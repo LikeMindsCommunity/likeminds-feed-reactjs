@@ -6,7 +6,8 @@ interface LMFlatFeedProps {
   FooterView?: React.FC;
   HeaderView?: React.FC;
 }
-function LMFlatFeed(props: LMFlatFeedProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function LMFlatFeed(_props: LMFlatFeedProps) {
   return <div></div>;
 }
 
