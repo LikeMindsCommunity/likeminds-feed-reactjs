@@ -6,6 +6,7 @@ import { useFetchFeeds } from "../hooks/useFetchFeeds";
 import { useCallback } from "react";
 import { Post } from "../types/models/post";
 import { FeedPostContext } from "../contexts/FeedPostContext";
+import Feed from "./Feed";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;
@@ -14,7 +15,7 @@ interface LMFlatFeedProps {
   HeaderView?: React.FC;
 }
 
-function LMFlatFeed(props: LMFlatFeedProps) {
+const LMFlatFeed = (props: LMFlatFeedProps) => {
   const {
     PostView = null,
     Shimmer = null,
@@ -39,7 +40,9 @@ function LMFlatFeed(props: LMFlatFeedProps) {
             users: feedUsersList,
             topics: topics,
           }}
-        ></FeedPostContext.Provider>
+        >
+          <Feed />
+        </FeedPostContext.Provider>
       );
     });
   }, [feedList, feedUsersList, topics]);
@@ -56,6 +59,6 @@ function LMFlatFeed(props: LMFlatFeedProps) {
       </InfiniteScroll>
     </div>
   );
-}
+};
 
 export default LMFlatFeed;
