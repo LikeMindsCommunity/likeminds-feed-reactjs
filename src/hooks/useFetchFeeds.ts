@@ -61,7 +61,7 @@ export function useFetchFeeds(): useFetchFeedsResponse {
         console.log(error);
       }
     },
-    [selectedTopics],
+    [selectedTopics, lmFeedclient],
   );
 
   //   function to load the next page for the current selected topics
