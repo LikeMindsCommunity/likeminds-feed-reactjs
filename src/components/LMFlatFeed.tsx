@@ -39,7 +39,9 @@ function LMFlatFeed(props: LMFlatFeedProps) {
             users: feedUsersList,
             topics: topics,
           }}
-        ></FeedPostContext.Provider>
+        >
+          <>{post.text}</>
+        </FeedPostContext.Provider>
       );
     });
   }, [feedList, feedUsersList, topics]);

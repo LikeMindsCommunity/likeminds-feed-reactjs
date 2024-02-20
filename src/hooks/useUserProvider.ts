@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
 import { InitiateUserRequest } from "@likeminds.community/feed-js-beta";
 import { InitiateUserResponse } from "../types/api-responses/initiateUserResponse";
 import { GetMemberStateResponse } from "../types/api-responses/getMemberStateResponse";
 import { User } from "../types/models/member";
 import { Community } from "../types/models/Community";
+import { LMClient } from "../types/DataLayerExportsTypes";
 
 interface UserProviderInterface {
   lmFeedUser: User | null;
@@ -16,9 +16,9 @@ interface UserProviderInterface {
 export default function useUserProvider(
   uuid: string,
   isGuest: boolean,
-  userId = ""
+  userId = "",
+  lmFeedclient: LMClient,
 ): UserProviderInterface {
-  const { lmFeedclient } = useContext(GlobalClientProviderContext);
   const [lmFeedUser, setLmFeedUser] = useState<null | User>(null);
 
   const [lmFeedUserCurrentCommunity, setLmFeedUserCurrentCommunity] =
@@ -37,7 +37,7 @@ export default function useUserProvider(
               .setUUID(uuid)
               .setIsGuest(isGuest)
               .setUserName(userId)
-              .build()
+              .build(),
           )) as never;
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
@@ -48,7 +48,7 @@ export default function useUserProvider(
           };
           setLmFeedUser(user || null);
           setLmFeedUserCurrentCommunity(
-            initiateUserCall?.data?.community || null
+            initiateUserCall?.data?.community || null,
           );
         }
       } catch (error) {
