@@ -26,7 +26,7 @@ export function useTopicDropdown(
   const [searchKey, setSearchKey] = useState<string>("");
 
   //   function to load the next page of the topics
-  const getNextPage = async function () {
+  const getNextPage = async () => {
     try {
       const getTopicsCall: GetTopicsResponse = (await lmFeedclient?.getTopics(
         GetTopicsRequest.builder()
@@ -48,29 +48,39 @@ export function useTopicDropdown(
   };
 
   //   function to load the list of topics initially| | loading with page no 1
-  const loadTopics = useCallback(
-    async function () {
-      try {
-        const getTopicsCall: GetTopicsResponse = (await lmFeedclient?.getTopics(
-          GetTopicsRequest.builder()
-            .setPage(1)
-            .setSearchType("name")
-            .setSearch(searchKey)
-            .setPageSize(20),
-        )) as never;
-        if (getTopicsCall.success) {
-          setCurrentPageCount(2);
-          setTopics([...getTopicsCall.data.topics]);
-          if (!getTopicsCall.data.topics.length) {
-            setLoadNewTopics(false);
-          }
+  const loadTopics = useCallback(async () => {
+    try {
+      const getTopicsCall: GetTopicsResponse = (await lmFeedclient?.getTopics(
+        GetTopicsRequest.builder()
+          .setPage(1)
+          .setSearchType("name")
+          .setSearch(searchKey)
+          .setPageSize(20),
+      )) as never;
+      if (getTopicsCall.success) {
+        setCurrentPageCount(2);
+        setTopics([...getTopicsCall.data.topics]);
+        if (!getTopicsCall.data.topics.length) {
+          setLoadNewTopics(false);
         }
-      } catch (error) {
-        console.log(error);
       }
-    },
-    [lmFeedclient, searchKey],
-  );
+    } catch (error) {
+      console.log(error);
+    }
+  }, [lmFeedclient, searchKey]);
+
+  const updateCheckedIds = (id: string) => {
+    if (checkedTopicIds.includes(id)) {
+      const index = checkedTopicIds.findIndex((topicId: string) => {
+        topicId === id;
+      });
+      setCheckedTopicIds([...checkedTopicIds].splice(index, 1));
+    } else {
+      const newCheckedTopics = [...checkedTopicIds];
+      newCheckedTopics.push(id);
+      setCheckedTopicIds(newCheckedTopics);
+    }
+  };
 
   useEffect(() => {
     loadTopics();
@@ -82,6 +92,7 @@ export function useTopicDropdown(
     loadNewTopics,
     getNextPage,
     setSearchKey,
+    updateCheckedIds,
   };
 }
 
@@ -91,4 +102,5 @@ interface useTopicDropdownResponse {
   topics: Topic[];
   loadNewTopics: boolean;
   setSearchKey: React.Dispatch<string>;
+  updateCheckedIds: (id: string) => void;
 }
