@@ -33,21 +33,27 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
   } = useFetchFeeds();
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
+      const postUuid = post.uuid;
+      const usersArray = Object.values(feedUsersList);
+      const filteredUser = usersArray.find((user) => user.uuid === postUuid);
+
       return (
         <FeedPostContext.Provider
+          key={post._id}
           value={{
             post: post,
             users: feedUsersList,
             topics: topics,
           }}
         >
-          <>{post.text}</>
+          <Feed post={post} user={filteredUser} />
         </FeedPostContext.Provider>
       );
     });
   }, [feedList, feedUsersList, topics]);
+
   return (
-    <div>
+    <div className="lm-feed-wrapper">
       <InfiniteScroll
         dataLength={feedList.length}
         hasMore={loadMoreFeeds}

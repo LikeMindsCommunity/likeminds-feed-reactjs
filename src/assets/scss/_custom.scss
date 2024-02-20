@@ -1,0 +1,43 @@
+.lm-feed-wrapper {
+  background-color: $bg-color;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+
+  &__card {
+    width: pxToRem(576);
+    margin-bottom: pxToRem(12);
+    background: $light-color;
+    border-radius: pxToRem(8);
+
+    &__header {
+      padding: pxToRem(8) pxToRem(16);
+      display: flex;
+      justify-content: space-between;
+
+      &--title {
+        font-size: 1rem;
+        font-weight: 500;
+        color: $dark-color;
+
+        span {
+          background-color: $primary-color;
+          border-radius: pxToRem(2);
+          padding: pxToRem(2) pxToRem(8);
+          font-size: pxToRem(11);
+          color: $light-color;
+          font-weight: 500;
+          line-height: pxToRem(16);
+          margin-left: pxToRem(8);
+        }
+      }
+    }
+
+    &__body {
+      .userTag {
+        color: $info-color;
+        cursor: pointer;
+      }
+    }
+  }
+}
