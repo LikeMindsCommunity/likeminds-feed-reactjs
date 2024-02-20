@@ -1,7 +1,7 @@
 const Feed = () => {
   return (
-    <div>
-      <h1>Feed Route</h1>
+    <div className="lmFeedWrapper">
+      <h1>Feed Route Flat</h1>
     </div>
   );
 };

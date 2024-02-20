@@ -1,38 +1,43 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "jest": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
-        "react-app",
-        "react-app/jest",
-        "airbnb",
-        "airbnb-typescript",
-        "plugin:import/typescript",
-        "plugin:prettier/recommended"
-    ],
-    "overrides": [
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaFeatures": {
-        "jsx": true
-        },
-        "ecmaVersion": "latest",
-        "sourceType": "module",
-        "project": "./tsconfig.json"
-    },
-    "plugins": ["react", "@typescript-eslint", "prettier"],
-    "rules": {
-        "react/react-in-jsx-scope": ["off"],
-        "react/jsx-uses-react": ["off"],
-        "react/jsx-props-no-spreading": ["warn"],
-        "react/no-unescaped-entities": ["off"]
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "react-app",
+    "react-app/jest",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended",
+    "plugin:css-modules/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["*.css"],
+      "processor": "css-modules/css"
     }
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["react", "@typescript-eslint", "prettier", "css-modules"],
+  "rules": {
+    "react/react-in-jsx-scope": ["off"],
+    "react/jsx-uses-react": ["off"],
+    "react/jsx-props-no-spreading": ["warn"],
+    "react/no-unescaped-entities": ["off"],
+    "css-modules/no-unused-class": "error",
+    "css-modules/no-undef-class": "error"
+  }
 }
-
- 
