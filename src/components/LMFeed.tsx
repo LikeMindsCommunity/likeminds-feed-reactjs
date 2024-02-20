@@ -22,7 +22,10 @@ function LMFeed({
   client,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
-    useUserProvider("", false, "");
+    useUserProvider("TestingUser1", false, "TestingUser1", client);
+  if (!lmFeedUser) {
+    return null;
+  }
   return (
     <GlobalClientProviderContext.Provider
       value={{

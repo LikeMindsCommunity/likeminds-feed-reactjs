@@ -41,7 +41,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
             topics: topics,
           }}
         >
-          <Feed />
+          <>{post.text}</>
         </FeedPostContext.Provider>
       );
     });
