@@ -1,0 +1,29 @@
+// Convert pixels to rems
+@function pxToRem($pixels) {
+  @return ($pixels / 16) * 1rem; // Assuming base font size is 16px
+}
+
+// Convert rems to pixels
+@function remToPx($rems) {
+  @return $rems * 16; // Assuming base font size is 16px
+}
+
+// Calculate percentage
+@function percentage($value, $total) {
+  @return ($value / $total) * 100%;
+}
+
+// Darken a color
+@function darken-color($color, $amount) {
+  @return darken($color, $amount);
+}
+
+// Lighten a color
+@function lighten-color($color, $amount) {
+  @return lighten($color, $amount);
+}
+
+// Blend two colors
+@function blend-colors($color1, $color2, $weight: 50%) {
+  @return mix($color1, $color2, $weight);
+}

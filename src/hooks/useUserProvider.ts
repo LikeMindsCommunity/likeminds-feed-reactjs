@@ -16,7 +16,7 @@ interface UserProviderInterface {
 export default function useUserProvider(
   uuid: string,
   isGuest: boolean,
-  userId = ""
+  userId = "",
 ): UserProviderInterface {
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
   const [lmFeedUser, setLmFeedUser] = useState<null | User>(null);
@@ -37,7 +37,7 @@ export default function useUserProvider(
               .setUUID(uuid)
               .setIsGuest(isGuest)
               .setUserName(userId)
-              .build()
+              .build(),
           )) as never;
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
@@ -48,7 +48,7 @@ export default function useUserProvider(
           };
           setLmFeedUser(user || null);
           setLmFeedUserCurrentCommunity(
-            initiateUserCall?.data?.community || null
+            initiateUserCall?.data?.community || null,
           );
         }
       } catch (error) {
