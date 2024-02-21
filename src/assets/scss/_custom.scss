@@ -2,7 +2,7 @@
   background-color: $bg-color;
   display: flex;
   justify-content: center;
-  height: 100vh;
+  height: auto;
 
   &__card {
     width: pxToRem(576);
@@ -69,6 +69,7 @@
         flex-wrap: wrap;
         justify-content: flex-start;
         margin-bottom: pxToRem(16);
+        // width: 576px;
 
         img {
           width: 100%;

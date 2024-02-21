@@ -1,30 +1,85 @@
 import React from "react";
-import { Attachment as AttachmentType } from "../../types/models/attachment"; // Import the Attachment interface
+import Slider from "react-slick";
+import { Attachment as AttachmentType } from "../../types/models/attachment";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 interface AttachmentProps {
-  attachment: AttachmentType; // Use the new Attachment interface
+  attachments: AttachmentType[];
 }
 
-const Attachment: React.FC<AttachmentProps> = ({ attachment }) => {
-  const { attachmentMeta, attachmentType } = attachment;
-
-  // Handle different attachment types (e.g., images, documents)
-  const renderAttachmentContent = () => {
-    switch (attachmentType) {
-      case 1: // Handle image attachments
-        return <img src={attachmentMeta.url} alt={attachmentMeta.name} />;
-      // Add cases for other attachment types as needed
-      default:
-        return null;
-    }
+const Attachment: React.FC<AttachmentProps> = ({ attachments }) => {
+  // Configure settings for react-slick carousel
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
   };
 
-  return (
-    <div className="attachment">
-      {renderAttachmentContent()}
-      {/* You can add additional rendering logic for attachment metadata if needed */}
-    </div>
-  );
+  // Render attachments as carousel if there are multiple attachments
+  if (attachments.length > 1) {
+    return (
+      <div className="slider-container">
+        <Slider {...settings}>
+          {attachments.map((attachment, index) => (
+            <div key={index}>
+              <RenderAttachment attachment={attachment} />
+            </div>
+          ))}
+        </Slider>
+      </div>
+    );
+  }
+
+  // Render single attachment if there's only one attachment
+  if (attachments.length === 1) {
+    return <RenderAttachment attachment={attachments[0]} />;
+  }
+
+  // Render nothing if there are no attachments
+  return null;
+};
+
+// Helper function to render individual attachment
+const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
+  attachment,
+}) => {
+  // Render attachment based on attachmentType
+  const { attachmentMeta, attachmentType } = attachment;
+  const { name, url } = attachmentMeta;
+
+  switch (attachmentType) {
+    case 1: // Image
+      return (
+        <div>
+          <img src={url} alt={name} />
+        </div>
+      );
+    case 2: // Video
+      return (
+        <div className="attachment-video">
+          <video controls width="100%" height="auto">
+            <source src={url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
+    case 3: // PDF
+      return (
+        <div className="attachment-pdf">
+          <iframe src={url} title={name} width="100%" height="500px"></iframe>
+        </div>
+      );
+    default:
+      // Unsupported attachment type
+      return (
+        <div className="attachment-unsupported">
+          Unsupported attachment type
+        </div>
+      );
+  }
 };
 
 export default Attachment;

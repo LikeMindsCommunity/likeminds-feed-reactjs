@@ -26,9 +26,10 @@ const Posts: React.FC<PostsProps> = (props) => {
 
     return (
       <div className="attachments">
-        {attachments.map((attachment, index) => (
+        <Attachment attachments={attachments} />
+        {/* {attachments.map((attachment, index) => (
           <Attachment key={index} attachment={attachment} />
-        ))}
+        ))} */}
       </div>
     );
   };
@@ -51,7 +52,7 @@ const Posts: React.FC<PostsProps> = (props) => {
             </div>
           </div>
         </div>
-        <div>{/* right penel */}</div>
+        <div>{/* right panel */}</div>
       </div>
       <div className="lm-feed-wrapper__card__body">
         <div className="lm-feed-wrapper__card__body__content">
