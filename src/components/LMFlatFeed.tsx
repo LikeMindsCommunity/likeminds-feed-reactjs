@@ -6,7 +6,7 @@ import { useFetchFeeds } from "../hooks/useFetchFeeds";
 import { useCallback } from "react";
 import { Post } from "../types/models/post";
 import { FeedPostContext } from "../contexts/FeedPostContext";
-import Feed from "./Feed";
+import Feed from "./Posts";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;

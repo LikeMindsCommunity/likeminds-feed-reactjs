@@ -19,6 +19,9 @@
         font-size: 1rem;
         font-weight: 500;
         color: $dark-color;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
 
         span {
           background-color: $primary-color;
@@ -31,9 +34,46 @@
           margin-left: pxToRem(8);
         }
       }
+      &--text {
+        font-size: pxToRem(14);
+        font-weight: 400;
+        color: $primary-color;
+        line-height: pxToRem(20);
+
+        span {
+          font-size: pxToRem(12);
+          color: $secondary-color;
+          font-weight: 400;
+          line-height: pxToRem(16);
+          margin: 0 0 0 pxToRem(8);
+          padding: 0 0 0 pxToRem(8);
+        }
+        span::before {
+          content: "\2022";
+          color: $secondary-color;
+          font-size: pxToRem(26);
+          position: absolute;
+          margin: pxToRem(4) 0 0 -12px;
+          height: pxToRem(4);
+          width: pxToRem(4);
+        }
+      }
     }
 
     &__body {
+      &__content {
+        padding: 1rem pxToRem(8) 1rem 1rem;
+      }
+      &__attachment {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-bottom: pxToRem(16);
+
+        img {
+          width: 100%;
+        }
+      }
       .userTag {
         color: $info-color;
         cursor: pointer;
