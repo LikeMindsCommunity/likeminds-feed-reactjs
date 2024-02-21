@@ -6,9 +6,7 @@ import { useFetchFeeds } from "../hooks/useFetchFeeds";
 import { useCallback } from "react";
 import { Post } from "../types/models/post";
 import { FeedPostContext } from "../contexts/FeedPostContext";
-import Feed from "./Feed";
-import LMFeedViewTopicDropdown from "./LM-Topic-Feed/LMFeedViewTopicDropdown";
-import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
+import Feed from "./Posts";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;
@@ -35,22 +33,27 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
   } = useFetchFeeds();
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
+      const postUuid = post.uuid;
+      const usersArray = Object.values(feedUsersList);
+      const filteredUser = usersArray.find((user) => user.uuid === postUuid);
+
       return (
         <FeedPostContext.Provider
+          key={post._id}
           value={{
             post: post,
             users: feedUsersList,
             topics: topics,
           }}
         >
-          <>{post.text}</>
+          <Feed post={post} user={filteredUser} />
         </FeedPostContext.Provider>
       );
     });
   }, [feedList, feedUsersList, topics]);
+
   return (
-    <div>
-      <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
+    <div className="lm-feed-wrapper">
       <InfiniteScroll
         dataLength={feedList.length}
         hasMore={loadMoreFeeds}

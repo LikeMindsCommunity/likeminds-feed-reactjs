@@ -17,7 +17,7 @@
 // Import utilities
 @import "utilities";
 
-@import "lm-topic-feed"
+@import "lm-topic-feed";
 
 // * {
 //   margin: 0;
@@ -38,3 +38,5 @@
 //   height: 100vh;
 //   display: flex;
 // }
+// Import Custom
+@import "custom";
