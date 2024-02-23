@@ -57,7 +57,7 @@ export default function useUserProvider(
     }
 
     setUser();
-  }, [lmFeedclient]);
+  }, [isGuest, lmFeedclient, userId, uuid]);
   function logoutUser() {
     setLmFeedUser(null);
   }

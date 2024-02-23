@@ -1,5 +1,5 @@
 export interface Topic {
-  _id: string;
+  Id: string;
   isEnabled: boolean;
   name: string;
 }

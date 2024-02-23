@@ -27,11 +27,7 @@ export const LMTopicSelectionTile = memo(
             },
             paddingX: "0px",
           }}
-          checked={
-            topic.name === "All Topics"
-              ? checkedList.length === 0
-              : checkedList.some((el) => el._id === topic._id)
-          }
+          checked={checkedList.some((el) => el.Id === topic.Id)}
         />
         <span className="lm-topic-name-container">{topic.name}</span>
       </div>
