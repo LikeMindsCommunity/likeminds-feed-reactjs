@@ -2,7 +2,7 @@ import { Attachment } from "./attachment";
 import { Topic } from "./topic";
 
 export interface Post {
-  _id: string;
+  Id: string;
   attachments: Attachment[];
   commentsCount: number;
   communityId: number;

@@ -33,7 +33,8 @@ export function useTopicDropdown(
           .setPage(currentPageCount)
           .setSearchType("name")
           .setSearch(searchKey)
-          .setPageSize(20),
+          .setPageSize(20)
+          .build(),
       )) as never;
       if (getTopicsCall.success) {
         setCurrentPageCount((pageCount) => pageCount + 1);
@@ -55,7 +56,9 @@ export function useTopicDropdown(
           .setPage(1)
           .setSearchType("name")
           .setSearch(searchKey)
-          .setPageSize(20),
+          .setPageSize(5)
+          .setIsEnabled(false)
+          .build(),
       )) as never;
       if (getTopicsCall.success) {
         setCurrentPageCount(2);
@@ -71,18 +74,23 @@ export function useTopicDropdown(
 
   // TODO update the logic for finding index and checking the topics
   const updateCheckedTopics = (arg: Topic) => {
-    if (
-      checkedTopics.some((topic: Topic) => {
-        return topic._id === arg._id;
-      })
-    ) {
+    console.log(arg);
+    const isTopicAlreadyChecked = checkedTopics.some((topic: Topic) => {
+      return topic.Id === arg.Id;
+    });
+    console.log(isTopicAlreadyChecked);
+    if (isTopicAlreadyChecked) {
       const index = checkedTopics.findIndex((topic: Topic) => {
-        topic._id === arg._id;
+        return topic.Id === arg.Id;
       });
-      setCheckedTopics([...checkedTopics].splice(index, 1));
+      console.log(index);
+      const newCheckedTopics = [...checkedTopics];
+      newCheckedTopics.splice(index, 1);
+      setCheckedTopics(newCheckedTopics);
     } else {
       const newCheckedTopics = [...checkedTopics];
       newCheckedTopics.push(arg);
+      console.log(newCheckedTopics);
       setCheckedTopics(newCheckedTopics);
     }
   };

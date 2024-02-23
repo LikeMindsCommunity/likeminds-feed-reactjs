@@ -11,7 +11,6 @@ interface PostsProps {
 }
 
 const Posts: React.FC<PostsProps> = (props) => {
-  console.info(props.post);
   const { text, createdAt, isEdited, attachments } = props.post;
   const { name, imageUrl, customTitle } = props.user || {};
 

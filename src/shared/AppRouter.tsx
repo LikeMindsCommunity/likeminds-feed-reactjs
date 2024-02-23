@@ -20,7 +20,7 @@ const LMAppRoute = createBrowserRouter([
         element: (
           <LMFeed
             client={LMFeedClient.Builder()
-              .setApiKey("6b11d5f6-19fc-48aa-9140-0f59c88b0d0a")
+              .setApiKey("69edd43f-4a5e-4077-9c50-2b7aa740acce")
               .setPlatformCode("rt")
               .setVersionCode(2)
               .build()}

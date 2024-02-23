@@ -7,6 +7,8 @@ import { useCallback } from "react";
 import { Post } from "../types/models/post";
 import { FeedPostContext } from "../contexts/FeedPostContext";
 import Feed from "./Posts";
+import LMFeedViewTopicDropdown from "./LM-Topic-Feed/LMFeedViewTopicDropdown";
+import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;
@@ -39,7 +41,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
 
       return (
         <FeedPostContext.Provider
-          key={post._id}
+          key={post.Id}
           value={{
             post: post,
             users: feedUsersList,
@@ -54,6 +56,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
+      <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
       <InfiniteScroll
         dataLength={feedList.length}
         hasMore={loadMoreFeeds}
