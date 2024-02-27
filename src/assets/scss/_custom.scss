@@ -80,6 +80,26 @@
             object-fit: cover;
           }
         }
+        .attachment-video{
+          width: 100%;
+          video {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: cover;
+          }
+        }
+        .attachment-pdf{
+          width: 100%;
+
+          PDFViewer{
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: cover;
+          }
+        }
+        
       }
       .userTag {
         color: $info-color;

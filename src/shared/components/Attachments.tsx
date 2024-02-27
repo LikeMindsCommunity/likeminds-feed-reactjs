@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import { Attachment as AttachmentType } from "../../types/models/attachment";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import PDFViewer from "./PDFViewer";
 
 interface AttachmentProps {
   attachments: AttachmentType[];
@@ -11,7 +12,7 @@ interface AttachmentProps {
 const Attachment: React.FC<AttachmentProps> = ({ attachments }) => {
   // Configure settings for react-slick carousel
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -69,7 +70,8 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
     case 3: // PDF
       return (
         <div className="attachment-pdf">
-          <iframe src={url} title={name} width="100%" height="500px"></iframe>
+          <PDFViewer pdfUrl={url} />
+          {/* <iframe src={url} title={name} width="100%" height="500px"></iframe> */}
         </div>
       );
     default:

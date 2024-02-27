@@ -4,7 +4,6 @@ import { User } from "../types/models/member";
 import { formatTimeAgo, getAvatar } from "../shared/utils";
 import { parseAndReplaceTags } from "../shared/taggingParser";
 
-// import { Video, Image } from "../shared/types";
 import LMCommentsScroller from "./LM-Replies/LMCommentsScroller";
 import Attachment from "../shared/components/Attachments";
 
@@ -13,34 +12,9 @@ interface PostsProps {
   user: User | undefined;
 }
 
-// // Assuming you have a function to filter attachments into images and videos
-// const filterAttachments = (attachments: Attachment[]) => {
-//   const images: Image[] = [];
-//   const videos: Video[] = [];
-
-//   attachments.forEach((attachment) => {
-//     if (attachment.attachmentType === 1) {
-//       // Assuming attachmentType 1 represents images
-//       images.push({
-//         src: attachment.attachmentMeta.url,
-//         alt: attachment.attachmentMeta.name, // You can set alt to whatever is appropriate
-//       });
-//     } else if (attachment.attachmentType === 2) {
-//       // Assuming attachmentType 2 represents videos
-//       videos.push({
-//         src: attachment.attachmentMeta.url,
-//       });
-//     }
-//   });
-
-//   return { images, videos };
-// };
-
 const Posts: React.FC<PostsProps> = (props) => {
   const { text, createdAt, isEdited, attachments } = props.post;
   const { name, imageUrl, customTitle } = props.user || {};
-
-  // const { images, videos } = filterAttachments(attachments);
 
   // Determine the avatar content based on imageUrl and name
   const avatarContent = getAvatar({ imageUrl, name });
@@ -53,11 +27,7 @@ const Posts: React.FC<PostsProps> = (props) => {
 
     return (
       <div className="attachments">
-        {/* <Carousel images={attachments} videos={videos} /> */}
         <Attachment attachments={attachments} />
-        {/* {attachments.map((attachment, index) => (
-          <Attachment key={index} attachment={attachment} />
-        ))} */}
       </div>
     );
   };
@@ -88,7 +58,6 @@ const Posts: React.FC<PostsProps> = (props) => {
         </div>
         <div className="lm-feed-wrapper__card__body__attachment">
           {renderAttachments()}
-          {/* <Carousel images={images} videos={videos} /> */}
         </div>
       </div>
       <div className="lm-feed-wrapper__card__footer">
