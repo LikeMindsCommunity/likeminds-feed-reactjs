@@ -13,6 +13,7 @@ const LMCommentsScroller = () => {
     users,
   } = useContext(FeedPostContext);
   const renderComments = () => {
+    console.log(replies);
     return replies.map((reply: Reply) => {
       return (
         <ReplyContext.Provider

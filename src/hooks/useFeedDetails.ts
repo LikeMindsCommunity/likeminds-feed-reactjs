@@ -6,6 +6,7 @@ import { GetPostDetailsResponse } from "../types/api-responses/getPostDetailsRes
 import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
 import { GetPostRequest } from "@likeminds.community/feed-js-beta";
 import { Topic } from "../types/models/topic";
+
 interface UseFeedDetailsInterface {
   post: Post | null;
   users: Record<string, User>;
@@ -39,6 +40,13 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const [pageCount, setPageCount] = useState<number>(1);
 
   const loadPost = useCallback(async () => {
+    console.log(
+      GetPostRequest.builder()
+        .setpage(1)
+        .setpageSize(20)
+        .setpostId(postId)
+        .build(),
+    );
     try {
       const getPostDetailsCall: GetPostDetailsResponse =
         (await lmFeedclient?.getPost(
@@ -48,6 +56,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             .setpostId(postId)
             .build(),
         )) as never;
+      console.log(getPostDetailsCall);
       if (getPostDetailsCall.success) {
         setPost({ ...getPostDetailsCall.data.post });
         setReplies([...(getPostDetailsCall.data.post.replies || [])]);

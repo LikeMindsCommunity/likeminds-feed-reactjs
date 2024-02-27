@@ -68,7 +68,7 @@ const formatTimeAgo = (timestamp: number): string => {
     return `${diffMinutes} ${diffMinutes === 1 ? "minute" : "minutes"} ago`;
   }
 };
-
+// TODO remove the daysjs dependency and manually do it
 const timeFromNow = (time: string) => dayjs(time).fromNow();
 
 export { getInitials, handleImageError, getAvatar, formatTimeAgo, timeFromNow };

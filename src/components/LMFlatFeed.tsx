@@ -9,6 +9,8 @@ import { FeedPostContext } from "../contexts/FeedPostContext";
 import Feed from "./Posts";
 import LMFeedViewTopicDropdown from "./LM-Topic-Feed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import LMFeedDetails from "./LMFeedDetails";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;
@@ -48,7 +50,9 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
             topics: topics,
           }}
         >
-          <Feed post={post} user={filteredUser} />
+          <Link to={`/post/${post.Id}`}>
+            <Feed post={post} user={filteredUser} />
+          </Link>
         </FeedPostContext.Provider>
       );
     });
@@ -56,16 +60,29 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
-      <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
-      <InfiniteScroll
-        dataLength={feedList.length}
-        hasMore={loadMoreFeeds}
-        next={getNextPage}
-        // TODO set shimmer on loader component
-        loader={null}
-      >
-        {renderFeeds()}
-      </InfiniteScroll>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
+                <InfiniteScroll
+                  dataLength={feedList.length}
+                  hasMore={loadMoreFeeds}
+                  next={getNextPage}
+                  // TODO set shimmer on loader component
+                  loader={null}
+                >
+                  {renderFeeds()}
+                </InfiniteScroll>
+              </>
+            }
+          ></Route>
+
+          <Route path="/post/:id" element={<LMFeedDetails />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 };

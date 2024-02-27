@@ -2,8 +2,8 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import LMAppLayout from "../App";
 import Error from "./components/Error";
 import LMFeed from "../components/LMFeed";
+import LMFeedDetails from "../components/LMFeedDetails";
 import { LMFeedClient } from "@likeminds.community/feed-js-beta";
-import LMFlatFeed from "../components/LMFlatFeed";
 
 // Routing
 const LMAppRoute = createBrowserRouter([
@@ -24,10 +24,12 @@ const LMAppRoute = createBrowserRouter([
               .setPlatformCode("rt")
               .setVersionCode(2)
               .build()}
-          >
-            <LMFlatFeed />
-          </LMFeed>
+          />
         ),
+      },
+      {
+        path: "/post/:id",
+        element: <LMFeedDetails />,
       },
     ],
     errorElement: <Error />,
