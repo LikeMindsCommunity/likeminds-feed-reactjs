@@ -1,0 +1,38 @@
+.lm-replies-wrapper{
+    background-color: $bg-color;
+    padding-bottom: pxToRem(16);
+    padding-top: pxToRem(13);
+    padding-left: pxToRem(10);
+    &__user-meta{}
+    &__answer{}
+    &__footer{
+        padding-right: pxToRem(16);
+   
+        &__duration{
+            font-size: pxToRem(12);
+            line-height: 1rem;
+            color: rgba(15, 30, 61, 0.4);
+        }
+        &__post-actions{
+            &__likes{
+                font-size: pxToRem(12);
+                line-height: 1rem;
+                color: rgba(15, 30, 61, 0.4);
+            }
+            &__comments{
+                font-size: pxToRem(12);
+                line-height: 1rem;
+                color: rgba(15, 30, 61, 0.4);
+                    &__action{
+                        font-size: pxToRem(16);
+                        line-height: 1rem;
+                        color: $primary-color;
+                }
+            }
+        }
+    }
+    &__replies-collapse{
+        
+    }
+}
+
