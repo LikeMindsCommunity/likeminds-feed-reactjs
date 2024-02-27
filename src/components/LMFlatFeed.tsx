@@ -57,16 +57,20 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
-      <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
-      <InfiniteScroll
-        dataLength={feedList.length}
-        hasMore={loadMoreFeeds}
-        next={getNextPage}
-        // TODO set shimmer on loader component
-        loader={null}
-      >
-        {renderFeeds()}
-      </InfiniteScroll>
+      <div>
+        <div className="lm-flex-container lm-mb-5">
+          <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
+        </div>
+        <InfiniteScroll
+          dataLength={feedList.length}
+          hasMore={loadMoreFeeds}
+          next={getNextPage}
+          // TODO set shimmer on loader component
+          loader={null}
+        >
+          {renderFeeds()}
+        </InfiniteScroll>
+      </div>
     </div>
   );
 };
