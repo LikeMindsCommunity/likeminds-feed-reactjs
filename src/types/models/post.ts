@@ -1,4 +1,5 @@
 import { Attachment } from "./attachment";
+import { Reply } from "./replies";
 import { Topic } from "./topic";
 
 export interface Post {
@@ -26,4 +27,5 @@ export interface Post {
   updatedAt: number;
   userId: string;
   uuid: string;
+  replies?: Reply[];
 }

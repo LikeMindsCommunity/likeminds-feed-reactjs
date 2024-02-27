@@ -71,8 +71,14 @@
         margin-bottom: pxToRem(16);
         width: 576px;
 
-        img {
+        .attachments{
           width: 100%;
+          img {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: cover;
+          }
         }
       }
       .userTag {
