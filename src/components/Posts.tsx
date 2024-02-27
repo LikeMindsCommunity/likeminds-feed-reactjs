@@ -4,6 +4,7 @@ import { User } from "../types/models/member";
 import { formatTimeAgo, getAvatar } from "../shared/utils";
 import { parseAndReplaceTags } from "../shared/taggingParser";
 import Attachment from "../shared/components/Attachments";
+import LMCommentsScroller from "./LM-Replies/LMCommentsScroller";
 
 interface PostsProps {
   post: Post;
@@ -62,7 +63,7 @@ const Posts: React.FC<PostsProps> = (props) => {
         </div>
       </div>
       <div className="lm-feed-wrapper__card__footer">
-        {/* <h1>{footer}</h1> */}
+        <LMCommentsScroller />
       </div>
     </div>
   );
