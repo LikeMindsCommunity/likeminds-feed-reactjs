@@ -12,6 +12,12 @@
     "format": "prettier --write .",
     "prepare": "husky install"
   },
+  "husky": {
+    "hooks": {
+    "pre-commit": "npm run lint",
+    "pre-push": "npm test"
+    }
+  },
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
@@ -28,7 +34,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-router-dom": "^6.22.1",
+    "react-pdf": "^7.7.1",
+    "react-router-dom": "^6.22.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
@@ -72,7 +79,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "husky": "^8.0.0",
+    "husky": "^9.0.11",
     "node-sass": "^9.0.0",
     "prettier": "^3.2.5",
     "react-app-rewired": "^2.2.1",

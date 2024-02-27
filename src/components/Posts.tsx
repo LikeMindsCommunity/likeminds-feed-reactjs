@@ -3,8 +3,9 @@ import { Post } from "../types/models/post";
 import { User } from "../types/models/member";
 import { formatTimeAgo, getAvatar } from "../shared/utils";
 import { parseAndReplaceTags } from "../shared/taggingParser";
-import Attachment from "../shared/components/Attachments";
+
 import LMCommentsScroller from "./LM-Replies/LMCommentsScroller";
+import Attachment from "../shared/components/Attachments";
 
 interface PostsProps {
   post: Post;
@@ -27,9 +28,6 @@ const Posts: React.FC<PostsProps> = (props) => {
     return (
       <div className="attachments">
         <Attachment attachments={attachments} />
-        {/* {attachments.map((attachment, index) => (
-          <Attachment key={index} attachment={attachment} />
-        ))} */}
       </div>
     );
   };
