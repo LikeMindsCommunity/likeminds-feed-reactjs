@@ -6,9 +6,10 @@ import { useFetchFeeds } from "../hooks/useFetchFeeds";
 import { useCallback } from "react";
 import { Post } from "../types/models/post";
 import { FeedPostContext } from "../contexts/FeedPostContext";
-import Feed from "./Posts";
+// import Feed from "./Posts";
 import LMFeedViewTopicDropdown from "./LM-Topic-Feed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
+import Posts from "./Posts";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;
@@ -48,7 +49,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
             topics: topics,
           }}
         >
-          <Feed post={post} user={filteredUser} />
+          <Posts post={post} user={filteredUser} />
         </FeedPostContext.Provider>
       );
     });
@@ -56,16 +57,20 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
-      <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
-      <InfiniteScroll
-        dataLength={feedList.length}
-        hasMore={loadMoreFeeds}
-        next={getNextPage}
-        // TODO set shimmer on loader component
-        loader={null}
-      >
-        {renderFeeds()}
-      </InfiniteScroll>
+      <div>
+        <div className="lm-flex-container lm-mb-5">
+          <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
+        </div>
+        <InfiniteScroll
+          dataLength={feedList.length}
+          hasMore={loadMoreFeeds}
+          next={getNextPage}
+          // TODO set shimmer on loader component
+          loader={null}
+        >
+          {renderFeeds()}
+        </InfiniteScroll>
+      </div>
     </div>
   );
 };
