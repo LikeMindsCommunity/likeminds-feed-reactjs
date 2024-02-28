@@ -18,10 +18,10 @@
 @import "utilities";
 
 // Import topic feed styles
-@import "lmTopicFeed";
-
-// Import custom styles
-@import "custom";
+@import "topicFeed";
 
 
-@import "_lmReplies.scss"
+// Import post styles
+@import "posts";
+// Import replies styles
+@import "replies"

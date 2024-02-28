@@ -7,24 +7,15 @@ const LMFeedDetails = () => {
   const { id = "" } = useParams();
   const { post, users, topics, replies, getNextPage, loadNextPage } =
     useFeedDetails(id);
-  if (!post || !users) {
-    return null;
-  }
-  return (
+
+  return !post || !users ? null : (
     <div>
       <FeedPostContext.Provider
         value={{ post, users, topics, replies, getNextPage, loadNextPage }}
       >
         <Posts
-          post={post!}
-          user={(function () {
-            const postUuid = post!.uuid;
-            const usersArray = Object.values(users);
-            const filteredUser = usersArray.find(
-              (user) => user.uuid === postUuid,
-            );
-            return filteredUser;
-          })()}
+          post={post}
+          user={Object.values(users).find((user) => user.uuid === post.uuid)}
         />
       </FeedPostContext.Provider>
     </div>

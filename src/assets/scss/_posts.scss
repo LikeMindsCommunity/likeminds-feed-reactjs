@@ -4,6 +4,11 @@
   justify-content: center;
   height: auto;
 
+  a{
+    color: $dark-color;
+    cursor: default;
+  }
+
   &__card {
     width: pxToRem(576);
     margin-bottom: pxToRem(12);
@@ -67,36 +72,38 @@
       &__attachment {
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
-        margin-bottom: pxToRem(16);
-        width: 576px;
+        justify-content: flex-start; 
+        width: pxToRem(576);
 
         .attachments{
           width: 100%;
+          background-color: #000000;
           img {
             width: 100%;
             height: auto;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: pxToRem(310);;
+            object-fit: contain;
           }
         }
         .attachment-video{
           width: 100%;
+          background-color: #000000;
           video {
             width: 100%;
             height: auto;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: pxToRem(310); 
+            object-fit: contain;
           }
         }
         .attachment-pdf{
           width: 100%;
-
+          background-color: #000000;
+          
           PDFViewer{
             width: 100%;
             height: auto;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: pxToRem(310);
+            object-fit: contain;
           }
         }
         
