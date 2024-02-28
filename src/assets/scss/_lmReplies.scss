@@ -3,8 +3,17 @@
     padding-bottom: pxToRem(16);
     padding-top: pxToRem(13);
     padding-left: pxToRem(10);
-    &__user-meta{}
-    &__answer{}
+    &__user-meta{
+        font-size: pxToRem(14);
+        font-weight: 500;
+        line-height: pxToRem(20);
+    }
+    &__answer{
+        font-size: pxToRem(14);
+        font-weight: 400;
+        line-height: pxToRem(20);
+        color: $base-grey-1;
+    }
     &__footer{
         padding-right: pxToRem(16);
    
