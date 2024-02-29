@@ -71,7 +71,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
             element={
               <div>
                 {/* Topics */}
-                <div className="lm-mb-5">
+                <div className="lm-mb-4">
                   <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
                 </div>
                 {/* Topics */}
