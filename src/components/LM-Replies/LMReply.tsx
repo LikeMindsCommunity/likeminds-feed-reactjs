@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ReplyContext } from "../../contexts/ReplyContext";
 import { timeFromNow } from "../../shared/utils";
+import { renderIconReplyLike } from "../../shared/icons/Icons";
 
 const LMReply = () => {
   const { reply, user } = useContext(ReplyContext);
@@ -11,7 +12,11 @@ const LMReply = () => {
       <div className="lm-replies-wrapper__answer">{reply?.text}</div>
       <div className="lm-replies-wrapper__footer">
         <div className="lm-replies-wrapper__footer__post-actions">
-          <div className="lm-replies-wrapper__footer__post-actions__likes"></div>
+          <div className="lm-replies-wrapper__footer__post-actions__likes">
+            <span className="lm-replies-wrapper__footer__post-actions__likes__action-button">
+              {renderIconReplyLike(reply?.isLiked || false)}
+            </span>
+          </div>
           {"|"}
           <div className="lm-replies-wrapper__footer__post-actions__comments">
             Reply
