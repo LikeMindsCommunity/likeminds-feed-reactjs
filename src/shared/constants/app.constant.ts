@@ -7,4 +7,6 @@ export const LM_APP_CONFIG = {
 export const POST = "Post";
 export const EDITED = "Edited";
 export const LIKE = "like";
+export const LIKES = "likes";
 export const COMMNENT = "comment";
+export const COMMNENTS = "comments";
