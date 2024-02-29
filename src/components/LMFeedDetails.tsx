@@ -15,12 +15,11 @@ const LMFeedDetails = () => {
       <FeedPostContext.Provider
         value={{ post, users, topics, replies, getNextPage, loadNextPage }}
       >
-        <Link to={`${ROUTES.ROOT_PATH}`}>
-          <div className="lm-post-header">
-            <img src={lmBack} alt="Back Icon" />
-            <span>Back to feed</span>
-          </div>
+        <Link to={`${ROUTES.ROOT_PATH}`} className="lm-post-header">
+          <img src={lmBack} alt="Back Icon" />
+          <span>Back to feed</span>
         </Link>
+
         <Posts
           post={post}
           user={Object.values(users).find((user) => user.uuid === post.uuid)}
