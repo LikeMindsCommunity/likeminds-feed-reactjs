@@ -108,7 +108,6 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
               anchorEl={topicMenuAnchor}
               open={Boolean(topicMenuAnchor)}
               onClose={closeTopicMenu}
-              className="lm-topic-dropdown"
               anchorOrigin={{
                 horizontal: "left",
                 vertical: "bottom",

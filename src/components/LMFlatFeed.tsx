@@ -19,6 +19,7 @@ interface LMFlatFeedProps {
   Shimmer?: React.FC;
   FooterView?: React.FC;
   HeaderView?: React.FC;
+  likeActionCall?: () => void;
 }
 
 const LMFlatFeed = (props: LMFlatFeedProps) => {
@@ -54,9 +55,9 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
             topics: topics,
           }}
         >
-          <Link to={`${ROUTES.POST}/${post.Id}`}>
-            <Posts post={post} user={filteredUser} />
-          </Link>
+          {/* <Link to={`${ROUTES.POST}/${post.Id}`}> */}
+          <Posts post={post} user={filteredUser} />
+          {/* </Link> */}
         </FeedPostContext.Provider>
       );
     });
