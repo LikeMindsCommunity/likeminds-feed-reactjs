@@ -2,6 +2,7 @@
   background-color: $bg-color;
   display: flex;
   justify-content: center;
+  min-height: 100vh;
   height: auto;
 
   a{
@@ -114,4 +115,16 @@
       }
     }
   }
+}
+
+.lm-post-header{
+  @extend .lm-d-flex;
+  @extend .lm-align-items-center;
+  padding: pxToRem(8) pxToRem(16);
+  background-color: $light-color;
+  margin-bottom: pxToRem(16);
+  gap: 10px;
+  color: #7f8495;
+  font-size: pxToRem(16);
+  font-weight: 400;
 }
