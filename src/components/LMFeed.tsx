@@ -5,6 +5,7 @@ import { LMClient } from "../types/DataLayerExportsTypes";
 import ThemeProviderContext from "../contexts/ThemeProviderContext";
 import UserProviderContext from "../contexts/UserProviderContext";
 import useUserProvider from "../hooks/useUserProvider";
+import { CustomAgentProviderContext } from "../contexts/CustomAgentProviderContext";
 
 export interface LMFeedProps<T> {
   client: T;
@@ -14,12 +15,14 @@ export interface LMFeedProps<T> {
     base?: string;
     postDetails?: string;
   };
+  likeActionCall?: () => void;
 }
 
 function LMFeed({
   theme = new Theme(),
   children,
   client,
+  likeActionCall,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider("testUser1", false, "testUser1", client);
@@ -37,15 +40,21 @@ function LMFeed({
           themeObject: theme,
         }}
       >
-        <UserProviderContext.Provider
+        <CustomAgentProviderContext.Provider
           value={{
-            currentUser: lmFeedUser,
-            currentCommunity: lmFeedUserCurrentCommunity,
-            logoutUser: logoutUser,
+            likeActionCall: likeActionCall,
           }}
         >
-          {children}
-        </UserProviderContext.Provider>
+          <UserProviderContext.Provider
+            value={{
+              currentUser: lmFeedUser,
+              currentCommunity: lmFeedUserCurrentCommunity,
+              logoutUser: logoutUser,
+            }}
+          >
+            {children}
+          </UserProviderContext.Provider>
+        </CustomAgentProviderContext.Provider>
       </ThemeProviderContext.Provider>
     </GlobalClientProviderContext.Provider>
   );

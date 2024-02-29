@@ -1,22 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Base component for setting Feed List.
 
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useFetchFeeds } from "../hooks/useFetchFeeds";
 import { useCallback } from "react";
-import { Post } from "../types/models/post";
-import { FeedPostContext } from "../contexts/FeedPostContext";
-import Feed from "./Posts";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import LMFeedViewTopicDropdown from "./LM-Topic-Feed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { FeedPostContext } from "../contexts/FeedPostContext";
+import { useFetchFeeds } from "../hooks/useFetchFeeds";
 import LMFeedDetails from "./LMFeedDetails";
+import { Post } from "../types/models/post";
+import { ROUTES } from "../shared/constants/routes.constant";
+import Posts from "./Posts";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;
   Shimmer?: React.FC;
   FooterView?: React.FC;
   HeaderView?: React.FC;
+  likeActionCall?: () => void;
 }
 
 const LMFlatFeed = (props: LMFlatFeedProps) => {
@@ -26,6 +29,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
     FooterView = null,
     HeaderView = null,
   } = props;
+
   const {
     topics,
     selectedTopics,
@@ -35,6 +39,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
     feedUsersList,
     getNextPage,
   } = useFetchFeeds();
+
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
       const postUuid = post.uuid;
@@ -50,9 +55,9 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
             topics: topics,
           }}
         >
-          <Link to={`/post/${post.Id}`}>
-            <Feed post={post} user={filteredUser} />
-          </Link>
+          {/* <Link to={`${ROUTES.POST}/${post.Id}`}> */}
+          <Posts post={post} user={filteredUser} />
+          {/* </Link> */}
         </FeedPostContext.Provider>
       );
     });
@@ -63,10 +68,16 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
       <BrowserRouter>
         <Routes>
           <Route
-            path="/"
+            path={ROUTES.ROOT_PATH}
             element={
-              <>
-                <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
+              <div>
+                {/* Topics */}
+                <div className="lm-mb-5">
+                  <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
+                </div>
+                {/* Topics */}
+
+                {/* Posts */}
                 <InfiniteScroll
                   dataLength={feedList.length}
                   hasMore={loadMoreFeeds}
@@ -76,11 +87,12 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
                 >
                   {renderFeeds()}
                 </InfiniteScroll>
-              </>
+                {/* Posts */}
+              </div>
             }
           ></Route>
 
-          <Route path="/post/:id" element={<LMFeedDetails />}></Route>
+          <Route path={ROUTES.POST_DETAIL} element={<LMFeedDetails />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

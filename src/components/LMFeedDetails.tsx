@@ -1,30 +1,28 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useFeedDetails } from "../hooks/useFeedDetails";
 import Posts from "./Posts";
 import { FeedPostContext } from "../contexts/FeedPostContext";
+import { ROUTES } from "../shared/constants/routes.constant";
+import lmBack from "../assets/images/lm-back.svg";
 
 const LMFeedDetails = () => {
   const { id = "" } = useParams();
   const { post, users, topics, replies, getNextPage, loadNextPage } =
     useFeedDetails(id);
-  if (!post || !users) {
-    return null;
-  }
-  return (
+
+  return !post || !users ? null : (
     <div>
       <FeedPostContext.Provider
         value={{ post, users, topics, replies, getNextPage, loadNextPage }}
       >
+        <Link to={`${ROUTES.ROOT_PATH}`} className="lm-post-header">
+          <img src={lmBack} alt="Back Icon" />
+          <span>Back to feed</span>
+        </Link>
+
         <Posts
-          post={post!}
-          user={(function () {
-            const postUuid = post!.uuid;
-            const usersArray = Object.values(users);
-            const filteredUser = usersArray.find(
-              (user) => user.uuid === postUuid,
-            );
-            return filteredUser;
-          })()}
+          post={post}
+          user={Object.values(users).find((user) => user.uuid === post.uuid)}
         />
       </FeedPostContext.Provider>
     </div>

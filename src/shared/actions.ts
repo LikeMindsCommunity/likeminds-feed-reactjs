@@ -1,8 +1,4 @@
-import { LMClient } from "../types/DataLayerExportsTypes";
-
-interface PostLikeActionInterface {
-  entityId: string;
-  client: LMClient;
-  context;
-}
-export const likeAction = async ({ en }: LikeActionInterface) => {};
+export const LMLikeAction = () => {
+  console.log("hello");
+  alert("The post has been liked");
+};

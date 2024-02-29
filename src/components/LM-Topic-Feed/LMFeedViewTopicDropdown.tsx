@@ -108,7 +108,7 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
   };
 
   // Function to handle the filter section view
-  const handleFilterView = function () {
+  const handleFilterView = () => {
     switch (isTopicSelectionMode) {
       case true: {
         return (

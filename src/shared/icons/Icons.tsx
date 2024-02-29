@@ -1,3 +1,5 @@
+import React from "react";
+
 export const renderLikeIcon: (prop: RenderLikeButton) => JSX.Element = ({
   likeColor,
   defaultColor,
