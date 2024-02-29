@@ -6,6 +6,7 @@ import { parseAndReplaceTags } from "../shared/taggingParser";
 
 import LMCommentsScroller from "./LM-Replies/LMCommentsScroller";
 import Attachment from "../shared/components/Attachments";
+import { EDITED, POST } from "../shared/constants/app.constant";
 
 interface PostsProps {
   post: Post;
@@ -42,15 +43,15 @@ const Posts: React.FC<PostsProps> = (props) => {
               {name} {customTitle ? <span>{customTitle}</span> : null}
             </div>
             <div className="lm-feed-wrapper__card__header--text">
-              Post
+              {POST}
               <span>{formatTimeAgo(createdAt)}</span>
               {isEdited ? (
-                <span className="lm-primary-text">Edited</span>
+                <span className="lm-primary-text">{EDITED}</span>
               ) : null}
             </div>
           </div>
         </div>
-        <div>{/* right panel */}</div>
+        <div>{/* menu drop down */}</div>
       </div>
       <div className="lm-feed-wrapper__card__body">
         <div className="lm-feed-wrapper__card__body__content">

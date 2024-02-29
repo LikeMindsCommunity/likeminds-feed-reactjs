@@ -2,7 +2,13 @@
   background-color: $bg-color;
   display: flex;
   justify-content: center;
+  min-height: 100vh;
   height: auto;
+
+  a{
+    color: $dark-color;
+    cursor: default;
+  }
 
   &__card {
     width: pxToRem(576);
@@ -67,36 +73,38 @@
       &__attachment {
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
-        margin-bottom: pxToRem(16);
-        width: 576px;
+        justify-content: flex-start; 
+        width: pxToRem(576);
 
         .attachments{
           width: 100%;
+          background-color: #000000;
           img {
             width: 100%;
             height: auto;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: pxToRem(310);;
+            object-fit: contain;
           }
         }
         .attachment-video{
           width: 100%;
+          background-color: #000000;
           video {
             width: 100%;
             height: auto;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: pxToRem(310); 
+            object-fit: contain;
           }
         }
         .attachment-pdf{
           width: 100%;
-
+          background-color: #000000;
+          
           PDFViewer{
             width: 100%;
             height: auto;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: pxToRem(310);
+            object-fit: contain;
           }
         }
         
@@ -107,4 +115,16 @@
       }
     }
   }
+}
+
+.lm-post-header{
+  @extend .lm-d-flex;
+  @extend .lm-align-items-center;
+  padding: pxToRem(8) pxToRem(16);
+  background-color: $light-color;
+  margin-bottom: pxToRem(16);
+  gap: 10px;
+  color: #7f8495;
+  font-size: pxToRem(16);
+  font-weight: 400;
 }

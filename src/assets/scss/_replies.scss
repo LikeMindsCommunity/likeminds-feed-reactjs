@@ -1,8 +1,20 @@
-.lm-replies-wrapper{
-    background-color: $bg-color;
-    padding-bottom: pxToRem(16);
-    padding-top: pxToRem(13);
-    padding-left: pxToRem(10);
+.lm-social-action-bar{
+    @extend .lm-d-flex;
+    background-color: $light-color;
+    padding: pxToRem(10) pxToRem(16);
+    justify-content: space-between;
+
+    &__actions{
+        @extend .lm-d-flex;
+        @extend .lm-align-items-center;
+        @extend .lm-text-capitalize;
+        color: $action-bar-color; 
+        gap: pxToRem(16);
+        font-size: pxToRem(16);;
+        line-height: pxToRem(16);;
+        font-weight: 400;
+    }
+
     &__user-meta{
         font-size: pxToRem(14);
         font-weight: 500;

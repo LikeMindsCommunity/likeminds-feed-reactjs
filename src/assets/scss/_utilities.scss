@@ -167,6 +167,10 @@
   justify-content: center;
 }
 
+.lm-flex-gap{
+  gap: 6px;
+}
+
 .lm-visible {
   visibility: visible;
 }
@@ -199,4 +203,8 @@
 
 .lm-primary-text {
   color: $primary-color !important;
+}
+
+.lm-cursor-pointer{
+  cursor: pointer;
 }
