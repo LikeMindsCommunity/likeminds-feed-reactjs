@@ -1,6 +1,5 @@
 import { Attachment } from "./attachment";
 import { Reply } from "./replies";
-import { Topic } from "./topic";
 
 export interface Post {
   Id: string;
@@ -23,7 +22,7 @@ export interface Post {
   repostCount: number;
   tempId: null | string;
   text: string;
-  topics: Topic[];
+  topics: string[];
   updatedAt: number;
   userId: string;
   uuid: string;
