@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { TopicsDropdownMode } from "../../enums/topicFeedDropdownMode";
-import { Menu, MenuItem } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useTopicDropdown } from "../../hooks/useTopicDropdown";
-import { LMTopicSelectionTile } from "./LMTopicSelectionTile";
+import LMTopicSelectionTile from "./LMTopicSelectionTile";
 import { Topic } from "../../types/models/topic";
 import { LMTopicSelectedBlock } from "./LMTopicSelectedBlock";
 import { ALL_TOPICS } from "../../shared/constants/app.constant";
@@ -51,7 +52,7 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
 
   // UI for searchBox
   const searchBox = (
-    <div className="lm-topic-search-box-container">
+    <div className="lm-topic-dropdown__search">
       <img src={topicSearchIcon} alt="Topic search" />
       <input
         className="lm-topic-search-box"
@@ -115,6 +116,11 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
               slotProps={{
                 paper: {
                   id: "scrollerTopics",
+                  sx: {
+                    height: "300px",
+                    borderRadius: "8px",
+                    overflow: "auto",
+                  },
                 },
               }}
             >
@@ -125,7 +131,9 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
                 dataLength={topics.length}
                 scrollableTarget={"scrollerTopics"}
               >
+                {/* Search */}
                 {searchBox}
+                {/* Search */}
                 <MenuItem
                   disableRipple={true}
                   role="option"
