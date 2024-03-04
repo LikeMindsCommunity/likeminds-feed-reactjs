@@ -18,17 +18,32 @@ import {
 import { COMMNENT, LIKE } from "../shared/constants/app.constant";
 import { CustomAgentProviderContext } from "../contexts/CustomAgentProviderContext";
 import { LMLikeAction } from "../shared/actions";
+import { Link } from "react-router-dom";
+import { ROUTES } from "../shared/constants/routes.constant";
+import { FeedPostContext } from "../contexts/FeedPostContext";
+import LMFeedTopicsTile from "./LM-Topic-Feed/LMFeedTopicsTile";
 interface PostsProps {
   post: Post;
   user: User | undefined;
 }
 
 const Posts: React.FC<PostsProps> = (props) => {
-  const { text, createdAt, isEdited, attachments, likesCount, commentsCount } =
-    props.post;
+  const {
+    text,
+    createdAt,
+    isEdited,
+    attachments,
+    likesCount,
+    commentsCount,
+    Id,
+    topics,
+  } = props.post;
   const { name, imageUrl, customTitle } = props.user || {};
+  const topicsMap = useContext(FeedPostContext).topics;
 
-  const { likeActionCall } = useContext(CustomAgentProviderContext);
+  const { likeActionCall, topicBlocksWrapperStyles } = useContext(
+    CustomAgentProviderContext,
+  );
 
   // Determine the avatar content based on imageUrl and name
   const avatarContent = getAvatar({ imageUrl, name });
@@ -66,6 +81,14 @@ const Posts: React.FC<PostsProps> = (props) => {
         </div>
         <div>{/* menu drop down */}</div>
       </div>
+      <div
+        className="lm-feed-wrapper__card__topic-view-wrapper"
+        style={topicBlocksWrapperStyles}
+      >
+        {topics.map((topicId: string) => {
+          return <LMFeedTopicsTile topic={topicsMap![topicId]} />;
+        })}
+      </div>
       <div className="lm-feed-wrapper__card__body">
         <div className="lm-feed-wrapper__card__body__content">
           {parseAndReplaceTags(text)}
@@ -87,6 +110,7 @@ const Posts: React.FC<PostsProps> = (props) => {
                   }
                 }}
                 src={like}
+                className="lm-cursor-pointer"
                 alt="Like"
               />
               <span>
@@ -95,7 +119,13 @@ const Posts: React.FC<PostsProps> = (props) => {
               </span>
             </div>
             <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
-              <img src={commnent} alt="commnent" />
+              <Link to={ROUTES.POST.concat("/").concat(Id.toString())}>
+                <img
+                  className="lm-cursor-pointer"
+                  src={commnent}
+                  alt="commnent"
+                />
+              </Link>
               <span>
                 {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
               </span>
