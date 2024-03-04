@@ -15,7 +15,7 @@ export function useTopicDropdown(
   const [checkedTopics, setCheckedTopics] = useState<Topic[]>([]);
 
   // to detect whether a new topic page should be loaded or not
-  const [loadNewTopics, setLoadNewTopics] = useState<boolean>(false);
+  const [loadNewTopics, setLoadNewTopics] = useState<boolean>(true);
 
   // to store the list of topics || will use this list to render the UI.
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -28,6 +28,7 @@ export function useTopicDropdown(
   //   function to load the next page of the topics
   const getNextPage = async () => {
     try {
+      console.log("here");
       const getTopicsCall: GetTopicsResponse = (await lmFeedclient?.getTopics(
         GetTopicsRequest.builder()
           .setPage(currentPageCount)

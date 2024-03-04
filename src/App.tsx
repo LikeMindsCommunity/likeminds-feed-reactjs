@@ -8,8 +8,8 @@ import { LMLikeAction } from "./shared/actions";
 
 function LMAppLayout() {
   function customCallbackforlike() {
-    alert("this is the custom callback");
     LMLikeAction();
+    alert("this is the custom callback");
   }
   const client = LMFeedClient.Builder()
     .setApiKey(LM_APP_CONFIG.API_KEY)
@@ -17,7 +17,14 @@ function LMAppLayout() {
     .setVersionCode(LM_APP_CONFIG.VERSION_CODE)
     .build();
   return (
-    <LMFeed client={client} likeActionCall={customCallbackforlike}>
+    <LMFeed
+      topicBlocksWrapperStyles={{
+        display: "flex",
+        justifyContent: "flex-end",
+      }}
+      client={client}
+      likeActionCall={customCallbackforlike}
+    >
       <LMFlatFeed />
     </LMFeed>
   );

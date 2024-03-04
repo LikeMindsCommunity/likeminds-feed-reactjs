@@ -16,6 +16,13 @@
     background: $light-color;
     border-radius: pxToRem(8);
 
+    &__topic-view-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: pxToRem(8);
+      padding: pxToRem(0) pxToRem(16);
+    }
+
     &__header {
       padding: pxToRem(8) pxToRem(16);
       display: flex;

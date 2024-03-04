@@ -1,12 +1,13 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useFeedDetails } from "../hooks/useFeedDetails";
 import Posts from "./Posts";
 import { FeedPostContext } from "../contexts/FeedPostContext";
-import { ROUTES } from "../shared/constants/routes.constant";
+
 import lmBack from "../assets/images/lm-back.svg";
 
 const LMFeedDetails = () => {
   const { id = "" } = useParams();
+
   const { post, users, topics, replies, getNextPage, loadNextPage } =
     useFeedDetails(id);
 
@@ -15,10 +16,15 @@ const LMFeedDetails = () => {
       <FeedPostContext.Provider
         value={{ post, users, topics, replies, getNextPage, loadNextPage }}
       >
-        <Link to={`${ROUTES.ROOT_PATH}`} className="lm-post-header">
-          <img src={lmBack} alt="Back Icon" />
+        <div className="lm-post-header">
+          <img
+            onClick={() => window.history.back()}
+            src={lmBack}
+            alt="Back Icon"
+            className="lm-cursor-pointer"
+          />
           <span>Back to feed</span>
-        </Link>
+        </div>
 
         <Posts
           post={post}

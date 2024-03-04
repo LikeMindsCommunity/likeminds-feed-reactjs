@@ -55,7 +55,7 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
     case 1: // Image
       return (
         <div>
-          <img src={url} alt={name} />
+          <img loading="lazy" width="576" height="324" src={url} alt={name} />
         </div>
       );
     case 2: // Video
