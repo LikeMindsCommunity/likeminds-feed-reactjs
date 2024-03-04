@@ -4,9 +4,10 @@ export const LM_APP_CONFIG = {
   VERSION_CODE: 2,
 };
 
-export const POST = "Post";
-export const EDITED = "Edited";
+export const POST = "post";
+export const EDITED = "edited";
 export const LIKE = "like";
 export const LIKES = "likes";
 export const COMMNENT = "comment";
+export const ALL_TOPICS = "all topics";
 export const COMMNENTS = "comments";
