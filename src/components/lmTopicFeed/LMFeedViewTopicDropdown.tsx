@@ -158,8 +158,8 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
       }
       case false: {
         return (
-          <div className="lm-display-selected-topics-container">
-            <div className="lm-topic-tags-container">
+          <div className="lmSelectedTopics">
+            <div className="lmSelectedTopics__tags">
               {checkedTopics.map((topic: Topic) => {
                 return (
                   <LMTopicSelectedBlock
@@ -171,10 +171,10 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
               })}
             </div>
             <div
-              className="lm-topics-clear-button"
+              className="lmSelectedTopics--clear"
               onClick={clearAllCheckedTopics}
             >
-              <span>Clear</span>
+              Clear
             </div>
           </div>
         );
