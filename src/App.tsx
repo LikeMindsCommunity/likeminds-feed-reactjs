@@ -9,7 +9,7 @@ import { LMLikeAction } from "./shared/actions";
 function LMAppLayout() {
   function customCallbackforlike() {
     LMLikeAction();
-    alert("this is the custom callback");
+    alert("Anshul Chutiya h");
   }
   const client = LMFeedClient.Builder()
     .setApiKey(LM_APP_CONFIG.API_KEY)

@@ -54,3 +54,13 @@
     }
 }
  
+.lm-feed-topic-tile {
+    padding: pxToRem(2) pxToRem(8) pxToRem(2) pxToRem(8);
+    border-radius: pxToRem(4);
+    color: $primary-color;
+    background-color: rgba(80, 70, 229, 0.1);
+    font-size: pxToRem(14);
+    line-height: pxToRem(20);
+    font-weight: 400;
+    
+}

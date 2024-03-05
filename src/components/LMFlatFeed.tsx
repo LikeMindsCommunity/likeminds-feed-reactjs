@@ -4,7 +4,7 @@
 import { useCallback } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
-
+import { HelmetProvider } from "react-helmet-async";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/FeedPostContext";
@@ -92,7 +92,14 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
             }
           ></Route>
 
-          <Route path={ROUTES.POST_DETAIL} element={<LMFeedDetails />}></Route>
+          <Route
+            path={ROUTES.POST_DETAIL}
+            element={
+              <HelmetProvider>
+                <LMFeedDetails />
+              </HelmetProvider>
+            }
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>

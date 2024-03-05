@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useFeedDetails } from "../hooks/useFeedDetails";
 import Posts from "./Posts";
 import { FeedPostContext } from "../contexts/FeedPostContext";
-
+import { Helmet } from "react-helmet-async";
 import lmBack from "../assets/images/lm-back.svg";
 
 const LMFeedDetails = () => {
@@ -13,6 +13,9 @@ const LMFeedDetails = () => {
 
   return !post || !users ? null : (
     <div>
+      <Helmet>
+        <title>{post.text}</title>
+      </Helmet>
       <FeedPostContext.Provider
         value={{ post, users, topics, replies, getNextPage, loadNextPage }}
       >
