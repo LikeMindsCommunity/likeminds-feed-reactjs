@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { FeedPostContext } from "../contexts/FeedPostContext";
 import { CustomAgentProviderContext } from "../contexts/CustomAgentProviderContext";
-import LMFeedTopicsTile from "./LM-Topic-Feed/LMFeedTopicsTile";
+import LMFeedTopicsTile from "./lmTopicFeed/LMFeedTopicsTile";
 
 const LMPostTopicsWrapper = () => {
   const { post, topics: topicsMap } = useContext(FeedPostContext);

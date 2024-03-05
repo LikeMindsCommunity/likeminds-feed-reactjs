@@ -14,7 +14,8 @@ import {
   LIKE,
   LIKES,
 } from "../shared/constants/app.constant";
-import LMCommentsScroller from "./LM-Replies/LMCommentsScroller";
+import LMCommentsScroller from "./lmReplies/LMCommentsScroller";
+
 const LMPostFooter = () => {
   const { post } = useContext(FeedPostContext);
   const { likesCount, commentsCount, Id } = post!;
