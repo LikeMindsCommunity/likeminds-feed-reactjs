@@ -7,7 +7,7 @@ import like from "../assets/images/like.svg";
 import commnent from "../assets/images/comment.svg";
 import bookmark from "../assets/images/bookmark.svg";
 import share from "../assets/images/share.svg";
-import LMCommentsScroller from "./LM-Replies/LMCommentsScroller";
+import LMCommentsScroller from "./lmReplies/LMCommentsScroller";
 import Attachment from "../shared/components/Attachments";
 import {
   COMMNENTS,
@@ -21,7 +21,7 @@ import { LMLikeAction } from "../shared/actions";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../shared/constants/routes.constant";
 import { FeedPostContext } from "../contexts/FeedPostContext";
-import LMFeedTopicsTile from "./LM-Topic-Feed/LMFeedTopicsTile";
+import LMFeedTopicsTile from "./lmTopicFeed/LMFeedTopicsTile";
 interface PostsProps {
   post: Post;
   user: User | undefined;

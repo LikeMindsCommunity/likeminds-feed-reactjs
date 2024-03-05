@@ -15,10 +15,46 @@
         font-weight: 400;
     }
 
-    &__user-meta{
-        font-size: pxToRem(14);
-        font-weight: 500;
-        line-height: pxToRem(20);
+
+    &__lmReply{
+        padding: 0 pxToRem(16);
+        width: 100%;
+        float: left;
+        
+        &__userMeta{ 
+            display: flex;
+
+            &__image{
+
+            }
+
+            &__content{
+                background-color: #f3f5fa;
+                padding: pxToRem(12);
+                border-radius: pxToRem(16);
+                width: pxToRem(255);
+                &--title{
+                    font-size: pxToRem(14);
+                    font-weight: 500;
+                    line-height: pxToRem(20);
+                    color: $dark-color;
+                }
+                &--replyText{
+                    color: $dark-color;
+                    font-size: pxToRem(14);
+                    font-weight: 400;
+                    line-height: pxToRem(20);
+                }
+            }
+
+            .like{
+                font-size: pxToRem(12);
+                font-weight: 400;
+                line-height: pxToRem(16);
+                color: #a3b2bd;
+                gap: pxToRem(10);
+            }
+        }
     }
     &__answer{
         font-size: pxToRem(14);
@@ -52,8 +88,17 @@
             }
         }
     }
-    &__replies-collapse{
-        
-    }
+    
+}
+
+.lm-feed-topic-tile {
+    padding: pxToRem(2) pxToRem(8) pxToRem(2) pxToRem(8);
+    border-radius: pxToRem(4);
+    color: $primary-color;
+    background-color: rgba(80, 70, 229, 0.1);
+    font-size: pxToRem(14);
+    line-height: pxToRem(20);
+    font-weight: 400;
+
 }
 
