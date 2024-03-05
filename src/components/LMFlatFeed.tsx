@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import LMFeedViewTopicDropdown from "./LM-Topic-Feed/LMFeedViewTopicDropdown";
+import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/FeedPostContext";
 import { useFetchFeeds } from "../hooks/useFetchFeeds";
