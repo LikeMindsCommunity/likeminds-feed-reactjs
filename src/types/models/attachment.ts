@@ -2,7 +2,7 @@ import { OgTag } from "./ogTag";
 
 export interface Attachment {
   attachmentMeta: {
-    entityId: string;
+    entityId?: string;
     format: string;
     name: string;
     ogTags: OgTag;
