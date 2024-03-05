@@ -1,5 +1,5 @@
 import React from "react";
-import { LMClient } from "../types/DataLayerExportsTypes";
+import { LMClient } from "../shared/types/dataLayerExportsTypes";
 
 interface GlobalChatProviderContextInterface {
   lmFeedclient: LMClient | null;

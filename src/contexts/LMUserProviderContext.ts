@@ -1,6 +1,6 @@
 import React from "react";
-import { User } from "../types/models/member";
-import { Community } from "../types/models/Community";
+import { User } from "../shared/types/models/member";
+import { Community } from "../shared/types/models/community";
 
 interface UserProviderContextInterface {
   currentUser: User | null;

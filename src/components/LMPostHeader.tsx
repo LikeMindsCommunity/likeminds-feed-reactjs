@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from "react";
-import { FeedPostContext } from "../contexts/FeedPostContext";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { formatTimeAgo, getAvatar } from "../shared/utils";
-import { EDITED, POST } from "../shared/constants/app.constant";
+import { EDITED, POST } from "../shared/constants/lmAppConstant";
 
 const LMPostHeader = () => {
   const { post, users } = useContext(FeedPostContext);

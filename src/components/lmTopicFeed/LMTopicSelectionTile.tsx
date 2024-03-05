@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Checkbox } from "@mui/material";
-import { Topic } from "../../types/models/topic";
+import { Topic } from "../../shared/types/models/topic";
 
 interface LMTopicSelectionTileProps {
   topic: Topic;

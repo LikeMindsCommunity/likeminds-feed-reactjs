@@ -1,17 +1,18 @@
 import React from "react";
-import { Post } from "../types/models/post";
-import { User } from "../types/models/member";
+import { Post } from "../shared/types/models/post";
+import { User } from "../shared/types/models/member";
 
 import LMPostHeader from "./LMPostHeader";
 import LMPostBody from "./LMPostBody";
 import LMPostFooter from "./LMPostFooter";
 import LMPostTopicsWrapper from "./LMPostTopicsWrapper";
-interface PostsProps {
+
+interface LMPostsProps {
   post: Post;
   user: User | undefined;
 }
 
-const Posts: React.FC<PostsProps> = () => {
+const LMPosts: React.FC<LMPostsProps> = () => {
   return (
     <div className="lm-feed-wrapper__card lm-mb-2">
       <LMPostHeader />
@@ -22,4 +23,4 @@ const Posts: React.FC<PostsProps> = () => {
   );
 };
 
-export default Posts;
+export default LMPosts;

@@ -6,13 +6,13 @@ import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
-import { TopicsDropdownMode } from "../enums/topicFeedDropdownMode";
-import { FeedPostContext } from "../contexts/FeedPostContext";
-import { useFetchFeeds } from "../hooks/useFetchFeeds";
+import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
+import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import LMFeedDetails from "./LMFeedDetails";
-import { Post } from "../types/models/post";
-import { ROUTES } from "../shared/constants/routes.constant";
-import Posts from "./Posts";
+import { Post } from "../shared/types/models/post";
+import { ROUTES } from "../shared/constants/lmRoutesConstant";
+import Posts from "./LMPosts";
 
 interface LMFlatFeedProps {
   PostView?: React.FC;

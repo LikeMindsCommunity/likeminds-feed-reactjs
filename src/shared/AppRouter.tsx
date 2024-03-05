@@ -1,6 +1,6 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import LMAppLayout from "../App";
-import Error from "./components/Error";
+import Error from "./components/LMError";
 import LMFeed from "../components/LMFeed";
 import LMFeedDetails from "../components/LMFeedDetails";
 import { LMFeedClient } from "@likeminds.community/feed-js-beta";

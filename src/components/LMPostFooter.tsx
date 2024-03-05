@@ -1,19 +1,19 @@
 import React, { useContext } from "react";
-import { CustomAgentProviderContext } from "../contexts/CustomAgentProviderContext";
+import { CustomAgentProviderContext } from "../contexts/LMCustomAgentProviderContext";
 import { LMLikeAction } from "../shared/actions";
 import like from "../assets/images/like.svg";
 import commnent from "../assets/images/comment.svg";
 import bookmark from "../assets/images/bookmark.svg";
 import share from "../assets/images/share.svg";
-import { FeedPostContext } from "../contexts/FeedPostContext";
-import { ROUTES } from "../shared/constants/routes.constant";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
+import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import { Link } from "react-router-dom";
 import {
   COMMNENT,
   COMMNENTS,
   LIKE,
   LIKES,
-} from "../shared/constants/app.constant";
+} from "../shared/constants/lmAppConstant";
 import LMCommentsScroller from "./lmReplies/LMCommentsScroller";
 
 const LMPostFooter = () => {

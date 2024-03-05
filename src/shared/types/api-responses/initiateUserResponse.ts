@@ -1,4 +1,4 @@
-import { Community } from "../models/Community";
+import { Community } from "../models/community";
 import { User } from "../models/member";
 
 export interface InitiateUserData {

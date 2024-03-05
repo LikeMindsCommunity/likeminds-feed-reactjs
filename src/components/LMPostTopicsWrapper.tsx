@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { FeedPostContext } from "../contexts/FeedPostContext";
-import { CustomAgentProviderContext } from "../contexts/CustomAgentProviderContext";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
+import { CustomAgentProviderContext } from "../contexts/LMCustomAgentProviderContext";
 import LMFeedTopicsTile from "./lmTopicFeed/LMFeedTopicsTile";
 
 const LMPostTopicsWrapper = () => {

@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { TopicsDropdownMode } from "../../enums/topicFeedDropdownMode";
+import { TopicsDropdownMode } from "../../shared/enums/lmTopicFeedDropdownMode";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useTopicDropdown } from "../../hooks/useTopicDropdown";
+import { useTopicDropdown } from "../../hooks/useLMTopicDropdown";
 import LMTopicSelectionTile from "./LMTopicSelectionTile";
-import { Topic } from "../../types/models/topic";
+import { Topic } from "../../shared/types/models/topic";
 import { LMTopicSelectedBlock } from "./LMTopicSelectedBlock";
-import { ALL_TOPICS } from "../../shared/constants/app.constant";
+import { ALL_TOPICS } from "../../shared/constants/lmAppConstant";
 import downArrowIcon from "../../assets/images/lm-down-arrow.svg";
 import topicSearchIcon from "../../assets/images/topic-search-icon.svg";
 interface LMTopicDropdownProps {

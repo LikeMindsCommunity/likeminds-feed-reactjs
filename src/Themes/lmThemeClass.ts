@@ -1,5 +1,5 @@
-import { ThemePellete, ThemeTextSizes } from "../types/theme/Theme";
-import { Theme as ThemeObject } from "../types/theme/Theme";
+import { ThemePellete, ThemeTextSizes } from "../shared/types/theme/lmTheme";
+import { Theme as ThemeObject } from "../shared/types/theme/lmTheme";
 export class Theme {
   private defaultThemeTextSizes: ThemeTextSizes = {
     xs: 12,
