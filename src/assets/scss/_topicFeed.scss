@@ -1,3 +1,4 @@
+
 .lm-all-topic-button {
     @extend .lm-d-flex; 
     @extend .lm-align-items-center; 
@@ -53,7 +54,27 @@
         gap: 10px; 
     }
 }
- 
+
+
+// Selected Topic Feed Container
+
+.lmSelectedTopics{
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0 0 0;
+    align-items: center;
+    &__tags{
+        // @extend .lm-feed-topic-tile;
+    }
+
+    &--clear{
+        color: $primary-color;
+        font-size: 14px;
+        cursor: pointer;
+    }
+}
+
+
 .lm-feed-topic-tile {
     padding: pxToRem(2) pxToRem(8) pxToRem(2) pxToRem(8);
     border-radius: pxToRem(4);
