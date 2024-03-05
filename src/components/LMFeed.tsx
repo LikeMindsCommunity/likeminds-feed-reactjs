@@ -1,13 +1,16 @@
-import { PropsWithChildren, CSSProperties } from "react";
+import { PropsWithChildren } from "react";
 import { Theme } from "../Themes/ThemeClass";
 import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
 import { LMClient } from "../types/DataLayerExportsTypes";
 import ThemeProviderContext from "../contexts/ThemeProviderContext";
 import UserProviderContext from "../contexts/UserProviderContext";
 import useUserProvider from "../hooks/useUserProvider";
-import { CustomAgentProviderContext } from "../contexts/CustomAgentProviderContext";
+import {
+  CustomAgentProviderContext,
+  CustomAgentProviderInterface,
+} from "../contexts/CustomAgentProviderContext";
 
-export interface LMFeedProps<T> {
+export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   theme?: Theme;
   showMember?: boolean;
@@ -15,8 +18,6 @@ export interface LMFeedProps<T> {
     base?: string;
     postDetails?: string;
   };
-  likeActionCall?: () => void;
-  topicBlocksWrapperStyles?: CSSProperties;
 }
 
 function LMFeed({
@@ -25,6 +26,7 @@ function LMFeed({
   client,
   likeActionCall,
   topicBlocksWrapperStyles,
+  LMPostHeaderStyles,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider("testUser1", false, "testUser1", client);
@@ -46,6 +48,7 @@ function LMFeed({
           value={{
             likeActionCall: likeActionCall,
             topicBlocksWrapperStyles,
+            LMPostHeaderStyles,
           }}
         >
           <UserProviderContext.Provider
