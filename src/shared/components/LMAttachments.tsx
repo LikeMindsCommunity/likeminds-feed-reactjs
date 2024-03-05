@@ -1,9 +1,9 @@
 import React from "react";
 import Slider from "react-slick";
-import { Attachment as AttachmentType } from "../../types/models/attachment";
+import { Attachment as AttachmentType } from "../types/models/attachment";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import PDFViewer from "./PDFViewer";
+import PDFViewer from "./LMPDFViewer";
 
 interface AttachmentProps {
   attachments: AttachmentType[];

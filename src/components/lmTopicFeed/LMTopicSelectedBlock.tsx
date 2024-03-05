@@ -1,4 +1,4 @@
-import { Topic } from "../../types/models/topic";
+import { Topic } from "../../shared/types/models/topic";
 import lmCancelIcon from "../../assets/images/topic-delete-icon.svg";
 interface TopicBlockProps {
   topic: Topic;

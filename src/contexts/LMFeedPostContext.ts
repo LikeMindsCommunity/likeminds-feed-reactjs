@@ -1,8 +1,8 @@
 import React from "react";
-import { Post } from "../types/models/post";
-import { Topic } from "../types/models/topic";
-import { User } from "../types/models/member";
-import { Reply } from "../types/models/replies";
+import { Post } from "../shared/types/models/post";
+import { Topic } from "../shared/types/models/topic";
+import { User } from "../shared/types/models/member";
+import { Reply } from "../shared/types/models/replies";
 
 export const FeedPostContext = React.createContext<FeedPostContextInterface>({
   post: null,

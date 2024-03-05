@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ReplyContext } from "../../contexts/ReplyContext";
+import { ReplyContext } from "../../contexts/LMReplyContext";
 import { timeFromNow } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
 // import commnentIcon from "../../assets/images/comment.svg";

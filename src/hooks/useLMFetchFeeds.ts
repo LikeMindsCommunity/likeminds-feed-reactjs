@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Post } from "../types/models/post";
-import { User } from "../types/models/member";
-import { GetUniversalFeedResponse } from "../types/api-responses/getUniversalFeed";
-import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
+import { Post } from "../shared/types/models/post";
+import { User } from "../shared/types/models/member";
+import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
+import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
 import { GetFeedRequest } from "@likeminds.community/feed-js-beta";
-import { Topic } from "../types/models/topic";
+import { Topic } from "../shared/types/models/topic";
 
 interface useFetchFeedsResponse {
   topics: Record<string, Topic>;

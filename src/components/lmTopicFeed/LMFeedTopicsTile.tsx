@@ -1,5 +1,5 @@
 import React from "react";
-import { Topic } from "../../types/models/topic";
+import { Topic } from "../../shared/types/models/topic";
 
 interface LMFeedTopicTileInterface {
   topic: Topic;

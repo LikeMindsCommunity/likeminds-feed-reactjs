@@ -1,11 +1,11 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { User } from "../types/models/member";
-import { Post } from "../types/models/post";
-import { Reply } from "../types/models/replies";
-import { GetPostDetailsResponse } from "../types/api-responses/getPostDetailsResponse";
-import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
+import { User } from "../shared/types/models/member";
+import { Post } from "../shared/types/models/post";
+import { Reply } from "../shared/types/models/replies";
+import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDetailsResponse";
+import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
 import { GetPostRequest } from "@likeminds.community/feed-js-beta";
-import { Topic } from "../types/models/topic";
+import { Topic } from "../shared/types/models/topic";
 
 interface UseFeedDetailsInterface {
   post: Post | null;

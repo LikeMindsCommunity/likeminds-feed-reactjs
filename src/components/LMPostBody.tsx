@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { parseAndReplaceTags } from "../shared/taggingParser";
-import { FeedPostContext } from "../contexts/FeedPostContext";
-import Attachment from "../shared/components/Attachments";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
+import Attachment from "../shared/components/LMAttachments";
 
 const LMPostBody = () => {
   const { post } = useContext(FeedPostContext);

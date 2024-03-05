@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { User } from "../types/models/member";
-import { Reply } from "../types/models/replies";
-import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
-import { GetCommentDetailsResponse } from "../types/api-responses/getCommentDetailsResponse";
+import { User } from "../shared/types/models/member";
+import { Reply } from "../shared/types/models/replies";
+import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
+import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
 import { GetCommentRequest } from "@likeminds.community/feed-js-beta";
 
 interface UseReplyInterface {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { InitiateUserRequest } from "@likeminds.community/feed-js-beta";
-import { InitiateUserResponse } from "../types/api-responses/initiateUserResponse";
-import { GetMemberStateResponse } from "../types/api-responses/getMemberStateResponse";
-import { User } from "../types/models/member";
-import { Community } from "../types/models/Community";
-import { LMClient } from "../types/DataLayerExportsTypes";
+import { InitiateUserResponse } from "../shared/types/api-responses/initiateUserResponse";
+import { GetMemberStateResponse } from "../shared/types/api-responses/getMemberStateResponse";
+import { User } from "../shared/types/models/member";
+import { Community } from "../shared/types/models/community";
+import { LMClient } from "../shared/types/dataLayerExportsTypes";
 
 interface UserProviderInterface {
   lmFeedUser: User | null;

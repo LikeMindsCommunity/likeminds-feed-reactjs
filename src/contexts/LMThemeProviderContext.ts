@@ -1,5 +1,5 @@
 import React from "react";
-import { Theme } from "../Themes/ThemeClass";
+import { Theme } from "../Themes/lmThemeClass";
 interface ThemeProviderContextInterface {
   themeObject: Theme | null;
 }

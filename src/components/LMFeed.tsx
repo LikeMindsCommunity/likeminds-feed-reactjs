@@ -1,11 +1,11 @@
 import { PropsWithChildren, CSSProperties } from "react";
-import { Theme } from "../Themes/ThemeClass";
-import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
-import { LMClient } from "../types/DataLayerExportsTypes";
-import ThemeProviderContext from "../contexts/ThemeProviderContext";
-import UserProviderContext from "../contexts/UserProviderContext";
-import useUserProvider from "../hooks/useUserProvider";
-import { CustomAgentProviderContext } from "../contexts/CustomAgentProviderContext";
+import { Theme } from "../Themes/lmThemeClass";
+import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
+import { LMClient } from "../shared/types/dataLayerExportsTypes";
+import ThemeProviderContext from "../contexts/LMThemeProviderContext";
+import UserProviderContext from "../contexts/LMUserProviderContext";
+import useUserProvider from "../hooks/useLMUserProvider";
+import { CustomAgentProviderContext } from "../contexts/LMCustomAgentProviderContext";
 
 export interface LMFeedProps<T> {
   client: T;

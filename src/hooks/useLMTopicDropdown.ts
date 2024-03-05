@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Topic } from "../types/models/topic";
-import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
+import { Topic } from "../shared/types/models/topic";
+import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
 import { GetTopicsRequest } from "@likeminds.community/feed-js-beta";
-import { GetTopicsResponse } from "../types/api-responses/getTopicsResponse";
+import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
   setCurrentSelectedTopicIds?: React.Dispatch<string[]>,

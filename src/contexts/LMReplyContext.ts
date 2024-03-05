@@ -1,6 +1,6 @@
 import React from "react";
-import { Reply } from "../types/models/replies";
-import { User } from "../types/models/member";
+import { Reply } from "../shared/types/models/replies";
+import { User } from "../shared/types/models/member";
 
 export const ReplyContext = React.createContext<ReplyContextInterface>({
   reply: null,

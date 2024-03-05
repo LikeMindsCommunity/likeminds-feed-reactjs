@@ -3,7 +3,7 @@ import "./assets/scss/styles.scss";
 
 import LMFeed from "./components/LMFeed";
 import LMFlatFeed from "./components/LMFlatFeed";
-import { LM_APP_CONFIG } from "./shared/constants/app.constant";
+import { LM_APP_CONFIG } from "./shared/constants/lmAppConstant";
 import { LMLikeAction } from "./shared/actions";
 
 function LMAppLayout() {
