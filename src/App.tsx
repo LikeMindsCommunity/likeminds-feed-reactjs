@@ -1,16 +1,11 @@
 import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import "./assets/scss/styles.scss";
-
+import "./App.css";
 import LMFeed from "./components/LMFeed";
-import LMFlatFeed from "./components/LMFlatFeed";
-import { LM_APP_CONFIG } from "./shared/constants/app.constant";
-import { LMLikeAction } from "./shared/actions";
+import LMFeedUniversalFeed from "./components/LMFeedFlatFeed";
+import { LM_APP_CONFIG } from "./shared/constants/lmAppConstant";
 
 function LMAppLayout() {
-  function customCallbackforlike() {
-    LMLikeAction();
-    alert("Anshul Chutiya h");
-  }
   const client = LMFeedClient.Builder()
     .setApiKey(LM_APP_CONFIG.API_KEY)
     .setPlatformCode(LM_APP_CONFIG.PLATFORM_CODE)
@@ -23,9 +18,14 @@ function LMAppLayout() {
         justifyContent: "flex-end",
       }}
       client={client}
-      likeActionCall={customCallbackforlike}
+      LMPostFooterStyles={{
+        likesCountStyles: {
+          color: "green",
+        },
+        likeButtonCustom: () => <></>,
+      }}
     >
-      <LMFlatFeed />
+      <LMFeedUniversalFeed />
     </LMFeed>
   );
 }

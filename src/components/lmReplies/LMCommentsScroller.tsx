@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { FeedPostContext } from "../../contexts/FeedPostContext";
+import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Reply } from "../../types/models/replies";
-import { ReplyContext } from "../../contexts/ReplyContext";
+import { Reply } from "../../shared/types/models/replies";
+import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import LMReply from "./LMReply";
 
 const LMCommentsScroller = () => {

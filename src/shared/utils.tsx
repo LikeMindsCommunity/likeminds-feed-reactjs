@@ -1,6 +1,6 @@
-import { AvatarProps } from "../types/models/AvatarProps";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+import { AvatarProps } from "./types/models/avatarProps";
 dayjs.extend(relativeTime);
 // Function to extract initials from a name
 const getInitials = (name: string): string => {

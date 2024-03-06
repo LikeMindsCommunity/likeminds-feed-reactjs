@@ -1,14 +1,14 @@
 import { PropsWithChildren } from "react";
-import { Theme } from "../Themes/ThemeClass";
-import GlobalClientProviderContext from "../contexts/GlobalClientProviderContext";
-import { LMClient } from "../types/DataLayerExportsTypes";
-import ThemeProviderContext from "../contexts/ThemeProviderContext";
-import UserProviderContext from "../contexts/UserProviderContext";
-import useUserProvider from "../hooks/useUserProvider";
+import { Theme } from "../Themes/lmThemeClass";
+import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import { LMClient } from "../shared/types/dataLayerExportsTypes";
+import ThemeProviderContext from "../contexts/LMFeedThemeProviderContext";
+import UserProviderContext from "../contexts/LMFeedUserProviderContext";
+import useUserProvider from "../hooks/useLMUserProvider";
 import {
   CustomAgentProviderContext,
   CustomAgentProviderInterface,
-} from "../contexts/CustomAgentProviderContext";
+} from "../contexts/LMFeedCustomAgentProviderContext";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -27,6 +27,7 @@ function LMFeed({
   likeActionCall,
   topicBlocksWrapperStyles,
   LMPostHeaderStyles,
+  LMPostFooterStyles,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider("testUser1", false, "testUser1", client);
@@ -49,6 +50,7 @@ function LMFeed({
             likeActionCall: likeActionCall,
             topicBlocksWrapperStyles,
             LMPostHeaderStyles,
+            LMPostFooterStyles,
           }}
         >
           <UserProviderContext.Provider

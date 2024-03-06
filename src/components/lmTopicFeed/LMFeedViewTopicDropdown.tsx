@@ -1,21 +1,23 @@
 import React, { useMemo, useState } from "react";
-import { TopicsDropdownMode } from "../../enums/topicFeedDropdownMode";
+import { TopicsDropdownMode } from "../../shared/enums/lmTopicFeedDropdownMode";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useTopicDropdown } from "../../hooks/useTopicDropdown";
-import LMTopicSelectionTile from "./LMTopicSelectionTile";
-import { Topic } from "../../types/models/topic";
-import { LMTopicSelectedBlock } from "./LMTopicSelectedBlock";
-import { ALL_TOPICS } from "../../shared/constants/app.constant";
+import { useTopicDropdown } from "../../hooks/useLMTopicDropdown";
+import LMFeedTopicSelectionTile from "./LMFeedTopicSelectionTile";
+import { Topic } from "../../shared/types/models/topic";
+import { LMFeedTopicSelectedBlock } from "./LMFeedTopicSelectedBlock";
+import { ALL_TOPICS } from "../../shared/constants/lmAppConstant";
 import downArrowIcon from "../../assets/images/lm-down-arrow.svg";
 import topicSearchIcon from "../../assets/images/topic-search-icon.svg";
-interface LMTopicDropdownProps {
+interface LMFeedTopicDropdownProps {
   // view for topic view && modify for creating or editing post
   mode: TopicsDropdownMode;
 }
 
-const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
+const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
+  mode,
+}) => {
   // using the useTopicHook to get all the required data.
   const {
     checkedTopics,
@@ -75,7 +77,7 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
           role="option"
           key={topic.Id}
         >
-          <LMTopicSelectionTile
+          <LMFeedTopicSelectionTile
             clickHandler={updateCheckedTopics}
             topic={topic}
             checkedList={checkedTopics}
@@ -139,7 +141,7 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
                   role="option"
                   key={Math.random()}
                 >
-                  <LMTopicSelectionTile
+                  <LMFeedTopicSelectionTile
                     clickHandler={updateCheckedTopics}
                     topic={{
                       Id: Math.random().toString(),
@@ -158,11 +160,11 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
       }
       case false: {
         return (
-          <div className="lm-display-selected-topics-container">
-            <div className="lm-topic-tags-container">
+          <div className="lmSelectedTopics">
+            <div className="lmSelectedTopics__tags">
               {checkedTopics.map((topic: Topic) => {
                 return (
-                  <LMTopicSelectedBlock
+                  <LMFeedTopicSelectedBlock
                     onDeleteClick={updateCheckedTopics}
                     key={topic.Id}
                     topic={topic}
@@ -171,10 +173,10 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
               })}
             </div>
             <div
-              className="lm-topics-clear-button"
+              className="lmSelectedTopics--clear"
               onClick={clearAllCheckedTopics}
             >
-              <span>Clear</span>
+              Clear
             </div>
           </div>
         );
@@ -279,7 +281,7 @@ const LMFeedViewTopicDropdown: React.FC<LMTopicDropdownProps> = ({ mode }) => {
             <div className="lm-topic-tags-container">
               {checkedTopics.map((topic) => {
                 return (
-                  <LMTopicSelectedBlock
+                  <LMFeedTopicSelectedBlock
                     isCreateMode={true}
                     onDeleteClick={updateCheckedTopics}
                     key={topic.Id}

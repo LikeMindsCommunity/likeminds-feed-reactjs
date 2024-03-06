@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
-import { useFeedDetails } from "../hooks/useFeedDetails";
-import Posts from "./Posts";
-import { FeedPostContext } from "../contexts/FeedPostContext";
+import { useFeedDetails } from "../hooks/useLMFeedDetails";
+import Posts from "./LMFeedPosts";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { Helmet } from "react-helmet-async";
 import lmBack from "../assets/images/lm-back.svg";
 

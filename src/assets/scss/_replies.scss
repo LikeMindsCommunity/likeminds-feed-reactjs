@@ -24,27 +24,23 @@
         &__userMeta{ 
             display: flex;
 
-            &__image{
+            &__content{ 
 
-            }
-
-            &__content{
-                background-color: #f3f5fa;
-                padding: pxToRem(12);
-                border-radius: pxToRem(16);
-                width: pxToRem(255);
-                &--title{
+                &--name{
                     font-size: pxToRem(14);
                     font-weight: 500;
                     line-height: pxToRem(20);
-                    color: $dark-color;
+                    color: #222020;
+                    text-transform: capitalize;
                 }
-                &--replyText{
-                    color: $dark-color;
+                
+                &--title{
                     font-size: pxToRem(14);
                     font-weight: 400;
-                    line-height: pxToRem(20);
+                    color: #222020;
+                    line-height: pxToRem(20); 
                 }
+                
             }
 
             .like{
@@ -53,6 +49,25 @@
                 line-height: pxToRem(16);
                 color: #a3b2bd;
                 gap: pxToRem(10);
+ 
+                .replies {
+                    font-size: pxToRem(12);
+                    color: $primary-color;
+                    font-weight: 400;
+                    line-height: pxToRem(16);
+                    margin: 0 0 0 pxToRem(8);
+                    padding: 0 0 0 pxToRem(8);
+                }
+
+                .replies::before {
+                    content: "\2022";
+                    color: $secondary-color;
+                    font-size: pxToRem(20);
+                    position: absolute;
+                    margin: pxToRem(1) 0 0 -12px;
+                    height: pxToRem(2);
+                    width: pxToRem(2);
+                }
             }
         }
     }

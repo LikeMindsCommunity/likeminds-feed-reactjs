@@ -1,4 +1,6 @@
 export const LMLikeAction = () => {
-  console.log("hello");
   alert("The post has been liked");
+};
+export const LMCommentAction = () => {
+  alert("Comment Action Triggered");
 };
