@@ -70,7 +70,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
           <Route
             path={ROUTES.ROOT_PATH}
             element={
-              <div>
+              <div className="lm-d-flex lm-flex-direction lm-feed">
                 {/* Topics */}
                 <div className="lm-mb-4">
                   <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
