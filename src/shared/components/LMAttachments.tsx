@@ -1,11 +1,10 @@
 import React from "react";
 import Slider from "react-slick";
 import { Attachment as AttachmentType } from "../types/models/attachment";
+import { formatFileSize, truncateString } from "../utils";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { truncateString } from "../utils";
-// import PdfThumbnail from "./LMPDFThumbnail";
-// import PDFViewer from "./LMPDFViewer";
+import pdfIcon from "../../assets/images/pdf-icon.svg";
 
 interface AttachmentProps {
   attachments: AttachmentType[];
@@ -51,13 +50,13 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
 }) => {
   // Render attachment based on attachmentType
   const { attachmentMeta, attachmentType } = attachment;
-  const { name, url, ogTags } = attachmentMeta;
-  console.log(attachmentMeta);
+  const { name, url, size, ogTags } = attachmentMeta;
+
   switch (attachmentType) {
     case 1: // Image
       return (
-        <div>
-          <img loading="lazy" width="576" height="324" src={url} alt={name} />
+        <div className="attachment-image">
+          <img loading="lazy" src={url} alt={name} />
         </div>
       );
     case 2: // Video
@@ -71,9 +70,36 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
       );
     case 3: // PDF
       return (
-        <div className="attachment-pdf">
-          {/* <PdfThumbnail pdfUrl="https://beta-likeminds-media.s3.ap-south-1.amazonaws.com/files/post/0e53748a-969b-44c6-b8fa-a4c8e1eb1208/16D769E6-D6F4-424B-B69E-B754EA29C842-3586-00000097F7862420.pdf" /> */}
-          <iframe src={url} title={name} width="100%" height="500px"></iframe>
+        <div className="attachmentPdf">
+          <object
+            data={url}
+            type="application/pdf"
+            className="attachmentPdf__pdfViewer"
+          >
+            <p>
+              Alternative text - include a link <a href={url}>to the PDF!</a>
+            </p>
+          </object>
+
+          <div className="attachmentPdf__content">
+            <img
+              src={pdfIcon}
+              alt="pdf"
+              className="attachmentOGTag__content--icon"
+            />
+            <div>
+              <a
+                className="attachmentPdf__content--title"
+                target="_blank"
+                href={url}
+              >
+                {name}
+              </a>
+              <div className="attachmentPdf__content--url">
+                {formatFileSize(size)}
+              </div>
+            </div>
+          </div>
         </div>
       );
     case 4: // OG Tags

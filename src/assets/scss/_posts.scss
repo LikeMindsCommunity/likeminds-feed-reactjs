@@ -100,6 +100,11 @@
             object-fit: contain;
           }
         }
+        .attachment-image{
+          width: 100%;
+          background-color: #000000;
+           
+        }
         .attachment-video{
           width: 100%;
           background-color: #000000;
@@ -110,15 +115,55 @@
             object-fit: contain;
           }
         }
-        .attachment-pdf{
+        .attachmentPdf{
           width: 100%;
-          // background-color: #000000;
-          
-          PDFViewer{
+          background-color: #fff;
+          border-radius: 8px;
+          border: 1px solid $bg-color;
+          max-width: 544px;
+          width: 100%;
+          margin: 0 auto;
+          overflow: hidden;
+
+          &__pdfViewer{
             width: 100%;
-            height: auto;
-            max-height: pxToRem(310);
-            object-fit: contain;
+            height: 250px;
+          } 
+
+          &__content {
+            padding: 1rem;
+            border-top: 1px solid $bg-color;
+            display: flex;
+            gap:10px;
+
+            img{
+              width: 40px !important;
+            }
+
+            &--icon {
+              width: 40px;
+            }
+            &--title {
+              font-size: 16px;
+              font-weight: 500;
+              color: $dark-color;
+              line-height: 20px;
+              cursor: pointer;
+            }
+
+            &--desc {
+              font-size: 14px;
+              font-weight: 400;
+              color: $secondary-color;
+              line-height: 20px;
+            }
+
+            &--url {
+              font-size: 12px;
+              font-weight: 400;
+              color: $secondary-color;
+              line-height: 20px;
+            }
           }
         }
         .attachmentOGTag{
