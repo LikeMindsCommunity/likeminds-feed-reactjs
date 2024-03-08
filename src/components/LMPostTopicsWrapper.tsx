@@ -14,7 +14,7 @@ const LMPostTopicsWrapper = () => {
         style={topicBlocksWrapperStyles}
       >
         {topics.map((topicId: string) => {
-          return <LMFeedTopicsTile topic={topicsMap![topicId]} />;
+          return <LMFeedTopicsTile topic={topicsMap![topicId]} key={topicId}/>;
         })}
       </div>
     </>

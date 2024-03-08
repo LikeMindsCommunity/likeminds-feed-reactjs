@@ -9,5 +9,5 @@ export const EDITED = "edited";
 export const LIKE = "like";
 export const LIKES = "likes";
 export const COMMNENT = "comment";
-export const ALL_TOPICS = "all topics";
 export const COMMNENTS = "comments";
+export const ALL_TOPICS = "all topics";

@@ -3,7 +3,9 @@ import Slider from "react-slick";
 import { Attachment as AttachmentType } from "../types/models/attachment";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import PDFViewer from "./LMPDFViewer";
+import { truncateString } from "../utils";
+// import PdfThumbnail from "./LMPDFThumbnail";
+// import PDFViewer from "./LMPDFViewer";
 
 interface AttachmentProps {
   attachments: AttachmentType[];
@@ -49,8 +51,8 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
 }) => {
   // Render attachment based on attachmentType
   const { attachmentMeta, attachmentType } = attachment;
-  const { name, url } = attachmentMeta;
-
+  const { name, url, ogTags } = attachmentMeta;
+  console.log(attachmentMeta);
   switch (attachmentType) {
     case 1: // Image
       return (
@@ -70,8 +72,31 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
     case 3: // PDF
       return (
         <div className="attachment-pdf">
-          <PDFViewer pdfUrl={url} />
-          {/* <iframe src={url} title={name} width="100%" height="500px"></iframe> */}
+          {/* <PdfThumbnail pdfUrl="https://beta-likeminds-media.s3.ap-south-1.amazonaws.com/files/post/0e53748a-969b-44c6-b8fa-a4c8e1eb1208/16D769E6-D6F4-424B-B69E-B754EA29C842-3586-00000097F7862420.pdf" /> */}
+          <iframe src={url} title={name} width="100%" height="500px"></iframe>
+        </div>
+      );
+    case 4: // OG Tags
+      return (
+        <div className="attachmentOGTag">
+          {ogTags?.image ? (
+            <img
+              src={ogTags.image}
+              alt="og tag image"
+              className="attachmentOGTag__img"
+            />
+          ) : (
+            <div className="attachmentOGTag__noImg">{ogTags?.url}</div>
+          )}
+          <div className="attachmentOGTag__content">
+            <a href={ogTags.url} target="_blank">
+              {truncateString(ogTags?.title, 100)}
+            </a>
+            <div className="attachmentOGTag__content--desc">
+              {truncateString(ogTags?.description, 300)}
+            </div>
+            <div className="attachmentOGTag__content--url">{ogTags?.url}</div>
+          </div>
         </div>
       );
     default:
