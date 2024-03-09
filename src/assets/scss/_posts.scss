@@ -16,7 +16,9 @@
     background: $light-color;
     border-radius: pxToRem(8);
     overflow: hidden;
-
+    max-width: 576px;
+    margin: 0 auto 0.5rem; 
+    
     &__topic-view-wrapper {
       display: flex;
       flex-wrap: wrap;
@@ -87,7 +89,7 @@
 
         .attachments{
           width: 100%;
-          background-color: #fff;
+          background-color: $light-color;
           img {
             width: 100%;
             height: auto;
@@ -97,12 +99,12 @@
         }
         .attachment-image{
           width: 100%;
-          background-color: #000000;
+          background-color: $black-color;
            
         }
         .attachment-video{
           width: 100%;
-          background-color: #000000;
+          background-color: $black-color;
           video {
             width: 100%;
             height: auto;
@@ -113,41 +115,41 @@
         .attachmentPdf{
           width: 100%;
           background-color: #fff;
-          border-radius: 8px;
+          border-radius: pxToRem(8);
           border: 1px solid $bg-color;
-          max-width: 544px;
+          max-width: pxToRem(544);
           width: 100%;
           margin: 0 auto;
           overflow: hidden;
 
           &__pdfViewer{
             width: 100%;
-            height: 250px;
+            height: pxToRem(250);
           } 
 
           &__content {
             padding: 1rem;
             border-top: 1px solid $bg-color;
             display: flex;
-            gap:10px;
+            gap:pxToRem(10);
 
             img{
-              width: 40px !important;
+              width: pxToRem(40) !important;
             }
 
             &--icon {
-              width: 40px;
+              width: pxToRem(40);
             }
             &--title {
-              font-size: 16px;
+              font-size: pxToRem(16);
               font-weight: 500;
               color: $dark-color;
-              line-height: 20px;
+              line-height: pxToRem(20);
               cursor: pointer;
             }
 
             &--desc {
-              font-size: 14px;
+              font-size: pxToRem(14);
               font-weight: 400;
               color: $secondary-color;
               line-height: 20px;
@@ -157,16 +159,16 @@
               font-size: 12px;
               font-weight: 400;
               color: $secondary-color;
-              line-height: 20px;
+              line-height: pxToRem(20);
             }
           }
         }
         .attachmentOGTag{
           width: 100%;
-          background-color: #fff;
-          border-radius: 8px;
+          background-color: $light-color;
+          border-radius: pxToRem(8);
           border: 1px solid $bg-color;
-          max-width: 544px;
+          max-width: pxToRem(544);
           width: 100%;
           margin: 0 auto;
           overflow: hidden;
@@ -181,31 +183,31 @@
             align-items: center;
             background-color: #E5F3F2;
             color: #00897B;
-            height: 215px;
+            height: pxToRem(215);
           }
           &__content{
             padding: 1rem;
             border-top: 1px solid $bg-color;
 
             a{
-              font-size: 16px;
+              font-size: pxToRem(16);
               font-weight: 500;
               color: $dark-color;
-              line-height: 20px;
+              line-height: pxToRem(20);
               cursor: pointer;
             }
 
             &--desc{
-              font-size: 14px;
+              font-size: pxToRem(14);
                 font-weight: 400;
                 color: $secondary-color;
-                line-height: 20px;
+                line-height: pxToRem(20);
             }
             &--url{
-              font-size: 12px;
+              font-size: pxToRem(12);
                 font-weight: 400;
                 color: $secondary-color;
-                line-height: 20px;
+                line-height: pxToRem(20);
             }
           }
         }
