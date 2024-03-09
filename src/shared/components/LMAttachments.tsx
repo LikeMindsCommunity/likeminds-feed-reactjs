@@ -13,7 +13,7 @@ interface AttachmentProps {
 const Attachment: React.FC<AttachmentProps> = ({ attachments }) => {
   // Configure settings for react-slick carousel
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
