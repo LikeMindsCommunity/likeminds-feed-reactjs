@@ -28,7 +28,6 @@ export function useTopicDropdown(
   //   function to load the next page of the topics
   const getNextPage = async () => {
     try {
-      console.log("here");
       const getTopicsCall: GetTopicsResponse = (await lmFeedclient?.getTopics(
         GetTopicsRequest.builder()
           .setPage(currentPageCount)
@@ -75,23 +74,19 @@ export function useTopicDropdown(
 
   // TODO update the logic for finding index and checking the topics
   const updateCheckedTopics = (arg: Topic) => {
-    console.log(arg);
     const isTopicAlreadyChecked = checkedTopics.some((topic: Topic) => {
       return topic.Id === arg.Id;
     });
-    console.log(isTopicAlreadyChecked);
     if (isTopicAlreadyChecked) {
       const index = checkedTopics.findIndex((topic: Topic) => {
         return topic.Id === arg.Id;
       });
-      console.log(index);
       const newCheckedTopics = [...checkedTopics];
       newCheckedTopics.splice(index, 1);
       setCheckedTopics(newCheckedTopics);
     } else {
       const newCheckedTopics = [...checkedTopics];
       newCheckedTopics.push(arg);
-      console.log(newCheckedTopics);
       setCheckedTopics(newCheckedTopics);
     }
   };

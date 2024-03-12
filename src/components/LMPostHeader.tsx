@@ -1,7 +1,8 @@
 import React, { useContext, useMemo } from "react";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { formatTimeAgo, getAvatar } from "../shared/utils";
+import { formatTimeAgo } from "../shared/utils";
 import { EDITED, POST } from "../shared/constants/lmAppConstant";
+import { getAvatar } from "../shared/components/LMUserMedia";
 
 const LMPostHeader = () => {
   const { post, users } = useContext(FeedPostContext);
@@ -10,8 +11,9 @@ const LMPostHeader = () => {
     () => users![post!.uuid],
     [post, users],
   );
-  // Determine the avatar content based on imageUrl and name
+
   const avatarContent = getAvatar({ imageUrl, name });
+
   return (
     <>
       <div className="lm-feed-wrapper__card__header">
@@ -22,11 +24,17 @@ const LMPostHeader = () => {
               {name} {customTitle ? <span>{customTitle}</span> : null}
             </div>
             <div className="lm-feed-wrapper__card__header--text">
-              {POST}
-              <span>{formatTimeAgo(createdAt)}</span>
               {isEdited ? (
-                <span className="lm-primary-text">{EDITED}</span>
-              ) : null}
+                <>
+                  <span className="edited">{formatTimeAgo(createdAt)}</span>
+                  <span className="lm-primary-text">{EDITED}</span>
+                </>
+              ) : (
+                <>
+                  {POST}
+                  <span>{formatTimeAgo(createdAt)}</span>
+                </>
+              )}
             </div>
           </div>
         </div>

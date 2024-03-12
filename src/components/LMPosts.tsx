@@ -14,7 +14,7 @@ interface LMPostsProps {
 
 const LMPosts: React.FC<LMPostsProps> = () => {
   return (
-    <div className="lm-feed-wrapper__card lm-mb-2">
+    <div className="lm-feed-wrapper__card">
       <LMPostHeader />
       <LMPostTopicsWrapper />
       <LMPostBody />
