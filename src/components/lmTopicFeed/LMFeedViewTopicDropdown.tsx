@@ -10,13 +10,18 @@ import { LMFeedTopicSelectedBlock } from "./LMFeedTopicSelectedBlock";
 import { ALL_TOPICS } from "../../shared/constants/lmAppConstant";
 import downArrowIcon from "../../assets/images/lm-down-arrow.svg";
 import topicSearchIcon from "../../assets/images/topic-search-icon.svg";
+
 interface LMFeedTopicDropdownProps {
   // view for topic view && modify for creating or editing post
   mode: TopicsDropdownMode;
+  selectedTopic?: string[];
+  setSelectedTopics?: React.Dispatch<string[]>;
 }
 
 const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
   mode,
+
+  setSelectedTopics,
 }) => {
   // using the useTopicHook to get all the required data.
   const {
@@ -28,7 +33,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     setSearchKey,
     updateCheckedTopics,
     clearAllCheckedTopics,
-  } = useTopicDropdown();
+  } = useTopicDropdown(undefined, setSelectedTopics);
 
   // state to handle the view || setting it to true will render a view for selection topics.
   const [isTopicSelectionMode, setIsTopicSelectionMode] =
@@ -49,6 +54,10 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     if (checkedTopics.length) {
       setIsTopicSelectionMode(false);
     }
+    console.log(checkedTopics);
+    setSelectedTopics
+      ? setSelectedTopics(checkedTopics.map((topic) => topic.Id))
+      : null;
     setTopicMenuAnchor(null);
   };
 
@@ -165,7 +174,12 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
               {checkedTopics.map((topic: Topic) => {
                 return (
                   <LMFeedTopicSelectedBlock
-                    onDeleteClick={updateCheckedTopics}
+                    onDeleteClick={() => {
+                      updateCheckedTopics(topic);
+                      if (checkedTopics.length === 1) {
+                        setIsTopicSelectionMode(true);
+                      }
+                    }}
                     key={topic.Id}
                     topic={topic}
                   />
@@ -174,7 +188,10 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
             </div>
             <div
               className="lmSelectedTopics--clear"
-              onClick={clearAllCheckedTopics}
+              onClick={() => {
+                clearAllCheckedTopics();
+                setIsTopicSelectionMode(true);
+              }}
             >
               Clear
             </div>

@@ -2,23 +2,18 @@
 // Base component for setting Feed List.
 
 import { useCallback } from "react";
-import {
-  BrowserRouter,
-  Link,
-  Route,
-  Routes,
-  useParams,
-} from "react-router-dom";
+
 import InfiniteScroll from "react-infinite-scroll-component";
-import { HelmetProvider } from "react-helmet-async";
+
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
-import LMFeedDetails from "./LMFeedDetails";
+
 import { Post } from "../shared/types/models/post";
-import { ROUTES } from "../shared/constants/lmRoutesConstant";
+
 import Posts from "./LMFeedPosts";
+import { useParams } from "react-router-dom";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -28,7 +23,9 @@ interface LMFeedUniversalFeedProps {
   likeActionCall?: () => void;
 }
 
-const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
+const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
+  const params = useParams();
+  console.log(params);
   const {
     PostView = null,
     Shimmer = null,
@@ -44,7 +41,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     feedList,
     feedUsersList,
     getNextPage,
-  } = useFetchFeeds();
+  } = useFetchFeeds(params.topicId ? params.topicId : undefined);
 
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
@@ -73,13 +70,14 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     <div className="lm-feed-wrapper">
       <div>
         {/* Topics */}
-        <div className="lm-mb-4">
+        {/* <div className="lm-mb-4">
           <LMFeedViewTopicDropdown
             mode={TopicsDropdownMode.view}
             selectedTopic={selectedTopics}
             setSelectedTopics={setSelectedTopics}
           />
-        </div>
+        </div> */}
+        {/* Commented for the topic feed view page */}
         {/* Topics */}
 
         {/* Posts */}
@@ -98,4 +96,4 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
   );
 };
 
-export default LMFeedUniversalFeed;
+export default LMFeedTopicFlatFeed;

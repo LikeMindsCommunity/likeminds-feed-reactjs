@@ -5,7 +5,7 @@ import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderC
 import { GetTopicsRequest } from "@likeminds.community/feed-js-beta";
 import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
 export function useTopicDropdown(
-  currentSelectedTopicIds?: string[],
+  currentSelectedTopicIds?: string,
   setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
 ): useTopicDropdownResponse {
   // Getting an instance of the client
@@ -91,7 +91,7 @@ export function useTopicDropdown(
     } else {
       const newCheckedTopics = [...checkedTopics];
       newCheckedTopics.push(arg);
-      console.log(newCheckedTopics);
+
       setCheckedTopics(newCheckedTopics);
     }
   };
@@ -104,6 +104,13 @@ export function useTopicDropdown(
   useEffect(() => {
     loadTopics();
   }, [loadTopics, searchKey]);
+
+  // update the checkedTopics on useFeed hooks
+  useEffect(() => {
+    setCurrentSelectedTopicIds
+      ? setCurrentSelectedTopicIds(checkedTopics.map((topic) => topic.Id))
+      : null;
+  }, [checkedTopics, setCurrentSelectedTopicIds]);
 
   return {
     checkedTopics,

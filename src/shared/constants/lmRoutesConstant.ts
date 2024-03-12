@@ -3,4 +3,5 @@ export const ROUTES = {
   POST: "/post",
   POST_DETAIL: "/post/:id",
   PAGE_NOT_FOUND_PATH: "404",
+  TOPIC: "/topic/:topicId",
 };

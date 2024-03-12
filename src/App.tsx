@@ -2,7 +2,7 @@ import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import "./assets/scss/styles.scss";
 import "./App.css";
 import LMFeed from "./components/LMFeed";
-import LMFeedUniversalFeed from "./components/LMFeedFlatFeed";
+
 import { LM_APP_CONFIG } from "./shared/constants/lmAppConstant";
 
 function LMAppLayout() {
@@ -24,9 +24,7 @@ function LMAppLayout() {
         },
         likeButtonCustom: () => <></>,
       }}
-    >
-      <LMFeedUniversalFeed />
-    </LMFeed>
+    ></LMFeed>
   );
 }
 

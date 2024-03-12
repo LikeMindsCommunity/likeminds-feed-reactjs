@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Topic } from "../../shared/types/models/topic";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
+import { useNavigate } from "react-router-dom";
+import { TOPIC_PATH } from "../../shared/constants/lmAppConstant";
 
 interface LMFeedTopicTileInterface {
   topic: Topic;
@@ -8,8 +10,16 @@ interface LMFeedTopicTileInterface {
 
 const LMFeedTopicsTile = ({ topic }: LMFeedTopicTileInterface) => {
   const { LMPostTopicStyles } = useContext(CustomAgentProviderContext);
+  const navigate = useNavigate();
+  const onTopicClickHandler = () => {
+    navigate(`${TOPIC_PATH}/${topic.Id}`);
+  };
   return (
-    <div style={LMPostTopicStyles?.topicStyles} className="lm-feed-topic-tile">
+    <div
+      onClick={onTopicClickHandler}
+      style={LMPostTopicStyles?.topicStyles}
+      className="lm-feed-topic-tile"
+    >
       {topic.name}
     </div>
   );

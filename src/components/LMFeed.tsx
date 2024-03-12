@@ -9,6 +9,12 @@ import {
   CustomAgentProviderContext,
   CustomAgentProviderInterface,
 } from "../contexts/LMFeedCustomAgentProviderContext";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LMFeedUniversalFeed from "./LMFeedFlatFeed";
+import { ROUTES } from "../shared/constants/lmRoutesConstant";
+import LMFeedDetails from "./LMFeedDetails";
+import { HelmetProvider } from "react-helmet-async";
+import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -22,7 +28,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 
 function LMFeed({
   theme = new Theme(),
-  children,
+
   client,
   likeActionCall,
   topicBlocksWrapperStyles,
@@ -60,7 +66,24 @@ function LMFeed({
               logoutUser: logoutUser,
             }}
           >
-            {children}
+            <BrowserRouter>
+              <Routes>
+                <Route
+                  path={ROUTES.ROOT_PATH}
+                  element={<LMFeedUniversalFeed />}
+                ></Route>
+
+                <Route
+                  path={ROUTES.POST_DETAIL}
+                  element={
+                    <HelmetProvider>
+                      <LMFeedDetails />
+                    </HelmetProvider>
+                  }
+                ></Route>
+                <Route path={ROUTES.TOPIC} element={<LMFeedTopicFlatFeed />} />
+              </Routes>
+            </BrowserRouter>
           </UserProviderContext.Provider>
         </CustomAgentProviderContext.Provider>
       </ThemeProviderContext.Provider>

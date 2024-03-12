@@ -16,7 +16,8 @@ interface useFetchFeedsResponse {
   feedUsersList: Record<string, User>;
 }
 
-export function useFetchFeeds(): useFetchFeedsResponse {
+export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
+  console.log("rendering");
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -43,7 +44,7 @@ export function useFetchFeeds(): useFetchFeedsResponse {
         const fetchFeedsCall: GetUniversalFeedResponse =
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
-              .setTopicIds(selectedTopics)
+              .setTopicIds(topicId ? [topicId] : selectedTopics)
               .setpage(1)
               .setpageSize(10)
               .build(),
@@ -61,7 +62,7 @@ export function useFetchFeeds(): useFetchFeedsResponse {
         console.log(error);
       }
     },
-    [selectedTopics, lmFeedclient],
+    [selectedTopics, lmFeedclient, topicId],
   );
 
   //   function to load the next page for the current selected topics

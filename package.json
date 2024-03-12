@@ -97,9 +97,6 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-peer-deps-external": "^2.2.4"
-  },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "files": ["dist"],
-  "types": "dist/index.d.ts"
+  }
+
 }
