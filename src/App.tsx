@@ -8,8 +8,8 @@ import { LM_APP_CONFIG } from "./shared/constants/lmAppConstant";
 
 function LMAppLayout() {
   const client = LMFeedClient.Builder()
-    .setApiKey(LM_APP_CONFIG.API_KEY)
-    // .setApiKey("f24b9522-a612-4f1e-8551-ffce88a52c76")
+    // .setApiKey(LM_APP_CONFIG.API_KEY)
+    .setApiKey("f24b9522-a612-4f1e-8551-ffce88a52c76")
     .setPlatformCode(LM_APP_CONFIG.PLATFORM_CODE)
     .setVersionCode(LM_APP_CONFIG.VERSION_CODE)
     .build();
