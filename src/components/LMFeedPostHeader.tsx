@@ -1,8 +1,9 @@
 import React, { useContext, useMemo } from "react";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { formatTimeAgo, getAvatar } from "../shared/utils";
+import { formatTimeAgo } from "../shared/utils";
 import { EDITED, POST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { getAvatar } from "../shared/components/LMUserMedia";
 
 const LMFeedPostHeader = () => {
   const { post, users } = useContext(FeedPostContext);
@@ -11,7 +12,7 @@ const LMFeedPostHeader = () => {
     () => users![post!.uuid],
     [post, users],
   );
-  // Determine the avatar content based on imageUrl and name
+
   const avatarContent = getAvatar({ imageUrl, name });
 
   const { LMPostHeaderStyles } = useContext(CustomAgentProviderContext);
@@ -35,18 +36,24 @@ const LMFeedPostHeader = () => {
               ) : null}
             </div>
             <div className="lm-feed-wrapper__card__header--text">
-              {POST}
-              <span>{formatTimeAgo(createdAt)}</span>
               {isEdited ? (
-                <span
-                  className="lm-primary-text"
-                  style={LMPostHeaderStyles?.editBadge}
-                >
-                  {LMPostHeaderStyles?.editBadgeCustomText
-                    ? LMPostHeaderStyles.editBadgeCustomText
-                    : EDITED}
-                </span>
-              ) : null}
+                <>
+                  <span className="edited">{formatTimeAgo(createdAt)}</span>
+                  <span
+                    className="lm-primary-text"
+                    style={LMPostHeaderStyles?.editBadge}
+                  >
+                    {LMPostHeaderStyles?.editBadgeCustomText
+                      ? LMPostHeaderStyles.editBadgeCustomText
+                      : EDITED}
+                  </span>
+                </>
+              ) : (
+                <>
+                  {LMPostHeaderStyles?.postBadgeText || POST}
+                  <span>{formatTimeAgo(createdAt)}</span>
+                </>
+              )}
             </div>
           </div>
         </div>

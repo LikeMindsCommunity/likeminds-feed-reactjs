@@ -19,6 +19,8 @@ const LMAppRoute = createBrowserRouter([
         path: "/feed",
         element: (
           <LMFeed
+            userId="testUser1"
+            username="testUser1"
             client={LMFeedClient.Builder()
               .setApiKey("69edd43f-4a5e-4077-9c50-2b7aa740acce")
               .setPlatformCode("rt")

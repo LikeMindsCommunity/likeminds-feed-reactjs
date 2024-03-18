@@ -1,10 +1,14 @@
+import { ReactNode } from "react";
+import { Topic } from "../models/topic";
+
 export interface CustomComponents {
-  PostViewHeader?: () => JSX.Element;
-  PostViewFooter?: () => JSX.Element;
-  PostViewTopicsWrapper?: () => JSX.Element;
-  PostViewBody?: () => JSX.Element;
-  TopicDropDown?: () => JSX.Element;
-  Reply?: () => JSX.Element;
-  PostView?: () => JSX.Element;
-  RepliesScroller?: () => JSX.Element;
+  PostViewHeader?: ReactNode;
+  PostViewFooter?: ReactNode;
+  PostViewTopicsWrapper?: ReactNode;
+  PostViewBody?: ReactNode;
+  TopicDropDown?: ReactNode;
+  Reply?: ReactNode;
+  PostView?: ReactNode;
+  RepliesScroller?: ReactNode;
+  PostTopicTile?: React.FC<{ key: string; topic: Topic }>;
 }

@@ -17,7 +17,6 @@ interface useFetchFeedsResponse {
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
-  console.log("rendering");
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);

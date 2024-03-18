@@ -22,12 +22,9 @@ const LMFeedCommentsScroller = () => {
             user: users![reply.uuid],
             reply: reply,
           }}
+          key={reply.Id}
         >
-          {CustomComponents?.Reply ? (
-            <CustomComponents.Reply />
-          ) : (
-            <LMFeedReply />
-          )}
+          {CustomComponents?.Reply || <LMFeedReply />}
         </ReplyContext.Provider>
       );
     });

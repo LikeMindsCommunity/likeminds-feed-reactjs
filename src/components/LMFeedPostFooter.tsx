@@ -3,8 +3,6 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { LMCommentAction, LMLikeAction } from "../shared/actions";
 import like from "../assets/images/like.svg";
 import commnent from "../assets/images/comment.svg";
-import bookmark from "../assets/images/bookmark.svg";
-import share from "../assets/images/share.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import { Link } from "react-router-dom";
@@ -14,12 +12,14 @@ import {
   LIKE,
   LIKES,
 } from "../shared/constants/lmAppConstant";
-import LMCommentsScroller from "./lmReplies/LMCommentsScroller";
+import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 
 const LMFeedPostFooter = () => {
   const { post } = useContext(FeedPostContext);
   const { likesCount, commentsCount, Id } = post!;
-  const { LMPostFooterStyles } = useContext(CustomAgentProviderContext);
+  const { LMPostFooterStyles, CustomComponents = null } = useContext(
+    CustomAgentProviderContext,
+  );
 
   return (
     <>
@@ -73,15 +73,15 @@ const LMFeedPostFooter = () => {
             </div>
           </div>
           <div className="lm-social-action-bar__actions">
-            <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
+            {/* <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
               <img src={bookmark} alt="bookmark" />
             </div>
             <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
               <img src={share} alt="share" />
-            </div>
+            </div> */}
           </div>
         </div>
-        <LMCommentsScroller />
+        {CustomComponents?.RepliesScroller || <LMCommentsScroller />}
       </div>
     </>
   );

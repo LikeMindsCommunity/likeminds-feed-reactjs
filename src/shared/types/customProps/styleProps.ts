@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 export interface LMPostHeaderStyles {
   title?: CSSProperties;
@@ -6,9 +6,13 @@ export interface LMPostHeaderStyles {
   avatar?: CSSProperties;
   editBadge?: CSSProperties;
   editBadgeCustomText?: string;
+  postBadgeText?: string;
 }
 
-export interface LMPostBodyStyles {}
+export interface LMPostBodyStyles {
+  heading?: CSSProperties;
+  content?: CSSProperties;
+}
 
 export interface LMPostFooterStyles {
   likesCountStyles?: CSSProperties;
@@ -20,14 +24,14 @@ export interface LMPostFooterStyles {
 }
 
 export interface LMPostTopicsStyles {
-  topicStyles: CSSProperties;
-  topicWrapperStyles: CSSProperties;
+  topicStyles?: CSSProperties;
+  topicWrapperStyles?: CSSProperties;
 }
 export interface CustomComponents {
-  PostViewHeader: () => React.FC;
-  PostViewFooter: () => React.FC;
-  PostViewWrapper: () => React.FC;
-  PostViewBody: () => React.FC;
-  TopicDropDown: () => React.FC;
-  PostView: () => React.FC;
+  PostViewHeader: ReactNode;
+  PostViewFooter: ReactNode;
+  PostViewWrapper: ReactNode;
+  PostViewBody: ReactNode;
+  TopicDropDown: ReactNode;
+  PostView: ReactNode;
 }

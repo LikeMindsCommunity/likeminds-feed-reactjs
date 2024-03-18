@@ -2,13 +2,6 @@
 // Base component for setting Feed List.
 
 import { useCallback } from "react";
-import {
-  BrowserRouter,
-  Link,
-  Route,
-  Routes,
-  useParams,
-} from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
@@ -29,13 +22,6 @@ interface LMFeedUniversalFeedProps {
 }
 
 const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
-  const {
-    PostView = null,
-    Shimmer = null,
-    FooterView = null,
-    HeaderView = null,
-  } = props;
-
   const {
     topics,
     selectedTopics,
@@ -61,9 +47,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             topics: topics,
           }}
         >
-          {/* <Link to={`${ROUTES.POST}/${post.Id}`}> */}
           <Posts post={post} user={filteredUser} />
-          {/* </Link> */}
         </FeedPostContext.Provider>
       );
     });

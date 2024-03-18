@@ -1,5 +1,6 @@
 import { CSSProperties, createContext } from "react";
 import {
+  LMPostBodyStyles,
   LMPostFooterStyles,
   LMPostHeaderStyles,
   LMPostTopicsStyles,
@@ -10,6 +11,7 @@ export interface CustomAgentProviderInterface {
   likeActionCall?: () => void;
   topicBlocksWrapperStyles?: CSSProperties;
   LMPostHeaderStyles?: LMPostHeaderStyles;
+  LMPostBodyStyles?: LMPostBodyStyles;
   LMPostFooterStyles?: LMPostFooterStyles;
   LMPostTopicStyles?: LMPostTopicsStyles;
   CustomComponents?: CustomComponents;

@@ -36,7 +36,7 @@
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.4",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-pdf": "^7.7.1",
+    "react-pdf": "^7.3.3",
     "react-router-dom": "^6.22.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",
@@ -63,6 +63,9 @@
     ]
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@types/react-slick": "^0.23.13",
@@ -85,18 +88,14 @@
     "node-sass": "^9.0.0",
     "prettier": "^3.2.5",
     "react-app-rewired": "^2.2.1",
+    "rollup": "^4.12.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "sass-loader": "^14.1.1",
     "stylelint": "^16.2.1",
     "stylelint-config-prettier-scss": "^1.0.0",
     "stylelint-config-standard-scss": "^13.0.0",
-    "typescript": "^5.3.3",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "rollup": "^4.12.1",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-dts": "^6.1.0",
-    "rollup-plugin-peer-deps-external": "^2.2.4"
+    "typescript": "^5.3.3"
   }
-
 }

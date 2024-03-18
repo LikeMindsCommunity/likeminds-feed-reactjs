@@ -1,17 +1,25 @@
 import { useContext } from "react";
-import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Reply } from "../../shared/types/models/replies";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
-import LMReply from "./LMReply";
-
-const LMCommentsScroller = () => {
+import LMFeedReply from "./LMFeedReply";
+import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
+import { useReply } from "../../hooks/useLMReply";
+interface LMFeedRepliesScrollerProps {
+  replyId: string;
+  postId: string;
+}
+const LMFeedRepliesScroller = ({
+  replyId,
+  postId,
+}: LMFeedRepliesScrollerProps) => {
   const {
     replies = [],
-    loadNextPage = false,
+    loadMoreReplies = false,
     getNextPage = () => {},
     users,
-  } = useContext(FeedPostContext);
+  } = useReply(postId, replyId);
+  const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderComments = () => {
     return replies.map((reply: Reply) => {
       return (
@@ -20,8 +28,9 @@ const LMCommentsScroller = () => {
             user: users![reply.uuid],
             reply: reply,
           }}
+          key={reply.Id}
         >
-          <LMReply />
+          {CustomComponents?.Reply || <LMFeedReply />}
         </ReplyContext.Provider>
       );
     });
@@ -30,7 +39,7 @@ const LMCommentsScroller = () => {
     <div>
       <InfiniteScroll
         dataLength={replies?.length}
-        hasMore={loadNextPage}
+        hasMore={loadMoreReplies}
         loader={null}
         next={getNextPage}
       >
@@ -40,4 +49,4 @@ const LMCommentsScroller = () => {
   );
 };
 
-export default LMCommentsScroller;
+export default LMFeedRepliesScroller;

@@ -6,7 +6,9 @@ import LMFeedTopicsTile from "./lmTopicFeed/LMFeedTopicsTile";
 const LMFeedPostTopicsWrapper = () => {
   const { post, topics: topicsMap } = useContext(FeedPostContext);
   const { topics } = post!;
-  const { LMPostTopicStyles } = useContext(CustomAgentProviderContext);
+  const { LMPostTopicStyles, CustomComponents } = useContext(
+    CustomAgentProviderContext,
+  );
   return (
     <>
       <div
@@ -14,7 +16,14 @@ const LMFeedPostTopicsWrapper = () => {
         style={LMPostTopicStyles?.topicWrapperStyles}
       >
         {topics.map((topicId: string) => {
-          return <LMFeedTopicsTile key={topicId} topic={topicsMap![topicId]} />;
+          return CustomComponents?.PostTopicTile ? (
+            <CustomComponents.PostTopicTile
+              key={topicId}
+              topic={topicsMap![topicId]}
+            />
+          ) : (
+            <LMFeedTopicsTile key={topicId} topic={topicsMap![topicId]} />
+          );
         })}
       </div>
     </>

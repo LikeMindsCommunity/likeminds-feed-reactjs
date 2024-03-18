@@ -9,6 +9,6 @@ export const EDITED = "edited";
 export const LIKE = "like";
 export const LIKES = "likes";
 export const COMMNENT = "comment";
-export const ALL_TOPICS = "all topics";
 export const COMMNENTS = "comments";
 export const TOPIC_PATH = "/topic";
+export const ALL_TOPICS = "all topics";

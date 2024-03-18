@@ -4,3 +4,7 @@ export const LMLikeAction = () => {
 export const LMCommentAction = () => {
   alert("Comment Action Triggered");
 };
+
+// export interface LMLikeActionInterface {
+//   post:
+// }
