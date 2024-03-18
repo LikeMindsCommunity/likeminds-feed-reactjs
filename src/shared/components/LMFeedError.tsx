@@ -1,6 +1,6 @@
 import { useRouteError } from "react-router-dom";
 
-const Error = () => {
+const LMFeedError = () => {
   const error: unknown = useRouteError();
   return (
     <div id="error-page" className="lmError">
@@ -18,4 +18,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default LMFeedError;

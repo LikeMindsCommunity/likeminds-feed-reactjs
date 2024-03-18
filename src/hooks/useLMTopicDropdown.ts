@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Topic } from "../shared/types/models/topic";
-import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
+import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetTopicsRequest } from "@likeminds.community/feed-js-beta";
 import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
 export function useTopicDropdown(
-  currentSelectedTopicIds?: string[],
+  currentSelectedTopicIds?: string,
   setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
 ): useTopicDropdownResponse {
   // Getting an instance of the client
@@ -99,6 +99,13 @@ export function useTopicDropdown(
   useEffect(() => {
     loadTopics();
   }, [loadTopics, searchKey]);
+
+  // update the checkedTopics on useFeed hooks
+  useEffect(() => {
+    setCurrentSelectedTopicIds
+      ? setCurrentSelectedTopicIds(checkedTopics.map((topic) => topic.Id))
+      : null;
+  }, [checkedTopics, setCurrentSelectedTopicIds]);
 
   return {
     checkedTopics,

@@ -1,14 +1,16 @@
-import { useContext } from "react";
-import { ReplyContext } from "../../contexts/LMReplyContext";
+import { useContext, useState } from "react";
+import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import { timeFromNow } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
-// import commnentIcon from "../../assets/images/comment.svg";
+import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
+import { useParams } from "react-router-dom";
 
-const LMReply = () => {
+const LMFeedReply = () => {
   const { reply, user } = useContext(ReplyContext);
 
+  const { id = "" } = useParams();
   const { name } = user || {};
-
+  const [openReplies, setOpenReplies] = useState<boolean>(false);
   return (
     <div className="lm-social-action-bar__lmReply">
       <div className="lm-social-action-bar__lmReply__userMeta lm-flex-direction">
@@ -28,7 +30,11 @@ const LMReply = () => {
             <span>2 likes </span>
             <span>|</span>
             <span>
-              Reply <span className="replies lm-cursor-pointer">3 Replies</span>
+              Reply{" "}
+              <span
+                className="replies lm-cursor-pointer"
+                onClick={() => setOpenReplies((current) => !current)}
+              >{`${reply?.commentsCount} Replies`}</span>
             </span>
           </div>
           <div className="like">
@@ -36,8 +42,13 @@ const LMReply = () => {
           </div>
         </div>
       </div>
+      <div className="lm-social-action-bar__lmReply__commentsScroller">
+        {openReplies && (
+          <LMFeedRepliesScroller postId={id} replyId={reply?.Id || ""} />
+        )}
+      </div>
     </div>
   );
 };
 
-export default LMReply;
+export default LMFeedReply;

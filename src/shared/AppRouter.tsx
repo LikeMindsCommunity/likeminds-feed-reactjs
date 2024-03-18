@@ -1,6 +1,6 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import LMAppLayout from "../App";
-import Error from "./components/LMError";
+import LMFeedError from "./components/LMFeedError";
 import LMFeed from "../components/LMFeed";
 import LMFeedDetails from "../components/LMFeedDetails";
 import { LMFeedClient } from "@likeminds.community/feed-js-beta";
@@ -19,6 +19,8 @@ const LMAppRoute = createBrowserRouter([
         path: "/feed",
         element: (
           <LMFeed
+            userId="testUser1"
+            username="testUser1"
             client={LMFeedClient.Builder()
               .setApiKey("69edd43f-4a5e-4077-9c50-2b7aa740acce")
               .setPlatformCode("rt")
@@ -32,7 +34,7 @@ const LMAppRoute = createBrowserRouter([
         element: <LMFeedDetails />,
       },
     ],
-    errorElement: <Error />,
+    errorElement: <LMFeedError />,
   },
 ]);
 

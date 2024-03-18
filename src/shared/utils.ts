@@ -1,5 +1,6 @@
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+// import { AvatarProps } from "./types/models/avatarProps";
 dayjs.extend(relativeTime);
 
 const formatTimeAgo = (timestamp: number): string => {

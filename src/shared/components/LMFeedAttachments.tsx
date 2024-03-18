@@ -4,13 +4,18 @@ import { Attachment as AttachmentType } from "../types/models/attachment";
 import { formatFileSize, truncateString } from "../utils";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+// import LMFeedPDFViewer from "./LMFeedPDFViewer";
 import pdfIcon from "../../assets/images/pdf-icon.svg";
-
-interface AttachmentProps {
+import { Document, Page, pdfjs } from "react-pdf";
+interface LMFeedAttachmentsProps {
   attachments: AttachmentType[];
 }
+const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
 
-const Attachment: React.FC<AttachmentProps> = ({ attachments }) => {
+const LMFeedAttachments: React.FC<LMFeedAttachmentsProps> = ({
+  attachments,
+}) => {
   // Configure settings for react-slick carousel
   const settings = {
     dots: true,
@@ -71,7 +76,7 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
     case 3: // PDF
       return (
         <div className="attachmentPdf">
-          <object
+          {/* <object
             data={url}
             type="application/pdf"
             className="attachmentPdf__pdfViewer"
@@ -79,7 +84,16 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
             <p>
               Alternative text - include a link <a href={url}>to the PDF!</a>
             </p>
-          </object>
+          </object> */}
+          <Document file={attachment?.attachmentMeta?.url}>
+            <Page
+              pageNumber={1}
+              className={"pdfPage"}
+              renderAnnotationLayer={false}
+              renderTextLayer={false}
+              height={324}
+            />
+          </Document>
 
           <div className="attachmentPdf__content">
             <img
@@ -135,4 +149,4 @@ const RenderAttachment: React.FC<{ attachment: AttachmentType }> = ({
   }
 };
 
-export default Attachment;
+export default LMFeedAttachments;
