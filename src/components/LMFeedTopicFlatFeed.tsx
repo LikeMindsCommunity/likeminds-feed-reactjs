@@ -2,19 +2,20 @@
 // Base component for setting Feed List.
 
 import { useCallback } from "react";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+
 import InfiniteScroll from "react-infinite-scroll-component";
-import { HelmetProvider } from "react-helmet-async";
+
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
-import LMFeedDetails from "./LMFeedDetails";
-import { Post } from "../shared/types/models/post";
-import { ROUTES } from "../shared/constants/lmRoutesConstant";
-import Posts from "./LMPosts";
 
-interface LMFlatFeedProps {
+import { Post } from "../shared/types/models/post";
+
+import Posts from "./LMFeedPosts";
+import { useParams } from "react-router-dom";
+
+interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
   Shimmer?: React.FC;
   FooterView?: React.FC;
@@ -22,7 +23,9 @@ interface LMFlatFeedProps {
   likeActionCall?: () => void;
 }
 
-const LMFlatFeed = (props: LMFlatFeedProps) => {
+const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
+  const params = useParams();
+  console.log(params);
   const {
     PostView = null,
     Shimmer = null,
@@ -38,7 +41,7 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
     feedList,
     feedUsersList,
     getNextPage,
-  } = useFetchFeeds();
+  } = useFetchFeeds(params.topicId ? params.topicId : undefined);
 
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
@@ -65,45 +68,32 @@ const LMFlatFeed = (props: LMFlatFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path={ROUTES.ROOT_PATH}
-            element={
-              <div className="lm-d-flex lm-flex-direction lm-feed">
-                {/* Topics */}
-                <div className="lm-mb-4">
-                  <LMFeedViewTopicDropdown mode={TopicsDropdownMode.view} />
-                </div>
-                {/* Topics */}
+      <div>
+        {/* Topics */}
+        {/* <div className="lm-mb-4">
+          <LMFeedViewTopicDropdown
+            mode={TopicsDropdownMode.view}
+            selectedTopic={selectedTopics}
+            setSelectedTopics={setSelectedTopics}
+          />
+        </div> */}
+        {/* Commented for the topic feed view page */}
+        {/* Topics */}
 
-                {/* Posts */}
-                <InfiniteScroll
-                  dataLength={feedList.length}
-                  hasMore={loadMoreFeeds}
-                  next={getNextPage}
-                  // TODO set shimmer on loader component
-                  loader={null}
-                >
-                  {renderFeeds()}
-                </InfiniteScroll>
-                {/* Posts */}
-              </div>
-            }
-          ></Route>
-
-          <Route
-            path={ROUTES.POST_DETAIL}
-            element={
-              <HelmetProvider>
-                <LMFeedDetails />
-              </HelmetProvider>
-            }
-          ></Route>
-        </Routes>
-      </BrowserRouter>
+        {/* Posts */}
+        <InfiniteScroll
+          dataLength={feedList.length}
+          hasMore={loadMoreFeeds}
+          next={getNextPage}
+          // TODO set shimmer on loader component
+          loader={null}
+        >
+          {renderFeeds()}
+        </InfiniteScroll>
+        {/* Posts */}
+      </div>
     </div>
   );
 };
 
-export default LMFlatFeed;
+export default LMFeedTopicFlatFeed;

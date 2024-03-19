@@ -8,7 +8,7 @@ interface ErrorSnackbarProps {
   onClose: () => void;
 }
 
-const Alert = (props: AlertProps) => {
+const LMFeedAlerts = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
@@ -19,9 +19,9 @@ const ErrorSnackbar: React.FC<ErrorSnackbarProps> = ({
 }) => {
   return (
     <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
-      <Alert onClose={onClose} severity="error">
+      <LMFeedAlerts onClose={onClose} severity="error">
         {message}
-      </Alert>
+      </LMFeedAlerts>
     </Snackbar>
   );
 };

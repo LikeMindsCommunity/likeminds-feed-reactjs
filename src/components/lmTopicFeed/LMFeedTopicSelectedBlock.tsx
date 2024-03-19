@@ -5,7 +5,7 @@ interface TopicBlockProps {
   onDeleteClick: (topic: Topic) => void;
   isCreateMode?: boolean;
 }
-export const LMTopicSelectedBlock = ({
+export const LMFeedTopicSelectedBlock = ({
   topic,
   onDeleteClick,
   isCreateMode,

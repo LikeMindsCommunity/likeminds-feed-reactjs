@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
-import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
+import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetFeedRequest } from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 
@@ -16,7 +16,7 @@ interface useFetchFeedsResponse {
   feedUsersList: Record<string, User>;
 }
 
-export function useFetchFeeds(): useFetchFeedsResponse {
+export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -43,7 +43,7 @@ export function useFetchFeeds(): useFetchFeedsResponse {
         const fetchFeedsCall: GetUniversalFeedResponse =
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
-              .setTopicIds(selectedTopics)
+              .setTopicIds(topicId ? [topicId] : selectedTopics)
               .setpage(1)
               .setpageSize(10)
               .build(),
@@ -61,7 +61,7 @@ export function useFetchFeeds(): useFetchFeedsResponse {
         console.log(error);
       }
     },
-    [selectedTopics, lmFeedclient],
+    [selectedTopics, lmFeedclient, topicId],
   );
 
   //   function to load the next page for the current selected topics

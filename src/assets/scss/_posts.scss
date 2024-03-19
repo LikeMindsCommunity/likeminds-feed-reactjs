@@ -88,6 +88,12 @@
     }
 
     &__body {
+      &__heading {
+        padding: 1rem pxToRem(8) pxToRem(0) 1rem;
+        word-wrap: break-word;
+        font-weight: 500;
+        color: $card-content-heading;
+      }
       &__content {
         padding: 1rem pxToRem(8) 1rem 1rem;
         word-wrap: break-word;
@@ -104,22 +110,30 @@
           background-color: $light-color;
           img {
             width: 100%;
-            height: auto;
-            max-height: pxToRem(500);
+            // height: auto;
+            // max-height: pxToRem(500);;
             object-fit: contain;
           }
         }
         .attachment-image {
           width: 100%;
           background-color: $black-color;
+          img {
+            width: 100%;
+            // height: auto;
+            // max-height: pxToRem(500);
+            object-fit: contain;
+            aspect-ratio: 16/9;
+          }
         }
         .attachment-video {
           width: 100%;
           background-color: $black-color;
           video {
             width: 100%;
-            height: auto;
-            max-height: pxToRem(310);
+            aspect-ratio: 16/9;
+            // height: auto;
+            // max-height: pxToRem(310);
             object-fit: contain;
           }
         }
@@ -207,6 +221,11 @@
               color: $dark-color;
               line-height: pxToRem(20);
               cursor: pointer;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              display: inline-block;
+              width: 100%;
             }
 
             &--desc {
@@ -214,6 +233,9 @@
               font-weight: 400;
               color: $secondary-color;
               line-height: pxToRem(20);
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
             }
             &--url {
               font-size: pxToRem(12);
@@ -298,3 +320,8 @@
   height: 15px !important;
   width: 15px !important;
 }
+
+// .react-pdf__Page__canvas{
+//   width: 100% !important;
+//   aspect-ratio: 16/9;
+// }

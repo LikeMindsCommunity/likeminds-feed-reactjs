@@ -2,13 +2,13 @@ import React, { memo } from "react";
 import { Checkbox } from "@mui/material";
 import { Topic } from "../../shared/types/models/topic";
 
-interface LMTopicSelectionTileProps {
+interface LMFeedTopicSelectionTileProps {
   topic: Topic;
   checkedList: Topic[];
   clickHandler: (topic: Topic) => void;
 }
 
-const LMTopicSelectionTile: React.FC<LMTopicSelectionTileProps> = memo(
+const LMFeedTopicSelectionTile: React.FC<LMFeedTopicSelectionTileProps> = memo(
   ({ topic, checkedList, clickHandler }) => {
     const handleTileClick = () => {
       clickHandler(topic);
@@ -29,4 +29,4 @@ const LMTopicSelectionTile: React.FC<LMTopicSelectionTileProps> = memo(
   },
 );
 
-export default LMTopicSelectionTile;
+export default LMFeedTopicSelectionTile;

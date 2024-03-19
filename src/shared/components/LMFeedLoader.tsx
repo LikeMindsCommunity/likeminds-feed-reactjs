@@ -5,7 +5,7 @@ interface LoaderProps {
   show: boolean;
 }
 
-const LmLoader: React.FC<LoaderProps> = ({ show }) => {
+const LMFeedLoader: React.FC<LoaderProps> = ({ show }) => {
   return (
     <>
       {show && (
@@ -24,4 +24,4 @@ const LmLoader: React.FC<LoaderProps> = ({ show }) => {
   );
 };
 
-export default LmLoader;
+export default LMFeedLoader;

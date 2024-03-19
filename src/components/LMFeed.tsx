@@ -1,33 +1,47 @@
-import { PropsWithChildren, CSSProperties } from "react";
-import { Theme } from "../Themes/lmThemeClass";
-import GlobalClientProviderContext from "../contexts/LMGlobalClientProviderContext";
-import { LMClient } from "../shared/types/dataLayerExportsTypes";
-import ThemeProviderContext from "../contexts/LMThemeProviderContext";
-import UserProviderContext from "../contexts/LMUserProviderContext";
-import useUserProvider from "../hooks/useLMUserProvider";
-import { CustomAgentProviderContext } from "../contexts/LMCustomAgentProviderContext";
+import { PropsWithChildren } from "react";
 
-export interface LMFeedProps<T> {
+import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import { LMClient } from "../shared/types/dataLayerExportsTypes";
+
+import UserProviderContext from "../contexts/LMFeedUserProviderContext";
+import useUserProvider from "../hooks/useLMUserProvider";
+import {
+  CustomAgentProviderContext,
+  CustomAgentProviderInterface,
+} from "../contexts/LMFeedCustomAgentProviderContext";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
+import { ROUTES } from "../shared/constants/lmRoutesConstant";
+import LMFeedDetails from "./LMFeedDetails";
+import { HelmetProvider } from "react-helmet-async";
+import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
+import { RouteModifiers } from "../shared/types/customProps/routes";
+
+export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
-  theme?: Theme;
   showMember?: boolean;
-  routes?: {
-    base?: string;
-    postDetails?: string;
-  };
-  likeActionCall?: () => void;
-  topicBlocksWrapperStyles?: CSSProperties;
+  routes?: RouteModifiers[];
+  username?: string;
+  userId: string;
+  isGuest?: boolean;
 }
 
 function LMFeed({
-  theme = new Theme(),
-  children,
+  username = "",
+  userId,
+  isGuest = false,
   client,
   likeActionCall,
   topicBlocksWrapperStyles,
+  LMPostHeaderStyles,
+  LMPostFooterStyles,
+  LMPostTopicStyles,
+  routes,
+  LMPostBodyStyles,
+  CustomComponents,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
-    useUserProvider("testUser1", false, "testUser1", client);
+    useUserProvider(userId, isGuest, username, client);
   if (!lmFeedUser) {
     return null;
   }
@@ -37,28 +51,57 @@ function LMFeed({
         lmFeedclient: client,
       }}
     >
-      <ThemeProviderContext.Provider
+      <CustomAgentProviderContext.Provider
         value={{
-          themeObject: theme,
+          likeActionCall: likeActionCall,
+          topicBlocksWrapperStyles,
+          LMPostHeaderStyles,
+          LMPostFooterStyles,
+          LMPostBodyStyles,
+          LMPostTopicStyles,
+          CustomComponents,
         }}
       >
-        <CustomAgentProviderContext.Provider
+        <UserProviderContext.Provider
           value={{
-            likeActionCall: likeActionCall,
-            topicBlocksWrapperStyles,
+            currentUser: lmFeedUser,
+            currentCommunity: lmFeedUserCurrentCommunity,
+            logoutUser: logoutUser,
           }}
         >
-          <UserProviderContext.Provider
-            value={{
-              currentUser: lmFeedUser,
-              currentCommunity: lmFeedUserCurrentCommunity,
-              logoutUser: logoutUser,
-            }}
-          >
-            {children}
-          </UserProviderContext.Provider>
-        </CustomAgentProviderContext.Provider>
-      </ThemeProviderContext.Provider>
+          <BrowserRouter>
+            {routes ? (
+              <>
+                <Routes>
+                  {routes.map((routeObject) => (
+                    <Route
+                      path={routeObject.route}
+                      element={routeObject.element}
+                    />
+                  ))}
+                </Routes>
+              </>
+            ) : (
+              <Routes>
+                <Route
+                  path={ROUTES.ROOT_PATH}
+                  element={<LMFeedUniversalFeed />}
+                ></Route>
+
+                <Route
+                  path={ROUTES.POST_DETAIL}
+                  element={
+                    <HelmetProvider>
+                      <LMFeedDetails />
+                    </HelmetProvider>
+                  }
+                ></Route>
+                <Route path={ROUTES.TOPIC} element={<LMFeedTopicFlatFeed />} />
+              </Routes>
+            )}
+          </BrowserRouter>
+        </UserProviderContext.Provider>
+      </CustomAgentProviderContext.Provider>
     </GlobalClientProviderContext.Provider>
   );
 }
