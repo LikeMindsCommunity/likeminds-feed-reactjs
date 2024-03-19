@@ -17,13 +17,25 @@ import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 const LMFeedPostFooter = () => {
   const { post } = useContext(FeedPostContext);
   const { likesCount, commentsCount, Id } = post!;
-  const { LMPostFooterStyles, CustomComponents = null } = useContext(
-    CustomAgentProviderContext,
-  );
+  const {
+    LMPostFooterStyles,
+    CustomComponents = null,
+    CustomCallbacks = {},
+  } = useContext(CustomAgentProviderContext);
+  const {
+    likeActionCallback,
+    likeTextCountClickCallback,
+    commentIconClickCallback,
+    commentTextCountClickCallback,
+    postFooterClickCallback,
+  } = CustomCallbacks;
 
   return (
     <>
-      <div className="lm-feed-wrapper__card__footer">
+      <div
+        className="lm-feed-wrapper__card__footer"
+        onClick={postFooterClickCallback}
+      >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
             <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
@@ -32,8 +44,8 @@ const LMFeedPostFooter = () => {
               ) : (
                 <img
                   onClick={() => {
-                    if (LMPostFooterStyles?.likeActionCallBack) {
-                      LMPostFooterStyles.likeActionCallBack();
+                    if (likeActionCallback) {
+                      likeActionCallback();
                     } else {
                       LMLikeAction();
                     }
@@ -43,7 +55,10 @@ const LMFeedPostFooter = () => {
                   alt="Like"
                 />
               )}
-              <span style={LMPostFooterStyles?.likesCountStyles}>
+              <span
+                style={LMPostFooterStyles?.likesCountStyles}
+                onClick={likeTextCountClickCallback}
+              >
                 {" "}
                 {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
               </span>
@@ -58,8 +73,8 @@ const LMFeedPostFooter = () => {
                 ) : (
                   <img
                     onClick={() => {
-                      if (LMPostFooterStyles?.commentActionCallBack) {
-                        LMPostFooterStyles?.commentActionCallBack();
+                      if (commentIconClickCallback) {
+                        commentIconClickCallback();
                       } else {
                         LMCommentAction();
                       }
@@ -72,6 +87,7 @@ const LMFeedPostFooter = () => {
                 <span
                   style={LMPostFooterStyles?.commentsCountStyles}
                   className="comments"
+                  onClick={commentTextCountClickCallback}
                 >
                   {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
                 </span>

@@ -5,7 +5,10 @@ import {
   LMPostHeaderStyles,
   LMPostTopicsStyles,
 } from "../shared/types/customProps/styleProps";
-import { CustomComponents } from "../shared/types/customProps/customComponentsProps";
+import {
+  CustomCallbacks,
+  CustomComponents,
+} from "../shared/types/customProps/customComponentsProps";
 
 export interface CustomAgentProviderInterface {
   likeActionCall?: () => void;
@@ -15,6 +18,7 @@ export interface CustomAgentProviderInterface {
   LMPostFooterStyles?: LMPostFooterStyles;
   LMPostTopicStyles?: LMPostTopicsStyles;
   CustomComponents?: CustomComponents;
+  CustomCallbacks?: CustomCallbacks;
 }
 export const CustomAgentProviderContext =
   createContext<CustomAgentProviderInterface>({});

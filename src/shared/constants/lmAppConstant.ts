@@ -12,3 +12,6 @@ export const COMMNENT = "comment";
 export const COMMNENTS = "comments";
 export const TOPIC_PATH = "/topic";
 export const ALL_TOPICS = "all topics";
+
+export const COMMENT_TILE_MODE = "COMMENT";
+export const REPLY_TILE_MODE = "REPLY";
