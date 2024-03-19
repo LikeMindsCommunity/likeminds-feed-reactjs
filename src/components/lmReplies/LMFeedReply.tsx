@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
-import { timeFromNow } from "../../shared/utils";
+import { formatTimeAgo } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
 import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
 import { useParams } from "react-router-dom";
@@ -72,9 +72,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
               >{`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? COMMNENTS : COMMNENT}`}</span>
             </span>
           </div>
-          <div className="like">
-            {timeFromNow(reply?.createdAt.toString() || "")}
-          </div>
+          <div className="like">{formatTimeAgo(reply?.createdAt || 0)}</div>
         </div>
       </div>
       <div className="lm-social-action-bar__lmReply__commentsScroller">

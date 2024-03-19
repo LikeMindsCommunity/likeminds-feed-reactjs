@@ -87,16 +87,11 @@ const LMFeedPostFooter = () => {
                 <span
                   style={LMPostFooterStyles?.commentsCountStyles}
                   className="comments"
+                  onClick={commentTextCountClickCallback}
                 >
                   {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
                 </span>
               </Link>
-              <span
-                style={LMPostFooterStyles?.commentsCountStyles}
-                onClick={commentTextCountClickCallback}
-              >
-                {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
-              </span>
             </div>
           </div>
           <div className="lm-social-action-bar__actions">
