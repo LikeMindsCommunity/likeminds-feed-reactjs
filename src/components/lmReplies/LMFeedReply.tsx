@@ -77,7 +77,10 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
       </div>
       <div className="lm-social-action-bar__lmReply__commentsScroller">
         {openReplies && (
-          <LMFeedRepliesScroller postId={id} replyId={reply?.Id || ""} />
+          <LMFeedRepliesScroller
+            postId={id.split("-")[0]}
+            replyId={reply?.Id || ""}
+          />
         )}
       </div>
     </div>

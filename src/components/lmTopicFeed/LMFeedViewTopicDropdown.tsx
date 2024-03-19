@@ -10,6 +10,7 @@ import { LMFeedTopicSelectedBlock } from "./LMFeedTopicSelectedBlock";
 import { ALL_TOPICS } from "../../shared/constants/lmAppConstant";
 import downArrowIcon from "../../assets/images/lm-down-arrow.svg";
 import topicSearchIcon from "../../assets/images/topic-search-icon.svg";
+import { Checkbox } from "@mui/material";
 
 interface LMFeedTopicDropdownProps {
   // view for topic view && modify for creating or editing post
@@ -150,7 +151,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                   role="option"
                   key={Math.random()}
                 >
-                  <LMFeedTopicSelectionTile
+                  {/* <LMFeedTopicSelectionTile
                     clickHandler={updateCheckedTopics}
                     topic={{
                       Id: Math.random().toString(),
@@ -158,7 +159,20 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                       isEnabled: true,
                     }}
                     checkedList={checkedTopics}
-                  />
+                  /> */}
+                  <div
+                    className="lm-topic-dropdown__topic"
+                    onClick={clearAllCheckedTopics}
+                  >
+                    <Checkbox
+                      disableRipple={true}
+                      checked={!checkedTopics.length}
+                      className="lm-topic-checkbox"
+                    />
+                    <span className="lm-topic-name-container">
+                      {"All Topics"}
+                    </span>
+                  </div>
                 </MenuItem>
 
                 {menuList}

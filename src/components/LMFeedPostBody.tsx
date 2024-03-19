@@ -22,12 +22,12 @@ const LMFeedPostBody = () => {
   return (
     <div className="lm-feed-wrapper__card__body">
       {heading.length > 0 && (
-        <div
+        <h1
           className="lm-feed-wrapper__card__body__heading"
           style={LMPostBodyStyles?.heading}
         >
           {heading}
-        </div>
+        </h1>
       )}
       <div
         className="lm-feed-wrapper__card__body__content"
