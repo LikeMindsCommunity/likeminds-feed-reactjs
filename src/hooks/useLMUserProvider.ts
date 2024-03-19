@@ -34,9 +34,9 @@ export default function useUserProvider(
         const initiateUserCall: InitiateUserResponse =
           (await lmFeedclient?.initiateUser(
             InitiateUserRequest.builder()
-              .setUUID(uuid)
-              .setIsGuest(isGuest)
-              .setUserName(userId)
+              .setUUID("")
+              .setIsGuest(true)
+              .setUserName("")
               .build(),
           )) as never;
         const memberStateCall: GetMemberStateResponse =

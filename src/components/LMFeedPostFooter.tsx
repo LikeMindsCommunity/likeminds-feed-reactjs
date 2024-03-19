@@ -49,7 +49,10 @@ const LMFeedPostFooter = () => {
               </span>
             </div>
             <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
-              <Link to={ROUTES.POST.concat("/").concat(Id.toString())}>
+              <Link
+                to={ROUTES.POST.concat("/").concat(Id.toString())}
+                className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
+              >
                 {LMPostFooterStyles?.commentButtonCustom ? (
                   <LMPostFooterStyles.commentButtonCustom />
                 ) : (
@@ -66,10 +69,13 @@ const LMFeedPostFooter = () => {
                     alt="commnent"
                   />
                 )}
+                <span
+                  style={LMPostFooterStyles?.commentsCountStyles}
+                  className="comments"
+                >
+                  {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
+                </span>
               </Link>
-              <span style={LMPostFooterStyles?.commentsCountStyles}>
-                {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
-              </span>
             </div>
           </div>
           <div className="lm-social-action-bar__actions">
