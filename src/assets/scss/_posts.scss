@@ -3,6 +3,7 @@
   min-height: 100vh;
   width: 100%;
   height: auto;
+  overflow: hidden;
 
   .lm-feed {
     margin: 0 auto;
@@ -257,7 +258,7 @@
 .lm-post-header {
   @extend .lm-d-flex;
   @extend .lm-align-items-center;
-  padding: pxToRem(8) pxToRem(16);
+  padding: pxToRem(16);
   background-color: $light-color;
   margin-bottom: pxToRem(16);
   gap: 10px;

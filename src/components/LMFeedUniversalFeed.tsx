@@ -63,7 +63,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
       {CustomComponents?.TopicDropDown ? (
         CustomComponents.TopicDropDown
       ) : (
-        <div className="lm-mb-4">
+        <div className="lm-mb-4 lm-mt-4">
           <LMFeedViewTopicDropdown
             mode={TopicsDropdownMode.view}
             selectedTopic={selectedTopics}
