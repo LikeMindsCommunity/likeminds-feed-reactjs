@@ -12,7 +12,7 @@ const LMFeedDetails = () => {
     useFeedDetails(id);
 
   return !post || !users ? null : (
-    <div>
+    <div className="lm-feed-wrapper">
       <Helmet>
         <title>{post.text}</title>
       </Helmet>

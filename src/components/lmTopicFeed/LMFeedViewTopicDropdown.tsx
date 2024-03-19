@@ -110,7 +110,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     switch (isTopicSelectionMode) {
       case true: {
         return (
-          <div>
+          <div className="lm-topic-btn-box">
             <button onClick={openTopicMenu} className="lm-all-topic-button">
               <span>{ALL_TOPICS}</span>
               <img src={downArrowIcon} alt="down arrow icon" />
