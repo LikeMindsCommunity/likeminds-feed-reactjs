@@ -1,7 +1,7 @@
 export const ROUTES = {
-  ROOT_PATH: "/",
+  ROOT_PATH: "/community",
   POST: "/post",
-  POST_DETAIL: "/post/:id",
+  POST_DETAIL: "community/post/:id",
   PAGE_NOT_FOUND_PATH: "404",
   TOPIC: "/topic/:topicId",
 };

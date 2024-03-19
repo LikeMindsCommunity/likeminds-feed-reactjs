@@ -4,8 +4,6 @@ import { LMCommentAction, LMLikeAction } from "../shared/actions";
 import like from "../assets/images/like.svg";
 import commnent from "../assets/images/comment.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { ROUTES } from "../shared/constants/lmRoutesConstant";
-import { Link } from "react-router-dom";
 import {
   COMMNENT,
   COMMNENTS,
@@ -13,6 +11,7 @@ import {
   LIKES,
 } from "../shared/constants/lmAppConstant";
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
+import { useNavigate } from "react-router-dom";
 
 const LMFeedPostFooter = () => {
   const { post } = useContext(FeedPostContext);
@@ -29,7 +28,7 @@ const LMFeedPostFooter = () => {
     commentTextCountClickCallback,
     postFooterClickCallback,
   } = CustomCallbacks;
-
+  const navigation = useNavigate();
   return (
     <>
       <div
@@ -63,35 +62,37 @@ const LMFeedPostFooter = () => {
                 {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
               </span>
             </div>
-            <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
-              <Link
-                to={ROUTES.POST.concat("/").concat(Id.toString())}
-                className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
+            <div
+              className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
+              onClick={() => {
+                navigation(
+                  `/community/post/${`${Id}-${post?.heading}`.substring(0, 59)}`,
+                );
+              }}
+            >
+              {LMPostFooterStyles?.commentButtonCustom ? (
+                <LMPostFooterStyles.commentButtonCustom />
+              ) : (
+                <img
+                  onClick={() => {
+                    if (commentIconClickCallback) {
+                      commentIconClickCallback();
+                    } else {
+                      LMCommentAction();
+                    }
+                  }}
+                  className="lm-cursor-pointer"
+                  src={commnent}
+                  alt="commnent"
+                />
+              )}
+              <span
+                style={LMPostFooterStyles?.commentsCountStyles}
+                className="comments"
+                onClick={commentTextCountClickCallback}
               >
-                {LMPostFooterStyles?.commentButtonCustom ? (
-                  <LMPostFooterStyles.commentButtonCustom />
-                ) : (
-                  <img
-                    onClick={() => {
-                      if (commentIconClickCallback) {
-                        commentIconClickCallback();
-                      } else {
-                        LMCommentAction();
-                      }
-                    }}
-                    className="lm-cursor-pointer"
-                    src={commnent}
-                    alt="commnent"
-                  />
-                )}
-                <span
-                  style={LMPostFooterStyles?.commentsCountStyles}
-                  className="comments"
-                  onClick={commentTextCountClickCallback}
-                >
-                  {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
-                </span>
-              </Link>
+                {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
+              </span>
             </div>
           </div>
           <div className="lm-social-action-bar__actions">

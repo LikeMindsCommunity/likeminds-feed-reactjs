@@ -9,12 +9,13 @@ const LMFeedDetails = () => {
   const { id = "" } = useParams();
 
   const { post, users, topics, replies, getNextPage, loadNextPage } =
-    useFeedDetails(id);
+    useFeedDetails(id.split("-")[0]);
 
   return !post || !users ? null : (
     <div className="lm-feed-wrapper">
       <Helmet>
-        <title>{post.text}</title>
+        <title>{post.heading}</title>
+        <meta name="description" content={post?.text} />
       </Helmet>
       <FeedPostContext.Provider
         value={{ post, users, topics, replies, getNextPage, loadNextPage }}
