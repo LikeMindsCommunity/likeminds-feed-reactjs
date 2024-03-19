@@ -58,33 +58,33 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
-      <div>
-        {/* Topics */}
-        {CustomComponents?.TopicDropDown ? (
-          CustomComponents.TopicDropDown
-        ) : (
-          <div className="lm-mb-4">
-            <LMFeedViewTopicDropdown
-              mode={TopicsDropdownMode.view}
-              selectedTopic={selectedTopics}
-              setSelectedTopics={setSelectedTopics}
-            />
-          </div>
-        )}
-        {/* Topics */}
+      {/* <div> */}
+      {/* Topics */}
+      {CustomComponents?.TopicDropDown ? (
+        CustomComponents.TopicDropDown
+      ) : (
+        <div className="lm-mb-4 lm-mt-4">
+          <LMFeedViewTopicDropdown
+            mode={TopicsDropdownMode.view}
+            selectedTopic={selectedTopics}
+            setSelectedTopics={setSelectedTopics}
+          />
+        </div>
+      )}
+      {/* Topics */}
 
-        {/* Posts */}
-        <InfiniteScroll
-          dataLength={feedList.length}
-          hasMore={loadMoreFeeds}
-          next={getNextPage}
-          // TODO set shimmer on loader component
-          loader={null}
-        >
-          {renderFeeds()}
-        </InfiniteScroll>
-        {/* Posts */}
-      </div>
+      {/* Posts */}
+      <InfiniteScroll
+        dataLength={feedList.length}
+        hasMore={loadMoreFeeds}
+        next={getNextPage}
+        // TODO set shimmer on loader component
+        loader={null}
+      >
+        {renderFeeds()}
+      </InfiniteScroll>
+      {/* Posts */}
+      {/* </div> */}
     </div>
   );
 };
