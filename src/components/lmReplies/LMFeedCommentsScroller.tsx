@@ -14,6 +14,7 @@ const LMFeedCommentsScroller = () => {
     users,
   } = useContext(FeedPostContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
+
   const renderComments = () => {
     return replies.map((reply: Reply) => {
       return (
@@ -24,7 +25,7 @@ const LMFeedCommentsScroller = () => {
           }}
           key={reply.Id}
         >
-          {CustomComponents?.Reply || <LMFeedReply />}
+          {CustomComponents?.Reply || <LMFeedReply mode="comment" />}
         </ReplyContext.Provider>
       );
     });

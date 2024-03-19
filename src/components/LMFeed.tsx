@@ -39,6 +39,7 @@ function LMFeed({
   routes,
   LMPostBodyStyles,
   CustomComponents,
+  CustomCallbacks,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(userId, isGuest, username, client);
@@ -60,6 +61,7 @@ function LMFeed({
           LMPostBodyStyles,
           LMPostTopicStyles,
           CustomComponents,
+          CustomCallbacks,
         }}
       >
         <UserProviderContext.Provider

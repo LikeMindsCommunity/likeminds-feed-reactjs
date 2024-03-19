@@ -30,7 +30,7 @@ const LMFeedRepliesScroller = ({
           }}
           key={reply.Id}
         >
-          {CustomComponents?.Reply || <LMFeedReply />}
+          {CustomComponents?.Reply || <LMFeedReply mode="reply" />}
         </ReplyContext.Provider>
       );
     });
