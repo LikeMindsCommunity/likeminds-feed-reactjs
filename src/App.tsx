@@ -33,6 +33,7 @@ function LMAppLayout() {
           color: "#00897B",
         },
       }}
+      CustomComponents={{}}
     ></LMFeed>
   );
 }

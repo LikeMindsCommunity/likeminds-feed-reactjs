@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Base component for setting Feed List.
 
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
@@ -12,6 +12,7 @@ import LMFeedDetails from "./LMFeedDetails";
 import { Post } from "../shared/types/models/post";
 import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import Posts from "./LMFeedPosts";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -31,7 +32,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     feedUsersList,
     getNextPage,
   } = useFetchFeeds();
-
+  const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
       const postUuid = post.uuid;
@@ -47,23 +48,29 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             topics: topics,
           }}
         >
-          <Posts post={post} user={filteredUser} />
+          {CustomComponents?.PostView || (
+            <Posts post={post} user={filteredUser} />
+          )}
         </FeedPostContext.Provider>
       );
     });
-  }, [feedList, feedUsersList, topics]);
+  }, [CustomComponents?.PostView, feedList, feedUsersList, topics]);
 
   return (
     <div className="lm-feed-wrapper">
       <div>
         {/* Topics */}
-        <div className="lm-mb-4">
-          <LMFeedViewTopicDropdown
-            mode={TopicsDropdownMode.view}
-            selectedTopic={selectedTopics}
-            setSelectedTopics={setSelectedTopics}
-          />
-        </div>
+        {CustomComponents?.TopicDropDown ? (
+          CustomComponents.TopicDropDown
+        ) : (
+          <div className="lm-mb-4">
+            <LMFeedViewTopicDropdown
+              mode={TopicsDropdownMode.view}
+              selectedTopic={selectedTopics}
+              setSelectedTopics={setSelectedTopics}
+            />
+          </div>
+        )}
         {/* Topics */}
 
         {/* Posts */}
