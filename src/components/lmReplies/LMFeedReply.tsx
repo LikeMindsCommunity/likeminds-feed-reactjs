@@ -61,7 +61,12 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
 
         <div className="lm-d-flex lm-justify-content-space-between lm-align-items-center lm-mb-5">
           <div className="like lm-d-flex">
-            <img src={likeIcon} className="lm-cursor-pointer" alt="Like" />
+            <img
+              src={likeIcon}
+              className="lm-cursor-pointer"
+              alt="Like"
+              loading="lazy"
+            />
             <span>{`${reply?.likesCount ? reply?.likesCount.toString().concat(" ") : ""}${(reply?.likesCount || 0) > 1 ? LIKES : LIKE}`}</span>
             <span>|</span>
             <span>

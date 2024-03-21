@@ -55,7 +55,6 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     if (checkedTopics.length) {
       setIsTopicSelectionMode(false);
     }
-    console.log(checkedTopics);
     setSelectedTopics
       ? setSelectedTopics(checkedTopics.map((topic) => topic.Id))
       : null;
@@ -114,7 +113,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
           <div className="lm-topic-btn-box">
             <button onClick={openTopicMenu} className="lm-all-topic-button">
               <span>{ALL_TOPICS}</span>
-              <img src={downArrowIcon} alt="down arrow icon" />
+              <img src={downArrowIcon} alt="down arrow icon" loading="lazy" />
             </button>
 
             <Menu
