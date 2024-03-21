@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { InitiateUserRequest } from "@likeminds.community/feed-js-beta";
+import { InitiateUserRequest } from "@likeminds.community/feed-js";
 
 import { InitiateUserResponse } from "../shared/types/api-responses/initiateUserResponse";
 import { GetMemberStateResponse } from "../shared/types/api-responses/getMemberStateResponse";

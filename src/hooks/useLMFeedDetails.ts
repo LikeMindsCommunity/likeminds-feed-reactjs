@@ -4,7 +4,7 @@ import { Post } from "../shared/types/models/post";
 import { Reply } from "../shared/types/models/replies";
 import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDetailsResponse";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetPostRequest } from "@likeminds.community/feed-js-beta";
+import { GetPostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 
 interface UseFeedDetailsInterface {
