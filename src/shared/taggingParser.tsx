@@ -73,6 +73,23 @@ export const parseAndReplaceTags = (text: string): ReactNode => {
   return textWithLinks;
 };
 
+export const textPreprocessor = (
+  text: string,
+): {
+  showReadMore: boolean;
+  text: string;
+} => {
+  const wordsSplit = text.split(" ");
+  if (wordsSplit.length <= 300) {
+    return {
+      text,
+      showReadMore: false,
+    };
+  } else {
+    return { showReadMore: true, text: wordsSplit.slice(0, 299).join(" ") };
+  }
+};
+
 // Function to handle route click
 const handleRouteClick = (route: string) => {
   alert(route); // Replace with your desired action

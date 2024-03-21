@@ -2,7 +2,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Topic } from "../shared/types/models/topic";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetTopicsRequest } from "@likeminds.community/feed-js-beta";
+import { GetTopicsRequest } from "@likeminds.community/feed-js";
 import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string,

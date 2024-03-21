@@ -247,6 +247,9 @@
             }
           }
         }
+        .attachment-unsupported{
+          padding: pxToRem(0) pxToRem(20);
+        }
       }
       .userTag {
         color: $info-color;
@@ -323,7 +326,7 @@
   width: 15px !important;
 }
 
-// .react-pdf__Page__canvas{
-//   width: 100% !important;
-//   aspect-ratio: 16/9;
-// }
+.react-pdf__Page__canvas{
+  width: 100% !important;
+  aspect-ratio: 16/9;
+}

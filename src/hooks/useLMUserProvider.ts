@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { InitiateUserRequest } from "@likeminds.community/feed-js-beta";
+import { InitiateUserRequest } from "@likeminds.community/feed-js";
 
 import { InitiateUserResponse } from "../shared/types/api-responses/initiateUserResponse";
 import { GetMemberStateResponse } from "../shared/types/api-responses/getMemberStateResponse";
@@ -34,9 +34,9 @@ export default function useUserProvider(
         const initiateUserCall: InitiateUserResponse =
           (await lmFeedclient?.initiateUser(
             InitiateUserRequest.builder()
-              .setUUID("")
-              .setIsGuest(true)
-              .setUserName("")
+              .setUUID(uuid || "")
+              .setIsGuest(isGuest ? true : false)
+              .setUserName(userId || "")
               .build(),
           )) as never;
         const memberStateCall: GetMemberStateResponse =

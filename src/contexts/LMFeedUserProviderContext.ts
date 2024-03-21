@@ -4,7 +4,6 @@ import { Community } from "../shared/types/models/community";
 
 interface UserProviderContextInterface {
   currentUser: User | null;
-
   logoutUser: (() => void) | null;
   currentCommunity: Community | null;
 }

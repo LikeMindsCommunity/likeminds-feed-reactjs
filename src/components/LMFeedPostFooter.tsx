@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { LMCommentAction, LMLikeAction } from "../shared/actions";
+
 import like from "../assets/images/like.svg";
 import commnent from "../assets/images/comment.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import {
   COMMNENT,
   COMMNENTS,
+  GUEST_USER_ACTION_MESSAGE,
   LIKE,
   LIKES,
 } from "../shared/constants/lmAppConstant";
@@ -33,7 +34,9 @@ const LMFeedPostFooter = () => {
     <>
       <div
         className="lm-feed-wrapper__card__footer"
-        onClick={postFooterClickCallback}
+        onClick={() =>
+          postFooterClickCallback ? postFooterClickCallback(navigation) : null
+        }
       >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
@@ -44,9 +47,9 @@ const LMFeedPostFooter = () => {
                 <img
                   onClick={() => {
                     if (likeActionCallback) {
-                      likeActionCallback();
+                      likeActionCallback(navigation);
                     } else {
-                      LMLikeAction();
+                      alert(GUEST_USER_ACTION_MESSAGE);
                     }
                   }}
                   src={like}
@@ -56,7 +59,11 @@ const LMFeedPostFooter = () => {
               )}
               <span
                 style={LMPostFooterStyles?.likesCountStyles}
-                onClick={likeTextCountClickCallback}
+                onClick={() =>
+                  likeTextCountClickCallback
+                    ? likeTextCountClickCallback(navigation)
+                    : null
+                }
               >
                 {" "}
                 {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
@@ -76,9 +83,9 @@ const LMFeedPostFooter = () => {
                 <img
                   onClick={() => {
                     if (commentIconClickCallback) {
-                      commentIconClickCallback();
+                      commentIconClickCallback(navigation);
                     } else {
-                      LMCommentAction();
+                      alert(GUEST_USER_ACTION_MESSAGE);
                     }
                   }}
                   className="lm-cursor-pointer"
@@ -89,7 +96,11 @@ const LMFeedPostFooter = () => {
               <span
                 style={LMPostFooterStyles?.commentsCountStyles}
                 className="comments"
-                onClick={commentTextCountClickCallback}
+                onClick={() =>
+                  commentTextCountClickCallback
+                    ? commentTextCountClickCallback(navigation)
+                    : null
+                }
               >
                 {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
               </span>

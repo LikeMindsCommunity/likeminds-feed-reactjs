@@ -3,7 +3,7 @@ import { User } from "../shared/types/models/member";
 import { Reply } from "../shared/types/models/replies";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
-import { GetCommentRequest } from "@likeminds.community/feed-js-beta";
+import { GetCommentRequest } from "@likeminds.community/feed-js";
 
 interface UseReplyInterface {
   reply: Reply | null;

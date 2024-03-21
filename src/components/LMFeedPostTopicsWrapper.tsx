@@ -15,7 +15,7 @@ const LMFeedPostTopicsWrapper = () => {
         className="lm-feed-wrapper__card__topic-view-wrapper"
         style={LMPostTopicStyles?.topicWrapperStyles}
       >
-        {topics.map((topicId: string) => {
+        {topics?.map((topicId: string) => {
           return CustomComponents?.PostTopicTile ? (
             <CustomComponents.PostTopicTile
               key={topicId}
