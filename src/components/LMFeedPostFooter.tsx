@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { LMCommentAction, LMLikeAction } from "../shared/actions";
+
 import like from "../assets/images/like.svg";
 import commnent from "../assets/images/comment.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import {
   COMMNENT,
   COMMNENTS,
+  GUEST_USER_ACTION_MESSAGE,
   LIKE,
   LIKES,
 } from "../shared/constants/lmAppConstant";
@@ -48,7 +49,7 @@ const LMFeedPostFooter = () => {
                     if (likeActionCallback) {
                       likeActionCallback(navigation);
                     } else {
-                      LMLikeAction();
+                      alert(GUEST_USER_ACTION_MESSAGE);
                     }
                   }}
                   src={like}
@@ -84,7 +85,7 @@ const LMFeedPostFooter = () => {
                     if (commentIconClickCallback) {
                       commentIconClickCallback(navigation);
                     } else {
-                      LMCommentAction();
+                      alert(GUEST_USER_ACTION_MESSAGE);
                     }
                   }}
                   className="lm-cursor-pointer"

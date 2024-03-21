@@ -16,9 +16,7 @@ function LMAppLayout() {
     .setPlatformCode(LM_APP_CONFIG.PLATFORM_CODE)
     .setVersionCode(LM_APP_CONFIG.VERSION_CODE)
     .build();
-  return (
-    <LMFeed userId="testUser1" username="testUser1" client={client}></LMFeed>
-  );
+  return <LMFeed userId="" username="" client={client}></LMFeed>;
 }
 
 export default LMAppLayout;

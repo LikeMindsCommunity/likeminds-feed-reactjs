@@ -15,3 +15,5 @@ export const ALL_TOPICS = "all topics";
 
 export const COMMENT_TILE_MODE = "COMMENT";
 export const REPLY_TILE_MODE = "REPLY";
+
+export const GUEST_USER_ACTION_MESSAGE = "you are not logged in";

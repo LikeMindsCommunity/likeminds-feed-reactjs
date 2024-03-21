@@ -3,13 +3,17 @@ import { parseAndReplaceTags, textPreprocessor } from "../shared/taggingParser";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedAttachments from "../shared/components/LMFeedAttachments";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { useNavigate } from "react-router-dom";
 
 const LMFeedPostBody = () => {
   const { post } = useContext(FeedPostContext);
   const { text, attachments, heading } = post!;
-  const { LMPostBodyStyles } = useContext(CustomAgentProviderContext);
+  const { LMPostBodyStyles, CustomCallbacks = {} } = useContext(
+    CustomAgentProviderContext,
+  );
   const [hasReadMoreTapped, setHasReadMoreTapped] = useState<boolean>(false);
-
+  const navigate = useNavigate();
+  const { postHeadingClickCallback } = CustomCallbacks;
   // Render attachments
   const renderAttachments = () => {
     if (!attachments || attachments.length === 0) return null;
@@ -26,7 +30,23 @@ const LMFeedPostBody = () => {
       {heading.length > 0 && (
         <h1
           className="lm-feed-wrapper__card__body__heading"
-          style={LMPostBodyStyles?.heading}
+          style={{
+            cursor: !window.location.pathname.includes("/post")
+              ? "pointer"
+              : undefined,
+            ...LMPostBodyStyles?.heading,
+          }}
+          onClick={() => {
+            if (postHeadingClickCallback) {
+              postHeadingClickCallback(navigate);
+            } else {
+              if (!window.location.pathname.includes("/post")) {
+                navigate(
+                  `/community/post/${`${post?.Id}-${post?.heading}`.substring(0, 59)}`,
+                );
+              }
+            }
+          }}
         >
           {heading}
         </h1>

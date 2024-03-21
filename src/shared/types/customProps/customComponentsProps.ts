@@ -12,6 +12,7 @@ export interface CustomComponents {
   PostView?: ReactNode;
   RepliesScroller?: ReactNode;
   PostTopicTile?: React.FC<{ key: string; topic: Topic }>;
+  PostDetailsView?: ReactNode;
 }
 
 export interface CustomCallbacks {
@@ -32,6 +33,7 @@ export interface CustomCallbacks {
   postHeaderTitleClickCallback?: FN;
   postHeaderCustomTitleClickCallback?: FN;
   postFooterClickCallback?: FN;
+  postHeadingClickCallback?: FN;
 }
 
 type FN = (navigate: NavigateFunction, ...args: unknown[]) => unknown;
