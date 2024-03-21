@@ -79,7 +79,7 @@ function LMFeed({
                 <>
                   <Routes>
                     {routes.map((routeObject) => (
-                      <Route path={routeObject.route} />
+                      <Route key={routeObject.route} path={routeObject.route} />
                     ))}
                   </Routes>
                 </>
