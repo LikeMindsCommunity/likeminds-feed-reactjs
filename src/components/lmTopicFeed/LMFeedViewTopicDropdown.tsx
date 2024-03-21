@@ -55,7 +55,6 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     if (checkedTopics.length) {
       setIsTopicSelectionMode(false);
     }
-    console.log(checkedTopics);
     setSelectedTopics
       ? setSelectedTopics(checkedTopics.map((topic) => topic.Id))
       : null;

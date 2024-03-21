@@ -25,7 +25,6 @@ interface LMFeedUniversalFeedProps {
 
 const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
   const params = useParams();
-  console.log(params);
   const {
     PostView = null,
     Shimmer = null,
