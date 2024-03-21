@@ -19,8 +19,8 @@ export interface LMPostFooterStyles {
   commentsCountStyles?: CSSProperties;
   likeButtonCustom?: () => JSX.Element;
   commentButtonCustom?: () => JSX.Element;
-  likeActionCallBack?: () => void;
-  commentActionCallBack?: () => void;
+  // likeActionCallBack?: () => void;
+  // commentActionCallBack?: () => void;
 }
 
 export interface LMPostTopicsStyles {

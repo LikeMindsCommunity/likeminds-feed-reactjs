@@ -33,7 +33,9 @@ const LMFeedPostFooter = () => {
     <>
       <div
         className="lm-feed-wrapper__card__footer"
-        onClick={postFooterClickCallback}
+        onClick={() =>
+          postFooterClickCallback ? postFooterClickCallback(navigation) : null
+        }
       >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
@@ -44,7 +46,7 @@ const LMFeedPostFooter = () => {
                 <img
                   onClick={() => {
                     if (likeActionCallback) {
-                      likeActionCallback();
+                      likeActionCallback(navigation);
                     } else {
                       LMLikeAction();
                     }
@@ -56,7 +58,11 @@ const LMFeedPostFooter = () => {
               )}
               <span
                 style={LMPostFooterStyles?.likesCountStyles}
-                onClick={likeTextCountClickCallback}
+                onClick={() =>
+                  likeTextCountClickCallback
+                    ? likeTextCountClickCallback(navigation)
+                    : null
+                }
               >
                 {" "}
                 {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
@@ -76,7 +82,7 @@ const LMFeedPostFooter = () => {
                 <img
                   onClick={() => {
                     if (commentIconClickCallback) {
-                      commentIconClickCallback();
+                      commentIconClickCallback(navigation);
                     } else {
                       LMCommentAction();
                     }
@@ -89,7 +95,11 @@ const LMFeedPostFooter = () => {
               <span
                 style={LMPostFooterStyles?.commentsCountStyles}
                 className="comments"
-                onClick={commentTextCountClickCallback}
+                onClick={() =>
+                  commentTextCountClickCallback
+                    ? commentTextCountClickCallback(navigation)
+                    : null
+                }
               >
                 {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
               </span>

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Topic } from "../models/topic";
+import { NavigateFunction } from "react-router-dom";
 
 export interface CustomComponents {
   PostViewHeader?: ReactNode;
@@ -18,21 +19,19 @@ export interface CustomCallbacks {
   likeTextCountClickCallback?: FN;
   commentIconClickCallback?: FN;
   commentTextCountClickCallback?: FN;
-  postFooterClickCallback?: FN;
   commentUsernameClickCallback?: FN;
   commentTextContentClickCallback?: FN;
   commentLikeActionCallback?: FN;
-  commentLikeTextClickCallback?: FN;
+  replyLikeActionCallback?: FN;
   replyActionButtonClickCallback?: FN;
   repliesCountClickCallback?: FN;
   replyUsernameClickCallback?: FN;
   replyTextContentClickCallback?: FN;
-  postFooterTileClickCallback?: FN;
-  postBodyClickCallback?: FN;
-  postHeaderClickCallback?: FN;
   postTopicTileClickCallback?: FN;
-  postCommentTileClickCallback?: FN;
-  commentReplyTileClickCallback?: FN;
+  postHeaderAvatarClickCallback?: FN;
+  postHeaderTitleClickCallback?: FN;
+  postHeaderCustomTitleClickCallback?: FN;
+  postFooterClickCallback?: FN;
 }
 
-type FN = (...args: unknown[]) => unknown;
+type FN = (navigate: NavigateFunction, ...args: unknown[]) => unknown;
