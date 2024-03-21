@@ -3,7 +3,7 @@ import LMAppLayout from "../App";
 import LMFeedError from "./components/LMFeedError";
 import LMFeed from "../components/LMFeed";
 import LMFeedDetails from "../components/LMFeedDetails";
-import { LMFeedClient } from "@likeminds.community/feed-js-beta";
+import { LMFeedClient } from "@likeminds.community/feed-js";
 
 // Routing
 const LMAppRoute = createBrowserRouter([

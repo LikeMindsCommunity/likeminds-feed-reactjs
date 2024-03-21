@@ -1,8 +1,6 @@
 import { PropsWithChildren } from "react";
-
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
-
 import UserProviderContext from "../contexts/LMFeedUserProviderContext";
 import useUserProvider from "../hooks/useLMUserProvider";
 import {
@@ -41,7 +39,7 @@ function LMFeed({
   LMPostBodyStyles,
   CustomComponents,
   CustomCallbacks,
-  useParentRouter,
+  useParentRouter = false,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(userId, isGuest, username, client);
