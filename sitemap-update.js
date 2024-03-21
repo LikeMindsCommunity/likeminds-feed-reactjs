@@ -3,7 +3,7 @@ const fs = require("fs"),
   convert = require("xml-js"),
   fetch = require("node-fetch"),
   moment = require("moment"),
-  hostBlogBaseURL = "https://niyo-feed-sample-app-web.web.app/community",
+  hostBlogBaseURL = "https://niyo-feed-sample-app-web.web.app/community/post",
   //   getBlogsListURL = `https://jsonplaceholder.typicode.com/posts`,
   //   hostBlogBaseURL = `https://niyo-feed-sample-app-web.web.app/community`,
   //   getBlogsListURL = `https://niyo-feed-sample-app-web.web.app/community`,
@@ -45,7 +45,6 @@ const fetchBlogsList = () => {
   )
     .then((res) => res.json())
     .then((dataJSON) => {
-      console.log(dataJSON.data.posts[0].heading);
       if (dataJSON) {
         dataJSON.data.posts.forEach((element) => {
           const modifiedURL = element.heading.replace(/ /g, "-");
@@ -58,24 +57,6 @@ const fetchBlogsList = () => {
       console.log(error);
     });
 };
-
-// const fetchBlogsList = () => {
-//   fetch(getBlogsListURL)
-//     .then((res) => res.json())
-//     .then((dataJSON) => {
-//       console.log(dataJSON);
-//       if (dataJSON && dataJSON.data && dataJSON.data.posts) {
-//         dataJSON.data.posts.forEach((element) => {
-//           const modifiedURL = element.title.replace(/ /g, "-");
-//           untrackedUrlsList.push(`${hostBlogBaseURL}/${modifiedURL}`);
-//         });
-//         filterUniqueURLs();
-//       }
-//     })
-//     .catch((error) => {
-//       console.log("Error fetching blogs:", error);
-//     });
-// };
 
 /* 
     Method to Filter/Unique already existing URLs and new urls we fetched from DB

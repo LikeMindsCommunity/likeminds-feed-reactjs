@@ -24,7 +24,12 @@ const getAvatar = ({ imageUrl, name, onError }: AvatarProps): JSX.Element => {
   };
 
   return imageUrl ? (
-    <img src={imageUrl} onError={handleImageError} alt="avatar" />
+    <img
+      src={imageUrl}
+      onError={handleImageError}
+      alt="avatar"
+      loading="lazy"
+    />
   ) : (
     <div className="avatar-initials lm-flex-container lm-justify-content-center lm-align-items-center">
       {name ? getInitials(name) : ""}
@@ -32,5 +37,4 @@ const getAvatar = ({ imageUrl, name, onError }: AvatarProps): JSX.Element => {
   );
 };
 
-
-export {getInitials, handleImageError, getAvatar}
+export { getInitials, handleImageError, getAvatar };

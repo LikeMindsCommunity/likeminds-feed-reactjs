@@ -100,6 +100,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                   }
                 }
               }}
+              loading="lazy"
             />
             <span>{`${reply?.likesCount ? reply?.likesCount.toString().concat(" ") : ""}${(reply?.likesCount || 0) > 1 ? LIKES : LIKE}`}</span>
             <span>|</span>
