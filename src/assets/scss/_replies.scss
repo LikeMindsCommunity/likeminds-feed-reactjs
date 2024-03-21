@@ -72,6 +72,7 @@
       }
     }
   }
+
   &__answer {
     font-size: pxToRem(14);
     font-weight: 400;
@@ -114,4 +115,12 @@
   font-size: pxToRem(14);
   line-height: pxToRem(20);
   font-weight: 400;
+}
+
+.lm-social-action-bar__lmReply
+  .lm-social-action-bar__lmReply
+  .lm-social-action-bar__lmReply
+  .lm-social-action-bar__lmReply,
+.lm-social-action-bar__lmReply .lm-social-action-bar__lmReply {
+  padding-right: 0;
 }
