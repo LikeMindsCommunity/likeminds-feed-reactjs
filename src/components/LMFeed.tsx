@@ -14,6 +14,7 @@ import LMFeedDetails from "./LMFeedDetails";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
 import { RouteModifiers } from "../shared/types/customProps/routes";
+import "../assets/scss/styles.scss";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;

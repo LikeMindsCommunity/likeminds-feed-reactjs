@@ -16,7 +16,7 @@ export default defineConfig({
         lib: {
             // Could also be a dictionary or array of multiple entry points
             entry: resolve(__dirname, 'src/index.ts'),
-            name: 'beta-react-feed-lib',
+            name: 'react-feed-lib',
             // the proper extensions will be added
             fileName: 'index',
         },

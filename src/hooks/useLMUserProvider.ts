@@ -35,7 +35,7 @@ export default function useUserProvider(
           (await lmFeedclient?.initiateUser(
             InitiateUserRequest.builder()
               .setUUID(uuid || "")
-              .setIsGuest(isGuest || true)
+              .setIsGuest(isGuest ? true : false)
               .setUserName(userId || "")
               .build(),
           )) as never;
