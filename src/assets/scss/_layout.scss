@@ -1,0 +1,53 @@
+.lm-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lm-header {
+  background-color: #007bff;
+  color: $light-color;
+  padding: 20px;
+}
+
+.lm-footer {
+  background-color: $dark-color;
+  color: $light-color;
+  padding: 20px;
+}
+
+.lm-sidebar {
+  width: 250px;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.lm-main-content {
+  padding: 20px;
+  margin: 0 0 20px; /* Example margin for spacing */
+  background-color: $light-color;
+}
+
+/* Example grid system using CSS Grid */
+.lm-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.lm-grid-item {
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+/* Example Flexbox layout */
+.lm-flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.lm-flex-item {
+  width: calc(33.33% - 20px);
+  background-color: #f8f9fa;
+  padding: 20px;
+}
