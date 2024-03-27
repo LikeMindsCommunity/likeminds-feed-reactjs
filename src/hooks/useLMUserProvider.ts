@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { InitiateUserRequest } from "@likeminds.community/feed-js";
 
-import { InitiateUserResponse } from "../shared/types/api-responses/initiateUserResponse";
 import { GetMemberStateResponse } from "../shared/types/api-responses/getMemberStateResponse";
 import { User } from "../shared/types/models/member";
 import { Community } from "../shared/types/models/community";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
+import { ValidateUserResponse } from "../shared/types/api-responses/initiateUserResponse";
+import { ValidateUserRequest } from "@likeminds.community/feed-js-beta";
 
 interface UserProviderInterface {
   lmFeedUser: User | null;
@@ -14,9 +14,8 @@ interface UserProviderInterface {
 }
 // Hook to provide user details
 export default function useUserProvider(
-  uuid: string,
-  isGuest: boolean,
-  userId = "",
+  accessToken: string,
+  refreshToken: string,
   lmFeedclient: LMClient,
 ): UserProviderInterface {
   const [lmFeedUser, setLmFeedUser] = useState<null | User>(null);
@@ -31,17 +30,24 @@ export default function useUserProvider(
     // calling initiateuser and memberstate apis and setting the user details
     async function setUser() {
       try {
-        const initiateUserCall: InitiateUserResponse =
-          (await lmFeedclient?.initiateUser(
-            InitiateUserRequest.builder()
-              .setUUID(uuid || "")
-              .setIsGuest(isGuest ? true : false)
-              .setUserName(userId || "")
+        // const initiateUserCall: InitiateUserResponse =
+        //   (await lmFeedclient?.initiateUser(
+        //     InitiateUserRequest.builder()
+        //       .setUUID(uuid || "")
+        //       .setIsGuest(isGuest ? true : false)
+        //       .setUserName(userId || "")
+        //       .build(),
+        //   )) as never;
+        const initiateUserCall: ValidateUserResponse =
+          (await lmFeedclient?.validateUser(
+            ValidateUserRequest.builder()
+              .setaccessToken(accessToken)
+              .setrefreshToken(refreshToken)
               .build(),
           )) as never;
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
-        if (initiateUserCall.success && memberStateCall.success) {
+        if (initiateUserCall && memberStateCall.success) {
           const user = {
             ...initiateUserCall.data?.user,
             ...memberStateCall.data.member,
@@ -57,7 +63,7 @@ export default function useUserProvider(
     }
 
     setUser();
-  }, [isGuest, lmFeedclient, userId, uuid]);
+  }, [accessToken, lmFeedclient, refreshToken]);
   function logoutUser() {
     setLmFeedUser(null);
   }

@@ -25,7 +25,7 @@ export default [
             commonjs(),
             typescript({ tsconfig: './tsconfig.json' })
         ],
-        external: ["react", "react-dom"]
+        external: ["react", "react-dom", "@likeminds.community/feed-js-beta"]
     },
     {
         input: 'dist/esm/types/index.d.ts',
