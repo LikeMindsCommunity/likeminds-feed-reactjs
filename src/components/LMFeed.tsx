@@ -20,18 +20,12 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
   routes?: RouteModifiers[];
-  // username?: string;
-  // userId: string;
-  // isGuest?: boolean;
   useParentRouter?: boolean;
   accessToken: string;
   refreshToken: string;
 }
 
 function LMFeed({
-  // username = "",
-  // userId,
-  // isGuest = false,
   accessToken,
   refreshToken,
   client,
