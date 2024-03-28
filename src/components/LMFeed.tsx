@@ -20,16 +20,14 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
   routes?: RouteModifiers[];
-  username?: string;
-  userId: string;
-  isGuest?: boolean;
   useParentRouter?: boolean;
+  accessToken: string;
+  refreshToken: string;
 }
 
 function LMFeed({
-  username = "",
-  userId,
-  isGuest = false,
+  accessToken,
+  refreshToken,
   client,
   likeActionCall,
   topicBlocksWrapperStyles,
@@ -43,10 +41,11 @@ function LMFeed({
   useParentRouter = false,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
-    useUserProvider(userId, isGuest, username, client);
+    useUserProvider(accessToken, refreshToken, client);
   if (!lmFeedUser) {
     return null;
   }
+
   return (
     <GlobalClientProviderContext.Provider
       value={{
