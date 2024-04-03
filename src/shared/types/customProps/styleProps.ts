@@ -35,3 +35,10 @@ export interface CustomComponents {
   TopicDropDown: ReactNode;
   PostView: ReactNode;
 }
+
+export interface LMFeedCreatePostStyles {
+  // custom styles
+
+  // custom properties
+  dialogHeading?: string;
+}
