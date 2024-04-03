@@ -13,6 +13,7 @@ import { Post } from "../shared/types/models/post";
 import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import Posts from "./LMFeedPosts";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import LMFeedCreatePost from "./LMFeedCreatePost";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -58,6 +59,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
+      <LMFeedCreatePost />
       {/* <div> */}
       {/* Topics */}
       {CustomComponents?.TopicDropDown ? (
