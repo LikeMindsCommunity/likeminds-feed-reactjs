@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 
 interface UseCreatePost {
   postText: string;
@@ -7,10 +8,19 @@ interface UseCreatePost {
   addMediaItem: (media: File) => void;
   removeMedia: (index: number) => void;
   clearMedia: () => void;
+  mediaUploadMode: LMFeedCreatePostMediaUploadMode;
+  changeMediaUploadMode: (mode: LMFeedCreatePostMediaUploadMode) => void;
 }
 export function useCreatePost(): UseCreatePost {
   const [text, setText] = useState<string>("");
   const [mediaList, setMediaList] = useState<File[]>([]);
+  const [mediaUploadMode, setMediaUploadMode] =
+    useState<LMFeedCreatePostMediaUploadMode>(
+      LMFeedCreatePostMediaUploadMode.NULL,
+    );
+  function changeMediaUploadMode(mode: LMFeedCreatePostMediaUploadMode) {
+    setMediaUploadMode(mode);
+  }
   function setPostText(txt: string) {
     setText(txt);
   }
@@ -34,5 +44,7 @@ export function useCreatePost(): UseCreatePost {
     addMediaItem,
     removeMedia,
     clearMedia,
+    mediaUploadMode,
+    changeMediaUploadMode,
   };
 }
