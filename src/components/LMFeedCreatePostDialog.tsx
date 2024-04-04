@@ -4,8 +4,13 @@ import { getAvatar } from "../shared/components/LMUserMedia";
 import LMFeedTextArea from "../shared/components/LMFeedTextArea";
 import LMFeedMediaUpload from "./LMFeedMediaUpload";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
-
-const LMFeedCreatePostDialog = () => {
+import LMFeedCreatePostAttachmentController from "../shared/components/LMFeedCreatePostAttachmentController";
+import LMFeedCreatePostSubmitButton from "../shared/components/LMFeedCreatePostSubmitButton";
+interface LMFeedCreatePostDialogProps {
+  mediaUploadDialog?: string;
+}
+// eslint-disable-next-line no-empty-pattern
+const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
   return (
     <div className="lm-feed-create-post-wrapper">
@@ -21,6 +26,8 @@ const LMFeedCreatePostDialog = () => {
       </div>
       <LMFeedTextArea />
       <LMFeedMediaUpload />
+      <LMFeedCreatePostAttachmentController />
+      <LMFeedCreatePostSubmitButton />
     </div>
   );
 };
