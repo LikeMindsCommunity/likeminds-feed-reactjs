@@ -1,7 +1,9 @@
 .lm-feed-create-post-wrapper {
     padding: pxToRem(20) pxToRem(36) pxToRem(28) pxToRem(36);
     width: pxToRem(460);
-    height: pxToRem(388);
+    min-height: pxToRem(388);
+    max-width: pxToRem(661);
+    border-radius: pxToRem(16);
     position: relative;
     &__dialog-heading {
         margin-bottom: pxToRem(36);
@@ -43,7 +45,30 @@
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        
+        input{
+            display: none;
+        }
+    }
+    &__attachments-controller{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: pxToRem(16);
+        border: pxToRem(1) solid rgba(208, 216, 226, 0.4);
+        border-radius: pxToRem(8);
+        margin: pxToRem(24) 0;
+    }
+    &__submit-button{
+        padding: pxToRem(8) pxToRem(16);
+        border-radius: pxToRem(8);
+        background-color: rgba(80, 70, 229, 1);
+        text-align: center;
+        span{
+            font-size: pxToRem(16);
+            font-weight: 500;
+            line-height: pxToRem(20);
+            color: white;
+        }
     }
 }
 

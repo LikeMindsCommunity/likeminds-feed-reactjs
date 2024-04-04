@@ -6,10 +6,12 @@ import user from "../assets/images/lm-photo.svg";
 import photo from "../assets/images/lm-photo.svg";
 import video from "../assets/images/VideoCamera.svg";
 import pdf from "../assets/images/lm-attach.svg";
+// import { useCreatePost } from "../hooks/useCreatePost";
 
 const LMFeedCreatePost = () => {
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
+  // const {postText, setPostText, mediaList, addMediaItem, removeMedia, clearMedia} = useCreatePost()
   return (
     <div>
       <div className="lm-createPost">
