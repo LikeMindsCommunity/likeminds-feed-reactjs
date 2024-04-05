@@ -4,6 +4,9 @@
   width: 100%;
   height: auto;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
 
   .lm-feed {
     margin: 0 auto;
@@ -270,6 +273,21 @@
   font-size: pxToRem(16);
   font-weight: 400;
 }
+
+// Member list
+.lm-member{
+  height: 100vh;
+  max-width: 360px;
+  width: 100%;
+  background-color: #fff;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  border: none;
+}
+
+// Member list
 
 // Responsive Styles for different mobile screens
 @media (max-width: 767px) {

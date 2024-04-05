@@ -14,6 +14,7 @@ import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import Posts from "./LMFeedPosts";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import LMFeedCreatePost from "./LMFeedCreatePost";
+import LMFeedAllMembers from "./LMFeedAllMembers";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -59,34 +60,39 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper">
-      <LMFeedCreatePost />
-      {/* <div> */}
-      {/* Topics */}
-      {CustomComponents?.TopicDropDown ? (
-        CustomComponents.TopicDropDown
-      ) : (
-        <div className="lm-mb-4 lm-mt-4">
-          {/* <LMFeedViewTopicDropdown
+      <div className="lm-flex-grow">
+        <LMFeedCreatePost />
+        {/* <div> */}
+        {/* Topics */}
+        {CustomComponents?.TopicDropDown ? (
+          CustomComponents.TopicDropDown
+        ) : (
+          <div className="lm-mb-4 lm-mt-4">
+            {/* <LMFeedViewTopicDropdown
             mode={TopicsDropdownMode.view}
             selectedTopic={selectedTopics}
             setSelectedTopics={setSelectedTopics}
           /> */}
-        </div>
-      )}
-      {/* Topics */}
+          </div>
+        )}
+        {/* Topics */}
 
-      {/* Posts */}
-      <InfiniteScroll
-        dataLength={feedList.length}
-        hasMore={loadMoreFeeds}
-        next={getNextPage}
-        // TODO set shimmer on loader component
-        loader={null}
-      >
-        {renderFeeds()}
-      </InfiniteScroll>
-      {/* Posts */}
-      {/* </div> */}
+        {/* Posts */}
+        <InfiniteScroll
+          dataLength={feedList.length}
+          hasMore={loadMoreFeeds}
+          next={getNextPage}
+          // TODO set shimmer on loader component
+          loader={null}
+        >
+          {renderFeeds()}
+        </InfiniteScroll>
+        {/* Posts */}
+        {/* </div> */}
+      </div>
+      <div className="lm-member">
+        <LMFeedAllMembers />
+      </div>
     </div>
   );
 };
