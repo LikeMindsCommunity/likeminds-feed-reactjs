@@ -1,0 +1,52 @@
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as AWS from "aws-sdk";
+
+// interface HelperFunctionsInterface {
+//   static detectLinks(text: string): any[];
+//   parseDataLayerResponse(response: any): any;
+// }
+
+export class HelperFunctionsClass {
+  static detectLinks(text: string) {
+    const regex = /\b(?:https?:\/\/)?(?:[\w.]+\.\w+)(?:(?<=\\n)|\b)/g;
+    const links = text?.match(regex);
+    return links ? links : [];
+  }
+
+  static parseDataLayerResponse(response: any) {
+    return {
+      ...response,
+    };
+  }
+
+  logError(err: any) {
+    if (process.env.NODE_ENV === "development") {
+      console.log(`%c ${err}`, 'background: #222; color: "white";');
+    }
+  }
+
+  static getAWS() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    (AWS.config.region = "ap-south-1"),
+      (AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: "ap-south-1:181963ba-f2db-450b-8199-964a941b38c2",
+      }));
+    const s3 = new AWS.S3({
+      apiVersion: "2006-03-01",
+      params: { Bucket: "beta-likeminds-media" },
+    });
+    return s3;
+  }
+
+  static uploadMedia(media: any, userUniqueId: any) {
+    const mediaObject = this.getAWS().upload({
+      Key: `files/post/${userUniqueId}/${media.name}`,
+      Bucket: "beta-likeminds-media",
+      Body: media,
+      ACL: "public-read-write",
+      ContentType: media.type,
+    });
+    return mediaObject.promise();
+  }
+}

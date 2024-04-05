@@ -94,3 +94,44 @@ export const textPreprocessor = (
 const handleRouteClick = (route: string) => {
   alert(route); // Replace with your desired action
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function setTagUserImage(user: any) {
+  const imageLink = user?.imageUrl;
+  if (imageLink !== "") {
+    return (
+      <img
+        src={imageLink}
+        alt={""}
+        style={{
+          width: "100%",
+          height: "100%",
+          borderRadius: "50%",
+        }}
+      />
+    );
+  } else {
+    return (
+      <div
+        style={{
+          minWidth: "36px",
+          width: "36px",
+          height: "36px",
+          borderRadius: "50%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#5046e5",
+          fontSize: "14px",
+          fontWeight: "bold",
+          color: "#fff",
+          letterSpacing: "1px",
+        }}
+      >
+        {user?.name?.split(" ").map((part: string) => {
+          return part.charAt(0)?.toUpperCase();
+        })}
+      </div>
+    );
+  }
+}

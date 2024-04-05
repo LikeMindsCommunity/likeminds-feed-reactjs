@@ -1,7 +1,7 @@
 .lm-feed-create-post-wrapper {
     padding: pxToRem(20) pxToRem(36) pxToRem(28) pxToRem(36);
     width: pxToRem(460);
-    min-height: pxToRem(388);
+    // min-height: pxToRem(388);
     max-width: pxToRem(661);
     border-radius: pxToRem(16);
     position: relative;
@@ -47,6 +47,23 @@
         cursor: pointer;
         input{
             display: none;
+        }
+        .file-upload-text{
+            font-size: pxToRem(16);
+            line-height: pxToRem(20);
+            font-weight: 400;
+            color: #484F67;
+        }
+        .file-upload-subtext{
+            font-size: pxToRem(12);
+            line-height: pxToRem(16);
+            font-weight: 400;
+            color: rgba(72, 79, 103, 0.5);
+        }
+        .close-icon{
+            position: absolute;
+            top: pxToRem(16);
+            right: pxToRem(16);;
         }
     }
     &__attachments-controller{
