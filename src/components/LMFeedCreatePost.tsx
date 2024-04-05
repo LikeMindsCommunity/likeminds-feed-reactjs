@@ -1,6 +1,6 @@
 import { Dialog } from "@mui/material";
 import React, { useState } from "react";
-import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
+// import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
 
 import user from "../assets/images/lm-photo.svg";
 import photo from "../assets/images/lm-photo.svg";
@@ -9,6 +9,8 @@ import pdf from "../assets/images/lm-attach.svg";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { useCreatePost } from "../hooks/useCreatePost";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
+import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
+// import { useCreatePost } from "../hooks/useCreatePost";
 
 const LMFeedCreatePost = () => {
   const [openCreatePostDialog, setOpenCreatePostDialog] =
@@ -96,7 +98,6 @@ const LMFeedCreatePost = () => {
               </div>
             </div>
           </div>
-
           <div className="lm-createPost__footer__right">
             <button
               className="lm-createPost__footer__right--btn-primary"
