@@ -1,20 +1,53 @@
 import { Dialog } from "@mui/material";
-import React, { useState } from "react";
 // import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
 
 import user from "../assets/images/lm-photo.svg";
 import photo from "../assets/images/lm-photo.svg";
 import video from "../assets/images/VideoCamera.svg";
 import pdf from "../assets/images/lm-attach.svg";
+import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
+import { useCreatePost } from "../hooks/useCreatePost";
+import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
-// import { useCreatePost } from "../hooks/useCreatePost";
 
 const LMFeedCreatePost = () => {
-  const [openCreatePostDialog, setOpenCreatePostDialog] =
-    useState<boolean>(false);
-  // const {postText, setPostText, mediaList, addMediaItem, removeMedia, clearMedia} = useCreatePost()
+  const {
+    postText,
+    setPostText,
+    mediaList,
+    addMediaItem,
+    removeMedia,
+    clearMedia,
+    mediaUploadMode,
+    changeMediaUploadMode,
+    textFieldRef,
+    containerRef,
+    postFeed,
+    ogTag,
+    openCreatePostDialog,
+    setOpenCreatePostDialog,
+    temporaryPost,
+  } = useCreatePost();
   return (
-    <div>
+    <LMFeedCreatePostContext.Provider
+      value={{
+        postText,
+        setPostText,
+        mediaList,
+        addMediaItem,
+        removeMedia,
+        clearMedia,
+        mediaUploadMode,
+        changeMediaUploadMode,
+        textFieldRef,
+        containerRef,
+        postFeed,
+        ogTag,
+        openCreatePostDialog,
+        setOpenCreatePostDialog,
+        temporaryPost,
+      }}
+    >
       <div className="lm-createPost">
         <div className="lm-createPost__media">
           <div className="lm-createPost__media__imgBox">
@@ -26,7 +59,13 @@ const LMFeedCreatePost = () => {
         </div>
         <div className="lm-createPost__footer">
           <div className="lm-createPost__footer__left">
-            <div className="lm-createPost__footer__left__media">
+            <div
+              className="lm-createPost__footer__left__media lm-cursor-pointer"
+              onClick={() => {
+                setOpenCreatePostDialog(!openCreatePostDialog);
+                changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.IMAGE);
+              }}
+            >
               <div className="lm-createPost__footer__left__media--imgBox">
                 <img src={photo} alt="image" />
               </div>
@@ -34,7 +73,13 @@ const LMFeedCreatePost = () => {
                 Photo
               </div>
             </div>
-            <div className="lm-createPost__footer__left__media">
+            <div
+              className="lm-createPost__footer__left__media lm-cursor-pointer"
+              onClick={() => {
+                setOpenCreatePostDialog(!openCreatePostDialog);
+                changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.VIDEO);
+              }}
+            >
               <div className="lm-createPost__footer__left__media--imgBox">
                 <img src={video} alt="video" />
               </div>
@@ -42,7 +87,13 @@ const LMFeedCreatePost = () => {
                 Video
               </div>
             </div>
-            <div className="lm-createPost__footer__left__media">
+            <div
+              className="lm-createPost__footer__left__media lm-cursor-pointer"
+              onClick={() => {
+                setOpenCreatePostDialog(!openCreatePostDialog);
+                changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.DOCUMENT);
+              }}
+            >
               <div className="lm-createPost__footer__left__media--imgBox">
                 <img src={pdf} alt="pdf" />
               </div>
@@ -63,6 +114,7 @@ const LMFeedCreatePost = () => {
             <Dialog
               open={openCreatePostDialog}
               onClose={() => {
+                changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.NULL);
                 setOpenCreatePostDialog(false);
               }}
             >
@@ -71,7 +123,7 @@ const LMFeedCreatePost = () => {
           </div>
         </div>
       </div>
-    </div>
+    </LMFeedCreatePostContext.Provider>
   );
 };
 
