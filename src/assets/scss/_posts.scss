@@ -35,6 +35,8 @@
       display: flex;
       justify-content: space-between;
 
+      
+
       &--title {
         font-size: 1rem;
         font-weight: 500;
@@ -347,4 +349,9 @@
 .react-pdf__Page__canvas{
   width: 100% !important;
   aspect-ratio: 16/9;
+}
+
+.three-dot-menu-options{
+  padding: 18px;
+  width: pxToRem(196);
 }

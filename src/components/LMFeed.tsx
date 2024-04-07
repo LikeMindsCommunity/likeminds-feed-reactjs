@@ -15,6 +15,7 @@ import { HelmetProvider } from "react-helmet-async";
 import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
 import { RouteModifiers } from "../shared/types/customProps/routes";
 import "../assets/scss/styles.scss";
+import { LMFeedCustomEvents } from "../shared/customEvents";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -50,6 +51,7 @@ function LMFeed({
     <GlobalClientProviderContext.Provider
       value={{
         lmFeedclient: client,
+        customEventClient: new LMFeedCustomEvents(),
       }}
     >
       <CustomAgentProviderContext.Provider

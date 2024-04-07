@@ -1,5 +1,4 @@
 import { Dialog } from "@mui/material";
-import React, { useState } from "react";
 // import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
 
 import user from "../assets/images/lm-photo.svg";
@@ -10,11 +9,8 @@ import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { useCreatePost } from "../hooks/useCreatePost";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
-// import { useCreatePost } from "../hooks/useCreatePost";
 
 const LMFeedCreatePost = () => {
-  const [openCreatePostDialog, setOpenCreatePostDialog] =
-    useState<boolean>(false);
   const {
     postText,
     setPostText,
@@ -27,6 +23,10 @@ const LMFeedCreatePost = () => {
     textFieldRef,
     containerRef,
     postFeed,
+    ogTag,
+    openCreatePostDialog,
+    setOpenCreatePostDialog,
+    temporaryPost,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -42,6 +42,10 @@ const LMFeedCreatePost = () => {
         textFieldRef,
         containerRef,
         postFeed,
+        ogTag,
+        openCreatePostDialog,
+        setOpenCreatePostDialog,
+        temporaryPost,
       }}
     >
       <div className="lm-createPost">

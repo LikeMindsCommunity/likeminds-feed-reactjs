@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { LMFeedCreatePostContext } from "../../contexts/LMFeedCreatePostContext";
 import { findTag, returnCSSForTagging, setCursorAtEnd } from "../utils";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useTagging } from "../../hooks/useTagging";
 
-import { setTagUserImage } from "../taggingParser";
+import { convertTextToHTML, setTagUserImage } from "../taggingParser";
 
 const LMFeedTextArea = () => {
   const { taggingList, clearTaggingList, fetchTaggingList, setTaggingString } =
@@ -14,7 +14,16 @@ const LMFeedTextArea = () => {
     setPostText,
     textFieldRef,
     containerRef,
+    temporaryPost,
   } = useContext(LMFeedCreatePostContext);
+  useEffect(() => {
+    if (temporaryPost && textFieldRef?.current) {
+      textFieldRef.current.innerHTML = convertTextToHTML(
+        temporaryPost.text,
+      ).innerHTML;
+      setPostText!(textFieldRef.current.textContent || "");
+    }
+  }, [textFieldRef, temporaryPost, setPostText]);
   return (
     <div ref={containerRef}>
       {taggingList && taggingList?.length > 0 ? (
