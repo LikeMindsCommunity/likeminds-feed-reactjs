@@ -21,9 +21,9 @@ const LMFeedTextArea = () => {
       textFieldRef.current.innerHTML = convertTextToHTML(
         temporaryPost.text,
       ).innerHTML;
-      setPostText!(textFieldRef.current.textContent || "");
+      // setPostText!(textFieldRef.current.textContent || "");
     }
-  }, [textFieldRef, temporaryPost, setPostText]);
+  }, [textFieldRef, temporaryPost]);
   return (
     <div ref={containerRef}>
       {taggingList && taggingList?.length > 0 ? (
@@ -186,13 +186,6 @@ const LMFeedTextArea = () => {
         }}
       ></div>
     </div>
-    // <div
-    //   className="lm-feed-create-post-wrapper__post-postText-content"
-    //   contentEditable
-    //   onInput={(e) => console.log(e.currentTarget)}
-    // >
-    //   Write something here...
-    // </div>
   );
 };
 

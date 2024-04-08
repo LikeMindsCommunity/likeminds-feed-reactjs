@@ -8,13 +8,19 @@ import LMFeedCreatePostAttachmentController from "../shared/components/LMFeedCre
 import LMFeedCreatePostSubmitButton from "../shared/components/LMFeedCreatePostSubmitButton";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
+import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
+import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
 // eslint-disable-next-line no-empty-pattern
 const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
-  const { mediaUploadMode = "NULL" } = useContext(LMFeedCreatePostContext);
+  const {
+    mediaUploadMode = "NULL",
+    setSelectedTopicIds,
+    selectedTopicIds,
+  } = useContext(LMFeedCreatePostContext);
   return (
     <div className="lm-feed-create-post-wrapper">
       <div className="lm-feed-create-post-wrapper__dialog-heading">
@@ -27,6 +33,11 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         })}
         <span>{currentUser?.name}</span>
       </div>
+      <LMFeedViewTopicDropdown
+        mode={TopicsDropdownMode.modify}
+        setSelectedTopics={setSelectedTopicIds}
+        selectedTopic={selectedTopicIds}
+      />
       <LMFeedTextArea />
 
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL ? (

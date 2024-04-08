@@ -13,6 +13,7 @@ import {
 } from "../shared/constants/lmAppConstant";
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 import { useNavigate } from "react-router-dom";
+import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
 
 const LMFeedPostFooter = () => {
   const { post } = useContext(FeedPostContext);
@@ -115,6 +116,11 @@ const LMFeedPostFooter = () => {
             </div> */}
           </div>
         </div>
+
+        <div className="lm-d-flex lm-flex-grow lm-align-items-center lm-mb-5 lm-feed-reply">
+          <LMFeedReplyTextArea />
+        </div>
+
         {CustomComponents?.RepliesScroller || <LMCommentsScroller />}
       </div>
     </>

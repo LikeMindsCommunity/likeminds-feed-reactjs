@@ -27,6 +27,8 @@ const LMFeedCreatePost = () => {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    selectedTopicIds,
+    setSelectedTopicIds,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -46,6 +48,8 @@ const LMFeedCreatePost = () => {
         openCreatePostDialog,
         setOpenCreatePostDialog,
         temporaryPost,
+        selectedTopicIds,
+        setSelectedTopicIds,
       }}
     >
       <div className="lm-createPost">

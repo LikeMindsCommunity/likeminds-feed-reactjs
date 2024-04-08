@@ -18,6 +18,8 @@ interface LMFeedCreatePostContextInterface {
   openCreatePostDialog?: boolean;
   setOpenCreatePostDialog?: React.Dispatch<boolean>;
   temporaryPost?: Post | null;
+  selectedTopicIds?: string[];
+  setSelectedTopicIds?: React.Dispatch<string[]>;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>({});

@@ -37,6 +37,8 @@ interface UseCreatePost {
   openCreatePostDialog: boolean;
   setOpenCreatePostDialog: React.Dispatch<boolean>;
   temporaryPost: Post | null;
+  selectedTopicIds: string[];
+  setSelectedTopicIds: React.Dispatch<string[]>;
 }
 export function useCreatePost(): UseCreatePost {
   // Getting context values
@@ -52,6 +54,7 @@ export function useCreatePost(): UseCreatePost {
   const [text, setText] = useState<string>("");
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [mediaUploadMode, setMediaUploadMode] =
     useState<LMFeedCreatePostMediaUploadMode>(
       LMFeedCreatePostMediaUploadMode.NULL,
@@ -170,7 +173,7 @@ export function useCreatePost(): UseCreatePost {
         AddPostRequest.builder()
           .setAttachments(attachmentResponseArray)
           .setText(textContent)
-          // .setTopicIds()
+          .setTopicIds(selectedTopicIds)
           .setTempId(Date.now().toString())
           .build(),
       );
@@ -213,17 +216,24 @@ export function useCreatePost(): UseCreatePost {
       }
     }, 500);
     return () => clearTimeout(checkForLinksTimeout);
-  }, [lmFeedclient, text]);
+  }, [lmFeedclient, ogTag, text]);
   useEffect(() => {
     customEventClient?.listen("OPEN_MENU", (event: Event) => {
       setOpenCreatePostDialog(true);
       const details = (event as CustomEvent).detail;
       setTemporaryPost(details.post);
+      setSelectedTopicIds(details.post.topics);
     });
     return () => {
       customEventClient?.remove("OPEN_MENU");
     };
-  }, [textFieldRef.current]);
+  }, [customEventClient]);
+  useEffect(() => {
+    if (!setOpenCreatePostDialog) {
+      setTemporaryPost(null);
+      setSelectedTopicIds([]);
+    }
+  }, [setOpenCreatePostDialog]);
   return {
     postText: text,
     mediaList,
@@ -240,5 +250,7 @@ export function useCreatePost(): UseCreatePost {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    selectedTopicIds,
+    setSelectedTopicIds,
   };
 }

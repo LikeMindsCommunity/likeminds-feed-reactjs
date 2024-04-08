@@ -124,3 +124,16 @@
 .lm-social-action-bar__lmReply .lm-social-action-bar__lmReply {
   padding-right: 0;
 }
+
+.lm-feed-reply {
+    .reply-text-area{
+      line-height: pxToRem(20);
+      font-size: pxToRem(16);
+      font-weight: 400;
+      height: auto;
+      margin: 0 pxToRem(16);
+      border: 1px solid #D0D8E2;
+      border-radius: pxToRem(24);
+      padding: pxToRem(4) pxToRem(16);
+    }
+}

@@ -21,8 +21,8 @@ interface LMFeedTopicDropdownProps {
 
 const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
   mode,
-
   setSelectedTopics,
+  selectedTopic,
 }) => {
   // using the useTopicHook to get all the required data.
   const {
@@ -34,7 +34,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     setSearchKey,
     updateCheckedTopics,
     clearAllCheckedTopics,
-  } = useTopicDropdown(undefined, setSelectedTopics);
+  } = useTopicDropdown(selectedTopic, setSelectedTopics);
 
   // state to handle the view || setting it to true will render a view for selection topics.
   const [isTopicSelectionMode, setIsTopicSelectionMode] =
@@ -249,7 +249,6 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                 paper: {
                   sx: {
                     height: "284px",
-                    paddingX: "24px",
                     marginTop: "6px",
                     borderRadius: "8px",
                     paddingTop: "0px",
@@ -288,7 +287,6 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                 paper: {
                   sx: {
                     height: "284px",
-                    paddingX: "24px",
                     marginTop: "6px",
                     borderRadius: "8px",
                     paddingTop: "0px",

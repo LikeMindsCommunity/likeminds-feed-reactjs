@@ -12,6 +12,7 @@ import {
   LIKE,
   LIKES,
 } from "../../shared/constants/lmAppConstant";
+import LMFeedReplyTextArea from "../../shared/components/LMFeedReplyTextArea";
 interface LMFeedReplyInterface {
   mode: string;
 }
@@ -29,8 +30,10 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
     replyActionButtonClickCallback,
   } = CustomCallbacks;
   const { id = "" } = useParams();
+
   const { name } = user || {};
   const [openReplies, setOpenReplies] = useState<boolean>(false);
+  const [openReplyText, setOpenReplyText] = useState<boolean>(false);
   const navigate = useNavigate();
   return (
     <div className="lm-social-action-bar__lmReply">
@@ -111,6 +114,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                   if (replyActionButtonClickCallback) {
                     replyActionButtonClickCallback(navigate);
                   }
+                  setOpenReplyText(!openReplyText);
                 }}
               >
                 Reply{" "}
@@ -128,6 +132,11 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
           </div>
           <div className="like">{formatTimeAgo(reply?.createdAt || 0)}</div>
         </div>
+        {openReplyText ? (
+          <div className="lm-d-flex lm-flex-grow lm-align-items-center lm-mb-5 lm-feed-reply">
+            <LMFeedReplyTextArea setOpenReplyText={setOpenReplyText} />
+          </div>
+        ) : null}
       </div>
       <div className="lm-social-action-bar__lmReply__commentsScroller">
         {openReplies && (
