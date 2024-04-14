@@ -2,6 +2,7 @@ import { MutableRefObject, createContext } from "react";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import { OgTag } from "../shared/types/models/ogTag";
 import { Post } from "../shared/types/models/post";
+import { Topic } from "../shared/types/models/topic";
 interface LMFeedCreatePostContextInterface {
   postText?: string;
   setPostText?: (text: string) => void;
@@ -20,6 +21,8 @@ interface LMFeedCreatePostContextInterface {
   temporaryPost?: Post | null;
   selectedTopicIds?: string[];
   setSelectedTopicIds?: React.Dispatch<string[]>;
+  preSelectedTopics?: Topic[];
+  setPreSelectedTopics?: React.Dispatch<Topic[]>;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>({});

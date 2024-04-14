@@ -7,6 +7,8 @@ import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsRespon
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
   setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
+  preSelectedTopics?: Topic[],
+  setPreSelectedTopics?: React.Dispatch<Topic[]>,
 ): useTopicDropdownResponse {
   // Getting an instance of the client
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
@@ -106,6 +108,12 @@ export function useTopicDropdown(
       ? setCurrentSelectedTopicIds(checkedTopics.map((topic) => topic.Id))
       : null;
   }, [checkedTopics, setCurrentSelectedTopicIds]);
+  useEffect(() => {
+    if (preSelectedTopics) {
+      console.log(preSelectedTopics);
+      setCheckedTopics(preSelectedTopics);
+    }
+  }, [preSelectedTopics]);
   // useEffect(() => {
   //   if (currentSelectedTopicIds && setCurrentSelectedTopicIds) {
   //     setCurrentSelectedTopicIds(currentSelectedTopicIds);

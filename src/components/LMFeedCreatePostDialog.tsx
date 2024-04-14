@@ -10,6 +10,7 @@ import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
+import { Divider } from "@mui/material";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -20,6 +21,8 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     mediaUploadMode = "NULL",
     setSelectedTopicIds,
     selectedTopicIds,
+    preSelectedTopics,
+    setPreSelectedTopics,
   } = useContext(LMFeedCreatePostContext);
   return (
     <div className="lm-feed-create-post-wrapper">
@@ -35,9 +38,12 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       </div>
       <LMFeedViewTopicDropdown
         mode={TopicsDropdownMode.modify}
-        setSelectedTopics={setSelectedTopicIds}
-        selectedTopic={selectedTopicIds}
+        setSelectedTopicsIds={setSelectedTopicIds}
+        selectedTopicIds={selectedTopicIds}
+        preSelectedTopics={preSelectedTopics}
+        setPreSelectedTopics={setPreSelectedTopics}
       />
+      <Divider className="lm-feed-create-post-topic-text-area-divider" />
       <LMFeedTextArea />
 
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL ? (

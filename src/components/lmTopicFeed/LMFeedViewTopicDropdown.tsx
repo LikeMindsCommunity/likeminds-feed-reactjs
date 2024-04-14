@@ -15,14 +15,18 @@ import { Checkbox } from "@mui/material";
 interface LMFeedTopicDropdownProps {
   // view for topic view && modify for creating or editing post
   mode: TopicsDropdownMode;
-  selectedTopic?: string[];
-  setSelectedTopics?: React.Dispatch<string[]>;
+  selectedTopicIds?: string[];
+  setSelectedTopicsIds?: React.Dispatch<string[]>;
+  preSelectedTopics?: Topic[];
+  setPreSelectedTopics?: React.Dispatch<Topic[]>;
 }
 
 const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
   mode,
-  setSelectedTopics,
-  selectedTopic,
+  setSelectedTopicsIds,
+  selectedTopicIds,
+  preSelectedTopics,
+  setPreSelectedTopics,
 }) => {
   // using the useTopicHook to get all the required data.
   const {
@@ -34,11 +38,17 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     setSearchKey,
     updateCheckedTopics,
     clearAllCheckedTopics,
-  } = useTopicDropdown(selectedTopic, setSelectedTopics);
+  } = useTopicDropdown(
+    selectedTopicIds,
+    setSelectedTopicsIds,
+    preSelectedTopics,
+    setPreSelectedTopics,
+  );
 
   // state to handle the view || setting it to true will render a view for selection topics.
-  const [isTopicSelectionMode, setIsTopicSelectionMode] =
-    useState<boolean>(true);
+  const [isTopicSelectionMode, setIsTopicSelectionMode] = useState<boolean>(
+    preSelectedTopics?.length ? false : true,
+  );
 
   // state to hold the anchor element for the topicMenuBox
   const [topicMenuAnchor, setTopicMenuAnchor] = useState<HTMLElement | null>(
@@ -55,8 +65,8 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     if (checkedTopics.length) {
       setIsTopicSelectionMode(false);
     }
-    setSelectedTopics
-      ? setSelectedTopics(checkedTopics.map((topic) => topic.Id))
+    setSelectedTopicsIds
+      ? setSelectedTopicsIds(checkedTopics.map((topic) => topic.Id))
       : null;
     setTopicMenuAnchor(null);
   };

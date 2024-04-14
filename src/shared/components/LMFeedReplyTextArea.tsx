@@ -28,7 +28,7 @@ const LMFeedReplyTextArea = ({
   const { taggingList, clearTaggingList, fetchTaggingList, setTaggingString } =
     useTagging();
   const {
-    replyText = "",
+    // replyText = "",
     setReplyText,
     textFieldRef,
     containerRef,
@@ -56,7 +56,18 @@ const LMFeedReplyTextArea = ({
   }
   return (
     <>
-      {avatar}
+      <div
+        className="lm-reply-avatar"
+        // style={LMPostHeaderStyles?.avatar}
+        // onClick={() => {
+        //   if (postHeaderAvatarClickCallback) {
+        //     postHeaderAvatarClickCallback(navigate);
+        //   }
+        // }}
+      >
+        {avatar}
+      </div>
+
       <div ref={containerRef} className="lm-flex-grow">
         {taggingList && taggingList?.length > 0 ? (
           <div
@@ -152,6 +163,7 @@ const LMFeedReplyTextArea = ({
             </InfiniteScroll>
           </div>
         ) : null}
+
         <div
           ref={textFieldRef}
           contentEditable={true}
@@ -159,25 +171,8 @@ const LMFeedReplyTextArea = ({
           tabIndex={0}
           autoFocus={true}
           //   id="editableDiv"
+          data-placeholder="Write something here..."
           className="reply-text-area"
-          onBlur={() => {
-            if (textFieldRef && textFieldRef.current) {
-              if (replyText.trim().length === 0) {
-                textFieldRef.current.textContent = `Write something here...`;
-              }
-            }
-          }}
-          onFocus={() => {
-            if (textFieldRef && textFieldRef.current) {
-              if (replyText.trim() === "") {
-                while (textFieldRef.current?.firstChild) {
-                  textFieldRef.current.removeChild(
-                    textFieldRef.current.firstChild,
-                  );
-                }
-              }
-            }
-          }}
           onInput={(event: React.KeyboardEvent<HTMLDivElement>) => {
             const selection = window.getSelection();
             setReplyText!(event.currentTarget.textContent!);

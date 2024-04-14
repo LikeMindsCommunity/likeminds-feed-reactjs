@@ -70,8 +70,8 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
           <div className="lm-mb-4 lm-mt-4">
             <LMFeedViewTopicDropdown
               mode={TopicsDropdownMode.view}
-              selectedTopic={selectedTopics}
-              setSelectedTopics={setSelectedTopics}
+              selectedTopicIds={selectedTopics}
+              setSelectedTopicsIds={setSelectedTopics}
             />
           </div>
         )}

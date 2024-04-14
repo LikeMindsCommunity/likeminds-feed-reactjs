@@ -128,12 +128,22 @@
 .lm-feed-reply {
     .reply-text-area{
       line-height: pxToRem(20);
-      font-size: pxToRem(16);
+      font-size: pxToRem(14);
       font-weight: 400;
       height: auto;
       margin: 0 pxToRem(16);
       border: 1px solid #D0D8E2;
       border-radius: pxToRem(24);
-      padding: pxToRem(4) pxToRem(16);
+      padding: pxToRem(10) pxToRem(16);
+      min-height: pxToRem(40);
+      outline: none;
+      position: relative;
     }
 }
+.reply-text-area[contenteditable=true]:empty:before{
+  content: attr(data-placeholder);
+  pointer-events: none;
+  display: block; /* For Firefox */
+  color: $secondary-color;
+}
+

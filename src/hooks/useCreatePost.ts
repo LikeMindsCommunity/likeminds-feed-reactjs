@@ -20,6 +20,7 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { OgTag } from "../shared/types/models/ogTag";
 import { GetOgTagResponse } from "../shared/types/api-responses/getOgTagResponse";
 import { Post } from "../shared/types/models/post";
+import { Topic } from "../shared/types/models/topic";
 
 interface UseCreatePost {
   postText: string;
@@ -39,6 +40,8 @@ interface UseCreatePost {
   temporaryPost: Post | null;
   selectedTopicIds: string[];
   setSelectedTopicIds: React.Dispatch<string[]>;
+  preSelectedTopics: Topic[];
+  setPreSelectedTopics: React.Dispatch<Topic[]>;
 }
 export function useCreatePost(): UseCreatePost {
   // Getting context values
@@ -55,6 +58,7 @@ export function useCreatePost(): UseCreatePost {
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [preSelectedTopics, setPreSelectedTopics] = useState<Topic[]>([]);
   const [mediaUploadMode, setMediaUploadMode] =
     useState<LMFeedCreatePostMediaUploadMode>(
       LMFeedCreatePostMediaUploadMode.NULL,
@@ -195,14 +199,12 @@ export function useCreatePost(): UseCreatePost {
         const linksDetected = HelperFunctionsClass.detectLinks(text);
         if (linksDetected.length) {
           const firstLinkDetected = linksDetected[0];
-          console.log(firstLinkDetected !== ogTag?.url);
           if (firstLinkDetected.toString() !== ogTag?.url.toString()) {
             const getOgTagData: GetOgTagResponse =
               await lmFeedclient?.decodeURL(
                 DecodeURLRequest.builder().setURL(firstLinkDetected).build(),
               );
             if (getOgTagData.success) {
-              console.log(getOgTagData);
               setOgtag(getOgTagData.data.og_tags);
             }
           }
@@ -221,8 +223,15 @@ export function useCreatePost(): UseCreatePost {
     customEventClient?.listen("OPEN_MENU", (event: Event) => {
       setOpenCreatePostDialog(true);
       const details = (event as CustomEvent).detail;
-      setTemporaryPost(details.post);
-      setSelectedTopicIds(details.post.topics);
+      const tempPost = details.post;
+      const topicsMap = details.topics;
+      setTemporaryPost(tempPost);
+      const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
+        return topicsMap[topicId];
+      });
+      console.log("The pre selected topic arr is");
+      console.log(preSelectedTopicsArr);
+      setPreSelectedTopics(preSelectedTopicsArr);
     });
     return () => {
       customEventClient?.remove("OPEN_MENU");
@@ -252,5 +261,7 @@ export function useCreatePost(): UseCreatePost {
     temporaryPost,
     selectedTopicIds,
     setSelectedTopicIds,
+    preSelectedTopics,
+    setPreSelectedTopics,
   };
 }

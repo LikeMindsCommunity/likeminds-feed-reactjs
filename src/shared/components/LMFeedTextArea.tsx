@@ -9,13 +9,9 @@ import { convertTextToHTML, setTagUserImage } from "../taggingParser";
 const LMFeedTextArea = () => {
   const { taggingList, clearTaggingList, fetchTaggingList, setTaggingString } =
     useTagging();
-  const {
-    postText = "",
-    setPostText,
-    textFieldRef,
-    containerRef,
-    temporaryPost,
-  } = useContext(LMFeedCreatePostContext);
+  const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
+    LMFeedCreatePostContext,
+  );
   useEffect(() => {
     if (temporaryPost && textFieldRef?.current) {
       textFieldRef.current.innerHTML = convertTextToHTML(
@@ -127,37 +123,8 @@ const LMFeedTextArea = () => {
         tabIndex={0}
         autoFocus={true}
         id="editableDiv"
-        style={{
-          width: "100%",
-          height: "auto",
-          resize: "none",
-          border: "none",
-          fontWeight: "400",
-          fontSize: "1rem",
-          fontFamily: "Roboto",
-          overflowY: "auto",
-          minHeight: "76px",
-          paddingLeft: "3px",
-          paddingRight: "3px",
-        }}
-        onBlur={() => {
-          if (textFieldRef && textFieldRef.current) {
-            if (postText.trim().length === 0) {
-              textFieldRef.current.textContent = `Write something here...`;
-            }
-          }
-        }}
-        onFocus={() => {
-          if (textFieldRef && textFieldRef.current) {
-            if (postText.trim() === "") {
-              while (textFieldRef.current?.firstChild) {
-                textFieldRef.current.removeChild(
-                  textFieldRef.current.firstChild,
-                );
-              }
-            }
-          }
-        }}
+        data-placeholder="Write something here...."
+        className="lm-feed-create-post-text-area"
         onInput={(event: React.KeyboardEvent<HTMLDivElement>) => {
           const selection = window.getSelection();
           setPostText!(event.currentTarget.textContent!);
