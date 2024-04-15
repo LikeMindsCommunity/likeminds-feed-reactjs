@@ -9,6 +9,7 @@ const LMFeedMediaUpload = () => {
   const { mediaUploadMode, changeMediaUploadMode, addMediaItem } = useContext(
     LMFeedCreatePostContext,
   );
+
   function renderUpoloadIcon() {
     switch (mediaUploadMode) {
       case LMFeedCreatePostMediaUploadMode.DOCUMENT:
@@ -45,8 +46,8 @@ const LMFeedMediaUpload = () => {
           onChange={addMediaItem}
           accept={
             mediaUploadMode === LMFeedCreatePostMediaUploadMode.DOCUMENT
-              ? ".pdf"
-              : ".png, .jpeg"
+              ? "application/pdf"
+              : "image/png,image/jpg,image/jpeg,video/mp4"
           }
         />
       </div>

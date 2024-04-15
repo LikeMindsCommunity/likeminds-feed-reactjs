@@ -23,6 +23,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     selectedTopicIds,
     preSelectedTopics,
     setPreSelectedTopics,
+    mediaList,
   } = useContext(LMFeedCreatePostContext);
   return (
     <div className="lm-feed-create-post-wrapper">
@@ -48,7 +49,8 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
 
       <LMFeedCreateMediaPost />
 
-      {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL ? (
+      {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
+      !mediaList?.length ? (
         <LMFeedMediaUpload />
       ) : null}
       <LMFeedCreatePostAttachmentController />

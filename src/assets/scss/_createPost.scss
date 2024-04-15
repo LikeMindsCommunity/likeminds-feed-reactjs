@@ -179,7 +179,6 @@
 .postImgSlider{
     width: 100%;
     position: relative;
-    display: none;
 
     &__header{
         position: absolute;
@@ -205,7 +204,9 @@
             display: flex;
             gap: 10px;
             align-items: center;
-
+            input{
+                display: none;
+            }
             img{
                 width: 16px !important;
                 height: 16px; 
