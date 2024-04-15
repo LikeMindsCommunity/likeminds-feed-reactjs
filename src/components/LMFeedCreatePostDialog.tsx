@@ -24,6 +24,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     preSelectedTopics,
     setPreSelectedTopics,
     mediaList,
+    temporaryPost,
   } = useContext(LMFeedCreatePostContext);
   return (
     <div className="lm-feed-create-post-wrapper">
@@ -50,10 +51,11 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       <LMFeedCreateMediaPost />
 
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
+      !temporaryPost &&
       !mediaList?.length ? (
         <LMFeedMediaUpload />
       ) : null}
-      <LMFeedCreatePostAttachmentController />
+      {!temporaryPost && <LMFeedCreatePostAttachmentController />}
       <LMFeedCreatePostSubmitButton />
     </div>
   );
