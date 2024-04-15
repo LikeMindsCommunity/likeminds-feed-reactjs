@@ -11,7 +11,7 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 const LMFeedPostHeader = () => {
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  const { post, users } = useContext(FeedPostContext);
+  const { post, users, topics } = useContext(FeedPostContext);
   const { createdAt, isEdited, menuItems } = post!;
   const { name, imageUrl, customTitle } = useMemo(
     () => users![post!.uuid],
@@ -36,6 +36,7 @@ const LMFeedPostHeader = () => {
         console.log(menuId);
         customEventClient?.dispatchEvent("OPEN_MENU", {
           post: post,
+          topics: topics,
         });
         break;
       }

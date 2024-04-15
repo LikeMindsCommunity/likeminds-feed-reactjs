@@ -230,3 +230,30 @@
 width: 100%;
     position: relative;
 }
+.lm-feed-create-post-text-area{
+    outline: none;
+    width: 100%;
+    height: auto;
+    resize: none;
+    border: none;
+    font-weight: 400;
+    font-size: 1rem;
+    font-family: Roboto;
+    overflow-y: auto;
+    min-height: 76px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+.lm-feed-create-post-text-area[contenteditable=true]:empty:before{
+    content: attr(data-placeholder);
+    pointer-events: none;
+    display: block; /* For Firefox */
+    color: $secondary-color;
+  }
+
+  .lm-feed-create-post-topic-text-area-divider{
+    border-width: 0.5px;
+    border-style: solid;
+    border-color: rgba(208, 216, 226, 0.4);
+    margin: pxToRem(16) pxToRem(0) !important;
+  }
