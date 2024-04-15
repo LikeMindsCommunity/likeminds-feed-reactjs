@@ -20,4 +20,5 @@ export interface Reply {
   updatedAt: number;
   userId: string;
   uuid: string;
+  parentComment?: Reply;
 }

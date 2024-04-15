@@ -25,7 +25,8 @@ const LMFeedMediaUpload = () => {
           src={closeIcon}
           className="close-icon"
           alt="close-icon"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             changeMediaUploadMode!(LMFeedCreatePostMediaUploadMode.NULL);
           }}
         />

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { parseAndReplaceTags, textPreprocessor } from "../shared/taggingParser";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedAttachments from "../shared/components/LMFeedAttachments";
@@ -15,7 +15,7 @@ const LMFeedPostBody = () => {
   const navigate = useNavigate();
   const { postHeadingClickCallback } = CustomCallbacks;
   // Render attachments
-  const renderAttachments = () => {
+  const renderAttachments = useCallback(() => {
     if (!attachments || attachments.length === 0) return null;
 
     return (
@@ -23,7 +23,7 @@ const LMFeedPostBody = () => {
         <LMFeedAttachments attachments={attachments} />
       </div>
     );
-  };
+  }, [attachments]);
 
   return (
     <div className="lm-feed-wrapper__card__body">

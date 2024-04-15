@@ -13,6 +13,8 @@ import {
 } from "../shared/constants/lmAppConstant";
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 import { useNavigate } from "react-router-dom";
+import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
+import { Divider } from "@mui/material";
 
 const LMFeedPostFooter = () => {
   const { post } = useContext(FeedPostContext);
@@ -29,7 +31,18 @@ const LMFeedPostFooter = () => {
     commentTextCountClickCallback,
     postFooterClickCallback,
   } = CustomCallbacks;
+
   const navigation = useNavigate();
+  function renderCommentBox() {
+    return window.location.pathname.includes("post") ? (
+      <>
+        <Divider className="lm-footer-reply-divider" />
+        <div className="lm-d-flex lm-flex-grow lm-align-items-center lm-mb-5 lm-feed-reply lm-pl-4 lm-pr-4 lm-pt-4 lm-pb-4">
+          <LMFeedReplyTextArea />
+        </div>
+      </>
+    ) : null;
+  }
   return (
     <>
       <div
@@ -115,6 +128,7 @@ const LMFeedPostFooter = () => {
             </div> */}
           </div>
         </div>
+        {renderCommentBox()}
         {CustomComponents?.RepliesScroller || <LMCommentsScroller />}
       </div>
     </>

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import UserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -16,6 +16,7 @@ import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
 import { RouteModifiers } from "../shared/types/customProps/routes";
 import "../assets/scss/styles.scss";
 import { LMFeedCustomEvents } from "../shared/customEvents";
+import { pdfjs } from "react-pdf";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -43,6 +44,10 @@ function LMFeed({
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(accessToken, refreshToken, client);
+  useEffect(() => {
+    const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+    pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
+  }, []);
   if (!lmFeedUser) {
     return null;
   }
