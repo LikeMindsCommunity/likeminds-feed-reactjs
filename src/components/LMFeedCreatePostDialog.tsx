@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-
 import { getAvatar } from "../shared/components/LMUserMedia";
 import LMFeedTextArea from "../shared/components/LMFeedTextArea";
 import LMFeedMediaUpload from "./LMFeedMediaUpload";
@@ -8,6 +7,7 @@ import LMFeedCreatePostAttachmentController from "../shared/components/LMFeedCre
 import LMFeedCreatePostSubmitButton from "../shared/components/LMFeedCreatePostSubmitButton";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
+import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -28,6 +28,8 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         <span>{currentUser?.name}</span>
       </div>
       <LMFeedTextArea />
+
+      <LMFeedCreateMediaPost />
 
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL ? (
         <LMFeedMediaUpload />
