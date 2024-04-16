@@ -29,6 +29,7 @@ const LMFeedCreatePost = () => {
     textFieldRef,
     containerRef,
     postFeed,
+    editPost,
     ogTag,
     openCreatePostDialog,
     setOpenCreatePostDialog,
@@ -37,6 +38,8 @@ const LMFeedCreatePost = () => {
     setSelectedTopicIds,
     preSelectedTopics,
     setPreSelectedTopics,
+    showOGTagViewContainer,
+    closeOGTagContainer,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -52,6 +55,7 @@ const LMFeedCreatePost = () => {
         textFieldRef,
         containerRef,
         postFeed,
+        editPost,
         ogTag,
         openCreatePostDialog,
         setOpenCreatePostDialog,
@@ -60,6 +64,8 @@ const LMFeedCreatePost = () => {
         setSelectedTopicIds,
         preSelectedTopics,
         setPreSelectedTopics,
+        showOGTagViewContainer,
+        closeOGTagContainer,
       }}
     >
       <div className="lm-createPost">

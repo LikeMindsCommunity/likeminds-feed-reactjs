@@ -5,8 +5,11 @@ import addMoreIcon from "../assets/images/add-more.svg";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import { Attachment } from "../shared/types/models/attachment";
-import { LMFeedOGTagAttachmentView } from "../shared/components/LMFeedAttachments";
-
+// import { LMFeedOGTagAttachmentView } from "../shared/components/LMFeedAttachments";
+import { Document, Page } from "react-pdf";
+import pdfIcon from "../assets/images/pdf-icon.svg";
+import { formatFileSize } from "../shared/utils";
+import { OgTag } from "../shared/types/models/ogTag";
 interface LMFeedCreatePostDMediaPost {
   mediaUploadDialog?: string;
 }
@@ -39,13 +42,16 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
           const attachment = attachmentsArray[0];
           switch (attachment.attachmentType) {
             case 3:
-              return null;
+              return <DocumentMediaItem attachment={attachment} />;
             case 1:
               return <ImageMediaItem attachment={attachment} />;
             case 2:
               return <VideoMediaItem attachment={attachment} />;
-            case 4:
-              return null;
+            // case 4:
+            //   return (
+            //     <OGTagMediaItem ogTags={attachment.attachmentMeta.ogTags} />
+            //   );
+
             default:
               return null;
           }
@@ -61,17 +67,13 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
               {attachmentsArray?.map((attachment) => {
                 switch (attachment.attachmentType) {
                   case 3:
-                    return null;
+                    return <DocumentMediaItem attachment={attachment} />;
                   case 1:
                     return <ImageMediaItem attachment={attachment} />;
                   case 2:
                     return <VideoMediaItem attachment={attachment} />;
-                  case 4:
-                    return (
-                      <LMFeedOGTagAttachmentView
-                        ogTags={attachment.attachmentMeta.ogTags}
-                      />
-                    );
+                  // case 4:
+                  //   return <OGTagMediaItem attachment={attachment} />;
                   default:
                     return null;
                 }
@@ -90,7 +92,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
 
           switch (file.type) {
             case "application/pdf": {
-              return null;
+              return <DocumentMediaItem file={file} />;
             }
             case "image/jpeg":
             case "image/png":
@@ -177,6 +179,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
 interface MediaItemProps {
   file?: File;
   attachment?: Attachment;
+  ogTags?: OgTag;
 }
 const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
   if (file) {
@@ -215,6 +218,77 @@ const VideoMediaItem = ({ file, attachment }: MediaItemProps) => {
       />
     );
   } else return null;
+};
+const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
+  if (attachment) {
+    const { attachmentMeta } = attachment;
+    const { name, url, size } = attachmentMeta;
+    return (
+      <div className="attachmentPdf">
+        <Document file={attachmentMeta?.url}>
+          <Page
+            pageNumber={1}
+            className={"pdfPage"}
+            renderAnnotationLayer={false}
+            renderTextLayer={false}
+            height={324}
+          />
+        </Document>
+
+        <div className="attachmentPdf__content">
+          <img
+            src={pdfIcon}
+            alt="pdf"
+            className="attachmentOGTag__content--icon"
+          />
+          <div>
+            <a
+              className="attachmentPdf__content--title"
+              target="_blank"
+              href={url}
+            >
+              {name}
+            </a>
+            <div className="attachmentPdf__content--url">
+              {formatFileSize(size)}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (file) {
+    <div className="attachmentPdf">
+      <Document file={URL.createObjectURL(file)}>
+        <Page
+          pageNumber={1}
+          className={"pdfPage"}
+          renderAnnotationLayer={false}
+          renderTextLayer={false}
+          height={324}
+        />
+      </Document>
+
+      <div className="attachmentPdf__content">
+        <img
+          src={pdfIcon}
+          alt="pdf"
+          className="attachmentOGTag__content--icon"
+        />
+        <div>
+          <a
+            className="attachmentPdf__content--title"
+            target="_blank"
+            // href={url}
+          >
+            {file.name}
+          </a>
+          <div className="attachmentPdf__content--url">
+            {formatFileSize(file.size)}
+          </div>
+        </div>
+      </div>
+    </div>;
+  }
 };
 
 export default LMFeedCreateMediaPost;

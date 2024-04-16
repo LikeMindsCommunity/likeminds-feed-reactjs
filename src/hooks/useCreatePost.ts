@@ -13,6 +13,7 @@ import {
   Attachment,
   AttachmentMeta,
   DecodeURLRequest,
+  EditPostRequest,
 } from "@likeminds.community/feed-js-beta";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
@@ -34,6 +35,7 @@ interface UseCreatePost {
   textFieldRef: MutableRefObject<HTMLDivElement | null>;
   containerRef: MutableRefObject<HTMLDivElement | null>;
   postFeed: () => Promise<void>;
+  editPost: () => Promise<void>;
   ogTag: OgTag | null;
   openCreatePostDialog: boolean;
   setOpenCreatePostDialog: React.Dispatch<boolean>;
@@ -42,6 +44,8 @@ interface UseCreatePost {
   setSelectedTopicIds: React.Dispatch<string[]>;
   preSelectedTopics: Topic[];
   setPreSelectedTopics: React.Dispatch<Topic[]>;
+  showOGTagViewContainer: boolean;
+  closeOGTagContainer: () => void;
 }
 export function useCreatePost(): UseCreatePost {
   // Getting context values
@@ -53,7 +57,8 @@ export function useCreatePost(): UseCreatePost {
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
-
+  const [showOGTagViewContainer, setShowOGTagViewContainer] =
+    useState<boolean>(true);
   const [text, setText] = useState<string>("");
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
@@ -69,6 +74,16 @@ export function useCreatePost(): UseCreatePost {
   const containerRef = useRef<HTMLDivElement | null>(null);
   function changeMediaUploadMode(mode: LMFeedCreatePostMediaUploadMode) {
     setMediaUploadMode(mode);
+  }
+  function resetStates() {
+    setShowOGTagViewContainer(true);
+    setText("");
+    setTemporaryPost(null);
+    setMediaList([]);
+    setPreSelectedTopics([]);
+    setSelectedTopicIds([]);
+    setMediaUploadMode(LMFeedCreatePostMediaUploadMode.NULL);
+    setOgtag(null);
   }
   function setPostText(txt: string) {
     setText(txt);
@@ -87,7 +102,9 @@ export function useCreatePost(): UseCreatePost {
   function clearMedia() {
     setMediaList([]);
   }
-
+  function closeOGTagContainer() {
+    setShowOGTagViewContainer(false);
+  }
   const postFeed = async function () {
     try {
       const textContent: string = extractTextFromNode(
@@ -141,19 +158,19 @@ export function useCreatePost(): UseCreatePost {
             );
             break;
           }
-          case 4: {
-            if (!mediaList.length) {
-              attachmentResponseArray.push(
-                Attachment.builder()
-                  .setAttachmentType(4)
-                  .setAttachmentMeta(
-                    AttachmentMeta.builder().setogTags(ogTag).build(),
-                  )
-                  .build(),
-              );
-            }
-            break;
-          }
+          // case 4: {
+          //   if (!mediaList.length) {
+          //     attachmentResponseArray.push(
+          //       Attachment.builder()
+          //         .setAttachmentType(4)
+          //         .setAttachmentMeta(
+          //           AttachmentMeta.builder().setogTags(ogTag).build(),
+          //         )
+          //         .build(),
+          //     );
+          //   }
+          //   break;
+          // }
           case 3: {
             attachmentResponseArray.push(
               Attachment.builder()
@@ -172,7 +189,16 @@ export function useCreatePost(): UseCreatePost {
           }
         }
       }
-
+      if (!mediaList.length && ogTag) {
+        attachmentResponseArray.push(
+          Attachment.builder()
+            .setAttachmentType(4)
+            .setAttachmentMeta(
+              AttachmentMeta.builder().setogTags(ogTag).build(),
+            )
+            .build(),
+        );
+      }
       const call = await lmFeedclient?.addPost(
         AddPostRequest.builder()
           .setAttachments(attachmentResponseArray)
@@ -187,11 +213,64 @@ export function useCreatePost(): UseCreatePost {
     }
   };
 
-  // const editPost = async function () {
-  //   // try {
-  //   // } catch (error) {
-  //   // }
-  // };
+  const editPost = async function () {
+    try {
+      const textContent: string = extractTextFromNode(
+        textFieldRef.current,
+      ).trim();
+      const attachmentResponseArray: Attachment[] = temporaryPost?.attachments
+        ? temporaryPost.attachments
+        : [];
+      if (ogTag) {
+        if (
+          !attachmentResponseArray.some(
+            (attachment) =>
+              attachment.attachmentType === 1 ||
+              attachment.attachmentType === 2 ||
+              attachment.attachmentType === 3,
+          )
+        ) {
+          console.log(attachmentResponseArray);
+          attachmentResponseArray.push(
+            Attachment.builder()
+              .setAttachmentType(4)
+              .setAttachmentMeta(
+                AttachmentMeta.builder().setogTags(ogTag).build(),
+              )
+              .build(),
+          );
+        }
+      } else {
+        if (
+          attachmentResponseArray.some(
+            (attachment) => attachment.attachmentType === 4,
+          )
+        ) {
+          attachmentResponseArray.pop();
+        }
+      }
+
+      // const call = await lmFeedclient?.addPost(
+      //   AddPostRequest.builder()
+      //     .setAttachments(attachmentResponseArray)
+      //     .setText(textContent)
+      //     .setTopicIds(selectedTopicIds)
+      //     .setTempId(Date.now().toString())
+      //     .build(),
+      // );
+      const call = await lmFeedclient?.editPost(
+        EditPostRequest.builder()
+          .setattachments(attachmentResponseArray)
+          .settext(textContent)
+          .setTopicIds(selectedTopicIds)
+          .setpostId(temporaryPost?.Id || "")
+          .build(),
+      );
+      console.log(call);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const checkForLinksTimeout = setTimeout(async () => {
@@ -238,11 +317,10 @@ export function useCreatePost(): UseCreatePost {
     };
   }, [customEventClient]);
   useEffect(() => {
-    if (!setOpenCreatePostDialog) {
-      setTemporaryPost(null);
-      setSelectedTopicIds([]);
+    if (!openCreatePostDialog) {
+      resetStates();
     }
-  }, [setOpenCreatePostDialog]);
+  }, [openCreatePostDialog]);
   return {
     postText: text,
     mediaList,
@@ -255,6 +333,7 @@ export function useCreatePost(): UseCreatePost {
     textFieldRef,
     containerRef,
     postFeed,
+    editPost,
     ogTag,
     openCreatePostDialog,
     setOpenCreatePostDialog,
@@ -263,5 +342,7 @@ export function useCreatePost(): UseCreatePost {
     setSelectedTopicIds,
     preSelectedTopics,
     setPreSelectedTopics,
+    showOGTagViewContainer,
+    closeOGTagContainer,
   };
 }
