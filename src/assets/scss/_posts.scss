@@ -4,7 +4,7 @@
   width: 100%;
   height: auto;
   overflow: hidden;
-  display: flex;
+  // display: flex;
   justify-content: space-between;
   position: relative;
 
@@ -19,7 +19,7 @@
     margin-bottom: pxToRem(12);
     background: $light-color;
     border-radius: pxToRem(8);
-    overflow: hidden;
+    // overflow: hidden;
     max-width: pxToRem(576);
     margin: 0 auto 0.5rem;
 
@@ -280,11 +280,9 @@
   max-width: 360px;
   width: 100%;
   background-color: #fff;
-  position: sticky;
   overflow: hidden;
-  top: 0;
-  right: 0;
   border: none;
+  position: relative;
 }
 
 // Member list
@@ -335,7 +333,7 @@
   font-size: 8px !important;
 }
 .slick-dots li.slick-active button:before {
-  color: #00897b !important;
+  color: $primary-color !important;
 }
 
 .slick-dots li {

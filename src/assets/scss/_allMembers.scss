@@ -1,6 +1,11 @@
 .lm-member-wrapper {
   width: 100%;
   background-color: #fff;
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  right: 0;
+  max-width: 360px;
 
   &__header {
     padding: 20px 16px;

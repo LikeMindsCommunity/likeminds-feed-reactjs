@@ -59,7 +59,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
   }, [CustomComponents?.PostView, feedList, feedUsersList, topics]);
 
   return (
-    <div className="lm-feed-wrapper">
+    <div className="lm-feed-wrapper lm-d-flex">
       <div className="lm-flex-grow">
         <LMFeedCreatePost />
         {/* <div> */}
