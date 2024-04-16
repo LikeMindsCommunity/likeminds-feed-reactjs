@@ -1,13 +1,72 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import {
+  GetReportTagsRequest,
+  PostReportRequest,
+} from "@likeminds.community/feed-js-beta";
+import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTagsResponse";
+import { ReportObject } from "../shared/types/models/reportTags";
+import closeIcon from "../assets/images/cancel-model-icon.svg";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 
 interface LMFeedReportPostDialogProps {
-  mediaUploadDialog?: string;
+  closeReportDialog: () => void;
+  entityId: string;
+  entityType: number;
 }
 // eslint-disable-next-line no-empty-pattern
-const LMFeedReportPostDialog = ({}: LMFeedReportPostDialogProps) => {
+const LMFeedReportPostDialog = ({
+  closeReportDialog,
+  entityId,
+  entityType,
+}: LMFeedReportPostDialogProps) => {
+  const { lmFeedclient } = useContext(LMFeedGlobalClientProviderContext);
+  const { currentUser } = useContext(LMFeedUserProviderContext);
+  const [reportTags, setReportTags] = useState<ReportObject[]>([]);
+  const [selectedTag, setSelectedTag] = useState<ReportObject | null>(null);
+  const [otherReason, setOtherReasons] = useState<string>("");
+  async function report() {
+    try {
+      const call = await lmFeedclient?.postReport(
+        PostReportRequest.builder()
+          .setUuid(currentUser?.sdkClientInfo.uuid || "")
+          .setTagId(selectedTag?.id || 0)
+          .setReason(
+            selectedTag?.id === 11 ? otherReason : selectedTag?.name || "",
+          )
+          .setEntityId(entityId)
+          .setEntityType(entityType)
+          .build(),
+      );
+      console.log(call);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    async function getReportTags() {
+      try {
+        const call: GetReportTagsResponse = (await lmFeedclient?.getReportTags(
+          GetReportTagsRequest.builder().settype(0).build(),
+        )) as never;
+        if (call.success) {
+          setReportTags(call.data.reportTags);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getReportTags();
+  }, [lmFeedclient]);
   return (
     <div className="lmReportPostWrapper">
       <div className="lmReportPostWrapper__header">Report Post</div>
+      <img
+        src={closeIcon}
+        className="lmReportPostWrapper__header__closeIcon"
+        alt="close-icon"
+        onClick={closeReportDialog}
+      />
       <div className="lmReportPostWrapper__body">
         <div className="lmReportPostWrapper__body__content">
           <div className="lmReportPostWrapper__body__content--texted">
@@ -15,20 +74,38 @@ const LMFeedReportPostDialog = ({}: LMFeedReportPostDialogProps) => {
             You would be able to report this Post after selecting a problem.
           </div>
           <div className="lmReportPostWrapper__body__content__types">
-            <span>Nudity</span>
-            <span>Hate Speech</span>
-            <span>Spam</span>
-            <span>Bad Language</span>
-            <span>Terrorism</span>
-            <span>Others</span>
+            {reportTags.map((tag) => {
+              return (
+                <span
+                  key={tag.id}
+                  onClick={() => {
+                    console.log(tag);
+                    setSelectedTag(tag);
+                  }}
+                >
+                  {tag.name}
+                </span>
+              );
+            })}
           </div>
 
           <div className="lmReportPostWrapper__body__content__actions">
-            <input
-              type="text"
-              className="lmReportPostWrapper__body__content__actions--input"
-            />
-            <button className="lmReportPostWrapper__body__content__actions--btnReport">
+            {selectedTag?.id === 11 ? (
+              <input
+                value={otherReason}
+                onChange={(e) => {
+                  setOtherReasons(e.target.value);
+                }}
+                placeholder="Enter the reason here..."
+                type="text"
+                className="lmReportPostWrapper__body__content__actions--input"
+              />
+            ) : null}
+            <button
+              onClick={report}
+              disabled={!selectedTag}
+              className="lmReportPostWrapper__body__content__actions--btnReport"
+            >
               Report
             </button>
           </div>

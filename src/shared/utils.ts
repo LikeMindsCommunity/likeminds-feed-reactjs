@@ -43,7 +43,10 @@ const timeFromNow = (time: string) => dayjs(time).fromNow();
 
 // Function to truncate a string
 const truncateString = (str: string, maxLength: number) => {
-  if (str.length <= maxLength) {
+  if (!str) {
+    str = "";
+  }
+  if (str?.length <= maxLength) {
     return str;
   }
   return str.substring(0, maxLength) + "...";

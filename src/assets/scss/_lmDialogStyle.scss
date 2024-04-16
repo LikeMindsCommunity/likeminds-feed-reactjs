@@ -4,7 +4,7 @@
     max-width: pxToRem(400);
     width: 100%;
     background: $light-color;
-
+    position: relative;
     &__header{
         position: relative;
         font-size: pxToRem(20);
@@ -14,6 +14,12 @@
         justify-content: center;
         margin: pxToRem(20) 0 pxToRem(36) 0;
         color: $dark-color;
+         &__closeIcon {
+            position: absolute;
+            top: pxToRem(16);
+            right: pxToRem(16);
+            cursor: pointer;
+         }
     }
 
     &__body{
@@ -63,13 +69,24 @@
                     padding: pxToRem(12) pxToRem(15);
                     border-radius: pxToRem(8);
                     border: 1px solid rgba(72, 79, 103, 0.5);
-                    display: none;
+                   outline: none;
                 }
                 &--btnReport{
                     width: 100%;
                     border: none;
                     color: $light-color;
-                    background-color: #00897b;
+                    background-color: $primary-color;
+                    font-weight: 500;
+                    font-size: pxToRem(20);
+                    border-radius: pxToRem(8);
+                    padding: pxToRem(12) pxToRem(15);
+                    cursor: pointer; 
+                }
+                &--btnReport:disabled{
+                    width: 100%;
+                    border: none;
+                    color: $light-color;
+                    background-color: $dark-color;
                     font-weight: 500;
                     font-size: pxToRem(20);
                     border-radius: pxToRem(8);

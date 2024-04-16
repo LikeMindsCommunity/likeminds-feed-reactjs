@@ -4,7 +4,7 @@ import { OgTag } from "../shared/types/models/ogTag";
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 interface LMFeedCreatePostContextInterface {
-  postText?: string;
+  postText?: string | null;
   setPostText?: (text: string) => void;
   mediaList?: File[];
   addMediaItem?: (event: React.ChangeEvent<HTMLInputElement>) => void;

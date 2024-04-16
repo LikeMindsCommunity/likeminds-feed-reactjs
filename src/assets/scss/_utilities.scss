@@ -225,7 +225,9 @@
 .lm-cursor-pointer{
   cursor: pointer;
 }
-
+.lm-hover-effect:hover{
+  background-color: rgba(72, 79, 103, 0.1);
+}
 .lm-w-full{
   width: 100%;
 }

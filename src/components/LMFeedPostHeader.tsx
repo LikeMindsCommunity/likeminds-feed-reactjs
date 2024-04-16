@@ -5,13 +5,19 @@ import { EDITED, POST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { useNavigate } from "react-router-dom";
-import { Menu } from "@mui/material";
+import { Dialog, Menu } from "@mui/material";
 import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import LMFeedReportPostDialog from "./LMFeedReportPostDialog";
+import { LMFeedEntityType } from "../shared/constants/lmEntityType";
 const LMFeedPostHeader = () => {
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  const { post, users, topics } = useContext(FeedPostContext);
+  const { post, users, topics, pinPost, deletePost } =
+    useContext(FeedPostContext);
+  const [openReportPostDialogBox, setOpenReportPostDialogBox] =
+    useState<boolean>(false);
   const { createdAt, isEdited, menuItems } = post!;
   const { name, imageUrl, customTitle } = useMemo(
     () => users![post!.uuid],
@@ -28,20 +34,48 @@ const LMFeedPostHeader = () => {
     postHeaderTitleClickCallback,
     postHeaderCustomTitleClickCallback,
   } = CustomCallbacks;
-
+  function closeReportDialog() {
+    setOpenReportPostDialogBox(false);
+  }
   function onMenuItemClick(e: React.MouseEvent) {
+    if (!post) {
+      return;
+    }
+    setAnchor(null);
     const menuId = e.currentTarget.id;
     switch (menuId) {
       case LMFeedPostMenuItems.EDIT_POST: {
-        console.log(menuId);
-        customEventClient?.dispatchEvent("OPEN_MENU", {
-          post: post,
-          topics: topics,
-        });
+        if (post && topics) {
+          customEventClient?.dispatchEvent(
+            LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
+            {
+              post: post,
+              topics: topics,
+            },
+          );
+        }
         break;
       }
       case LMFeedPostMenuItems.REPORT_POST: {
-        console.log(menuId);
+        setOpenReportPostDialogBox(true);
+        break;
+      }
+      case LMFeedPostMenuItems.DELETE_POST: {
+        if (deletePost) {
+          deletePost(post.Id);
+        }
+        break;
+      }
+      case LMFeedPostMenuItems.PIN_POST: {
+        if (pinPost) {
+          pinPost(post.Id);
+        }
+        break;
+      }
+      case LMFeedPostMenuItems.UNPIN_POST: {
+        if (pinPost) {
+          pinPost(post?.Id);
+        }
         break;
       }
     }
@@ -50,6 +84,13 @@ const LMFeedPostHeader = () => {
   const [anchor, setAnchor] = useState<HTMLImageElement | null>(null);
   return (
     <>
+      <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
+        <LMFeedReportPostDialog
+          entityType={LMFeedEntityType.POST}
+          closeReportDialog={closeReportDialog}
+          entityId={post?.Id || ""}
+        />
+      </Dialog>
       <div className="lm-feed-wrapper__card__header">
         <div className="lm-flex-container">
           <div
@@ -134,7 +175,7 @@ const LMFeedPostHeader = () => {
             {menuItems?.map((menuItem) => {
               return (
                 <div
-                  className="three-dot-menu-options"
+                  className="three-dot-menu-options lm-cursor-pointer lm-hover-effect"
                   onClick={onMenuItemClick}
                   id={menuItem?.id?.toString()}
                   key={menuItem?.id}
