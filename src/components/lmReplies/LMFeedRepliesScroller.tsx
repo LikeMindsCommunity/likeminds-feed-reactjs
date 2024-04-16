@@ -5,6 +5,7 @@ import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import LMFeedReply from "./LMFeedReply";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
 import { useReply } from "../../hooks/useLMReply";
+import { LMFeedReplyMode } from "../../shared/constants/lmFeedReplyMode";
 interface LMFeedRepliesScrollerProps {
   replyId: string;
   postId: string;
@@ -30,7 +31,9 @@ const LMFeedRepliesScroller = ({
           }}
           key={reply.Id}
         >
-          {CustomComponents?.Reply || <LMFeedReply mode="reply" />}
+          {CustomComponents?.Reply || (
+            <LMFeedReply mode={LMFeedReplyMode.REPLY} />
+          )}
         </ReplyContext.Provider>
       );
     });

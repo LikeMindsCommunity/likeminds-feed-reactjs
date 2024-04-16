@@ -13,6 +13,14 @@ import {
   LIKES,
 } from "../../shared/constants/lmAppConstant";
 import LMFeedReplyTextArea from "../../shared/components/LMFeedReplyTextArea";
+import repliesThreeDotMenu from "../../assets/images/three-dot-menu-replies.svg";
+import { Dialog, Menu } from "@mui/material";
+import LMFeedReportPostDialog from "../LMFeedReportPostDialog";
+import { LMFeedEntityType } from "../../shared/constants/lmEntityType";
+import { LMFeedReplyMode } from "../../shared/constants/lmFeedReplyMode";
+import { LMFeedReplyMenuItems } from "../../shared/constants/lmFeedRepliesMenuItems";
+import LMFeedReplyEditTextArea from "../../shared/components/LMFeedReplyEditTextArea";
+import { parseAndReplaceTags } from "../../shared/taggingParser";
 interface LMFeedReplyInterface {
   mode: string;
 }
@@ -34,54 +42,147 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   const { name } = user || {};
   const [openReplies, setOpenReplies] = useState<boolean>(false);
   const [openReplyText, setOpenReplyText] = useState<boolean>(false);
+  const [threeDotMenuAnchor, setThreeDotMenuAnchor] =
+    useState<HTMLDivElement | null>(null);
+  const [openReportPostDialogBox, setOpenReportPostDialogBox] =
+    useState<boolean>(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
+  function closeEditMode() {
+    setEditMode(false);
+  }
+  function startEditMode() {
+    setEditMode(true);
+  }
+  function handleMenuClick(e: React.MouseEvent<HTMLDivElement>) {
+    const id = e.currentTarget.id;
+    switch (id) {
+      case LMFeedReplyMenuItems.DELETE: {
+        //
+        break;
+      }
+      case LMFeedReplyMenuItems.REPORT: {
+        //
+        openReportDialog();
+        break;
+      }
+      case LMFeedReplyMenuItems.EDIT: {
+        startEditMode();
+        //
+        break;
+      }
+    }
+    // switch (id) {
+    // }
+  }
+  function closeReportDialog() {
+    setOpenReportPostDialogBox(false);
+  }
+  function openReportDialog() {
+    setOpenReportPostDialogBox(true);
+  }
   const navigate = useNavigate();
+  function openThreeDotMenu(e: React.MouseEvent<HTMLImageElement>) {
+    setThreeDotMenuAnchor(e.currentTarget);
+  }
+  function closeThreeDotMenu() {
+    setThreeDotMenuAnchor(null);
+  }
   return (
     <div className="lm-social-action-bar__lmReply">
+      <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
+        <LMFeedReportPostDialog
+          entityType={
+            mode === LMFeedReplyMode.COMMENT
+              ? LMFeedEntityType.COMMENT
+              : LMFeedEntityType.REPLY
+          }
+          closeReportDialog={closeReportDialog}
+          entityId={reply?.Id || ""}
+        />
+      </Dialog>
+      <Menu
+        open={Boolean(threeDotMenuAnchor)}
+        anchorEl={threeDotMenuAnchor}
+        anchorOrigin={{
+          horizontal: "right",
+          vertical: "top",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        onClose={closeThreeDotMenu}
+      >
+        {reply?.menuItems.map((menuItem) => {
+          return (
+            <div
+              className="three-dot-menu-options lm-cursor-pointer lm-hover-effect"
+              onClick={handleMenuClick}
+              id={menuItem?.id?.toString()}
+              key={menuItem?.id}
+            >
+              {menuItem?.title}
+            </div>
+          );
+        })}
+      </Menu>
       <div className="lm-social-action-bar__lmReply__userMeta lm-flex-direction">
         <div className="lm-social-action-bar__lmReply__userMeta__content lm-mb-5">
-          <div
-            className="lm-social-action-bar__lmReply__userMeta__content--name"
-            onClick={() => {
-              switch (mode) {
-                case COMMENT_TILE_MODE: {
-                  if (commentUsernameClickCallback) {
-                    commentUsernameClickCallback(navigate);
-                  }
-                  break;
-                }
-                default: {
-                  if (replyUsernameClickCallback) {
-                    replyUsernameClickCallback(navigate);
-                  }
-                }
-              }
-            }}
-          >
-            {name}
-          </div>
-
-          <div
-            className="lm-social-action-bar__lmReply__userMeta__content--title"
-            onClick={() => {
-              switch (mode) {
-                case COMMENT_TILE_MODE: {
-                  if (commentTextContentClickCallback) {
-                    commentTextContentClickCallback(navigate);
-                  }
-                  break;
-                }
-                default: {
-                  if (replyTextContentClickCallback) {
-                    replyTextContentClickCallback(navigate);
-                  }
-                }
-              }
-            }}
-          >
-            {reply?.text}
-          </div>
+          {editMode ? (
+            <LMFeedReplyEditTextArea closeEditMode={closeEditMode} />
+          ) : (
+            <>
+              <div className="content-area">
+                <div
+                  className="lm-social-action-bar__lmReply__userMeta__content--name"
+                  onClick={() => {
+                    switch (mode) {
+                      case COMMENT_TILE_MODE: {
+                        if (commentUsernameClickCallback) {
+                          commentUsernameClickCallback(navigate);
+                        }
+                        break;
+                      }
+                      default: {
+                        if (replyUsernameClickCallback) {
+                          replyUsernameClickCallback(navigate);
+                        }
+                      }
+                    }
+                  }}
+                >
+                  {name}
+                </div>
+                <div
+                  className="lm-social-action-bar__lmReply__userMeta__content--title"
+                  onClick={() => {
+                    switch (mode) {
+                      case COMMENT_TILE_MODE: {
+                        if (commentTextContentClickCallback) {
+                          commentTextContentClickCallback(navigate);
+                        }
+                        break;
+                      }
+                      default: {
+                        if (replyTextContentClickCallback) {
+                          replyTextContentClickCallback(navigate);
+                        }
+                      }
+                    }
+                  }}
+                >
+                  {parseAndReplaceTags(reply?.text || "")}
+                </div>
+              </div>
+              <img
+                src={repliesThreeDotMenu}
+                alt="three-dot-menu"
+                className="three-dot-menu lm-cursor-pointer"
+                onClick={openThreeDotMenu}
+              />
+            </>
+          )}
         </div>
-
         <div className="lm-d-flex lm-justify-content-space-between lm-align-items-center lm-mb-5">
           <div className="like lm-d-flex">
             <img

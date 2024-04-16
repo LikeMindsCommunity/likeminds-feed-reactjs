@@ -27,7 +27,7 @@ const LMFeedReportPostDialog = ({
   const [otherReason, setOtherReasons] = useState<string>("");
   async function report() {
     try {
-      const call = await lmFeedclient?.postReport(
+      await lmFeedclient?.postReport(
         PostReportRequest.builder()
           .setUuid(currentUser?.sdkClientInfo.uuid || "")
           .setTagId(selectedTag?.id || 0)
@@ -38,7 +38,6 @@ const LMFeedReportPostDialog = ({
           .setEntityType(entityType)
           .build(),
       );
-      console.log(call);
     } catch (error) {
       console.log(error);
     }

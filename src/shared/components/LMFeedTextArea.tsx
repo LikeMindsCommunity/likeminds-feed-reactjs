@@ -17,7 +17,9 @@ const LMFeedTextArea = () => {
       textFieldRef.current.innerHTML = convertTextToHTML(
         temporaryPost.text,
       ).innerHTML;
-      // setPostText!(textFieldRef.current.textContent || "");
+    }
+    if (textFieldRef?.current) {
+      textFieldRef.current.focus();
     }
   }, [textFieldRef, temporaryPost]);
   return (

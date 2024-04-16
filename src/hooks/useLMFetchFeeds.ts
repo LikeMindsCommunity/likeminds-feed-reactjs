@@ -143,7 +143,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   //         .setUuid()
   //         .build(),
   //     );
-  //     console.log(call);
+  //     ;
   //   } catch (error) {
   //     console.log(error);
   //   }

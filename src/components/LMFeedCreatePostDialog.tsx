@@ -28,7 +28,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     mediaList,
     temporaryPost,
     showOGTagViewContainer,
-
+    setOpenCreatePostDialog,
     ogTag,
   } = useContext(LMFeedCreatePostContext);
   return (
@@ -38,6 +38,11 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         <img
           src={cancelModelMcon}
           alt="cancelModelMcon"
+          onClick={() => {
+            if (setOpenCreatePostDialog) {
+              setOpenCreatePostDialog(false);
+            }
+          }}
           className="cancelIcon"
         />
       </div>
@@ -67,12 +72,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       mediaUploadMode === LMFeedCreatePostMediaUploadMode.NULL &&
       !mediaList?.length ? (
         <LMFeedOGTagMediaItem />
-      ) : (
-        (function () {
-          console.log(ogTag);
-          return <></>;
-        })()
-      )}
+      ) : null}
       <LMFeedCreateMediaPost />
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
       !temporaryPost &&
