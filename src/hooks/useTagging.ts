@@ -43,7 +43,6 @@ export function useTagging(): UseTagging {
       if (!call.data.members.length) {
         setFetchMoreTags(false);
       }
-      console.log(call);
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +52,7 @@ export function useTagging(): UseTagging {
       setFetchMoreTags(true);
       fetchTaggingList(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagString]);
   return {
     taggingList,

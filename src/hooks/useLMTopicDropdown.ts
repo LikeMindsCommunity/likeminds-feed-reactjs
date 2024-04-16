@@ -110,15 +110,10 @@ export function useTopicDropdown(
   }, [checkedTopics, setCurrentSelectedTopicIds]);
   useEffect(() => {
     if (preSelectedTopics) {
-      console.log(preSelectedTopics);
       setCheckedTopics(preSelectedTopics);
     }
   }, [preSelectedTopics]);
-  // useEffect(() => {
-  //   if (currentSelectedTopicIds && setCurrentSelectedTopicIds) {
-  //     setCurrentSelectedTopicIds(currentSelectedTopicIds);
-  //   }
-  // }, [currentSelectedTopicIds]);
+
   return {
     checkedTopics,
     topics,
