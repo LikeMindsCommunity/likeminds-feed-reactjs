@@ -24,7 +24,7 @@ import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 
 interface UseCreatePost {
-  postText: string;
+  postText: string | null;
   setPostText: (text: string) => void;
   mediaList: File[];
   addMediaItem: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -59,7 +59,7 @@ export function useCreatePost(): UseCreatePost {
     useState<boolean>(false);
   const [showOGTagViewContainer, setShowOGTagViewContainer] =
     useState<boolean>(true);
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string | null>("");
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -77,7 +77,7 @@ export function useCreatePost(): UseCreatePost {
   }
   function resetStates() {
     setShowOGTagViewContainer(true);
-    setText("");
+    setText(null);
     setTemporaryPost(null);
     setMediaList([]);
     setPreSelectedTopics([]);
@@ -86,6 +86,7 @@ export function useCreatePost(): UseCreatePost {
     setOgtag(null);
   }
   function setPostText(txt: string) {
+    console.log(text?.length);
     setText(txt);
   }
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
@@ -231,6 +232,7 @@ export function useCreatePost(): UseCreatePost {
           )
         ) {
           console.log(attachmentResponseArray);
+          attachmentResponseArray.pop();
           attachmentResponseArray.push(
             Attachment.builder()
               .setAttachmentType(4)
@@ -249,15 +251,6 @@ export function useCreatePost(): UseCreatePost {
           attachmentResponseArray.pop();
         }
       }
-
-      // const call = await lmFeedclient?.addPost(
-      //   AddPostRequest.builder()
-      //     .setAttachments(attachmentResponseArray)
-      //     .setText(textContent)
-      //     .setTopicIds(selectedTopicIds)
-      //     .setTempId(Date.now().toString())
-      //     .build(),
-      // );
       const call = await lmFeedclient?.editPost(
         EditPostRequest.builder()
           .setattachments(attachmentResponseArray)
@@ -275,7 +268,7 @@ export function useCreatePost(): UseCreatePost {
   useEffect(() => {
     const checkForLinksTimeout = setTimeout(async () => {
       try {
-        const linksDetected = HelperFunctionsClass.detectLinks(text);
+        const linksDetected = HelperFunctionsClass.detectLinks(text || "");
         if (linksDetected.length) {
           const firstLinkDetected = linksDetected[0];
           if (firstLinkDetected.toString() !== ogTag?.url.toString()) {
@@ -296,8 +289,13 @@ export function useCreatePost(): UseCreatePost {
         console.log(error);
       }
     }, 500);
+
     return () => clearTimeout(checkForLinksTimeout);
-  }, [lmFeedclient, ogTag, text]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lmFeedclient, text]);
+  useEffect(() => {
+    console.log(text);
+  }, [text]);
   useEffect(() => {
     customEventClient?.listen("OPEN_MENU", (event: Event) => {
       setOpenCreatePostDialog(true);
@@ -308,8 +306,15 @@ export function useCreatePost(): UseCreatePost {
       const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
         return topicsMap[topicId];
       });
-      console.log("The pre selected topic arr is");
-      console.log(preSelectedTopicsArr);
+      const ogTagAttchmentObject = tempPost?.attachments?.filter(
+        (attachment: Attachment) => {
+          return attachment.attachmentType === 4;
+        },
+      );
+      if (ogTagAttchmentObject.length) {
+        console.log(ogTagAttchmentObject[0].attachmentMeta.ogTags);
+        setOgtag(ogTagAttchmentObject[0].attachmentMeta.ogTags);
+      }
       setPreSelectedTopics(preSelectedTopicsArr);
     });
     return () => {
