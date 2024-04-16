@@ -37,7 +37,7 @@ const LMFeedPostFooter = () => {
     return window.location.pathname.includes("post") ? (
       <>
         <Divider className="lm-footer-reply-divider" />
-        <div className="lm-d-flex lm-flex-grow lm-align-items-center lm-mb-5 lm-feed-reply lm-pl-4 lm-pr-4 lm-pt-4 lm-pb-4">
+        <div className="lm-d-flex lm-flex-grow lm-position-relative lm-align-items-center lm-mb-5 lm-feed-reply lm-pl-4 lm-pr-4 lm-pt-4 lm-pb-4">
           <LMFeedReplyTextArea />
         </div>
       </>

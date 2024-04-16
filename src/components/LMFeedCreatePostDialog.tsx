@@ -12,6 +12,7 @@ import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
+import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -34,13 +35,20 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     <div className="lm-feed-create-post-wrapper">
       <div className="lm-feed-create-post-wrapper__dialog-heading">
         Create Post
+        <img
+          src={cancelModelMcon}
+          alt="cancelModelMcon"
+          className="cancelIcon"
+        />
       </div>
       <div className="lm-feed-create-post-wrapper__user-meta">
-        {getAvatar({
-          imageUrl: currentUser?.imageUrl,
-          name: currentUser?.name,
-        })}
-        <span>{currentUser?.name}</span>
+        <div className="lm-avatar lm-mr-4">
+          {getAvatar({
+            imageUrl: currentUser?.imageUrl,
+            name: currentUser?.name,
+          })}
+        </div>
+        <div>{currentUser?.name}</div>
       </div>
       <LMFeedViewTopicDropdown
         mode={TopicsDropdownMode.modify}
@@ -50,7 +58,10 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         setPreSelectedTopics={setPreSelectedTopics}
       />
       <Divider className="lm-feed-create-post-topic-text-area-divider" />
-      <LMFeedTextArea />
+      <div className="lm-textarea">
+        <LMFeedTextArea />
+      </div>
+
       {showOGTagViewContainer &&
       ogTag &&
       mediaUploadMode === LMFeedCreatePostMediaUploadMode.NULL &&
@@ -64,6 +75,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         <LMFeedMediaUpload />
       ) : null}
       {!temporaryPost && <LMFeedCreatePostAttachmentController />}
+
       <LMFeedCreatePostSubmitButton />
     </div>
   );

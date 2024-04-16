@@ -65,6 +65,10 @@
   justify-content: space-between;
   margin: 10px 0 0 0;
   align-items: center;
+  width: 100%;
+  max-width: pxToRem(576);
+  margin: pxToRem(16) auto 0; 
+  overflow: hidden;
   &__tags {
     // @extend .lm-feed-topic-tile;
   }

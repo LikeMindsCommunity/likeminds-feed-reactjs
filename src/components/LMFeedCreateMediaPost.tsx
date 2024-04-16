@@ -141,7 +141,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
     return null;
   }
   return (
-    <div>
+    <div className="">
       {/* Post Slider  */}
       <div className="postImgSlider">
         {!temporaryPost && (
