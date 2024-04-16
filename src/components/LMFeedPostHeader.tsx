@@ -175,7 +175,7 @@ const LMFeedPostHeader = () => {
             {menuItems?.map((menuItem) => {
               return (
                 <div
-                  className="three-dot-menu-options"
+                  className="three-dot-menu-options lm-cursor-pointer lm-hover-effect"
                   onClick={onMenuItemClick}
                   id={menuItem?.id?.toString()}
                   key={menuItem?.id}

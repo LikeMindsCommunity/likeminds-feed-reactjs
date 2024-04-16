@@ -18,6 +18,8 @@
 
   &__body {
     padding: 16px;
+    overflow-y: auto;
+    height: 100vh;
     &__media {
       display: flex;
       align-items: center;

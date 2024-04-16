@@ -74,7 +74,12 @@ const LMFeedCreatePost = () => {
             {/* <img src={user} alt="user photo" /> */}
             {avatar}
           </div>
-          <div className="lm-createPost__media--mediaText">
+          <div
+            onClick={() => {
+              setOpenCreatePostDialog(!openCreatePostDialog);
+            }}
+            className="lm-createPost__media--mediaText"
+          >
             Write something here...
           </div>
         </div>
