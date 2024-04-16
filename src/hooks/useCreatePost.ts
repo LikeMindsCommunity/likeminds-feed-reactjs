@@ -87,7 +87,6 @@ export function useCreatePost(): UseCreatePost {
     setOgtag(null);
   }
   function setPostText(txt: string) {
-    console.log(text?.length);
     setText(txt);
   }
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
@@ -201,7 +200,7 @@ export function useCreatePost(): UseCreatePost {
             .build(),
         );
       }
-      const call = await lmFeedclient?.addPost(
+      await lmFeedclient?.addPost(
         AddPostRequest.builder()
           .setAttachments(attachmentResponseArray)
           .setText(textContent)
@@ -209,7 +208,6 @@ export function useCreatePost(): UseCreatePost {
           .setTempId(Date.now().toString())
           .build(),
       );
-      console.log(call);
     } catch (error) {
       console.log(error);
     }
@@ -252,7 +250,7 @@ export function useCreatePost(): UseCreatePost {
           attachmentResponseArray.pop();
         }
       }
-      const call = await lmFeedclient?.editPost(
+      await lmFeedclient?.editPost(
         EditPostRequest.builder()
           .setattachments(attachmentResponseArray)
           .settext(textContent)
@@ -260,7 +258,6 @@ export function useCreatePost(): UseCreatePost {
           .setpostId(temporaryPost?.Id || "")
           .build(),
       );
-      console.log(call);
     } catch (error) {
       console.log(error);
     }
@@ -294,9 +291,7 @@ export function useCreatePost(): UseCreatePost {
     return () => clearTimeout(checkForLinksTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lmFeedclient, text]);
-  useEffect(() => {
-    console.log(text);
-  }, [text]);
+
   useEffect(() => {
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,

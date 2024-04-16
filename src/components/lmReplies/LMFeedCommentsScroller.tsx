@@ -5,6 +5,7 @@ import { Reply } from "../../shared/types/models/replies";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import LMFeedReply from "./LMFeedReply";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
+import { LMFeedReplyMode } from "../../shared/constants/lmFeedReplyMode";
 
 const LMFeedCommentsScroller = () => {
   const {
@@ -25,7 +26,9 @@ const LMFeedCommentsScroller = () => {
           }}
           key={reply.Id}
         >
-          {CustomComponents?.Reply || <LMFeedReply mode="comment" />}
+          {CustomComponents?.Reply || (
+            <LMFeedReply mode={LMFeedReplyMode.COMMENT} />
+          )}
         </ReplyContext.Provider>
       );
     });

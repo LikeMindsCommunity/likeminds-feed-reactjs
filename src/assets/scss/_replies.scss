@@ -28,6 +28,11 @@
       display: flex;
 
       &__content {
+        display: flex;
+        align-items: center;
+        .content-area{
+          flex-grow: 1;
+        }
         &--name {
           font-size: pxToRem(14);
           font-weight: 500;
@@ -41,6 +46,9 @@
           font-weight: 400;
           color: #222020;
           line-height: pxToRem(20);
+          word-break: break-word;
+          padding-right: pxToRem(12);
+          text-align: justify;
         }
       }
 
@@ -140,7 +148,19 @@
       outline: none;
       position: relative;
     }
-
+    .edit-reply-text-area{
+       line-height: pxToRem(20);
+      font-size: pxToRem(14);
+      font-weight: 400;
+      height: auto;
+      margin: 0 pxToRem(16) 0 0;
+      border: 1px solid #D0D8E2;
+      border-radius: pxToRem(24);
+      padding: pxToRem(10) pxToRem(16);
+      min-height: pxToRem(40);
+      outline: none;
+      position: relative;
+    }
     .taggingBox{
       top: 81% !important;
       left: 70px !important;
@@ -160,4 +180,11 @@
   display: block; /* For Firefox */
   color: $secondary-color;
 }
+.edit-reply-text-area[contenteditable=true]:empty:before{
+  content: attr(data-placeholder);
+  pointer-events: none;
+  display: block; /* For Firefox */
+  color: $secondary-color;
+}
+
 

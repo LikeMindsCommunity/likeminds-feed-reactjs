@@ -1,8 +1,9 @@
-import { useContext, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 // import { PostResponse } from "../shared/types/api-responses/postReplyResponse";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import {
   AddCommentRequest,
+  EditCommentRequest,
   ReplyCommentRequest,
 } from "@likeminds.community/feed-js-beta";
 import { extractTextFromNode } from "../shared/utils";
@@ -16,20 +17,19 @@ export function useLMPostReply(
   const [text, setText] = useState<string>("");
   const textFieldRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  function setReplyText(replyText: string) {
+  const setReplyText = useCallback(function (replyText: string) {
     setText(replyText);
-  }
+  }, []);
   async function postReply() {
     try {
       const replyText = extractTextFromNode(textFieldRef.current).trim();
-      const call = await lmFeedclient?.replyComment(
+      await lmFeedclient?.replyComment(
         ReplyCommentRequest.builder()
           .setText(replyText)
           .setPostId(postId)
           .setCommentId(commentId || "")
           .build(),
       );
-      console.log(call);
     } catch (error) {
       console.log(error);
     }
@@ -37,10 +37,24 @@ export function useLMPostReply(
   async function postComment() {
     try {
       const commentText = extractTextFromNode(textFieldRef.current).trim();
-      const call = await lmFeedclient?.addComment(
+      await lmFeedclient?.addComment(
         AddCommentRequest.builder()
           .settext(commentText)
           .setpostId(postId)
+          .build(),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function editComment() {
+    try {
+      const commentText = extractTextFromNode(textFieldRef.current).trim();
+      const call = await lmFeedclient?.editComment(
+        EditCommentRequest.builder()
+          .setcommentId(commentId || "")
+          .setpostId(postId)
+          .settext(commentText)
           .build(),
       );
       console.log(call);
@@ -55,6 +69,7 @@ export function useLMPostReply(
     containerRef,
     postReply,
     postComment,
+    editComment,
   };
 }
 interface UseLMPostReply {
@@ -64,4 +79,5 @@ interface UseLMPostReply {
   containerRef: React.MutableRefObject<HTMLDivElement | null>;
   postReply: () => void;
   postComment: () => void;
+  editComment: () => void;
 }
