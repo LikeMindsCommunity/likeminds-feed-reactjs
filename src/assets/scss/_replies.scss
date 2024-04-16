@@ -126,6 +126,7 @@
 }
 
 .lm-feed-reply {
+  position: relative; 
     .reply-text-area{
       line-height: pxToRem(20);
       font-size: pxToRem(14);
@@ -138,6 +139,19 @@
       min-height: pxToRem(40);
       outline: none;
       position: relative;
+    }
+
+    .taggingBox{
+      top: 81% !important;
+      left: 70px !important;
+      border-radius: 8px;
+      box-shadow: 0 1px 16px 0 #0000003d;
+      max-height: 210px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: absolute;
+      width: 260px;
+      z-index: 9;
     }
 }
 .reply-text-area[contenteditable=true]:empty:before{
