@@ -25,6 +25,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   useParentRouter?: boolean;
   accessToken: string;
   refreshToken: string;
+  customEventClient: LMFeedCustomEvents;
 }
 
 function LMFeed({
@@ -41,9 +42,10 @@ function LMFeed({
   CustomComponents,
   CustomCallbacks,
   useParentRouter = false,
+  customEventClient,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
-    useUserProvider(accessToken, refreshToken, client);
+    useUserProvider(accessToken, refreshToken, client, customEventClient);
   useEffect(() => {
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
@@ -56,7 +58,7 @@ function LMFeed({
     <GlobalClientProviderContext.Provider
       value={{
         lmFeedclient: client,
-        customEventClient: new LMFeedCustomEvents(),
+        customEventClient: customEventClient,
       }}
     >
       <CustomAgentProviderContext.Provider

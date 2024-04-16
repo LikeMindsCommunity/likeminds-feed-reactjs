@@ -21,6 +21,7 @@ const LMFeedAllMembers = () => {
         const response: any = await lmFeedclient?.getAllMembers(
           GetAllMembersRequest.builder().setpage(pageCount).build(),
         );
+
         setMembers(response?.data?.members);
       } catch (error) {
         console.log(error);

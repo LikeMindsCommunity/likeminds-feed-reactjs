@@ -1,0 +1,43 @@
+.lm-feed-activity-wrapper{
+    max-height: pxToRem(650);
+    overflow-y: auto;
+    padding: pxToRem(0);
+    border-radius: pxToRem(8);
+    width: pxToRem(376);
+    &__title{
+        padding: pxToRem(28);
+        font-size: pxToRem(20);
+        line-height: pxToRem(24);
+        font-weight: 500;
+        color: $dark-color
+    }
+    &__activity-item{
+        padding: pxToRem(24);
+        height: pxToRem(118);
+        display: flex;
+        gap: pxToRem(8);
+        .user-image{
+            height: pxToRem(48);
+            width: pxToRem(48);
+            border-radius: 50%;
+            background-color: $primary-color;
+            color: $light-color;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .notification-content{
+            flex-grow: 1;
+            .notification-text{
+                display: -webkit-box;
+                max-width: pxToRem(200);
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+        }
+    }
+}
+.non-interacted-activity{
+    background-color: $bg-color;
+}
