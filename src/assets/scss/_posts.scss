@@ -156,6 +156,7 @@
             width: 100%;
             height: pxToRem(250);
             overflow: hidden;
+            aspect-ratio: 16/9;
           }
 
           &__content {
@@ -207,14 +208,18 @@
           &__img {
             width: 100%;
             object-fit: cover;
+            aspect-ratio: 16/8;
           }
           &__noImg {
             @extend .lm-d-flex;
             @extend .lm-justify-content-center;
             @extend .lm-align-items-center;
             background-color: #e5f3f2;
-            height: pxToRem(215);
+            min-height: pxToRem(215);
+            width: 100%;
+              object-fit: cover;
             color: #00897b;
+            aspect-ratio: 16/8;
           }
           &__content {
             padding: 1rem;
@@ -292,6 +297,8 @@
   .lm-feed-wrapper__card {
     border-radius: 0;
   }
+  .lm-member{display: none;}
+  .lm-feed-create-post-wrapper{padding: 1rem;}
 }
 
 @media (min-width: 768px) and (max-width: 991px) {

@@ -17,7 +17,7 @@
   }
 
   &__body {
-    padding: 16px;
+    padding: 16px 16px 60px 16px;
     overflow-y: auto;
     height: 100vh;
     &__media {
@@ -41,13 +41,33 @@
         display: flex;
         align-items: center;
 
-        &--title {
+        &--name {
           font-size: 16px;
           line-height: 20px;
           font-weight: 400;
           color: $dark-color;
+          text-transform: capitalize;
         }
       }
     }
+  }
+}
+
+
+
+.lm-hide-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+
+  &::-webkit-scrollbar {
+    width: 1px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
   }
 }

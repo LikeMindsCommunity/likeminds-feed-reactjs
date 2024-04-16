@@ -1,57 +1,93 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
-import dummyUser from "../assets/images/user.png";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetAllMembersRequest } from "@likeminds.community/feed-js-beta";
-// import { IMember } from "@likeminds.community/feed-js";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { getAvatar } from "../shared/components/LMUserMedia";
-import { User } from "../shared/types/models/member";
+import { Member } from "../shared/types/models/member";
+import { GetAllMembersResponse } from "../shared/types/api-responses/getAllMembersResponse";
 
 const LMFeedAllMembers = () => {
   const { lmFeedclient, customEventClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
-  const [members, setMembers] = useState<User[] | null>(null);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loadMoreFeeds, setLoadMoreFeeds] = useState<boolean>(true);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [totalMemberCounts, setTotalMemberCounts] = useState<number>(0);
+
+  // Function to fetch members, placed outside to be accessible by getNextPage
+  const fetchMembers = async (page: number) => {
+    try {
+      const response: GetAllMembersResponse =
+        (await lmFeedclient?.getAllMembers(
+          GetAllMembersRequest.builder().setpage(page).build(),
+        )) as never;
+
+      if (response && response.data && response.data.members) {
+        if (response.data.members.length > 0) {
+          setMembers((prevMembers) => [
+            ...prevMembers,
+            ...response.data.members,
+          ]);
+          setPageCount(page); // set current page
+          setTotalMemberCounts(response.data.totalMembers);
+        }
+
+        if (
+          response.data.members.length === 0 ||
+          members.length >= response.data.totalMembers
+        ) {
+          setLoadMoreFeeds(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setLoadMoreFeeds(false);
+    }
+  };
 
   useEffect(() => {
-    async function getAllMembers() {
-      try {
-        const pageCount = 1;
-        const response: any = await lmFeedclient?.getAllMembers(
-          GetAllMembersRequest.builder().setpage(pageCount).build(),
-        );
-        setMembers(response?.data?.members);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getAllMembers();
+    fetchMembers(1);
   }, [lmFeedclient]);
+
+  const getNextPage = () => {
+    fetchMembers(pageCount + 1);
+  };
 
   return (
     <div className="lm-member-wrapper">
-      <div className="lm-member-wrapper__header">Member List</div>
-      <div className="lm-member-wrapper__body">
-        {members ? (
-          members.map((member: User) => (
-            <div key={member.id} className="lm-member-wrapper__body__media">
-              <div className="lm-member-wrapper__body__media__imgBox lm-avatar">
-                {getAvatar({
-                  imageUrl: member.imageUrl,
-                  name: member?.name,
-                })}
-              </div>
-              <div className="lm-member-wrapper__body__media__content">
-                <div className="lm-member-wrapper__body__media__content--name">
-                  {member.name}
+      <div className="lm-member-wrapper__header">
+        Member List ({totalMemberCounts})
+      </div>
+      <div className="lm-member-wrapper__body lm-hide-scrollbar">
+        <InfiniteScroll
+          dataLength={members ? members.length : 0}
+          hasMore={loadMoreFeeds}
+          next={getNextPage}
+          loader={null}
+        >
+          {members ? (
+            members.map((member: Member) => (
+              <div key={member.id} className="lm-member-wrapper__body__media">
+                <div className="lm-member-wrapper__body__media__imgBox lm-avatar">
+                  {getAvatar({
+                    imageUrl: member.imageUrl,
+                    name: member?.name,
+                  })}
+                </div>
+                <div className="lm-member-wrapper__body__media__content">
+                  <div className="lm-member-wrapper__body__media__content--name">
+                    {member.name}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <div>Loading...</div>
-        )}
+            ))
+          ) : (
+            <div>Loading...</div>
+          )}
+        </InfiniteScroll>
       </div>
     </div>
   );

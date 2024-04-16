@@ -1,7 +1,7 @@
 .lm-feed-create-post-wrapper {
   padding: pxToRem(20) pxToRem(36) pxToRem(28) pxToRem(36);
-  width: pxToRem(460);
-  // min-height: pxToRem(388);
+  max-width: pxToRem(460);
+  width: 100%; 
   max-width: pxToRem(661);
   border-radius: pxToRem(16);
   position: relative;
@@ -59,7 +59,8 @@
     margin-bottom: pxToRem(24);
   }
   &__media-upload {
-    width: pxToRem(388);
+    max-width: pxToRem(388);
+    width: 100%;
     height: pxToRem(194);
     background-color: rgba(230, 235, 245, 0.3);
     border: 1px solid;
