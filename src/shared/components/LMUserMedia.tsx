@@ -1,12 +1,20 @@
 import { AvatarProps } from "../types/models/avatarProps";
-
-// Function to extract initials from a name
 const getInitials = (name: string): string => {
-  const initials = name
-    .split(" ")
-    .map((word) => word[0])
-    .join("");
-  return initials.toUpperCase();
+  const words = name.split(" ");
+  if (words.length === 1) {
+    // Only one word, return its initial
+    return name[0].toUpperCase();
+  } else if (words.length === 2) {
+    // Two words, return the initials of both
+    const firstInitial = words[0][0];
+    const secondInitial = words[1][0];
+    return (firstInitial + secondInitial).toUpperCase();
+  } else {
+    // More than two words, return the initials of the first and last names
+    const firstInitial = words[0][0];
+    const lastInitial = words[words.length - 1][0];
+    return (firstInitial + lastInitial).toUpperCase();
+  }
 };
 
 // Function to handle broken or undefined image URLs

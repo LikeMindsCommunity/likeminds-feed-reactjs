@@ -66,7 +66,7 @@ const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
   }, [feedList, feedUsersList, topics]);
 
   return (
-    <div className="lm-feed-wrapper">
+    <div className="lm-feed-wrapper lm-d-flex">
       <div>
         {/* Topics */}
         {/* <div className="lm-mb-4">
