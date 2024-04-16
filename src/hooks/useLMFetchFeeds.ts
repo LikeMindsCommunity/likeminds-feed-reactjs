@@ -5,6 +5,15 @@ import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUnive
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetFeedRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
+import {
+  DeletePostRequest,
+  // GetReportTagsRequest,
+  PinPostRequest,
+  // PostReportRequest,
+} from "@likeminds.community/feed-js-beta";
+import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
+import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
+// import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
 interface useFetchFeedsResponse {
   topics: Record<string, Topic>;
@@ -14,6 +23,8 @@ interface useFetchFeedsResponse {
   getNextPage: () => Promise<void>;
   feedList: Post[];
   feedUsersList: Record<string, User>;
+  deletePost: (id: string) => Promise<void>;
+  pinPost: (id: string) => Promise<void>;
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
@@ -89,6 +100,55 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     }
   }
 
+  // function to delete a post
+  async function deletePost(id: string) {
+    try {
+      const call: DeletePostResponse = (await lmFeedclient?.deletePost(
+        DeletePostRequest.builder().setpostId(id).build(),
+      )) as never;
+      if (call.success) {
+        // TODO delete call action
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // function to pin a post
+  async function pinPost(id: string) {
+    try {
+      const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
+        PinPostRequest.builder().setpostId(id).build(),
+      )) as never;
+      if (call.success) {
+        // TODO pin post actions
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // function to pin a post
+  // async function reportPost(id: string) {
+  //   try {
+  //     const tagsCall = await lmFeedclient?.getReportTags(
+  //       GetReportTagsRequest.builder().settype().build(),
+  //     );
+  //     console.log(tagsCall);
+  //     const call = await lmFeedclient?.postReport(
+  //       PostReportRequest.builder()
+  //         .setEntityId()
+  //         .setEntityType()
+  //         .setReason()
+  //         .setTagId()
+  //         .setUuid()
+  //         .build(),
+  //     );
+  //     console.log(call);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
   //  Effect to run when selectedTopics changes or during the initial loading of the page
   useEffect(() => {
     loadFeed();
@@ -102,5 +162,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     feedList,
     feedUsersList,
     getNextPage,
+    deletePost,
+    pinPost,
   };
 }

@@ -17,4 +17,6 @@ interface FeedPostContextInterface {
   getNextPage?: () => Promise<void>;
   loadNextPage?: boolean;
   replies?: Reply[];
+  deletePost?: (id: string) => Promise<void>;
+  pinPost?: (id: string) => Promise<void>;
 }

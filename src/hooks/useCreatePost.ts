@@ -22,6 +22,7 @@ import { OgTag } from "../shared/types/models/ogTag";
 import { GetOgTagResponse } from "../shared/types/api-responses/getOgTagResponse";
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 
 interface UseCreatePost {
   postText: string | null;
@@ -297,26 +298,29 @@ export function useCreatePost(): UseCreatePost {
     console.log(text);
   }, [text]);
   useEffect(() => {
-    customEventClient?.listen("OPEN_MENU", (event: Event) => {
-      setOpenCreatePostDialog(true);
-      const details = (event as CustomEvent).detail;
-      const tempPost = details.post;
-      const topicsMap = details.topics;
-      setTemporaryPost(tempPost);
-      const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
-        return topicsMap[topicId];
-      });
-      const ogTagAttchmentObject = tempPost?.attachments?.filter(
-        (attachment: Attachment) => {
-          return attachment.attachmentType === 4;
-        },
-      );
-      if (ogTagAttchmentObject.length) {
-        console.log(ogTagAttchmentObject[0].attachmentMeta.ogTags);
-        setOgtag(ogTagAttchmentObject[0].attachmentMeta.ogTags);
-      }
-      setPreSelectedTopics(preSelectedTopicsArr);
-    });
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
+      (event: Event) => {
+        setOpenCreatePostDialog(true);
+        const details = (event as CustomEvent).detail;
+        const tempPost = details.post;
+        const topicsMap = details.topics;
+        setTemporaryPost(tempPost);
+        const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
+          return topicsMap[topicId];
+        });
+        const ogTagAttchmentObject = tempPost?.attachments?.filter(
+          (attachment: Attachment) => {
+            return attachment.attachmentType === 4;
+          },
+        );
+        if (ogTagAttchmentObject.length) {
+          console.log(ogTagAttchmentObject[0].attachmentMeta.ogTags);
+          setOgtag(ogTagAttchmentObject[0].attachmentMeta.ogTags);
+        }
+        setPreSelectedTopics(preSelectedTopicsArr);
+      },
+    );
     return () => {
       customEventClient?.remove("OPEN_MENU");
     };

@@ -33,6 +33,8 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     feedList,
     feedUsersList,
     getNextPage,
+    deletePost,
+    pinPost,
   } = useFetchFeeds();
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderFeeds = useCallback(() => {
@@ -48,6 +50,8 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             post: post,
             users: feedUsersList,
             topics: topics,
+            deletePost: deletePost,
+            pinPost: pinPost,
           }}
         >
           {CustomComponents?.PostView || (
@@ -56,7 +60,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
         </FeedPostContext.Provider>
       );
     });
-  }, [CustomComponents?.PostView, feedList, feedUsersList, topics]);
+  }, [CustomComponents?.PostView, deletePost, feedList, feedUsersList, topics]);
 
   return (
     <div className="lm-feed-wrapper">
