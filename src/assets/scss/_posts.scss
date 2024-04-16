@@ -35,8 +35,6 @@
       display: flex;
       justify-content: space-between;
 
-      
-
       &--title {
         font-size: 1rem;
         font-weight: 500;
@@ -252,7 +250,7 @@
             }
           }
         }
-        .attachment-unsupported{
+        .attachment-unsupported {
           padding: pxToRem(0) pxToRem(20);
         }
       }
@@ -277,12 +275,12 @@
 }
 
 // Member list
-.lm-member{
-  height: 100vh;
+.lm-member {
+  height: auto;
   max-width: 360px;
   width: 100%;
   background-color: #fff;
-  position: absolute;
+  position: sticky;
   overflow: hidden;
   top: 0;
   right: 0;
@@ -346,12 +344,12 @@
   width: 15px !important;
 }
 
-.react-pdf__Page__canvas{
+.react-pdf__Page__canvas {
   width: 100% !important;
   aspect-ratio: 16/9;
 }
 
-.three-dot-menu-options{
+.three-dot-menu-options {
   padding: 18px;
   width: pxToRem(196);
 }

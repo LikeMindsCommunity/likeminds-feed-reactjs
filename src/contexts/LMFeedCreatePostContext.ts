@@ -15,6 +15,7 @@ interface LMFeedCreatePostContextInterface {
   textFieldRef?: MutableRefObject<HTMLDivElement | null>;
   containerRef?: MutableRefObject<HTMLDivElement | null>;
   postFeed?: () => Promise<void>;
+  editPost?: () => Promise<void>;
   ogTag?: OgTag | null;
   openCreatePostDialog?: boolean;
   setOpenCreatePostDialog?: React.Dispatch<boolean>;
@@ -23,6 +24,8 @@ interface LMFeedCreatePostContextInterface {
   setSelectedTopicIds?: React.Dispatch<string[]>;
   preSelectedTopics?: Topic[];
   setPreSelectedTopics?: React.Dispatch<Topic[]>;
+  showOGTagViewContainer?: boolean;
+  closeOGTagContainer?: () => void;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>({});

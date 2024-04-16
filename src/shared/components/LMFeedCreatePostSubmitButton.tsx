@@ -2,13 +2,15 @@ import React, { useContext } from "react";
 import { LMFeedCreatePostContext } from "../../contexts/LMFeedCreatePostContext";
 
 const LMFeedCreatePostSubmitButton = () => {
-  const { postFeed } = useContext(LMFeedCreatePostContext);
+  const { postFeed, temporaryPost, editPost } = useContext(
+    LMFeedCreatePostContext,
+  );
   return (
     <div
-      className="lm-feed-create-post-wrapper__submit-button"
-      onClick={postFeed}
+      className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button"
+      onClick={temporaryPost ? editPost : postFeed}
     >
-      <span>POST</span>
+      <span>{temporaryPost ? "EDIT" : "POST"}</span>
     </div>
   );
 };

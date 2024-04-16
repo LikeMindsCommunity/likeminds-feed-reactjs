@@ -11,6 +11,7 @@ import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Divider } from "@mui/material";
+import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -23,6 +24,11 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     selectedTopicIds,
     preSelectedTopics,
     setPreSelectedTopics,
+    mediaList,
+    temporaryPost,
+    showOGTagViewContainer,
+
+    ogTag,
   } = useContext(LMFeedCreatePostContext);
   return (
     <div className="lm-feed-create-post-wrapper">
@@ -45,13 +51,19 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       />
       <Divider className="lm-feed-create-post-topic-text-area-divider" />
       <LMFeedTextArea />
-
+      {showOGTagViewContainer &&
+      ogTag &&
+      mediaUploadMode === LMFeedCreatePostMediaUploadMode.NULL &&
+      !mediaList?.length ? (
+        <LMFeedOGTagMediaItem />
+      ) : null}
       <LMFeedCreateMediaPost />
-
-      {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL ? (
+      {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
+      !temporaryPost &&
+      !mediaList?.length ? (
         <LMFeedMediaUpload />
       ) : null}
-      <LMFeedCreatePostAttachmentController />
+      {!temporaryPost && <LMFeedCreatePostAttachmentController />}
       <LMFeedCreatePostSubmitButton />
     </div>
   );
