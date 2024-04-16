@@ -123,7 +123,7 @@ const LMFeedTextArea = () => {
         tabIndex={0}
         autoFocus={true}
         id="editableDiv"
-        data-placeholder="Write something here...."
+        data-placeholder="Write something here..."
         className="lm-feed-create-post-text-area"
         onInput={(event: React.KeyboardEvent<HTMLDivElement>) => {
           const selection = window.getSelection();

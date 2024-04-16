@@ -11,7 +11,16 @@
     font-size: pxToRem(20);
     line-height: pxToRem(24);
     font-weight: 500;
+    position: relative;
+
+    .cancelIcon{
+      position: absolute;
+      right: 0px;
+      top: 2px;
+      cursor: pointer;
+    }
   }
+
   &__user-meta {
     display: flex;
     justify-content: flex-start;
@@ -19,12 +28,29 @@
     margin-bottom: pxToRem(24);
     span {
       margin-left: pxToRem(16);
-
       font-size: pxToRem(16);
       line-height: pxToRem(20);
       font-weight: 500;
     }
   }
+
+  .lm-textarea{
+    position: relative;
+  }
+
+  .lm-textarea .taggingBox {
+    top: 74% !important;
+    left: 0px !important;
+    border-radius: 8px;
+    box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.2392156863);
+    max-height: 180px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    width: 260px;
+    z-index: 9;
+  }
+
   &__post-text-content {
     font-size: pxToRem(16);
     line-height: pxToRem(20);
@@ -176,6 +202,7 @@
 .postImgSlider {
   width: 100%;
   position: relative;
+  background-color: #000000;
 
   &__header {
     position: absolute;
@@ -220,6 +247,7 @@
     object-fit: contain;
     width: 100%;
     border-radius: 8px;
+    aspect-ratio: 16/9;
   }
 }
 
@@ -229,17 +257,13 @@
 }
 .lm-feed-create-post-text-area {
   outline: none;
-  width: 100%;
-  height: auto;
-  resize: none;
+  width: 100%; 
   border: none;
   font-weight: 400;
-  font-size: 1rem;
-  font-family: Roboto;
+  font-size: 1rem; 
   overflow-y: auto;
-  min-height: 76px;
-  padding-left: 3px;
-  padding-right: 3px;
+  min-height: 50px; 
+  max-height: 90px; 
 }
 .lm-feed-create-post-text-area[contenteditable="true"]:empty:before {
   content: attr(data-placeholder);
@@ -324,3 +348,4 @@
         }
     }
 }
+ 
