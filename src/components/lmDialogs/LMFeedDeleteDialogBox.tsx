@@ -1,5 +1,5 @@
 import React from "react";
-import closeIcon from "../assets/images/cancel-model-icon.svg";
+import closeIcon from "../../assets/images/cancel-model-icon.svg";
 
 const LMFeedDeleteDialogBox = () => {
   return (
