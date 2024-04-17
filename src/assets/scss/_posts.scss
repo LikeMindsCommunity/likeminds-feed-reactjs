@@ -3,8 +3,7 @@
   min-height: 100vh;
   width: 100%;
   height: auto;
-  overflow: hidden;
-  // display: flex;
+  overflow: hidden; 
   justify-content: space-between;
   position: relative;
 
@@ -15,13 +14,13 @@
   }
 
   &__card {
+    max-width: pxToRem(576);
     width: 100%;
     margin-bottom: pxToRem(12);
     background: $light-color;
-    border-radius: pxToRem(8);
-    // overflow: hidden;
-    max-width: pxToRem(576);
+    border-radius: pxToRem(8); 
     margin: 0 auto 0.5rem;
+    
 
     &__topic-view-wrapper {
       display: flex;
@@ -92,6 +91,7 @@
     }
 
     &__body {
+      width: 100%;
       &__heading {
         padding: 1rem pxToRem(8) pxToRem(0) 1rem;
         word-wrap: break-word;
@@ -195,8 +195,7 @@
             }
           }
         }
-        .attachmentOGTag {
-          width: 100%;
+        .attachmentOGTag { 
           background-color: $light-color;
           border-radius: pxToRem(8);
           border: 1px solid $bg-color;
@@ -296,9 +295,12 @@
 @media (max-width: 767px) {
   .lm-feed-wrapper__card {
     border-radius: 0;
+    width: 415px;
   }
-  .lm-member{display: none;}
-  .lm-feed-create-post-wrapper{padding: 1rem;}
+  .lm-member{display: none;} 
+  .lm-feed-create-post-wrapper{
+    width: 21.75rem !important;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {

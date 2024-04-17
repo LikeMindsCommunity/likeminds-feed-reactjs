@@ -1,9 +1,12 @@
+@import 'responsive';
+
 .lm-feed-create-post-wrapper {
   padding: pxToRem(20) pxToRem(36) pxToRem(28) pxToRem(36);
-  width: pxToRem(460);
+  width: pxToRem(460); 
   min-height: pxToRem(388);
   border-radius: pxToRem(16);
-  position: relative;
+  position: relative; 
+
   &__dialog-heading {
     margin-bottom: pxToRem(36);
     text-align: center;
@@ -116,7 +119,26 @@
 }
 
 // Create Post Box
-
+.lm-create-post-btn{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 500;
+  background-color: #5046e5;
+  border: none;
+  z-index: 999;
+  color: #fff;
+  border-radius: 24px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  @include respond-mobile-up {
+      display: none;
+    }
+}
 .lm-createPost {
   width: 100%;
   max-width: pxToRem(576);
@@ -124,6 +146,10 @@
   border-radius: pxToRem(8);
   background-color: $light-color;
   overflow: hidden;
+  display: none;
+  @include respond-mobile-up {
+    display: block;
+  }
 
   &__media {
     padding: pxToRem(16);

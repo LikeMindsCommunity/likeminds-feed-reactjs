@@ -61,10 +61,7 @@ const LMFeedAllMembers = () => {
       <div className="lm-member-wrapper__header">
         Member List ({totalMemberCounts})
       </div>
-      <div
-        className="lm-member-wrapper__body lm-hide-scrollbar"
-        id="member-scroll-container"
-      >
+      <div className="lm-member-wrapper__body" id="member-scroll-container">
         <InfiniteScroll
           dataLength={members ? members.length : 0}
           hasMore={loadMoreFeeds}

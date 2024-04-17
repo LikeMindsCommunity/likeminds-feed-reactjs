@@ -1,11 +1,14 @@
 .lm-feed-activity-wrapper{
     max-height: pxToRem(650);
-    overflow: auto;
+    // overflow: auto;
     padding: pxToRem(0);
     border-radius: pxToRem(8);
     width: pxToRem(376);
+    .notificationBody{
+        overflow: auto;
+    }
     &__title{
-        padding: pxToRem(28);
+        padding: 5px 20px 10px;
         font-size: pxToRem(20);
         line-height: pxToRem(24);
         font-weight: 500;
@@ -13,10 +16,12 @@
     }
     
     &__activity-item{
-        padding: pxToRem(24);
-        height: pxToRem(118);
+        padding: 10px 16px; 
         display: flex;
         gap: pxToRem(8);
+        justify-content: space-between;
+        border-bottom: 1px solid #fff;
+        
         .user-image{
             height: pxToRem(48);
             width: pxToRem(48);
@@ -28,17 +33,40 @@
             align-items: center;
         }
         .notification-content{
-            flex-grow: 1;
-            .notification-text{
+            width: 83%;
+            .notification-text{ 
+                color: #484f67;
                 display: -webkit-box;
-                max-width: pxToRem(200);
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+                margin-bottom: 5px;
+                max-width: 325px;
                 overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .notification-time-before{ 
+                color: #484f6780;
+                font-size: 14px;
+                line-height: 20px;
             }
         }
     }
 }
 .non-interacted-activity{
     background-color: $bg-color;
+}
+
+.lmNoNotification{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0;
+
+    .lmNoNotification{
+        width: 64px;
+        height: 64px;
+    }
 }

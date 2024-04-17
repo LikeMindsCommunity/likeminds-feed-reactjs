@@ -9,8 +9,10 @@ const LMFeedNotificationHeader = ({
   return (
     <div className="lm-header-notification">
       <h1>LMFeed</h1>
-      <LMFeedNotification customEventClient={customEventClient} />
-      <div>notification</div>
+
+      <div>
+        <LMFeedNotification customEventClient={customEventClient} />
+      </div>
     </div>
   );
 };
