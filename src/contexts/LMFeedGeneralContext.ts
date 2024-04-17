@@ -1,5 +1,10 @@
-// const GeneralContext = React.createContext<GeneralContextInterface>({});
+import { createContext } from "react";
 
-// interface GeneralContextInterface {
-//   snackbackMessage: string;
-// }
+export const GeneralContext = createContext<GeneralContextInterface>({});
+
+interface GeneralContextInterface {
+  displaySnackbarMessage?: (message: string) => void;
+  closeSnackbar?: () => void;
+  showSnackbar?: boolean;
+  message?: string;
+}

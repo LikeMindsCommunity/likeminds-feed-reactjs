@@ -246,7 +246,7 @@ export function extractTextFromNode(node: any): string {
         text += extractTextFromNode(childNode);
       }
 
-      return "\n" + text;
+      return text;
     }
   } else {
     return "";

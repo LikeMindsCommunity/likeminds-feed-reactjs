@@ -64,7 +64,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
 
   return (
     <div className="lm-feed-wrapper lm-d-flex">
-      <div className="lm-flex-grow">
+      <div className="lm-flex-grow" id="feed-scroller">
         <LMFeedCreatePost />
         {/* <div> */}
         {/* Topics */}

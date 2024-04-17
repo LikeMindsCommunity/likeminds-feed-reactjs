@@ -6,6 +6,8 @@ import { Community } from "../shared/types/models/community";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import { ValidateUserResponse } from "../shared/types/api-responses/initiateUserResponse";
 import { ValidateUserRequest } from "@likeminds.community/feed-js";
+import { LMFeedCustomEvents } from "../shared/customEvents";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 
 interface UserProviderInterface {
   lmFeedUser: User | null;
@@ -17,6 +19,7 @@ export default function useUserProvider(
   accessToken: string,
   refreshToken: string,
   lmFeedclient: LMClient,
+  customEventClient: LMFeedCustomEvents,
 ): UserProviderInterface {
   const [lmFeedUser, setLmFeedUser] = useState<null | User>(null);
 
@@ -56,6 +59,14 @@ export default function useUserProvider(
 
     setUser();
   }, [accessToken, lmFeedclient, refreshToken]);
+  useEffect(() => {
+    if (lmFeedUser) {
+      customEventClient.dispatchEvent(LMFeedCustomActionEvents.USER_INITIATED, {
+        lmFeedClient: lmFeedclient,
+        user: lmFeedUser,
+      });
+    }
+  }, [customEventClient, lmFeedUser, lmFeedclient]);
   function logoutUser() {
     setLmFeedUser(null);
   }
