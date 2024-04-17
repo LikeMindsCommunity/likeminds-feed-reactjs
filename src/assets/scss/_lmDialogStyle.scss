@@ -56,6 +56,10 @@
                     float: left; 
                     cursor: pointer;
                 }
+                span.active{
+                    border: pxToRem(1) solid $primary-color;
+                    color: $primary-color;
+                }
             }
 
             &__actions{
@@ -86,7 +90,7 @@
                     width: 100%;
                     border: none;
                     color: $light-color;
-                    background-color: $dark-color;
+                    background-color: #e6ebf5;
                     font-weight: 500;
                     font-size: pxToRem(20);
                     border-radius: pxToRem(8);
