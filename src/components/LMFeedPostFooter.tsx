@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
 import like from "../assets/images/like.svg";
+import postLiked from "../assets/images/liked-post.svg";
 import commnent from "../assets/images/comment.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import {
@@ -54,8 +55,16 @@ const LMFeedPostFooter = () => {
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
             <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
-              {LMPostFooterStyles?.likeButtonCustom ? (
-                <LMPostFooterStyles.likeButtonCustom />
+              {post?.isLiked ? (
+                <img
+                  onClick={() => {
+                    console.log(Id);
+                    likePost!(Id);
+                  }}
+                  src={postLiked}
+                  className="lm-cursor-pointer"
+                  alt="Like"
+                />
               ) : (
                 <img
                   onClick={() => {
@@ -67,6 +76,7 @@ const LMFeedPostFooter = () => {
                   alt="Like"
                 />
               )}
+
               <span
                 style={LMPostFooterStyles?.likesCountStyles}
                 onClick={() =>

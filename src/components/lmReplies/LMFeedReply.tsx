@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import { formatTimeAgo } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
+import commentLiked from "../../assets/images/comment-liked.svg";
 import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
@@ -48,7 +49,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(true);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   function closeDeleteDialog() {
     setOpenDeleteDialog(false);
   }
@@ -193,27 +194,51 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
         </div>
         <div className="lm-d-flex lm-justify-content-space-between lm-align-items-center lm-mb-5">
           <div className="like lm-d-flex">
-            <img
-              src={likeIcon}
-              className="lm-cursor-pointer"
-              alt="Like"
-              onClick={() => {
-                switch (mode) {
-                  case COMMENT_TILE_MODE: {
-                    if (commentLikeActionCallback) {
-                      commentLikeActionCallback(navigate);
+            {reply?.isLiked ? (
+              <img
+                src={commentLiked}
+                className="lm-cursor-pointer"
+                alt="Like"
+                onClick={() => {
+                  switch (mode) {
+                    case COMMENT_TILE_MODE: {
+                      if (commentLikeActionCallback) {
+                        commentLikeActionCallback(navigate);
+                      }
+                      break;
                     }
-                    break;
-                  }
-                  default: {
-                    if (replyLikeActionCallback) {
-                      replyLikeActionCallback(navigate);
+                    default: {
+                      if (replyLikeActionCallback) {
+                        replyLikeActionCallback(navigate);
+                      }
                     }
                   }
-                }
-              }}
-              loading="lazy"
-            />
+                }}
+                loading="lazy"
+              />
+            ) : (
+              <img
+                src={likeIcon}
+                className="lm-cursor-pointer"
+                alt="Like"
+                onClick={() => {
+                  switch (mode) {
+                    case COMMENT_TILE_MODE: {
+                      if (commentLikeActionCallback) {
+                        commentLikeActionCallback(navigate);
+                      }
+                      break;
+                    }
+                    default: {
+                      if (replyLikeActionCallback) {
+                        replyLikeActionCallback(navigate);
+                      }
+                    }
+                  }
+                }}
+                loading="lazy"
+              />
+            )}
             <span>{`${reply?.likesCount ? reply?.likesCount.toString().concat(" ") : ""}${(reply?.likesCount || 0) > 1 ? LIKES : LIKE}`}</span>
             <span>|</span>
             <span>

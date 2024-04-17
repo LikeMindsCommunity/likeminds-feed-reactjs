@@ -43,6 +43,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     setSelectedTopicsIds,
     preSelectedTopics,
     setPreSelectedTopics,
+    mode,
   );
 
   // state to handle the view || setting it to true will render a view for selection topics.
@@ -109,6 +110,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
   const setView = () => {
     switch (mode) {
       case TopicsDropdownMode.modify:
+      case TopicsDropdownMode.edit:
         return setTopicsForPostView();
       case TopicsDropdownMode.view:
         return handleFilterView();

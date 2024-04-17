@@ -56,7 +56,9 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         <div>{currentUser?.name}</div>
       </div>
       <LMFeedViewTopicDropdown
-        mode={TopicsDropdownMode.modify}
+        mode={
+          temporaryPost ? TopicsDropdownMode.edit : TopicsDropdownMode.modify
+        }
         setSelectedTopicsIds={setSelectedTopicIds}
         selectedTopicIds={selectedTopicIds}
         preSelectedTopics={preSelectedTopics}
