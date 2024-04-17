@@ -6,10 +6,10 @@ import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDet
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetPostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
-import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
-import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
-import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
+// import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
+// import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
+// import { GeneralContext } from "../contexts/LMFeedGeneralContext";
+// import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 
 interface UseFeedDetailsInterface {
   post: Post | null;
@@ -18,13 +18,16 @@ interface UseFeedDetailsInterface {
   loadNextPage: boolean;
   replies: Reply[];
   topics: Record<string, Topic>;
+  addNewComment: (comment: Reply, userMap: Record<string, User>) => void;
+  removeAComment: (id: string) => void;
+  updateReplyOnPostReply: (id: string) => void;
+  editAComment: (comment: Reply, usersMap: Record<string, User>) => void;
 }
 
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   postId: string,
 ) => {
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
-  const { displaySnackbarMessage } = useContext(GeneralContext);
 
   // state for storing the post
   const [post, setPost] = useState<Post | null>(null);
@@ -97,44 +100,49 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       console.log(error);
     }
   };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async function deletePost(id: string) {
-    try {
-      const call: DeletePostResponse = (await lmFeedclient?.deletePost(
-        DeletePostRequest.builder().setpostId(id).build(),
-      )) as never;
-      if (call.success) {
-        const feedCopy = { ...post! };
 
-        setPost(feedCopy);
-        if (displaySnackbarMessage)
-          displaySnackbarMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY);
-      }
-    } catch (error) {
-      console.log(error);
+  function updateReplyOnPostReply(replyId: string) {
+    const repliesCopy = [...replies];
+    const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
+    if (targetReply) {
+      targetReply.commentsCount++;
     }
+    setReplies(repliesCopy);
   }
-  // function to pin a post
-  // async function pinPost(id: string) {
-  //   try {
-  //     const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-  //       PinPostRequest.builder().setpostId(id).build(),
-  //     )) as never;
-  //     if (call.success) {
-  //       let feedListCopy = [...feedList];
-  //       const index = feedListCopy.findIndex((feed) => feed.Id === id);
-  //       const tempPost = feedListCopy[index];
-  //       feedListCopy.splice(index, 1);
-  //       feedListCopy = [tempPost, ...feedListCopy];
-  //       setFeedList(feedListCopy);
-  //       if (displaySnackbarMessage) {
-  //         displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+
+  function addNewComment(comment: Reply, usersMap: Record<string, User>) {
+    const repliesCopy = [comment, ...replies];
+    const usersCopy = { ...users, ...usersMap };
+    const postCopy = { ...post };
+    if (postCopy && postCopy?.commentsCount) {
+      postCopy.commentsCount++;
+      setPost(postCopy as Post);
+    }
+    setReplies(repliesCopy);
+    setUsers(usersCopy);
+  }
+  function removeAComment(id: string) {
+    const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+    const postCopy = { ...post };
+    if (postCopy && postCopy?.commentsCount) {
+      postCopy.commentsCount--;
+      setPost(postCopy as Post);
+    }
+    setReplies(repliesCopy);
+  }
+  function editAComment(comment: Reply, usersMap: Record<string, User>) {
+    const repliesCopy = [...replies].map((reply) =>
+      reply.Id === comment.Id ? comment : reply,
+    );
+    const usersCopy = { ...users, ...usersMap };
+    const postCopy = { ...post };
+    if (postCopy && postCopy.isEdited) {
+      postCopy.isEdited = true;
+      setPost(postCopy as Post);
+    }
+    setReplies(repliesCopy);
+    setUsers(usersCopy);
+  }
 
   useEffect(() => {
     loadPost();
@@ -146,5 +154,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     replies,
     loadNextPage,
     topics,
+    addNewComment,
+    removeAComment,
+    editAComment,
+    updateReplyOnPostReply,
   };
 };

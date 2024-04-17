@@ -15,6 +15,7 @@ import Posts from "./LMFeedPosts";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import LMFeedCreatePost from "./LMFeedCreatePost";
 import LMFeedAllMembers from "./LMFeedAllMembers";
+import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -26,16 +27,16 @@ interface LMFeedUniversalFeedProps {
 
 const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
   const {
-    topics,
+    topics = {},
     selectedTopics,
     setSelectedTopics,
-    loadMoreFeeds,
-    feedList,
-    feedUsersList,
-    getNextPage,
+    loadMoreFeeds = true,
+    feedList = [],
+    feedUsersList = {},
+    getNextPage = () => {},
     deletePost,
     pinPost,
-  } = useFetchFeeds();
+  } = useContext(LMFeedDataContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {

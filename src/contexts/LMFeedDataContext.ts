@@ -13,6 +13,7 @@ interface LMFeedDataContextInterface {
   getNextPage?: () => Promise<void>;
   feedList?: Post[];
   feedUsersList?: Record<string, User>;
-  deletePost?: (id?: string) => Promise<void>;
-  pinPost?: (id?: string) => Promise<void>;
+  deletePost?: (id: string) => Promise<void>;
+  pinPost?: (id: string) => Promise<void>;
+  likePost?: (id: string) => Promise<void>;
 }

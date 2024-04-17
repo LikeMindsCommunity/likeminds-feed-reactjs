@@ -8,8 +8,18 @@ import lmBack from "../assets/images/lm-back.svg";
 const LMFeedDetails = () => {
   const { id = "" } = useParams();
 
-  const { post, users, topics, replies, getNextPage, loadNextPage } =
-    useFeedDetails(id.split("-")[0]);
+  const {
+    post,
+    users,
+    topics,
+    replies,
+    getNextPage,
+    loadNextPage,
+    addNewComment,
+    removeAComment,
+    editAComment,
+    updateReplyOnPostReply,
+  } = useFeedDetails(id.split("-")[0]);
 
   return !post || !users ? null : (
     <div className="lm-feed-wrapper">
@@ -18,7 +28,18 @@ const LMFeedDetails = () => {
         <meta name="description" content={post?.text} />
       </Helmet>
       <FeedPostContext.Provider
-        value={{ post, users, topics, replies, getNextPage, loadNextPage }}
+        value={{
+          post,
+          users,
+          topics,
+          replies,
+          getNextPage,
+          loadNextPage,
+          addNewComment,
+          removeAComment,
+          editAComment,
+          updateReplyOnPostReply,
+        }}
       >
         <div className="lm-post-header">
           <img

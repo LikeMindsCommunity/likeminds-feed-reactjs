@@ -19,4 +19,8 @@ interface FeedPostContextInterface {
   replies?: Reply[];
   deletePost?: (id: string) => Promise<void>;
   pinPost?: (id: string) => Promise<void>;
+  addNewComment?: (comment: Reply, userMap: Record<string, User>) => void;
+  removeAComment?: (id: string) => void;
+  updateReplyOnPostReply?: (id: string) => void;
+  editAComment?: (comment: Reply, usersMap: Record<string, User>) => void;
 }
