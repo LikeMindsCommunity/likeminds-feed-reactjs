@@ -35,14 +35,7 @@ const LMFeedReplyTextArea = ({
     postReply,
     postComment,
   } = useLMPostReply(id?.split("-")[0].toString() || "", reply?.Id || "");
-  //   useEffect(() => {
-  //     if (temporaryPost && textFieldRef?.current) {
-  //       textFieldRef.current.innerHTML = convertTextToHTML(
-  //         temporaryPost.text,
-  //       ).innerHTML;
-  //       setReplyText!(textFieldRef.current.textContent || "");
-  //     }
-  //   }, [textFieldRef, setReplyText]);
+
   function postReplyAndCloseReplyText() {
     if (setOpenReplyText) {
       postReply();
@@ -56,17 +49,7 @@ const LMFeedReplyTextArea = ({
   }
   return (
     <>
-      <div
-        className="lm-reply-avatar"
-        // style={LMPostHeaderStyles?.avatar}
-        // onClick={() => {
-        //   if (postHeaderAvatarClickCallback) {
-        //     postHeaderAvatarClickCallback(navigate);
-        //   }
-        // }}
-      >
-        {avatar}
-      </div>
+      <div className="lm-reply-avatar">{avatar}</div>
 
       <div ref={containerRef} className="lm-flex-grow">
         {taggingList && taggingList?.length > 0 ? (

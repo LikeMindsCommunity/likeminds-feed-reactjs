@@ -7,6 +7,7 @@ import { GetFeedRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
+  LikePostRequest,
   // GetReportTagsRequest,
   PinPostRequest,
   // PostReportRequest,
@@ -15,6 +16,7 @@ import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResp
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
+import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
 interface useFetchFeedsResponse {
@@ -27,6 +29,7 @@ interface useFetchFeedsResponse {
   feedUsersList: Record<string, User>;
   deletePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
+  likePost: (id: string) => Promise<void>;
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
@@ -143,9 +146,26 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     }
   }
 
-  // async function likePost(){
-
-  // }
+  async function likePost(id: string) {
+    try {
+      const call: LikePostResponse = (await lmFeedclient?.likePost(
+        LikePostRequest.builder().setpostId(id).build(),
+      )) as never;
+      if (call.success) {
+        const feedListCopy = [...feedList];
+        const index = feedListCopy.findIndex((feed) => feed.Id === id);
+        feedListCopy[index].isLiked = !feedListCopy[index].isLiked;
+        if (feedListCopy[index].isLiked) {
+          feedListCopy[index].likesCount++;
+        } else {
+          feedListCopy[index].likesCount--;
+        }
+        setFeedList(feedListCopy);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   //  Effect to run when selectedTopics changes or during the initial loading of the page
   useEffect(() => {
@@ -162,5 +182,6 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     getNextPage,
     deletePost,
     pinPost,
+    likePost,
   };
 }

@@ -71,8 +71,6 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
         break;
       }
     }
-    // switch (id) {
-    // }
   }
   function closeReportDialog() {
     setOpenReportPostDialogBox(false);
@@ -87,6 +85,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   function closeThreeDotMenu() {
     setThreeDotMenuAnchor(null);
   }
+
   return (
     <div className="lm-social-action-bar__lmReply">
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
@@ -209,17 +208,19 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
             <span>{`${reply?.likesCount ? reply?.likesCount.toString().concat(" ") : ""}${(reply?.likesCount || 0) > 1 ? LIKES : LIKE}`}</span>
             <span>|</span>
             <span>
-              <span
-                className="reply-badge"
-                onClick={() => {
-                  if (replyActionButtonClickCallback) {
-                    replyActionButtonClickCallback(navigate);
-                  }
-                  setOpenReplyText(!openReplyText);
-                }}
-              >
-                Reply{" "}
-              </span>
+              {(reply?.level || 0) < 1 && (
+                <span
+                  className="reply-badge lm-cursor-pointer"
+                  onClick={() => {
+                    if (replyActionButtonClickCallback) {
+                      replyActionButtonClickCallback(navigate);
+                    }
+                    setOpenReplyText(!openReplyText);
+                  }}
+                >
+                  Reply{" "}
+                </span>
+              )}
               <span
                 className="replies lm-cursor-pointer"
                 onClick={() => {

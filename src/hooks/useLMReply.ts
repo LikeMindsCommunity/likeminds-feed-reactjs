@@ -4,6 +4,7 @@ import { Reply } from "../shared/types/models/replies";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
 import { GetCommentRequest } from "@likeminds.community/feed-js";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 
 interface UseReplyInterface {
   reply: Reply | null;
@@ -18,7 +19,9 @@ export const useReply: (
   replyId: string,
 ) => UseReplyInterface = (postId: string, replyId: string) => {
   // to get the instance of the client from the client context
-  const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { lmFeedclient, customEventClient } = useContext(
+    GlobalClientProviderContext,
+  );
 
   // to store the reply
   const [reply, setReply] = useState<Reply | null>(null);
@@ -91,7 +94,23 @@ export const useReply: (
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.REPLY_POSTED,
+      (e: Event) => {
+        const comment: Reply = (e as CustomEvent).detail.comment;
+        const userMap: Record<string, User> = (e as CustomEvent).detail.users;
+        if (comment.parentComment?.Id === replyId) {
+          const repliesCopy = [comment, ...replies];
+          const usersCopy = { ...users, ...userMap };
+          setReplies(repliesCopy);
+          setUser(usersCopy);
+        }
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.REPLY_POSTED);
+  });
   useEffect(() => {
     loadReply();
   }, [loadReply, postId, replyId]);

@@ -15,6 +15,7 @@ import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 import { useNavigate } from "react-router-dom";
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
 import { Divider } from "@mui/material";
+import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 
 const LMFeedPostFooter = () => {
   const { post } = useContext(FeedPostContext);
@@ -25,13 +26,12 @@ const LMFeedPostFooter = () => {
     CustomCallbacks = {},
   } = useContext(CustomAgentProviderContext);
   const {
-    likeActionCallback,
     likeTextCountClickCallback,
     commentIconClickCallback,
     commentTextCountClickCallback,
     postFooterClickCallback,
   } = CustomCallbacks;
-
+  const { likePost } = useContext(LMFeedDataContext);
   const navigation = useNavigate();
   function renderCommentBox() {
     return window.location.pathname.includes("post") ? (
@@ -59,11 +59,8 @@ const LMFeedPostFooter = () => {
               ) : (
                 <img
                   onClick={() => {
-                    if (likeActionCallback) {
-                      likeActionCallback(navigation);
-                    } else {
-                      alert(GUEST_USER_ACTION_MESSAGE);
-                    }
+                    console.log(Id);
+                    likePost!(Id);
                   }}
                   src={like}
                   className="lm-cursor-pointer"

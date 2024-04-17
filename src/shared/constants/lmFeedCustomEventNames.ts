@@ -5,4 +5,5 @@ export enum LMFeedCustomActionEvents {
   PIN_POST = "PIN_POST",
   UNPIN_POST = "UNPIN_POST",
   USER_INITIATED = "USER_INITIATED",
+  REPLY_POSTED = "REPLY_POSTED",
 }
