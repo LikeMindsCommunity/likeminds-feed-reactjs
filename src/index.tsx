@@ -3,18 +3,12 @@ import ReactDOM from "react-dom/client";
 import LMFeed from "./components/LMFeed";
 
 import { LMFeedClient } from "@likeminds.community/feed-js-beta";
-import LMFeedNotification from "./shared/components/LMFeedNotification";
+import LMFeedNotificationHeader from "./shared/components/LMFeedNotificationHeader";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 const customEventClient = new LMFeedCustomEvents();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <>
-    <header
-      style={{
-        padding: "16px",
-      }}
-    >
-      <LMFeedNotification customEventClient={customEventClient} />
-    </header>
+    <LMFeedNotificationHeader />
     <LMFeed
       client={LMFeedClient.Builder()
         .setPlatformCode("rt")
