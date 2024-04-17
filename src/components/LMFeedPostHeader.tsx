@@ -19,7 +19,7 @@ const LMFeedPostHeader = () => {
     useContext(FeedPostContext);
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
-  const { createdAt, isEdited, menuItems } = post!;
+  const { createdAt, isEdited, menuItems, isPinned } = post!;
   const { name, imageUrl, customTitle } = useMemo(
     () => users![post!.uuid],
     [post, users],
@@ -152,11 +152,13 @@ const LMFeedPostHeader = () => {
           </div>
         </div>
         <div className="lm-feed-wrapper__card__header__menu-items-container">
-          <img
-            className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
-            src={pinIcon}
-            alt="3-dot-menu"
-          />
+          {isPinned ? (
+            <img
+              className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
+              src={pinIcon}
+              alt="3-dot-menu"
+            />
+          ) : null}
 
           <img
             className="three-dot-menu-image lm-cursor-pointer"
