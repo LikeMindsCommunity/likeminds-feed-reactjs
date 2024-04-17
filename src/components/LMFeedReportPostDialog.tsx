@@ -76,6 +76,7 @@ const LMFeedReportPostDialog = ({
             {reportTags.map((tag) => {
               return (
                 <span
+                  // className="active"
                   key={tag.id}
                   onClick={() => {
                     console.log(tag);

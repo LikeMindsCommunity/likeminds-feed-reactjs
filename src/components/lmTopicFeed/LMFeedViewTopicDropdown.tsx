@@ -170,7 +170,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                     checkedList={checkedTopics}
                   /> */}
                   <div
-                    className="lm-topic-dropdown__topic"
+                    className="lm-topic-dropdown__topic lm-all-topic"
                     onClick={clearAllCheckedTopics}
                   >
                     <Checkbox
@@ -178,9 +178,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                       checked={!checkedTopics.length}
                       className="lm-topic-checkbox"
                     />
-                    <span className="lm-topic-name-container">
-                      {"All Topics"}
-                    </span>
+                    <span className="">{"All Topics"} ffdf</span>
                   </div>
                 </MenuItem>
 
