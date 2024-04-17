@@ -4,6 +4,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import like from "../assets/images/like.svg";
 import postLiked from "../assets/images/liked-post.svg";
 import commnent from "../assets/images/comment.svg";
+import bookmark from "../assets/images/bookmark.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import {
   COMMNENT,
@@ -127,10 +128,10 @@ const LMFeedPostFooter = () => {
             </div>
           </div>
           <div className="lm-social-action-bar__actions">
-            {/* <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
+            <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
               <img src={bookmark} alt="bookmark" />
             </div>
-            <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
+            {/* <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
               <img src={share} alt="share" />
             </div> */}
           </div>
