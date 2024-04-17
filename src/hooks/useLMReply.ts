@@ -5,6 +5,8 @@ import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderC
 import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
 import { GetCommentRequest } from "@likeminds.community/feed-js";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { DeleteCommentRequest } from "@likeminds.community/feed-js-beta";
+import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 
 interface UseReplyInterface {
   reply: Reply | null;
@@ -12,6 +14,7 @@ interface UseReplyInterface {
   loadMoreReplies: boolean;
   getNextPage: () => Promise<void>;
   replies: Reply[];
+  deleteReply: (id: string) => void;
 }
 
 export const useReply: (
@@ -111,6 +114,27 @@ export const useReply: (
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.REPLY_POSTED);
   });
+  async function deleteReply(id: string) {
+    try {
+      const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
+        DeleteCommentRequest.builder()
+          .setcommentId(id)
+          .setpostId(postId)
+          .build(),
+      )) as never;
+      if (call.success) {
+        const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+        const replyCopy = { ...reply };
+        if (replyCopy && replyCopy.commentsCount) {
+          replyCopy.commentsCount--;
+        }
+        setReply(replyCopy as Reply);
+        setReplies(repliesCopy);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
     loadReply();
   }, [loadReply, postId, replyId]);
@@ -120,5 +144,6 @@ export const useReply: (
     loadMoreReplies,
     getNextPage,
     replies,
+    deleteReply,
   };
 };

@@ -23,6 +23,7 @@ import { LMFeedReplyMenuItems } from "../../shared/constants/lmFeedRepliesMenuIt
 import LMFeedReplyEditTextArea from "../../shared/components/LMFeedReplyEditTextArea";
 import { parseAndReplaceTags } from "../../shared/taggingParser";
 import LMFeedDeleteDialogBox from "../lmDialogs/LMFeedDeleteDialogBox";
+import { LMFeedDeletePostModes } from "../../shared/enums/lmDeleteDialogModes";
 
 interface LMFeedReplyInterface {
   mode: string;
@@ -65,6 +66,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
     switch (id) {
       case LMFeedReplyMenuItems.DELETE: {
         //
+        setOpenDeleteDialog(true);
         break;
       }
       case LMFeedReplyMenuItems.REPORT: {
@@ -96,7 +98,13 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   return (
     <div className="lm-social-action-bar__lmReply">
       <Dialog open={openDeleteDialog} onClose={closeDeleteDialog}>
-        <LMFeedDeleteDialogBox />
+        <LMFeedDeleteDialogBox
+          mode={
+            mode === LMFeedReplyMode.COMMENT
+              ? LMFeedDeletePostModes.COMMENT
+              : LMFeedDeletePostModes.REPLY
+          }
+        />
       </Dialog>
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
         <LMFeedReportPostDialog

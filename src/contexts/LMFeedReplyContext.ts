@@ -10,4 +10,5 @@ export const ReplyContext = React.createContext<ReplyContextInterface>({
 interface ReplyContextInterface {
   reply: Reply | null;
   user: User | null;
+  deleteReply?: (id: string) => void;
 }

@@ -19,6 +19,7 @@ const LMFeedRepliesScroller = ({
     loadMoreReplies = false,
     getNextPage = () => {},
     users,
+    deleteReply,
   } = useReply(postId, replyId);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderComments = () => {
@@ -28,6 +29,7 @@ const LMFeedRepliesScroller = ({
           value={{
             user: users![reply.uuid],
             reply: reply,
+            deleteReply,
           }}
           key={reply.Id}
         >

@@ -13,12 +13,18 @@ import LMFeedReportPostDialog from "./LMFeedReportPostDialog";
 import { LMFeedEntityType } from "../shared/constants/lmEntityType";
 import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import pinIcon from "../assets/images/Icon-pin_new.svg";
+import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
+import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 const LMFeedPostHeader = () => {
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  const { post, users, topics, pinPost, deletePost } =
-    useContext(FeedPostContext);
+  const { post, users, topics, pinPost } = useContext(FeedPostContext);
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
+  const [openDeletePostDialog, setOpenDeletePostDialog] =
+    useState<boolean>(false);
+  function closeDeletePostDialog() {
+    setOpenDeletePostDialog(false);
+  }
   const { createdAt, isEdited, menuItems, isPinned } = post!;
   const { name, imageUrl, customTitle } = useMemo(
     () => users![post!.uuid],
@@ -62,9 +68,7 @@ const LMFeedPostHeader = () => {
         break;
       }
       case LMFeedPostMenuItems.DELETE_POST: {
-        if (deletePost) {
-          deletePost(post.Id);
-        }
+        setOpenDeletePostDialog(true);
         break;
       }
       case LMFeedPostMenuItems.PIN_POST: {
@@ -85,6 +89,9 @@ const LMFeedPostHeader = () => {
   const [anchor, setAnchor] = useState<HTMLImageElement | null>(null);
   return (
     <>
+      <Dialog open={openDeletePostDialog} onClose={closeDeletePostDialog}>
+        <LMFeedDeleteDialogBox mode={LMFeedDeletePostModes.POST} />
+      </Dialog>
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
         <LMFeedReportPostDialog
           entityType={LMFeedEntityType.POST}

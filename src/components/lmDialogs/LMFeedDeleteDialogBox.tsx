@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useContext } from "react";
 import closeIcon from "../../assets/images/cancel-model-icon.svg";
-
-const LMFeedDeleteDialogBox = () => {
+import { LMFeedDeletePostModes } from "../../shared/enums/lmDeleteDialogModes";
+import { FeedPostContext } from "../../contexts/LMFeedPostContext";
+import { ReplyContext } from "../../contexts/LMFeedReplyContext";
+interface LMDeletePostDialogProps {
+  mode: LMFeedDeletePostModes;
+}
+const LMFeedDeleteDialogBox = ({ mode }: LMDeletePostDialogProps) => {
+  const { deletePost, post, removeAComment } = useContext(FeedPostContext);
+  const { reply, deleteReply } = useContext(ReplyContext);
+  function confirmDelete() {
+    switch (mode) {
+      case LMFeedDeletePostModes.POST: {
+        if (deletePost) {
+          deletePost(post?.Id || "");
+        }
+        return;
+      }
+      case LMFeedDeletePostModes.COMMENT: {
+        if (removeAComment) {
+          removeAComment(reply?.Id || "");
+        }
+        return;
+      }
+      case LMFeedDeletePostModes.REPLY: {
+        if (deleteReply) {
+          deleteReply(reply?.Id || "");
+        }
+      }
+    }
+  }
   return (
     <div className="lmReportPostWrapper">
       <div className="lmReportPostWrapper__header">Delete Post</div>
@@ -18,7 +46,10 @@ const LMFeedDeleteDialogBox = () => {
           </div>
 
           <div className="lmReportPostWrapper__body__content__actions">
-            <button className="lmReportPostWrapper__body__content__actions--btnReport">
+            <button
+              onClick={confirmDelete}
+              className="lmReportPostWrapper__body__content__actions--btnReport"
+            >
               Delete
             </button>
           </div>

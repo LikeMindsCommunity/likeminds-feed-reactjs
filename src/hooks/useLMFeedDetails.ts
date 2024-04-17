@@ -6,6 +6,8 @@ import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDet
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetPostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
+import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
+import { DeleteCommentRequest } from "@likeminds.community/feed-js-beta";
 // import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 // import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
 // import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -121,14 +123,26 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     setReplies(repliesCopy);
     setUsers(usersCopy);
   }
-  function removeAComment(id: string) {
-    const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
-    const postCopy = { ...post };
-    if (postCopy && postCopy?.commentsCount) {
-      postCopy.commentsCount--;
-      setPost(postCopy as Post);
+  async function removeAComment(id: string) {
+    try {
+      const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
+        DeleteCommentRequest.builder()
+          .setpostId(post?.Id || "")
+          .setcommentId(id)
+          .build(),
+      )) as never;
+      if (call.success) {
+        const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+        const postCopy = { ...post };
+        if (postCopy && postCopy?.commentsCount) {
+          postCopy.commentsCount--;
+          setPost(postCopy as Post);
+          setReplies(repliesCopy);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
-    setReplies(repliesCopy);
   }
   function editAComment(comment: Reply, usersMap: Record<string, User>) {
     const repliesCopy = [...replies].map((reply) =>
