@@ -17,6 +17,8 @@ import { RouteModifiers } from "../shared/types/customProps/routes";
 import "../assets/scss/styles.scss";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { pdfjs } from "react-pdf";
+import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContextProvider";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -46,6 +48,8 @@ function LMFeed({
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(accessToken, refreshToken, client, customEventClient);
+  const { showSnackbar, message, closeSnackbar, displaySnackbarMessage } =
+    useLMFeedGeneralContextProvider();
   useEffect(() => {
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
@@ -73,82 +77,94 @@ function LMFeed({
           CustomCallbacks,
         }}
       >
-        <UserProviderContext.Provider
+        <GeneralContext.Provider
           value={{
-            currentUser: lmFeedUser,
-            currentCommunity: lmFeedUserCurrentCommunity,
-            logoutUser: logoutUser,
+            message,
+            showSnackbar,
+            closeSnackbar,
+            displaySnackbarMessage,
           }}
         >
-          {useParentRouter ? (
-            <>
-              {routes ? (
-                <>
+          <UserProviderContext.Provider
+            value={{
+              currentUser: lmFeedUser,
+              currentCommunity: lmFeedUserCurrentCommunity,
+              logoutUser: logoutUser,
+            }}
+          >
+            {useParentRouter ? (
+              <>
+                {routes ? (
+                  <>
+                    <Routes>
+                      {routes.map((routeObject) => (
+                        <Route
+                          key={routeObject.route}
+                          path={routeObject.route}
+                        />
+                      ))}
+                    </Routes>
+                  </>
+                ) : (
                   <Routes>
-                    {routes.map((routeObject) => (
-                      <Route key={routeObject.route} path={routeObject.route} />
-                    ))}
-                  </Routes>
-                </>
-              ) : (
-                <Routes>
-                  <Route
-                    path={ROUTES.ROOT_PATH}
-                    element={<LMFeedUniversalFeed />}
-                  ></Route>
+                    <Route
+                      path={ROUTES.ROOT_PATH}
+                      element={<LMFeedUniversalFeed />}
+                    ></Route>
 
-                  <Route
-                    path={ROUTES.POST_DETAIL}
-                    element={
-                      <HelmetProvider>
-                        <LMFeedDetails />
-                      </HelmetProvider>
-                    }
-                  ></Route>
-                  <Route
-                    path={ROUTES.TOPIC}
-                    element={<LMFeedTopicFlatFeed />}
-                  />
-                </Routes>
-              )}
-            </>
-          ) : (
-            <BrowserRouter>
-              {routes ? (
-                <>
+                    <Route
+                      path={ROUTES.POST_DETAIL}
+                      element={
+                        <HelmetProvider>
+                          <LMFeedDetails />
+                        </HelmetProvider>
+                      }
+                    ></Route>
+                    <Route
+                      path={ROUTES.TOPIC}
+                      element={<LMFeedTopicFlatFeed />}
+                    />
+                  </Routes>
+                )}
+              </>
+            ) : (
+              <BrowserRouter>
+                {routes ? (
+                  <>
+                    <Routes>
+                      {routes.map((routeObject) => (
+                        <Route
+                          path={routeObject.route}
+                          element={routeObject.element}
+                        />
+                      ))}
+                    </Routes>
+                  </>
+                ) : (
                   <Routes>
-                    {routes.map((routeObject) => (
-                      <Route
-                        path={routeObject.route}
-                        element={routeObject.element}
-                      />
-                    ))}
-                  </Routes>
-                </>
-              ) : (
-                <Routes>
-                  <Route
-                    path={ROUTES.ROOT_PATH}
-                    element={<LMFeedUniversalFeed />}
-                  ></Route>
+                    <Route
+                      path={ROUTES.ROOT_PATH}
+                      element={<LMFeedUniversalFeed />}
+                    ></Route>
 
-                  <Route
-                    path={ROUTES.POST_DETAIL}
-                    element={
-                      <HelmetProvider>
-                        <LMFeedDetails />
-                      </HelmetProvider>
-                    }
-                  ></Route>
-                  <Route
-                    path={ROUTES.TOPIC}
-                    element={<LMFeedTopicFlatFeed />}
-                  />
-                </Routes>
-              )}
-            </BrowserRouter>
-          )}
-        </UserProviderContext.Provider>
+                    <Route
+                      path={ROUTES.POST_DETAIL}
+                      element={
+                        <HelmetProvider>
+                          <LMFeedDetails />
+                        </HelmetProvider>
+                      }
+                    ></Route>
+                    <Route
+                      path={ROUTES.TOPIC}
+                      element={<LMFeedTopicFlatFeed />}
+                    />
+                  </Routes>
+                )}
+              </BrowserRouter>
+            )}
+          </UserProviderContext.Provider>
+        </GeneralContext.Provider>
       </CustomAgentProviderContext.Provider>
     </GlobalClientProviderContext.Provider>
   );

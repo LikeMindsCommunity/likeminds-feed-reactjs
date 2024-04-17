@@ -1,6 +1,6 @@
 .lm-feed-activity-wrapper{
     max-height: pxToRem(650);
-    overflow-y: auto;
+    overflow: auto;
     padding: pxToRem(0);
     border-radius: pxToRem(8);
     width: pxToRem(376);
@@ -11,6 +11,7 @@
         font-weight: 500;
         color: $dark-color
     }
+    
     &__activity-item{
         padding: pxToRem(24);
         height: pxToRem(118);

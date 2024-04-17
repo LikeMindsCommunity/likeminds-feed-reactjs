@@ -13,6 +13,8 @@ import {
 } from "@likeminds.community/feed-js-beta";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
+import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
 interface useFetchFeedsResponse {
@@ -29,6 +31,7 @@ interface useFetchFeedsResponse {
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { displaySnackbarMessage } = useContext(GeneralContext);
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -107,7 +110,12 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         DeletePostRequest.builder().setpostId(id).build(),
       )) as never;
       if (call.success) {
-        // TODO delete call action
+        const feedListCopy = [...feedList];
+        const index = feedListCopy.findIndex((feed) => feed.Id === id);
+        feedListCopy.splice(index, 1);
+        setFeedList(feedListCopy);
+        if (displaySnackbarMessage)
+          displaySnackbarMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY);
       }
     } catch (error) {
       console.log(error);
@@ -120,33 +128,23 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         PinPostRequest.builder().setpostId(id).build(),
       )) as never;
       if (call.success) {
-        // TODO pin post actions
+        let feedListCopy = [...feedList];
+        const index = feedListCopy.findIndex((feed) => feed.Id === id);
+        const tempPost = feedListCopy[index];
+        feedListCopy.splice(index, 1);
+        feedListCopy = [tempPost, ...feedListCopy];
+        setFeedList(feedListCopy);
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  // function to pin a post
-  // async function reportPost(id: string) {
-  //   try {
-  //     const tagsCall = await lmFeedclient?.getReportTags(
-  //       GetReportTagsRequest.builder().settype().build(),
-  //     );
-  //     console.log(tagsCall);
-  //     const call = await lmFeedclient?.postReport(
-  //       PostReportRequest.builder()
-  //         .setEntityId()
-  //         .setEntityType()
-  //         .setReason()
-  //         .setTagId()
-  //         .setUuid()
-  //         .build(),
-  //     );
-  //     ;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  // async function likePost(){
+
   // }
 
   //  Effect to run when selectedTopics changes or during the initial loading of the page

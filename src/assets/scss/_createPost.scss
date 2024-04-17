@@ -1,8 +1,7 @@
 .lm-feed-create-post-wrapper {
   padding: pxToRem(20) pxToRem(36) pxToRem(28) pxToRem(36);
-  max-width: pxToRem(460);
-  width: 100%; 
-  max-width: pxToRem(661);
+  width: pxToRem(460);
+  min-height: pxToRem(388);
   border-radius: pxToRem(16);
   position: relative;
   &__dialog-heading {

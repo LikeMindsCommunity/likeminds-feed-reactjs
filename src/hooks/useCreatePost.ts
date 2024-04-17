@@ -108,6 +108,7 @@ export function useCreatePost(): UseCreatePost {
   }
   const postFeed = async function () {
     try {
+      setOpenCreatePostDialog(false);
       const textContent: string = extractTextFromNode(
         textFieldRef.current,
       ).trim();
@@ -215,6 +216,7 @@ export function useCreatePost(): UseCreatePost {
 
   const editPost = async function () {
     try {
+      setOpenCreatePostDialog(false);
       const textContent: string = extractTextFromNode(
         textFieldRef.current,
       ).trim();

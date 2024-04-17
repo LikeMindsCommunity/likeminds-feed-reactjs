@@ -8,7 +8,7 @@ import { LMFeedCustomEvents } from "./shared/customEvents";
 const customEventClient = new LMFeedCustomEvents();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <>
-    <LMFeedNotificationHeader />
+    <LMFeedNotificationHeader customEventClient={customEventClient} />
     <LMFeed
       client={LMFeedClient.Builder()
         .setPlatformCode("rt")

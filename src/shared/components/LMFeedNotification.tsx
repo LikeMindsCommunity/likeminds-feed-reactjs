@@ -29,16 +29,20 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
         anchorEl={notificationAnchor}
         onClose={() => setNotificationAnchor(null)}
       >
-        <div className="lm-feed-activity-wrapper">
-          <div className="lm-feed-activity-wrapper__title">Notification</div>
+        <div className="lm-feed-activity-wrapper" id="scroller">
+          {/* <div className="lm-feed-activity-wrapper__scroll-container"> */}
           {notifications.length > 0 ? (
             <InfiniteScroll
-              dataLength={notifications.length}
+              dataLength={notifications.length + 1}
               hasMore={shouldLoadMoreNotifications}
               next={getNotifications}
               loader={null}
-              scrollableTarget="lm-feed-activity-wrapper__scroll-container"
+              // className="lm-feed-activity-wrapper__scroll-container"
+              scrollableTarget="scroller"
             >
+              <div className="lm-feed-activity-wrapper__title">
+                Notification
+              </div>
               {notifications.map((activity: Activity) => {
                 const { imageUrl, name } = users[activity?.actionBy[0]];
                 const avatar = getAvatar({
@@ -96,6 +100,7 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
               Oops! You do not have any no notifications yet.
             </div>
           )}
+          {/* </div> */}
         </div>
       </Menu>
     );

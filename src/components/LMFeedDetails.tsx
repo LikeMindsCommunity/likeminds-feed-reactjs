@@ -23,6 +23,7 @@ const LMFeedDetails = () => {
         <div className="lm-post-header">
           <img
             onClick={() => window.history.back()}
+            // onClick={() => window.history.back()}
             src={lmBack}
             alt="Back Icon"
             className="lm-cursor-pointer"
