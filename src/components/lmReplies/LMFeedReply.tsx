@@ -63,7 +63,6 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
     switch (id) {
       case LMFeedReplyMenuItems.DELETE: {
         //
-
         break;
       }
       case LMFeedReplyMenuItems.REPORT: {
