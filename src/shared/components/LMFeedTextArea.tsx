@@ -7,8 +7,13 @@ import { useTagging } from "../../hooks/useTagging";
 import { convertTextToHTML, setTagUserImage } from "../taggingParser";
 
 const LMFeedTextArea = () => {
-  const { taggingList, clearTaggingList, fetchTaggingList, setTaggingString } =
-    useTagging();
+  const {
+    taggingList,
+    clearTaggingList,
+    fetchTaggingList,
+    setTaggingString,
+    fetchMoreTags,
+  } = useTagging();
   const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
     LMFeedCreatePostContext,
   );
@@ -32,7 +37,7 @@ const LMFeedTextArea = () => {
         >
           <InfiniteScroll
             loader={null}
-            hasMore={true}
+            hasMore={fetchMoreTags}
             next={fetchTaggingList}
             dataLength={taggingList.length}
             scrollableTarget="scrollableTaggingContainer"

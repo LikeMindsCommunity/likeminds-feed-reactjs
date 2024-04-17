@@ -37,7 +37,14 @@ export function useTagging(): UseTagging {
           .build(),
       );
       if (call.success) {
-        setTaggingList([...taggingList, ...call.data.members]);
+        // setTaggingList([...taggingList, ...call.data.members]);
+        setTaggingList((previousState) => {
+          console.log("the previous state value");
+          console.log(previousState);
+          console.log("the new state value");
+          console.log([...taggingList, ...call.data.members]);
+          return [...previousState, ...call.data.members];
+        });
         setPageNo(pageNo + 1);
       }
       if (!call.data.members.length) {
@@ -50,6 +57,13 @@ export function useTagging(): UseTagging {
   useEffect(() => {
     if (tagString !== null) {
       setFetchMoreTags(true);
+      setTaggingList((previousState) => {
+        console.log("the previous state value");
+        console.log(previousState);
+        console.log("the new state value");
+        console.log([]);
+        return [];
+      });
       fetchTaggingList(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
