@@ -9,6 +9,8 @@ import { convertTextToHTML } from "../taggingParser";
 import dayjs from "dayjs";
 import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
+import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
+// import threeDotMenuIcon from "../../";
 const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
   const {
     notificationCount,
@@ -29,74 +31,87 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
         anchorEl={notificationAnchor}
         onClose={() => setNotificationAnchor(null)}
       >
-        <div className="lm-feed-activity-wrapper" id="scroller">
-          {/* <div className="lm-feed-activity-wrapper__scroll-container"> */}
+        <div className="lm-feed-activity-wrapper">
           {notifications.length > 0 ? (
-            <InfiniteScroll
-              dataLength={notifications.length + 1}
-              hasMore={shouldLoadMoreNotifications}
-              next={getNotifications}
-              loader={null}
-              // className="lm-feed-activity-wrapper__scroll-container"
-              scrollableTarget="scroller"
-            >
+            <>
               <div className="lm-feed-activity-wrapper__title">
                 Notification
               </div>
-              {notifications.map((activity: Activity) => {
-                const { imageUrl, name } = users[activity?.actionBy[0]];
-                const avatar = getAvatar({
-                  imageUrl,
-                  name,
-                });
-                return (
-                  <div
-                    key={activity?.Id}
-                    className={`lm-feed-activity-wrapper__activity-item lm-cursor-pointer ${!activity.isRead ? "non-interacted-activity" : ""} lm-hover-effect`}
-                    onClick={() => handleNotification(activity.Id)}
-                  >
-                    <div className="user-image">{avatar}</div>
-                    <div className="notification-content">
+
+              <div className="notificationBody" id="scroller">
+                <InfiniteScroll
+                  dataLength={notifications.length + 1}
+                  hasMore={shouldLoadMoreNotifications}
+                  next={getNotifications}
+                  loader={null}
+                  scrollableTarget="scroller"
+                >
+                  {notifications.map((activity: Activity) => {
+                    const { imageUrl, name } = users[activity?.actionBy[0]];
+                    const avatar = getAvatar({
+                      imageUrl,
+                      name,
+                    });
+                    return (
                       <div
-                        className="notification-text"
-                        dangerouslySetInnerHTML={{
-                          __html: convertTextToHTML(activity?.activityText)
-                            ?.innerHTML,
-                        }}
-                      ></div>
-                      <div className="notification-time-before">
-                        {dayjs(activity?.updatedAt).fromNow()}
-                      </div>
-                    </div>
-                    <div>
-                      {/* <IconButton
+                        key={activity?.Id}
+                        className={`lm-feed-activity-wrapper__activity-item lm-cursor-pointer ${!activity.isRead ? "non-interacted-activity" : ""} lm-hover-effect`}
+                        onClick={() => handleNotification(activity.Id)}
+                      >
+                        <div className="user-image">{avatar}</div>
+                        <div className="notification-content">
+                          <div
+                            className="notification-text"
+                            dangerouslySetInnerHTML={{
+                              __html: convertTextToHTML(activity?.activityText)
+                                ?.innerHTML,
+                            }}
+                          ></div>
+                          <div className="notification-time-before">
+                            {dayjs(activity?.updatedAt).fromNow()}
+                          </div>
+                        </div>
+                        <div>
+                          <img
+                            className="three-dot-menu-image lm-cursor-pointer"
+                            src={threeDotMenuIcon}
+                            alt="3-dot-menu"
+                            // onClick={(e) => {
+                            //   setMenuAnchor(e.currentTarget);
+                            // }}
+                          />
+                          {/* <IconButton
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                             setMenuAnchor(e.currentTarget)
                           }>
                           <MoreVertIcon />
                         </IconButton> */}
-                    </div>
+                        </div>
 
-                    <Menu
-                      open={Boolean(menuAnchor)}
-                      onClose={() => setMenuAnchor(null)}
-                      anchorEl={menuAnchor}
-                      className="menu-block"
-                    >
-                      <div className="menu-block-item">
-                        Remove this notification
+                        <Menu
+                          open={Boolean(menuAnchor)}
+                          onClose={() => setMenuAnchor(null)}
+                          anchorEl={menuAnchor}
+                          className="menu-block"
+                        >
+                          <div className="menu-block-item">
+                            Remove this notification
+                          </div>
+                          <div className="menu-block-item">
+                            Mute this notification
+                          </div>
+                        </Menu>
                       </div>
-                      <div className="menu-block-item">
-                        Mute this notification
-                      </div>
-                    </Menu>
-                  </div>
-                );
-              })}
-            </InfiniteScroll>
+                    );
+                  })}
+                </InfiniteScroll>
+              </div>
+            </>
           ) : (
-            <div className="lmNoNotification noNotifications">
-              <img src={noNotifications} alt="default image" />
+            <div className="lmNoNotification noNotifications lm-d-flex">
+              <div>
+                <img src={noNotifications} alt="default image" />
+              </div>
               Oops! You do not have any no notifications yet.
             </div>
           )}

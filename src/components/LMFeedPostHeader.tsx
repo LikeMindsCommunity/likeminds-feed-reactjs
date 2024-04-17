@@ -6,19 +6,20 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { useNavigate } from "react-router-dom";
 import { Dialog, Menu } from "@mui/material";
-import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import LMFeedReportPostDialog from "./LMFeedReportPostDialog";
 import { LMFeedEntityType } from "../shared/constants/lmEntityType";
+import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
+import pinIcon from "../assets/images/Icon-pin_new.svg";
 const LMFeedPostHeader = () => {
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
   const { post, users, topics, pinPost, deletePost } =
     useContext(FeedPostContext);
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
-  const { createdAt, isEdited, menuItems } = post!;
+  const { createdAt, isEdited, menuItems, isPinned } = post!;
   const { name, imageUrl, customTitle } = useMemo(
     () => users![post!.uuid],
     [post, users],
@@ -151,6 +152,14 @@ const LMFeedPostHeader = () => {
           </div>
         </div>
         <div className="lm-feed-wrapper__card__header__menu-items-container">
+          {isPinned ? (
+            <img
+              className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
+              src={pinIcon}
+              alt="3-dot-menu"
+            />
+          ) : null}
+
           <img
             className="three-dot-menu-image lm-cursor-pointer"
             src={threeDotMenuIcon}

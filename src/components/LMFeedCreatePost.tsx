@@ -9,6 +9,7 @@ import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
+import createPostIcon from "../assets/images/note.text.badge.plus.svg";
 
 const LMFeedCreatePost = () => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -68,6 +69,15 @@ const LMFeedCreatePost = () => {
         closeOGTagContainer,
       }}
     >
+      <div
+        className="lm-create-post-btn"
+        onClick={() => {
+          setOpenCreatePostDialog(!openCreatePostDialog);
+        }}
+      >
+        <img src={createPostIcon} alt="createPostIcon" />
+        New Post
+      </div>
       <div className="lm-createPost">
         <div className="lm-createPost__media">
           <div className="lm-createPost__media__imgBox lm-avatar">
