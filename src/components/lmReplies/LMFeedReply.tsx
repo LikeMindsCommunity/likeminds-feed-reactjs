@@ -21,7 +21,8 @@ import { LMFeedReplyMode } from "../../shared/constants/lmFeedReplyMode";
 import { LMFeedReplyMenuItems } from "../../shared/constants/lmFeedRepliesMenuItems";
 import LMFeedReplyEditTextArea from "../../shared/components/LMFeedReplyEditTextArea";
 import { parseAndReplaceTags } from "../../shared/taggingParser";
-import LMFeedDeleteDialogBox from "../LMFeedDeleteDialogBox";
+import LMFeedDeleteDialogBox from "../lmDialogs/LMFeedDeleteDialogBox";
+
 interface LMFeedReplyInterface {
   mode: string;
 }
@@ -63,7 +64,6 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
     switch (id) {
       case LMFeedReplyMenuItems.DELETE: {
         //
-
         break;
       }
       case LMFeedReplyMenuItems.REPORT: {

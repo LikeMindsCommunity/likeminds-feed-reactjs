@@ -13,6 +13,7 @@ import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
+import { CREATE_POST, EDIT_POST } from "../shared/constants/lmAppConstant";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -34,7 +35,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
   return (
     <div className="lm-feed-create-post-wrapper">
       <div className="lm-feed-create-post-wrapper__dialog-heading">
-        Create Post
+        {temporaryPost ? EDIT_POST : CREATE_POST}
         <img
           src={cancelModelMcon}
           alt="cancelModelMcon"

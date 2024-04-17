@@ -1,7 +1,7 @@
 .lm-social-action-bar {
   @extend .lm-d-flex;
   background-color: $light-color;
-  padding: pxToRem(10) pxToRem(16);
+  padding: 1.75rem pxToRem(16) pxToRem(10);
   justify-content: space-between;
 
   &__actions {
