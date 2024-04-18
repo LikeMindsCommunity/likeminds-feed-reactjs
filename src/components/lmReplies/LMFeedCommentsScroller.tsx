@@ -14,6 +14,7 @@ const LMFeedCommentsScroller = () => {
     getNextPage = () => {},
     users,
     likeReply,
+    updateReply,
   } = useContext(FeedPostContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
 
@@ -25,6 +26,7 @@ const LMFeedCommentsScroller = () => {
             user: users![reply.uuid],
             reply: reply,
             likeReply,
+            updateReply,
           }}
           key={reply.Id}
         >

@@ -7,6 +7,7 @@ import LMFeedPostBody from "./LMFeedPostBody";
 import LMFeedPostFooter from "./LMFeedPostFooter";
 import LMFeedPostTopicsWrapper from "./LMFeedPostTopicsWrapper";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
 
 interface LMFeedPostProps {
   post: Post;
@@ -15,9 +16,9 @@ interface LMFeedPostProps {
 
 const LMFeedPost: React.FC<LMFeedPostProps> = () => {
   const { CustomComponents } = useContext(CustomAgentProviderContext);
-
+  const { post } = useContext(FeedPostContext);
   return (
-    <div className="lm-feed-wrapper__card lm-mb-2">
+    <div className="lm-feed-wrapper__card lm-mb-2" id={post?.Id}>
       {CustomComponents?.PostViewHeader ? (
         CustomComponents?.PostViewHeader
       ) : (

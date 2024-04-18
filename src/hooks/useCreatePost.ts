@@ -273,6 +273,14 @@ export function useCreatePost(): UseCreatePost {
           usersMap: call.data.users,
           topicsMap: call.data.topics,
         });
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.POST_EDITED_TARGET_DETAILS,
+          {
+            post: call.data.post,
+            usersMap: call.data.users,
+            topicsMap: call.data.topics,
+          },
+        );
       }
     } catch (error) {
       console.log(error);

@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Base component for setting Feed List.
 
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import LMFeedDetails from "./LMFeedDetails";
 import { Post } from "../shared/types/models/post";
 import { ROUTES } from "../shared/constants/lmRoutesConstant";
@@ -39,6 +38,14 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     likePost,
   } = useContext(LMFeedDataContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const scrollPos = sessionStorage.getItem("scroll-pos");
+    if (scrollPos) {
+      const el = document.getElementById(scrollPos);
+      el?.scrollIntoView();
+    }
+  }, [wrapperRef]);
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
       const postUuid = post.uuid;
@@ -63,11 +70,30 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
         </FeedPostContext.Provider>
       );
     });
-  }, [CustomComponents?.PostView, deletePost, feedList, feedUsersList, topics]);
-
+  }, [
+    CustomComponents?.PostView,
+    deletePost,
+    feedList,
+    feedUsersList,
+    likePost,
+    pinPost,
+    topics,
+  ]);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    return () => {
+      console.log(el?.scrollTop);
+    };
+  }, [wrapperRef]);
   return (
-    <div className="lm-feed-wrapper lm-d-flex">
-      <div className="lm-flex-grow" id="feed-scroller">
+    <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
+      <div
+        className="lm-flex-grow"
+        id="feed-scroller"
+        // style={{
+        //   overflow: "auto",
+        // }}
+      >
         <LMFeedCreatePost showStarterComponent />
         {/* <div> */}
         {/* Topics */}
@@ -91,6 +117,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
           next={getNextPage}
           // TODO set shimmer on loader component
           loader={null}
+          // scrollableTarget="feed-scroller"
         >
           {renderFeeds()}
         </InfiniteScroll>

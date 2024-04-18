@@ -32,7 +32,7 @@ interface UseFeedDetailsInterface {
   addNewComment: (comment: Reply, userMap: Record<string, User>) => void;
   removeAComment: (id: string) => void;
   updateReplyOnPostReply: (id: string) => void;
-  editAComment: (comment: Reply, usersMap: Record<string, User>) => void;
+  updateReply: (comment: Reply, usersMap: Record<string, User>) => void;
   likeReply: (id: string) => void;
   likePost: (id: string) => void;
 }
@@ -83,6 +83,15 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         if (!getPostDetailsCall.data.post.replies?.length) {
           setLoadNextPage(false);
         }
+      } else {
+        if (displaySnackbarMessage) {
+          alert(LMDisplayMessages.ERROR_LOADING_POST);
+          displaySnackbarMessage(
+            getPostDetailsCall?.errorMessage ||
+              LMDisplayMessages.ERROR_LOADING_POST,
+          );
+        }
+        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -121,6 +130,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     const repliesCopy = [...replies];
     const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
     if (targetReply) {
+      console.log(targetReply);
       targetReply.commentsCount++;
     }
     setReplies(repliesCopy);
@@ -136,6 +146,11 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     }
     setReplies(repliesCopy);
     setUsers(usersCopy);
+    if (customEventClient) {
+      customEventClient.dispatchEvent(LMFeedCustomActionEvents.COMMENT_ADDED, {
+        postId: post?.Id,
+      });
+    }
   }
   async function removeAComment(id: string) {
     try {
@@ -157,12 +172,20 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             displaySnackbarMessage(LMDisplayMessages.COMMENT_DELETED_SUCCESS);
           }
         }
+        if (customEventClient) {
+          customEventClient.dispatchEvent(
+            LMFeedCustomActionEvents.COMMENT_REMOVED,
+            {
+              postId: post?.Id,
+            },
+          );
+        }
       }
     } catch (error) {
       console.log(error);
     }
   }
-  function editAComment(comment: Reply, usersMap: Record<string, User>) {
+  function updateReply(comment: Reply, usersMap: Record<string, User>) {
     const repliesCopy = [...replies].map((reply) =>
       reply.Id === comment.Id ? comment : reply,
     );
@@ -250,6 +273,28 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.REPLY_DELETED);
   });
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_EDITED_TARGET_DETAILS,
+      (e: Event) => {
+        const detail = (e as CustomEvent).detail;
+        const { post, usersMap, topicsMap } = detail;
+        const postCopy = { ...post };
+        const feedUsersCopy = { ...users, ...usersMap };
+        const topicsCopy = { ...topics, ...topicsMap };
+        setPost(postCopy);
+        setTopics(topicsCopy);
+        setUsers(feedUsersCopy);
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(LMDisplayMessages.POST_EDIT_SUCCESS);
+        }
+      },
+    );
+    return () =>
+      customEventClient?.remove(
+        LMFeedCustomActionEvents.POST_EDITED_TARGET_DETAILS,
+      );
+  });
 
   useEffect(() => {
     loadPost();
@@ -263,7 +308,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     topics,
     addNewComment,
     removeAComment,
-    editAComment,
+    updateReply,
     updateReplyOnPostReply,
     likeReply,
     likePost,

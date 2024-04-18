@@ -20,6 +20,7 @@ interface UseReplyInterface {
   replies: Reply[];
   deleteReply: (id: string) => void;
   likeReply: (id: string) => void;
+  updateReply: (comment: Reply, usersMap: Record<string, User>) => void;
 }
 
 export const useReply: (
@@ -153,6 +154,15 @@ export const useReply: (
       console.log(error);
     }
   }
+  function updateReply(comment: Reply, usersMap: Record<string, User>) {
+    const repliesCopy = [...replies].map((reply) =>
+      reply.Id === comment.Id ? comment : reply,
+    );
+    const usersCopy = { ...users, ...usersMap };
+    setReplies(repliesCopy);
+    setUser(usersCopy);
+  }
+
   useEffect(() => {
     customEventClient?.listen(
       LMFeedCustomActionEvents.REPLY_POSTED,
@@ -182,5 +192,6 @@ export const useReply: (
     replies,
     deleteReply,
     likeReply,
+    updateReply,
   };
 };
