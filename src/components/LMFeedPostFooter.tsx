@@ -17,10 +17,9 @@ import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 import { useNavigate } from "react-router-dom";
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
 import { Divider } from "@mui/material";
-import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 
 const LMFeedPostFooter = () => {
-  const { post } = useContext(FeedPostContext);
+  const { post, likePost } = useContext(FeedPostContext);
   const { likesCount, commentsCount, Id } = post!;
   const {
     LMPostFooterStyles,
@@ -33,7 +32,7 @@ const LMFeedPostFooter = () => {
     commentTextCountClickCallback,
     postFooterClickCallback,
   } = CustomCallbacks;
-  const { likePost } = useContext(LMFeedDataContext);
+
   const navigation = useNavigate();
   function renderCommentBox() {
     return window.location.pathname.includes("post") ? (

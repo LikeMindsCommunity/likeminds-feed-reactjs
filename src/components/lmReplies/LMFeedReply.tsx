@@ -29,13 +29,13 @@ interface LMFeedReplyInterface {
   mode: string;
 }
 const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
-  const { reply, user } = useContext(ReplyContext);
+  const { reply, user, likeReply } = useContext(ReplyContext);
   const { CustomCallbacks = {} } = useContext(CustomAgentProviderContext);
   const {
-    commentLikeActionCallback,
+    // commentLikeActionCallback,
     commentTextContentClickCallback,
     commentUsernameClickCallback,
-    replyLikeActionCallback,
+    // replyLikeActionCallback,
     repliesCountClickCallback,
     replyTextContentClickCallback,
     replyUsernameClickCallback,
@@ -63,6 +63,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   }
   function handleMenuClick(e: React.MouseEvent<HTMLDivElement>) {
     const id = e.currentTarget.id;
+    setThreeDotMenuAnchor(null);
     switch (id) {
       case LMFeedReplyMenuItems.DELETE: {
         //
@@ -208,18 +209,21 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 className="lm-cursor-pointer"
                 alt="Like"
                 onClick={() => {
-                  switch (mode) {
-                    case COMMENT_TILE_MODE: {
-                      if (commentLikeActionCallback) {
-                        commentLikeActionCallback(navigate);
-                      }
-                      break;
-                    }
-                    default: {
-                      if (replyLikeActionCallback) {
-                        replyLikeActionCallback(navigate);
-                      }
-                    }
+                  // switch (mode) {
+                  //   case COMMENT_TILE_MODE: {
+                  //     if (commentLikeActionCallback) {
+                  //       commentLikeActionCallback(navigate);
+                  //     }
+                  //     break;
+                  //   }
+                  //   default: {
+                  //     if (replyLikeActionCallback) {
+                  //       replyLikeActionCallback(navigate);
+                  //     }
+                  //   }
+                  // }
+                  if (likeReply) {
+                    likeReply(reply?.Id || "");
                   }
                 }}
                 loading="lazy"
@@ -230,18 +234,21 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 className="lm-cursor-pointer"
                 alt="Like"
                 onClick={() => {
-                  switch (mode) {
-                    case COMMENT_TILE_MODE: {
-                      if (commentLikeActionCallback) {
-                        commentLikeActionCallback(navigate);
-                      }
-                      break;
-                    }
-                    default: {
-                      if (replyLikeActionCallback) {
-                        replyLikeActionCallback(navigate);
-                      }
-                    }
+                  // switch (mode) {
+                  //   case COMMENT_TILE_MODE: {
+                  //     if (commentLikeActionCallback) {
+                  //       commentLikeActionCallback(navigate);
+                  //     }
+                  //     break;
+                  //   }
+                  //   default: {
+                  //     if (replyLikeActionCallback) {
+                  //       replyLikeActionCallback(navigate);
+                  //     }
+                  //   }
+                  // }
+                  if (likeReply) {
+                    likeReply(reply?.Id || "");
                   }
                 }}
                 loading="lazy"

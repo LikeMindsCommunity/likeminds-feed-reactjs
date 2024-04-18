@@ -38,9 +38,43 @@ const LMFeedReplyEditTextArea = ({
         reply?.text || "",
       ).innerHTML;
       setReplyText!(textFieldRef.current.textContent || "");
+
+      // Setting the cursor at the end of the div
+      textFieldRef.current.focus();
+      const range = document.createRange();
+
+      range.selectNodeContents(textFieldRef.current);
+
+      range.collapse(false);
+
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+
+        selection.addRange(range);
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textFieldRef, setReplyText]);
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        !containerRef.current?.contains(e.target as Node) &&
+        !(e.target as HTMLElement).classList.contains("lm-hover-effect")
+      ) {
+        if (closeEditMode) {
+          closeEditMode();
+        }
+      }
+    }
+    console.log(document.activeElement === textFieldRef.current);
+    if (containerRef && containerRef.current) {
+      document.addEventListener("click", handleClickOutside);
+
+      return () => document.removeEventListener("click", handleClickOutside);
+    }
+  }, [containerRef, closeEditMode, textFieldRef]);
   function editReply() {
     if (closeEditMode) {
       editComment();

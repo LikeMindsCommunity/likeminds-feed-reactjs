@@ -7,10 +7,16 @@ import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderC
 import { GetPostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
-import { DeleteCommentRequest } from "@likeminds.community/feed-js-beta";
+import {
+  DeleteCommentRequest,
+  LikeCommentRequest,
+  LikePostRequest,
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
+import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
+import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
 // import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 // import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
 // import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -27,6 +33,8 @@ interface UseFeedDetailsInterface {
   removeAComment: (id: string) => void;
   updateReplyOnPostReply: (id: string) => void;
   editAComment: (comment: Reply, usersMap: Record<string, User>) => void;
+  likeReply: (id: string) => void;
+  likePost: (id: string) => void;
 }
 
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
@@ -167,6 +175,61 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     setReplies(repliesCopy);
     setUsers(usersCopy);
   }
+  async function likeReply(id: string) {
+    try {
+      const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
+        LikeCommentRequest.builder().setpostId(postId).setcommentId(id).build(),
+      )) as never;
+      if (call.success) {
+        const repliesCopy = [...replies].map((reply) => {
+          if (reply.Id === id) {
+            if (reply.isLiked) {
+              reply.isLiked = false;
+              reply.likesCount--;
+            } else {
+              reply.isLiked = true;
+              reply.likesCount++;
+            }
+          }
+          return reply;
+        });
+        setReplies(repliesCopy);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function likePost(id: string) {
+    try {
+      const call: LikePostResponse = (await lmFeedclient?.likePost(
+        LikePostRequest.builder().setpostId(id).build(),
+      )) as never;
+      if (call.success) {
+        const postCopy = { ...post };
+        if (postCopy.isLiked) {
+          postCopy.isLiked = false;
+          postCopy.likesCount ? postCopy.likesCount-- : null;
+        } else {
+          postCopy.isLiked = true;
+          postCopy.likesCount
+            ? postCopy.likesCount++
+            : (postCopy.likesCount = 1);
+        }
+        setPost(postCopy as Post);
+        if (customEventClient) {
+          customEventClient.dispatchEvent(
+            LMFeedCustomActionEvents.LIKE_POST_CALLED,
+            {
+              postId: id,
+            },
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     customEventClient?.listen(
       LMFeedCustomActionEvents.REPLY_DELETED,
@@ -202,5 +265,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     removeAComment,
     editAComment,
     updateReplyOnPostReply,
+    likeReply,
+    likePost,
   };
 };

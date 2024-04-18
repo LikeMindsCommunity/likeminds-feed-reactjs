@@ -23,4 +23,6 @@ interface FeedPostContextInterface {
   removeAComment?: (id: string) => void;
   updateReplyOnPostReply?: (id: string) => void;
   editAComment?: (comment: Reply, usersMap: Record<string, User>) => void;
+  likeReply?: (id: string) => void;
+  likePost?: (id: string) => void;
 }

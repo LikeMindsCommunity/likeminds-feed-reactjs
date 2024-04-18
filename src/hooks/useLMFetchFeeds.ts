@@ -205,7 +205,29 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.POST_EDITED);
   });
-
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.LIKE_POST_CALLED,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.postId;
+        const feedListCopy = [...feedList].map((post) => {
+          if (post.Id === id) {
+            if (post.isLiked) {
+              post.isLiked = false;
+              post.likesCount--;
+            } else {
+              post.isLiked = true;
+              post.likesCount++;
+            }
+          }
+          return post;
+        });
+        setFeedList(feedListCopy);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.LIKE_POST_CALLED);
+  });
   //  Effect to run when selectedTopics changes or during the initial loading of the page
   useEffect(() => {
     loadFeed();
