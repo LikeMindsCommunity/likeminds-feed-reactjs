@@ -5,6 +5,12 @@ import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderC
 import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
 import { GetCommentRequest } from "@likeminds.community/feed-js";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import {
+  DeleteCommentRequest,
+  LikeCommentRequest,
+} from "@likeminds.community/feed-js-beta";
+import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
+import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
 
 interface UseReplyInterface {
   reply: Reply | null;
@@ -12,6 +18,8 @@ interface UseReplyInterface {
   loadMoreReplies: boolean;
   getNextPage: () => Promise<void>;
   replies: Reply[];
+  deleteReply: (id: string) => void;
+  likeReply: (id: string) => void;
 }
 
 export const useReply: (
@@ -94,6 +102,57 @@ export const useReply: (
       console.log(error);
     }
   };
+  async function deleteReply(id: string) {
+    try {
+      const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
+        DeleteCommentRequest.builder()
+          .setcommentId(id)
+          .setpostId(postId)
+          .build(),
+      )) as never;
+      if (call.success) {
+        const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+        const replyCopy = { ...reply };
+        if (replyCopy && replyCopy.commentsCount) {
+          replyCopy.commentsCount--;
+        }
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.REPLY_DELETED,
+          {
+            replyId: replyId,
+          },
+        );
+        setReply(replyCopy as Reply);
+        setReplies(repliesCopy);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function likeReply(id: string) {
+    try {
+      const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
+        LikeCommentRequest.builder().setpostId(postId).setcommentId(id).build(),
+      )) as never;
+      if (call.success) {
+        const repliesCopy = [...replies].map((reply) => {
+          if (reply.Id === id) {
+            if (reply.isLiked) {
+              reply.isLiked = false;
+              reply.likesCount--;
+            } else {
+              reply.isLiked = true;
+              reply.likesCount++;
+            }
+          }
+          return reply;
+        });
+        setReplies(repliesCopy);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
     customEventClient?.listen(
       LMFeedCustomActionEvents.REPLY_POSTED,
@@ -111,6 +170,7 @@ export const useReply: (
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.REPLY_POSTED);
   });
+
   useEffect(() => {
     loadReply();
   }, [loadReply, postId, replyId]);
@@ -120,5 +180,7 @@ export const useReply: (
     loadMoreReplies,
     getNextPage,
     replies,
+    deleteReply,
+    likeReply,
   };
 };

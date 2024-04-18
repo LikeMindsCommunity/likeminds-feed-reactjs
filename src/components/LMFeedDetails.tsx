@@ -4,6 +4,7 @@ import Posts from "./LMFeedPosts";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { Helmet } from "react-helmet-async";
 import lmBack from "../assets/images/lm-back.svg";
+import LMFeedCreatePost from "./LMFeedCreatePost";
 
 const LMFeedDetails = () => {
   const { id = "" } = useParams();
@@ -19,6 +20,8 @@ const LMFeedDetails = () => {
     removeAComment,
     editAComment,
     updateReplyOnPostReply,
+    likeReply,
+    likePost,
   } = useFeedDetails(id.split("-")[0]);
 
   return !post || !users ? null : (
@@ -39,8 +42,11 @@ const LMFeedDetails = () => {
           removeAComment,
           editAComment,
           updateReplyOnPostReply,
+          likeReply,
+          likePost,
         }}
       >
+        <LMFeedCreatePost />
         <div className="lm-post-header">
           <img
             onClick={() => window.history.back()}

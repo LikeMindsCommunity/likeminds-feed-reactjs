@@ -23,18 +23,19 @@ import { LMFeedReplyMenuItems } from "../../shared/constants/lmFeedRepliesMenuIt
 import LMFeedReplyEditTextArea from "../../shared/components/LMFeedReplyEditTextArea";
 import { parseAndReplaceTags } from "../../shared/taggingParser";
 import LMFeedDeleteDialogBox from "../lmDialogs/LMFeedDeleteDialogBox";
+import { LMFeedDeletePostModes } from "../../shared/enums/lmDeleteDialogModes";
 
 interface LMFeedReplyInterface {
   mode: string;
 }
 const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
-  const { reply, user } = useContext(ReplyContext);
+  const { reply, user, likeReply } = useContext(ReplyContext);
   const { CustomCallbacks = {} } = useContext(CustomAgentProviderContext);
   const {
-    commentLikeActionCallback,
+    // commentLikeActionCallback,
     commentTextContentClickCallback,
     commentUsernameClickCallback,
-    replyLikeActionCallback,
+    // replyLikeActionCallback,
     repliesCountClickCallback,
     replyTextContentClickCallback,
     replyUsernameClickCallback,
@@ -62,9 +63,11 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   }
   function handleMenuClick(e: React.MouseEvent<HTMLDivElement>) {
     const id = e.currentTarget.id;
+    setThreeDotMenuAnchor(null);
     switch (id) {
       case LMFeedReplyMenuItems.DELETE: {
         //
+        setOpenDeleteDialog(true);
         break;
       }
       case LMFeedReplyMenuItems.REPORT: {
@@ -96,7 +99,13 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   return (
     <div className="lm-social-action-bar__lmReply">
       <Dialog open={openDeleteDialog} onClose={closeDeleteDialog}>
-        <LMFeedDeleteDialogBox />
+        <LMFeedDeleteDialogBox
+          mode={
+            mode === LMFeedReplyMode.COMMENT
+              ? LMFeedDeletePostModes.COMMENT
+              : LMFeedDeletePostModes.REPLY
+          }
+        />
       </Dialog>
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
         <LMFeedReportPostDialog
@@ -200,18 +209,21 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 className="lm-cursor-pointer"
                 alt="Like"
                 onClick={() => {
-                  switch (mode) {
-                    case COMMENT_TILE_MODE: {
-                      if (commentLikeActionCallback) {
-                        commentLikeActionCallback(navigate);
-                      }
-                      break;
-                    }
-                    default: {
-                      if (replyLikeActionCallback) {
-                        replyLikeActionCallback(navigate);
-                      }
-                    }
+                  // switch (mode) {
+                  //   case COMMENT_TILE_MODE: {
+                  //     if (commentLikeActionCallback) {
+                  //       commentLikeActionCallback(navigate);
+                  //     }
+                  //     break;
+                  //   }
+                  //   default: {
+                  //     if (replyLikeActionCallback) {
+                  //       replyLikeActionCallback(navigate);
+                  //     }
+                  //   }
+                  // }
+                  if (likeReply) {
+                    likeReply(reply?.Id || "");
                   }
                 }}
                 loading="lazy"
@@ -222,18 +234,21 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 className="lm-cursor-pointer"
                 alt="Like"
                 onClick={() => {
-                  switch (mode) {
-                    case COMMENT_TILE_MODE: {
-                      if (commentLikeActionCallback) {
-                        commentLikeActionCallback(navigate);
-                      }
-                      break;
-                    }
-                    default: {
-                      if (replyLikeActionCallback) {
-                        replyLikeActionCallback(navigate);
-                      }
-                    }
+                  // switch (mode) {
+                  //   case COMMENT_TILE_MODE: {
+                  //     if (commentLikeActionCallback) {
+                  //       commentLikeActionCallback(navigate);
+                  //     }
+                  //     break;
+                  //   }
+                  //   default: {
+                  //     if (replyLikeActionCallback) {
+                  //       replyLikeActionCallback(navigate);
+                  //     }
+                  //   }
+                  // }
+                  if (likeReply) {
+                    likeReply(reply?.Id || "");
                   }
                 }}
                 loading="lazy"

@@ -6,6 +6,17 @@ import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDet
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetPostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
+import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
+import {
+  DeleteCommentRequest,
+  LikeCommentRequest,
+  LikePostRequest,
+} from "@likeminds.community/feed-js-beta";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
+import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
+import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
+import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
 // import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 // import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
 // import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -22,12 +33,17 @@ interface UseFeedDetailsInterface {
   removeAComment: (id: string) => void;
   updateReplyOnPostReply: (id: string) => void;
   editAComment: (comment: Reply, usersMap: Record<string, User>) => void;
+  likeReply: (id: string) => void;
+  likePost: (id: string) => void;
 }
 
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   postId: string,
 ) => {
-  const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { lmFeedclient, customEventClient } = useContext(
+    GlobalClientProviderContext,
+  );
+  const { displaySnackbarMessage } = useContext(GeneralContext);
 
   // state for storing the post
   const [post, setPost] = useState<Post | null>(null);
@@ -121,14 +137,30 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     setReplies(repliesCopy);
     setUsers(usersCopy);
   }
-  function removeAComment(id: string) {
-    const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
-    const postCopy = { ...post };
-    if (postCopy && postCopy?.commentsCount) {
-      postCopy.commentsCount--;
-      setPost(postCopy as Post);
+  async function removeAComment(id: string) {
+    try {
+      const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
+        DeleteCommentRequest.builder()
+          .setpostId(post?.Id || "")
+          .setcommentId(id)
+          .build(),
+      )) as never;
+      if (call.success) {
+        const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+
+        const postCopy = { ...post };
+        if (postCopy && postCopy?.commentsCount) {
+          postCopy.commentsCount--;
+          setPost(postCopy as Post);
+          setReplies(repliesCopy);
+          if (displaySnackbarMessage) {
+            displaySnackbarMessage(LMDisplayMessages.COMMENT_DELETED_SUCCESS);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
-    setReplies(repliesCopy);
   }
   function editAComment(comment: Reply, usersMap: Record<string, User>) {
     const repliesCopy = [...replies].map((reply) =>
@@ -143,6 +175,81 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     setReplies(repliesCopy);
     setUsers(usersCopy);
   }
+  async function likeReply(id: string) {
+    try {
+      const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
+        LikeCommentRequest.builder().setpostId(postId).setcommentId(id).build(),
+      )) as never;
+      if (call.success) {
+        const repliesCopy = [...replies].map((reply) => {
+          if (reply.Id === id) {
+            if (reply.isLiked) {
+              reply.isLiked = false;
+              reply.likesCount--;
+            } else {
+              reply.isLiked = true;
+              reply.likesCount++;
+            }
+          }
+          return reply;
+        });
+        setReplies(repliesCopy);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function likePost(id: string) {
+    try {
+      const call: LikePostResponse = (await lmFeedclient?.likePost(
+        LikePostRequest.builder().setpostId(id).build(),
+      )) as never;
+      if (call.success) {
+        const postCopy = { ...post };
+        if (postCopy.isLiked) {
+          postCopy.isLiked = false;
+          postCopy.likesCount ? postCopy.likesCount-- : null;
+        } else {
+          postCopy.isLiked = true;
+          postCopy.likesCount
+            ? postCopy.likesCount++
+            : (postCopy.likesCount = 1);
+        }
+        setPost(postCopy as Post);
+        if (customEventClient) {
+          customEventClient.dispatchEvent(
+            LMFeedCustomActionEvents.LIKE_POST_CALLED,
+            {
+              postId: id,
+            },
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.REPLY_DELETED,
+      (e: Event) => {
+        const replyId = (e as CustomEvent).detail.replyId;
+        const repliesCopy = [...replies];
+
+        const tempReply = repliesCopy.find((reply) => reply.Id === replyId);
+        if (tempReply) {
+          tempReply.commentsCount--;
+        }
+
+        setReplies(repliesCopy);
+        if (displaySnackbarMessage)
+          displaySnackbarMessage(LMDisplayMessages.REPLY_DELETED_SUCCESS);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.REPLY_DELETED);
+  });
 
   useEffect(() => {
     loadPost();
@@ -158,5 +265,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     removeAComment,
     editAComment,
     updateReplyOnPostReply,
+    likeReply,
+    likePost,
   };
 };

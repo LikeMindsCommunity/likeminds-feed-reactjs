@@ -36,6 +36,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     getNextPage = () => {},
     deletePost,
     pinPost,
+    likePost,
   } = useContext(LMFeedDataContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderFeeds = useCallback(() => {
@@ -53,6 +54,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             topics: topics,
             deletePost: deletePost,
             pinPost: pinPost,
+            likePost: likePost,
           }}
         >
           {CustomComponents?.PostView || (
@@ -66,7 +68,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
   return (
     <div className="lm-feed-wrapper lm-d-flex">
       <div className="lm-flex-grow" id="feed-scroller">
-        <LMFeedCreatePost />
+        <LMFeedCreatePost showStarterComponent />
         {/* <div> */}
         {/* Topics */}
         {CustomComponents?.TopicDropDown ? (
