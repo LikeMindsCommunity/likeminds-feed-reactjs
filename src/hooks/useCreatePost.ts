@@ -23,6 +23,10 @@ import { GetOgTagResponse } from "../shared/types/api-responses/getOgTagResponse
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import {
+  AddPostResponse,
+  EditPostResponse,
+} from "../shared/types/api-responses/addPostResponse";
 
 interface UseCreatePost {
   postText: string | null;
@@ -201,7 +205,7 @@ export function useCreatePost(): UseCreatePost {
             .build(),
         );
       }
-      await lmFeedclient?.addPost(
+      const call: AddPostResponse = await lmFeedclient?.addPost(
         AddPostRequest.builder()
           .setAttachments(attachmentResponseArray)
           .setText(textContent)
@@ -209,6 +213,9 @@ export function useCreatePost(): UseCreatePost {
           .setTempId(Date.now().toString())
           .build(),
       );
+      if (call.success) {
+        customEventClient?.dispatchEvent(LMFeedCustomActionEvents.POST_CREATED);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -252,14 +259,21 @@ export function useCreatePost(): UseCreatePost {
           attachmentResponseArray.pop();
         }
       }
-      await lmFeedclient?.editPost(
+      const call: EditPostResponse = (await lmFeedclient?.editPost(
         EditPostRequest.builder()
           .setattachments(attachmentResponseArray)
           .settext(textContent)
           .setTopicIds(selectedTopicIds)
           .setpostId(temporaryPost?.Id || "")
           .build(),
-      );
+      )) as never;
+      if (call.success) {
+        customEventClient?.dispatchEvent(LMFeedCustomActionEvents.POST_EDITED, {
+          post: call.data.post,
+          usersMap: call.data.users,
+          topicsMap: call.data.topics,
+        });
+      }
     } catch (error) {
       console.log(error);
     }

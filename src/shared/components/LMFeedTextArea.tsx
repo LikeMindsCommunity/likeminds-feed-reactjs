@@ -24,7 +24,20 @@ const LMFeedTextArea = () => {
       ).innerHTML;
     }
     if (textFieldRef?.current) {
+      // Setting the cursor at the end of the div
       textFieldRef.current.focus();
+      const range = document.createRange();
+
+      range.selectNodeContents(textFieldRef.current);
+
+      range.collapse(false);
+
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+
+        selection.addRange(range);
+      }
     }
   }, [textFieldRef, temporaryPost]);
   return (

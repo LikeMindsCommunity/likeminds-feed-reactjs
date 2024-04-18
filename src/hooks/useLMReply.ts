@@ -128,6 +128,12 @@ export const useReply: (
         if (replyCopy && replyCopy.commentsCount) {
           replyCopy.commentsCount--;
         }
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.REPLY_DELETED,
+          {
+            replyId: replyId,
+          },
+        );
         setReply(replyCopy as Reply);
         setReplies(repliesCopy);
       }

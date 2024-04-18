@@ -17,6 +17,7 @@ import { DeletePostResponse } from "../shared/types/api-responses/deletePostResp
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
 interface useFetchFeedsResponse {
@@ -33,7 +34,9 @@ interface useFetchFeedsResponse {
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
-  const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { lmFeedclient, customEventClient } = useContext(
+    GlobalClientProviderContext,
+  );
   const { displaySnackbarMessage } = useContext(GeneralContext);
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -166,6 +169,42 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       console.log(error);
     }
   }
+  useEffect(() => {
+    customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
+      loadFeed();
+      if (displaySnackbarMessage) {
+        displaySnackbarMessage(LMDisplayMessages.POST_CREATED_SUCCESS);
+      }
+    });
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.POST_CREATED);
+  });
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_EDITED,
+      (e: Event) => {
+        const detail = (e as CustomEvent).detail;
+        const { post, usersMap, topicsMap } = detail;
+        const feedListCopy = [...feedList].map((feed) => {
+          if (feed.Id === post.Id) {
+            return post;
+          } else {
+            return feed;
+          }
+        });
+        const feedUsersCopy = { ...feedUsersList, ...usersMap };
+        const topicsCopy = { ...topics, ...topicsMap };
+        setFeedList(feedListCopy);
+        setTopics(topicsCopy);
+        setFeedUsersList(feedUsersCopy);
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(LMDisplayMessages.POST_EDIT_SUCCESS);
+        }
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.POST_EDITED);
+  });
 
   //  Effect to run when selectedTopics changes or during the initial loading of the page
   useEffect(() => {

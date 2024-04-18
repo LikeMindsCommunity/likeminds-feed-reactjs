@@ -8,6 +8,9 @@ import { GetPostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import { DeleteCommentRequest } from "@likeminds.community/feed-js-beta";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
+import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 // import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 // import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
 // import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -29,7 +32,10 @@ interface UseFeedDetailsInterface {
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   postId: string,
 ) => {
-  const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { lmFeedclient, customEventClient } = useContext(
+    GlobalClientProviderContext,
+  );
+  const { displaySnackbarMessage } = useContext(GeneralContext);
 
   // state for storing the post
   const [post, setPost] = useState<Post | null>(null);
@@ -133,11 +139,15 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       )) as never;
       if (call.success) {
         const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+
         const postCopy = { ...post };
         if (postCopy && postCopy?.commentsCount) {
           postCopy.commentsCount--;
           setPost(postCopy as Post);
           setReplies(repliesCopy);
+          if (displaySnackbarMessage) {
+            displaySnackbarMessage(LMDisplayMessages.COMMENT_DELETED_SUCCESS);
+          }
         }
       }
     } catch (error) {
@@ -157,6 +167,26 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     setReplies(repliesCopy);
     setUsers(usersCopy);
   }
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.REPLY_DELETED,
+      (e: Event) => {
+        const replyId = (e as CustomEvent).detail.replyId;
+        const repliesCopy = [...replies];
+
+        const tempReply = repliesCopy.find((reply) => reply.Id === replyId);
+        if (tempReply) {
+          tempReply.commentsCount--;
+        }
+
+        setReplies(repliesCopy);
+        if (displaySnackbarMessage)
+          displaySnackbarMessage(LMDisplayMessages.REPLY_DELETED_SUCCESS);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.REPLY_DELETED);
+  });
 
   useEffect(() => {
     loadPost();

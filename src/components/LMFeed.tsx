@@ -14,6 +14,7 @@ import { pdfjs } from "react-pdf";
 import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContextProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedDataContextProvider from "./LMFeedDataContextProvider";
+import { Snackbar } from "@mui/material";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -93,6 +94,12 @@ function LMFeed({
           </UserProviderContext.Provider>
         </GeneralContext.Provider>
       </CustomAgentProviderContext.Provider>
+      <Snackbar
+        open={showSnackbar}
+        message={message}
+        onClose={closeSnackbar}
+        autoHideDuration={3000}
+      />
     </GlobalClientProviderContext.Provider>
   );
 }
