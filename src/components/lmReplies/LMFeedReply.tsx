@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import { formatTimeAgo } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
-import commentLiked from "../../assets/images/comment-liked.svg";
+import commentLiked from "../../assets/images/liked-sm.png";
 import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
@@ -206,7 +206,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
             {reply?.isLiked ? (
               <img
                 src={commentLiked}
-                className="lm-cursor-pointer"
+                className="lm-cursor-pointer liked-comment"
                 alt="Like"
                 onClick={() => {
                   // switch (mode) {
@@ -255,7 +255,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
               />
             )}
             <span>{`${reply?.likesCount ? reply?.likesCount.toString().concat(" ") : ""}${(reply?.likesCount || 0) > 1 ? LIKES : LIKE}`}</span>
-            <span>|</span>
+            <span className="pipe">|</span>
             <span>
               {(reply?.level || 0) < 1 && (
                 <span
@@ -271,7 +271,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 </span>
               )}
               <span
-                className="replies lm-cursor-pointer"
+                className="replies lm-cursor-pointer commentTitle"
                 onClick={() => {
                   if (repliesCountClickCallback) {
                     repliesCountClickCallback(navigate);

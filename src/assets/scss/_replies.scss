@@ -133,6 +133,9 @@
   padding-right: 0;
 }
 
+.lm-social-action-bar__lmReply .lm-social-action-bar__lmReply .pipe{ display: none;}
+.lm-social-action-bar__lmReply .lm-social-action-bar__lmReply .commentTitle{ display: none;}
+
 .lm-feed-reply {
   position: relative; 
     .reply-text-area{
@@ -187,4 +190,8 @@
   color: $secondary-color;
 }
 
+.liked-comment{
+  width: 16px;
+  height: 16px;
+}
 
