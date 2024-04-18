@@ -7,6 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { Member } from "../shared/types/models/member";
 import { GetAllMembersResponse } from "../shared/types/api-responses/getAllMembersResponse";
+import { MEMBER_LIST } from "../shared/constants/lmAppConstant";
 
 const LMFeedAllMembers = () => {
   const { lmFeedclient, customEventClient } = useContext(
@@ -17,7 +18,6 @@ const LMFeedAllMembers = () => {
   const [pageCount, setPageCount] = useState<number>(1);
   const [totalMemberCounts, setTotalMemberCounts] = useState<number>(0);
 
-  // Function to fetch members, placed outside to be accessible by getNextPage
   const fetchMembers = async (page: number) => {
     try {
       const response: GetAllMembersResponse =
@@ -50,6 +50,7 @@ const LMFeedAllMembers = () => {
 
   useEffect(() => {
     fetchMembers(1);
+    fetchMembers(2);
   }, [lmFeedclient]);
 
   const getNextPage = () => {
@@ -59,7 +60,7 @@ const LMFeedAllMembers = () => {
   return (
     <div className="lm-member-wrapper">
       <div className="lm-member-wrapper__header">
-        Member List ({totalMemberCounts})
+        {MEMBER_LIST} ({totalMemberCounts})
       </div>
       <div className="lm-member-wrapper__body" id="member-scroll-container">
         <InfiniteScroll
