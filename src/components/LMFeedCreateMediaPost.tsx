@@ -141,38 +141,35 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
     return null;
   }
   return (
-    <div className="">
-      {/* Post Slider  */}
-      <div className="postImgSlider">
-        {!temporaryPost && (
-          <div className="postImgSlider__header">
-            <label className="postImgSlider__header--addMore">
-              <img src={addMoreIcon} alt="icon" /> Add More
-              <input
-                onChange={addMediaItem}
-                type="file"
-                accept={
-                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.DOCUMENT
-                    ? "application/pdf"
-                    : "image/png, image/jpeg, image/jpg, video/mp4"
+    <div className="postImgSlider">
+      {!temporaryPost && (
+        <div className="postImgSlider__header">
+          <label className="postImgSlider__header--addMore">
+            <img src={addMoreIcon} alt="icon" /> Add More
+            <input
+              onChange={addMediaItem}
+              type="file"
+              accept={
+                mediaUploadMode === LMFeedCreatePostMediaUploadMode.DOCUMENT
+                  ? "application/pdf"
+                  : "image/png, image/jpeg, image/jpg, video/mp4"
+              }
+            />
+          </label>
+          <div className="postImgSlider__header--cancelBtn">
+            <img
+              src={cancelBtnIcon}
+              alt="video"
+              onClick={() => {
+                if (removeMedia) {
+                  removeMedia(activeSlide || 0);
                 }
-              />
-            </label>
-            <div className="postImgSlider__header--cancelBtn">
-              <img
-                src={cancelBtnIcon}
-                alt="video"
-                onClick={() => {
-                  if (removeMedia) {
-                    removeMedia(activeSlide || 0);
-                  }
-                }}
-              />
-            </div>
+              }}
+            />
           </div>
-        )}
-        {renderMediaItems()}
-      </div>
+        </div>
+      )}
+      {renderMediaItems()}
     </div>
   );
 };

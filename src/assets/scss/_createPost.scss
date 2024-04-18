@@ -275,6 +275,46 @@
     border-radius: 8px;
     aspect-ratio: 16/9;
   }
+
+  .lm-feed-create-post-media-item {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+  }
+
+  .attachmentPdf{
+    object-fit: contain;
+    width: 100%;
+    // aspect-ratio: 16 / 9;
+  }
+
+  .attachmentPdf__content{
+    padding: 1rem;
+    border: 1px solid #e6ebf5;
+    display: flex;
+    gap: 0.625rem;
+    background-color: #fff;
+    img{
+      width: 2.5rem !important;
+      aspect-ratio: 16 / 9;
+    }
+
+    .attachmentPdf__content--title{
+      font-size: 1rem;
+      font-weight: 500;
+      color: #484f67;
+      line-height: 1.25rem;
+      cursor: pointer;
+    }
+    .attachmentPdf__content--url{
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #a3a7b3;
+      line-height: 1.25rem;
+    }
+  }
+
+
 }
 
 .postDocs {
@@ -374,4 +414,6 @@
         }
     }
 }
+ 
+
  
