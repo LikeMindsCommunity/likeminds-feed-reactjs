@@ -19,3 +19,4 @@ export const GUEST_USER_ACTION_MESSAGE = "you are not logged in";
 export const DEFAULT_PAGE_SIZE = 10;
 export const CREATE_POST = "Create Post";
 export const EDIT_POST = "Edit Post";
+export const MEMBER_LIST = "Member List";

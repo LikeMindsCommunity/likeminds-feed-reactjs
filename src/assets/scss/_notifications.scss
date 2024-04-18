@@ -1,6 +1,5 @@
 .lm-feed-activity-wrapper{
-    max-height: pxToRem(650);
-    // overflow: auto;
+    max-height: pxToRem(650); 
     padding: pxToRem(0);
     border-radius: pxToRem(8);
     width: pxToRem(376);
@@ -8,7 +7,7 @@
         overflow: auto;
     }
     &__title{
-        padding: 5px 20px 10px;
+        padding: 5px pxToRem(20) pxToRem(10);
         font-size: pxToRem(20);
         line-height: pxToRem(24);
         font-weight: 500;
@@ -16,7 +15,7 @@
     }
     
     &__activity-item{
-        padding: 10px 16px; 
+        padding: pxToRem(10) 16px; 
         display: flex;
         gap: pxToRem(8);
         justify-content: space-between;
@@ -33,22 +32,22 @@
             align-items: center;
         }
         .notification-content{
-            width: 83%;
+            width: 72%;
             .notification-text{ 
-                color: #484f67;
+                color: $dark-color;
                 display: -webkit-box;
-                font-size: 14px;
+                font-size: pxToRem(14);
                 font-weight: 400;
-                line-height: 20px;
+                line-height: pxToRem(20);
                 margin-bottom: 5px;
-                max-width: 325px;
+                max-width: pxToRem(325);
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
             .notification-time-before{ 
                 color: #484f6780;
-                font-size: 14px;
-                line-height: 20px;
+                font-size: pxToRem(14);
+                line-height: pxToRem(20);
             }
         }
     }
@@ -63,10 +62,10 @@
     gap: 1rem;
     justify-content: center;
     align-items: center;
-    padding: 50px 0;
+    padding: pxToRem(50) 0;
 
     .lmNoNotification{
-        width: 64px;
-        height: 64px;
+        width: pxToRem(64);
+        height: pxToRem(64);
     }
 }

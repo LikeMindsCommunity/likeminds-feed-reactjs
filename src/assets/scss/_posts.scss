@@ -100,7 +100,7 @@
         font-size: 1rem;
       }
       &__content {
-        padding: 1rem pxToRem(8) 1rem 1rem;
+        padding: .5rem pxToRem(8) 0.5rem 1rem;
         word-wrap: break-word;
       }
       &__attachment {
@@ -216,7 +216,7 @@
             background-color: #e5f3f2;
             min-height: pxToRem(215);
             width: 100%;
-              object-fit: cover;
+            object-fit: cover;
             color: #00897b;
             aspect-ratio: 16/8;
           }
@@ -363,9 +363,4 @@
 .three-dot-menu-options {
   padding: 18px;
   width: pxToRem(196);
-}
-
-.lm-all-topic{
-  border-bottom: 1px solid #edeff3;
-  width: 100%;
 }
