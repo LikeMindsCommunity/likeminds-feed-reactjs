@@ -1,7 +1,8 @@
 .lm-all-topic {
   border-bottom: 1px solid #edeff3;
   width: 100%;
-  margin: 0 8px; 
+  margin: 0 pxToRem(8); 
+  padding: 0 0 pxToRem(10) 0;
 }
 
 .lm-topic-btn-box {
