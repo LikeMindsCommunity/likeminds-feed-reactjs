@@ -7,7 +7,9 @@ import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsRespon
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
-  setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
+  // setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setCurrentSelectedTopicIds?: any,
   preSelectedTopics?: Topic[],
   setPreSelectedTopics?: React.Dispatch<Topic[]>,
   mode?: TopicsDropdownMode,
@@ -107,9 +109,28 @@ export function useTopicDropdown(
 
   // update the checkedTopics on useFeed hooks
   useEffect(() => {
-    setCurrentSelectedTopicIds
-      ? setCurrentSelectedTopicIds(checkedTopics.map((topic) => topic.Id))
-      : null;
+    if (setCurrentSelectedTopicIds) {
+      const checkedTopicIdsArr = checkedTopics.map((topic) => topic.Id);
+      setCurrentSelectedTopicIds((prevstate: string[]) => {
+        const t = checkedTopics.map((topic) => topic.Id);
+        if (checkedTopics.length !== prevstate.length) {
+          return t;
+        }
+
+        // Create sorted copies of the arrays
+        const sortedArr1 = [...prevstate].sort();
+        const sortedArr2 = [...t].sort();
+
+        // Iterate over each element in the sorted arrays
+        for (let i = 0; i < sortedArr1.length; i++) {
+          // Check if the elements at the current index are not equal
+          if (sortedArr1[i] !== sortedArr2[i]) {
+            return t;
+          }
+        }
+        return prevstate;
+      });
+    }
   }, [checkedTopics, setCurrentSelectedTopicIds]);
   useEffect(() => {
     if (preSelectedTopics) {

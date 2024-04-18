@@ -9,7 +9,7 @@ import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import {
   COMMNENT,
   COMMNENTS,
-  GUEST_USER_ACTION_MESSAGE,
+  // GUEST_USER_ACTION_MESSAGE,
   LIKE,
   LIKES,
 } from "../shared/constants/lmAppConstant";
@@ -28,7 +28,7 @@ const LMFeedPostFooter = () => {
   } = useContext(CustomAgentProviderContext);
   const {
     likeTextCountClickCallback,
-    commentIconClickCallback,
+    // commentIconClickCallback,
     commentTextCountClickCallback,
     postFooterClickCallback,
   } = CustomCallbacks;
@@ -92,6 +92,7 @@ const LMFeedPostFooter = () => {
             <div
               className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
               onClick={() => {
+                sessionStorage.setItem("scroll-pos", Id);
                 navigation(
                   `/community/post/${`${Id}-${post?.heading}`.substring(0, 59)}`,
                 );
@@ -101,13 +102,6 @@ const LMFeedPostFooter = () => {
                 <LMPostFooterStyles.commentButtonCustom />
               ) : (
                 <img
-                  onClick={() => {
-                    if (commentIconClickCallback) {
-                      commentIconClickCallback(navigation);
-                    } else {
-                      alert(GUEST_USER_ACTION_MESSAGE);
-                    }
-                  }}
                   className="lm-cursor-pointer"
                   src={commnent}
                   alt="commnent"

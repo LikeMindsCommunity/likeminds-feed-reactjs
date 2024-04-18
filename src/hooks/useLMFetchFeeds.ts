@@ -81,7 +81,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         console.log(error);
       }
     },
-    [selectedTopics, lmFeedclient, topicId],
+    [lmFeedclient, topicId, selectedTopics],
   );
 
   //   function to load the next page for the current selected topics
@@ -134,14 +134,23 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         PinPostRequest.builder().setpostId(id).build(),
       )) as never;
       if (call.success) {
-        let feedListCopy = [...feedList];
+        const feedListCopy = [...feedList];
         const index = feedListCopy.findIndex((feed) => feed.Id === id);
         const tempPost = feedListCopy[index];
-        feedListCopy.splice(index, 1);
-        feedListCopy = [tempPost, ...feedListCopy];
+        if (tempPost.isPinned) {
+          tempPost.isPinned = false;
+        } else {
+          tempPost.isPinned = true;
+        }
+        // feedListCopy.splice(index, 1);
+
         setFeedList(feedListCopy);
         if (displaySnackbarMessage) {
-          displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+          if (tempPost.isPinned) {
+            displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+          } else {
+            displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+          }
         }
       }
     } catch (error) {
@@ -228,10 +237,50 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.LIKE_POST_CALLED);
   });
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.COMMENT_ADDED,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.postId;
+        const feedListCopy = [...feedList].map((post) => {
+          if (post.Id === id) {
+            console.log(post);
+            post.commentsCount++;
+            console.log(post);
+          }
+
+          return post;
+        });
+        setFeedList(feedListCopy);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.COMMENT_ADDED);
+  });
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.COMMENT_REMOVED,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.postId;
+        const feedListCopy = [...feedList].map((post) => {
+          if (post.Id === id) {
+            console.log(post);
+            post.commentsCount--;
+            console.log(post);
+          }
+
+          return post;
+        });
+        setFeedList(feedListCopy);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.COMMENT_REMOVED);
+  });
   //  Effect to run when selectedTopics changes or during the initial loading of the page
   useEffect(() => {
     loadFeed();
-  }, [selectedTopics, loadFeed]);
+  }, [loadFeed]);
 
   return {
     topics,

@@ -38,30 +38,27 @@ const LMFeedReplyEditTextArea = ({
         reply?.text || "",
       ).innerHTML;
       setReplyText!(textFieldRef.current.textContent || "");
-
       // Setting the cursor at the end of the div
       textFieldRef.current.focus();
       const range = document.createRange();
-
       range.selectNodeContents(textFieldRef.current);
-
       range.collapse(false);
-
       const selection = window.getSelection();
       if (selection) {
         selection.removeAllRanges();
-
         selection.addRange(range);
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textFieldRef, setReplyText]);
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
         !containerRef.current?.contains(e.target as Node) &&
-        !(e.target as HTMLElement).classList.contains("lm-hover-effect")
+        !(
+          (e.target as HTMLElement).classList.contains("lm-hover-effect") ||
+          (e.target as HTMLElement).classList.contains("reply-editor")
+        )
       ) {
         if (closeEditMode) {
           closeEditMode();
@@ -102,7 +99,7 @@ const LMFeedReplyEditTextArea = ({
                 return (
                   <button
                     key={item?.id.toString() + Math.random().toString()}
-                    className="taggingTile"
+                    className="taggingTile reply-editor"
                     onClick={(e) => {
                       e.preventDefault();
                       const focusNode = window.getSelection()!.focusNode;
@@ -150,6 +147,7 @@ const LMFeedReplyEditTextArea = ({
                         display: "flex",
                         alignItems: "center",
                       }}
+                      className="tag-container reply-editor"
                     >
                       {setTagUserImage(item)}
                       <div
@@ -159,6 +157,7 @@ const LMFeedReplyEditTextArea = ({
                           overflowY: "hidden",
                           textOverflow: "ellipsis",
                         }}
+                        className="tag-name reply-editor"
                       >
                         {item?.name}
                       </div>

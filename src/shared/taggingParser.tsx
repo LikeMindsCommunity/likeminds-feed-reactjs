@@ -127,6 +127,7 @@ export function setTagUserImage(user: any) {
           color: "#fff",
           letterSpacing: "1px",
         }}
+        className="reply-editor"
       >
         {user?.name?.split(" ").map((part: string) => {
           return part.charAt(0)?.toUpperCase();

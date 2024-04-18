@@ -14,6 +14,7 @@ import {
 } from "../shared/types/api-responses/postCommentResponse";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { ReplyContext } from "../contexts/LMFeedReplyContext";
 
 export function useLMPostReply(
   postId: string,
@@ -22,8 +23,8 @@ export function useLMPostReply(
   const { lmFeedclient, customEventClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
-  const { addNewComment, editAComment, updateReplyOnPostReply } =
-    useContext(FeedPostContext);
+  const { addNewComment, updateReplyOnPostReply } = useContext(FeedPostContext);
+  const { updateReply } = useContext(ReplyContext);
   const [text, setText] = useState<string>("");
   const textFieldRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -82,8 +83,9 @@ export function useLMPostReply(
           .settext(commentText)
           .build(),
       )) as never;
-      if (call.success && editAComment) {
-        editAComment(call.data.comment, call.data.users);
+      console.log(updateReply);
+      if (call.success && updateReply) {
+        updateReply(call.data.comment, call.data.users);
       }
       console.log(call);
     } catch (error) {

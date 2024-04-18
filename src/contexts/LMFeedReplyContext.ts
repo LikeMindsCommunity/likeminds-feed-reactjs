@@ -12,4 +12,5 @@ interface ReplyContextInterface {
   user: User | null;
   deleteReply?: (id: string) => void;
   likeReply?: (id: string) => void;
+  updateReply?: (comment: Reply, usersMap: Record<string, User>) => void;
 }

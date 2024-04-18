@@ -9,7 +9,7 @@ import { convertTextToHTML } from "../taggingParser";
 import dayjs from "dayjs";
 import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
-import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
+// import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
 // import threeDotMenuIcon from "../../";
 const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
   const {
@@ -72,14 +72,12 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
                           </div>
                         </div>
                         <div>
-                          <img
+                          {/* <img
                             className="three-dot-menu-image lm-cursor-pointer"
                             src={threeDotMenuIcon}
                             alt="3-dot-menu"
-                            // onClick={(e) => {
-                            //   setMenuAnchor(e.currentTarget);
-                            // }}
-                          />
+                            
+                          /> */}
                           {/* <IconButton
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                             setMenuAnchor(e.currentTarget)

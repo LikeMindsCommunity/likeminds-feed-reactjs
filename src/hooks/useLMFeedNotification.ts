@@ -2,7 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Activity } from "../shared/types/models/Activity";
 import { GetNotificationCountResponse } from "../shared/types/api-responses/getNotificationCount";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
-import { GetNotificationFeedRequest } from "@likeminds.community/feed-js-beta";
+import {
+  GetNotificationFeedRequest,
+  MarkReadNotificationRequest,
+} from "@likeminds.community/feed-js-beta";
 import { DEFAULT_PAGE_SIZE } from "../shared/constants/lmAppConstant";
 import { GetNotificationResponse } from "../shared/types/api-responses/getNotificationResponse";
 import { LMFeedCustomEvents } from "../shared/customEvents";
@@ -20,6 +23,7 @@ export function useLMFeedNotification(
   const [notificationPage, setNotificationPage] = useState<number>(1);
   const [lmFeedClient, setLMFeedClient] = useState<LMClient | null>(null);
   const [, setUser] = useState<User | null>(null);
+
   const getNotificationCount = useCallback(
     async function () {
       try {
@@ -34,6 +38,16 @@ export function useLMFeedNotification(
     },
     [lmFeedClient],
   );
+  async function markReadNotification(id: string) {
+    try {
+      const call = await lmFeedClient?.markReadNotification(
+        MarkReadNotificationRequest.builder().setactivityId(id).build(),
+      );
+      console.log(call);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const getNotifications = useCallback(
     async function () {
       try {
@@ -69,6 +83,8 @@ export function useLMFeedNotification(
     if (!clickedNotification.isRead) {
       clickedNotification.isRead = true;
     }
+    markReadNotification(id);
+    window.location.href = `community/post/${clickedNotification.activityEntityData.Id}`;
     setNotifications(notificationsCopy);
   }
   useEffect(() => {
