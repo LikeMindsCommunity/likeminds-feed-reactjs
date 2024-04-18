@@ -1,3 +1,10 @@
+.lm-all-topic {
+  border-bottom: 1px solid #edeff3;
+  width: 100%;
+  margin: 0 pxToRem(8); 
+  padding: 0 0 pxToRem(10) 0;
+}
+
 .lm-topic-btn-box {
   margin: 0 auto;
   max-width: pxToRem(576);
@@ -40,7 +47,7 @@
       color: #848488;
       font-size: pxToRem(17);
       font-weight: 400;
-      line-height: 22px;
+      line-height: pxToRem(22);
       &:focus {
         border: none;
         outline: none;
@@ -53,8 +60,14 @@
     @extend .lm-align-items-center;
     @extend .lm-ts-16;
     @extend .lm-fw-400;
-    color: #333333;
-    gap: 10px;
+    color: $card-content-heading;
+    width: 100%;
+    margin: 0 8px; 
+
+    span {
+        margin-left: 0;
+        padding-left: 0;
+      }
   }
 }
 
@@ -63,7 +76,7 @@
 .lmSelectedTopics {
   display: flex;
   justify-content: space-between;
-  margin: 10px 0 0 0;
+  margin: pxToRem(10) 0 0 0;
   align-items: center;
   width: 100%;
   max-width: pxToRem(576);
@@ -75,7 +88,7 @@
 
   &--clear {
     color: $primary-color;
-    font-size: 14px;
+    font-size: pxToRem(14);
     cursor: pointer;
   }
 }
@@ -118,9 +131,7 @@
   border-radius: pxToRem(4);
   color: $primary-color;
   display: inline-flex;
-  font-family: Roboto;
   font-size: pxToRem(14);
-  font-style: normal;
   font-weight: 400;
   height: pxToRem(24);
   line-height: pxToRem(20);
