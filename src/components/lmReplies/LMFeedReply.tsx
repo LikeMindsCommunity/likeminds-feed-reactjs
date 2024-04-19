@@ -8,8 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
 import {
   COMMENT_TILE_MODE,
-  COMMNENT,
-  COMMNENTS,
   LIKE,
   LIKES,
 } from "../../shared/constants/lmAppConstant";
@@ -278,7 +276,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                   }
                   setOpenReplies((current) => !current);
                 }}
-              >{`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? COMMNENTS : COMMNENT}`}</span>
+              >{`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? "Replies" : "Reply"}`}</span>
             </span>
           </div>
           <div className="like">{formatTimeAgo(reply?.createdAt || 0)}</div>
