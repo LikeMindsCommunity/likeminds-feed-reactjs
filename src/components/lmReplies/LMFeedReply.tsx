@@ -252,7 +252,19 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 loading="lazy"
               />
             )}
-            <span>{`${reply?.likesCount ? reply?.likesCount.toString().concat(" ") : ""}${(reply?.likesCount || 0) > 1 ? LIKES : LIKE}`}</span>
+
+            {reply?.likesCount ? (
+              <span>
+                {(reply?.likesCount || 0) > 1
+                  ? `${reply?.likesCount} ${LIKES}`
+                  : (reply?.likesCount || 0) === 1
+                    ? `${reply?.likesCount} ${LIKE}`
+                    : ""}
+              </span>
+            ) : (
+              ""
+            )}
+
             <span className="pipe">|</span>
             <span>
               {(reply?.level || 0) < 1 && (
@@ -273,8 +285,10 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
               <span
                 className={
                   (reply?.commentsCount || 0) > 1
-                    ? "replies lm-cursor-pointer commentTitle bullet"
-                    : "replies lm-cursor-pointer commentTitle"
+                    ? `replies lm-cursor-pointer commentTitle bullet`
+                    : (reply?.commentsCount || 0) === 1
+                      ? `replies lm-cursor-pointer commentTitle bullet`
+                      : "replies lm-cursor-pointer commentTitle"
                 }
                 onClick={() => {
                   if (repliesCountClickCallback) {
@@ -284,7 +298,11 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 }}
               >
                 {/* {reply?.commentsCount} = */}
-                {(reply?.commentsCount || 0) > 1 ? "Replies" : ""}
+                {(reply?.commentsCount || 0) > 1
+                  ? `${reply?.commentsCount} Replies`
+                  : (reply?.commentsCount || 0) === 1
+                    ? `${reply?.commentsCount} Reply`
+                    : ""}
                 {/* {`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? "Replies" : "Reply"}`} */}
               </span>
             </span>
