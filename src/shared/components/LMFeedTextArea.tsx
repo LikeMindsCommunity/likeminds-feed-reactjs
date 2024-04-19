@@ -17,12 +17,7 @@ const LMFeedTextArea = () => {
   const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
     LMFeedCreatePostContext,
   );
-  useEffect(() => {
-    if (temporaryPost && textFieldRef?.current) {
-      textFieldRef.current.innerHTML = convertTextToHTML(
-        temporaryPost.text,
-      ).innerHTML;
-    }
+  function setCursorToTheEnd() {
     if (textFieldRef?.current) {
       // Setting the cursor at the end of the div
       textFieldRef.current.focus();
@@ -39,6 +34,16 @@ const LMFeedTextArea = () => {
         selection.addRange(range);
       }
     }
+  }
+
+  useEffect(() => {
+    console.log("asdf");
+    if (temporaryPost && textFieldRef?.current) {
+      textFieldRef.current.innerHTML = convertTextToHTML(
+        temporaryPost.text,
+      ).innerHTML;
+    }
+    setCursorToTheEnd();
   }, [textFieldRef, temporaryPost]);
   return (
     <div ref={containerRef}>
@@ -145,6 +150,13 @@ const LMFeedTextArea = () => {
         id="editableDiv"
         data-placeholder="Write something here..."
         className="lm-feed-create-post-text-area"
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            //prevent the default behaviour (where the browser would add a new text node)
+            document.execCommand("insertLineBreak");
+            event.preventDefault();
+          }
+        }}
         onInput={(event: React.KeyboardEvent<HTMLDivElement>) => {
           const selection = window.getSelection();
           setPostText!(event.currentTarget.textContent!);

@@ -156,6 +156,13 @@ const LMFeedReplyTextArea = ({
           //   id="editableDiv"
           data-placeholder="Write something here..."
           className="reply-text-area"
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              //prevent the default behaviour (where the browser would add a new text node)
+              document.execCommand("insertLineBreak");
+              event.preventDefault();
+            }
+          }}
           onInput={(event: React.KeyboardEvent<HTMLDivElement>) => {
             const selection = window.getSelection();
             setReplyText!(event.currentTarget.textContent!);

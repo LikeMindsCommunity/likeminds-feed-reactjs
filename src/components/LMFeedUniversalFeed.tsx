@@ -117,6 +117,8 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
           next={getNextPage}
           // TODO set shimmer on loader component
           loader={null}
+          scrollThreshold={0.6}
+          height={"100%"}
           // scrollableTarget="feed-scroller"
         >
           {renderFeeds()}

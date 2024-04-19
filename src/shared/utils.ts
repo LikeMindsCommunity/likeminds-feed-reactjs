@@ -165,8 +165,22 @@ export function findTag(str: string): TagInfo | undefined {
 export function returnCSSForTagging(
   refObject: React.MutableRefObject<HTMLDivElement | null>,
 ) {
+  if (!(refObject && refObject.current)) {
+    return;
+  }
   const selection = window.getSelection();
-  const resObject: any = {};
+  if (!selection) {
+    return;
+  }
+  const resObject: {
+    left: string | number;
+    position: string;
+    top: string | number;
+  } = {
+    left: "0px",
+    position: "absolute",
+    top: "0px",
+  };
   if (selection === null) {
     return {};
   }

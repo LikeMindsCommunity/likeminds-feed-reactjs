@@ -39,7 +39,7 @@ export function useTopicDropdown(
           .setPage(currentPageCount)
           .setSearchType("name")
           .setSearch(searchKey)
-          .setPageSize(20)
+          .setPageSize(10)
           .setIsEnabled(TopicsDropdownMode.edit === mode ? true : null)
           .build(),
       )) as never;
@@ -63,7 +63,7 @@ export function useTopicDropdown(
           .setPage(1)
           .setSearchType("name")
           .setSearch(searchKey)
-          .setPageSize(5)
+          .setPageSize(10)
           .setIsEnabled(TopicsDropdownMode.edit === mode ? true : null)
           .build(),
       )) as never;

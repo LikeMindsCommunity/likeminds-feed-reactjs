@@ -95,7 +95,7 @@ const LMFeedReplyEditTextArea = ({
               dataLength={taggingList.length}
               scrollableTarget="scrollableTaggingContainer"
             >
-              {taggingList?.map!((item) => {
+              {taggingList?.map((item) => {
                 return (
                   <button
                     key={item?.id.toString() + Math.random().toString()}
@@ -176,6 +176,13 @@ const LMFeedReplyEditTextArea = ({
           autoFocus={true}
           data-placeholder="Write something here..."
           className="edit-reply-text-area"
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              //prevent the default behaviour (where the browser would add a new text node)
+              document.execCommand("insertLineBreak");
+              event.preventDefault();
+            }
+          }}
           onInput={(event: React.KeyboardEvent<HTMLDivElement>) => {
             const selection = window.getSelection();
             setReplyText!(event.currentTarget.textContent!);
