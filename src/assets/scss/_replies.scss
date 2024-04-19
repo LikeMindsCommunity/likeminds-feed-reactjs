@@ -30,7 +30,7 @@
       &__content {
         display: flex;
         align-items: center;
-        .content-area{
+        .content-area {
           flex-grow: 1;
         }
         &--name {
@@ -66,9 +66,17 @@
           line-height: pxToRem(16);
           margin: 0 0 0 pxToRem(8);
           padding: 0 0 0 pxToRem(8);
-        }
-
-        .replies::before {
+        } 
+        // .replies::before {
+        //   content: "\2022";
+        //   color: $secondary-color;
+        //   font-size: pxToRem(20);
+        //   position: absolute;
+        //   margin: pxToRem(1) 0 0 -12px;
+        //   height: pxToRem(2);
+        //   width: pxToRem(2);
+        // }
+        .replies.bullet::before {
           content: "\2022";
           color: $secondary-color;
           font-size: pxToRem(20);
@@ -77,6 +85,15 @@
           height: pxToRem(2);
           width: pxToRem(2);
         }
+        // .replies.bullet {
+        //   content: "\2022";
+        //   color: $secondary-color;
+        //   font-size: pxToRem(20);
+        //   position: absolute;
+        //   margin: pxToRem(1) 0 0 -12px;
+        //   height: pxToRem(2);
+        //   width: pxToRem(2);
+        // }
       }
     }
   }
@@ -133,65 +150,68 @@
   padding-right: 0;
 }
 
-.lm-social-action-bar__lmReply .lm-social-action-bar__lmReply .pipe{ display: none;}
-.lm-social-action-bar__lmReply .lm-social-action-bar__lmReply .commentTitle{ display: none;}
+.lm-social-action-bar__lmReply .lm-social-action-bar__lmReply .pipe {
+  display: none;
+}
+.lm-social-action-bar__lmReply .lm-social-action-bar__lmReply .commentTitle {
+  display: none;
+}
 
 .lm-feed-reply {
-  position: relative; 
-    .reply-text-area{
-      line-height: pxToRem(20);
-      font-size: pxToRem(14);
-      font-weight: 400;
-      height: auto;
-      margin: 0 pxToRem(16);
-      border: 1px solid #D0D8E2;
-      border-radius: pxToRem(24);
-      padding: pxToRem(10) pxToRem(16);
-      min-height: pxToRem(40);
-      outline: none;
-      position: relative;
-    }
-    .edit-reply-text-area{
-       line-height: pxToRem(20);
-      font-size: pxToRem(14);
-      font-weight: 400;
-      height: auto;
-      margin: 0 pxToRem(16) 0 0;
-      border: 1px solid #D0D8E2;
-      border-radius: pxToRem(24);
-      padding: pxToRem(10) pxToRem(16);
-      min-height: pxToRem(40);
-      outline: none;
-      position: relative;
-    }
-    .taggingBox{
-      top: 81% !important;
-      left: 70px !important;
-      border-radius: 8px;
-      box-shadow: 0 1px 16px 0 #0000003d;
-      max-height: 210px;
-      overflow-x: hidden;
-      overflow-y: auto;
-      position: absolute;
-      width: 260px;
-      z-index: 9;
-    }
+  position: relative;
+  .reply-text-area {
+    line-height: pxToRem(20);
+    font-size: pxToRem(14);
+    font-weight: 400;
+    height: auto;
+    margin: 0 pxToRem(16);
+    border: 1px solid #d0d8e2;
+    border-radius: pxToRem(24);
+    padding: pxToRem(10) pxToRem(16);
+    min-height: pxToRem(40);
+    outline: none;
+    position: relative;
+  }
+  .edit-reply-text-area {
+    line-height: pxToRem(20);
+    font-size: pxToRem(14);
+    font-weight: 400;
+    height: auto;
+    margin: 0 pxToRem(16) 0 0;
+    border: 1px solid #d0d8e2;
+    border-radius: pxToRem(24);
+    padding: pxToRem(10) pxToRem(16);
+    min-height: pxToRem(40);
+    outline: none;
+    position: relative;
+  }
+  .taggingBox {
+    top: 81% !important;
+    left: 70px !important;
+    border-radius: 8px;
+    box-shadow: 0 1px 16px 0 #0000003d;
+    max-height: 210px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    width: 260px;
+    z-index: 9;
+  }
 }
-.reply-text-area[contenteditable=true]:empty:before{
+.reply-text-area[contenteditable="true"]:empty:before {
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
   color: $secondary-color;
 }
-.edit-reply-text-area[contenteditable=true]:empty:before{
+.edit-reply-text-area[contenteditable="true"]:empty:before {
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
   color: $secondary-color;
 }
 
-.liked-comment{
+.liked-comment {
   width: 16px;
   height: 16px;
 }
-

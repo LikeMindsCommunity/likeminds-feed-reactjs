@@ -12,7 +12,7 @@ const LMFeedPostTopicsWrapper = () => {
   return (
     <>
       <div
-        className="lm-feed-wrapper__card__topic-view-wrapper"
+        className="lm-feed-wrapper__card__topic-view-wrapper  lm-mb-3"
         style={LMPostTopicStyles?.topicWrapperStyles}
       >
         {topics?.map((topicId: string) => {

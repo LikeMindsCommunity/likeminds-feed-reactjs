@@ -209,7 +209,12 @@ const LMFeedReplyEditTextArea = ({
           }}
         ></div>
       </div>
-      <img src={replyAction} alt="edit-reply-action" onClick={editReply} />
+      <img
+        src={replyAction}
+        alt="edit-reply-action"
+        className="lm-cursor-pointer"
+        onClick={editReply}
+      />
     </div>
   );
 };
