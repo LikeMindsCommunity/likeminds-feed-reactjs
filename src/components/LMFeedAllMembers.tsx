@@ -72,7 +72,10 @@ const LMFeedAllMembers = () => {
         >
           {members ? (
             members.map((member: Member) => (
-              <div key={member.id} className="lm-member-wrapper__body__media">
+              <div
+                key={member.id}
+                className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"
+              >
                 <div className="lm-member-wrapper__body__media__imgBox lm-avatar">
                   {getAvatar({
                     imageUrl: member.imageUrl,

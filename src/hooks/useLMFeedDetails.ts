@@ -11,12 +11,14 @@ import {
   DeleteCommentRequest,
   LikeCommentRequest,
   LikePostRequest,
+  PinPostRequest,
 } from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
 import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
+import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 // import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 // import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
 // import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -35,6 +37,7 @@ interface UseFeedDetailsInterface {
   updateReply: (comment: Reply, usersMap: Record<string, User>) => void;
   likeReply: (id: string) => void;
   likePost: (id: string) => void;
+  pinPost: (id: string) => Promise<void>;
 }
 
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
@@ -252,6 +255,42 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       console.log(error);
     }
   }
+  async function pinPost(id: string) {
+    try {
+      const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
+        PinPostRequest.builder().setpostId(id).build(),
+      )) as never;
+      if (call.success) {
+        const tempPost = { ...post };
+
+        if (tempPost.isPinned) {
+          tempPost.isPinned = false;
+        } else {
+          tempPost.isPinned = true;
+        }
+        // feedListCopy.splice(index, 1);
+
+        setPost(tempPost as Post);
+        if (customEventClient) {
+          customEventClient.dispatchEvent(
+            LMFeedCustomActionEvents.PINNED_ON_DETAIL,
+            {
+              id: postId,
+            },
+          );
+        }
+        if (displaySnackbarMessage) {
+          if (tempPost.isPinned) {
+            displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+          } else {
+            displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     customEventClient?.listen(
@@ -312,5 +351,6 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     updateReplyOnPostReply,
     likeReply,
     likePost,
+    pinPost,
   };
 };
