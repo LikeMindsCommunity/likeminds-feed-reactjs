@@ -277,7 +277,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                   }
                   setOpenReplies((current) => !current);
                 }}
-              >{`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? "Replies" : ""}`}</span>
+              >{`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? "Replies" : "Reply"}`}</span>
             </span>
           </div>
           <div className="like">{formatTimeAgo(reply?.createdAt || 0)}</div>
