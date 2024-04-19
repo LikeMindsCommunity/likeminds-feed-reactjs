@@ -228,7 +228,7 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
             className={"pdfPage"}
             renderAnnotationLayer={false}
             renderTextLayer={false}
-            height={324}
+            height={200}
           />
         </Document>
 

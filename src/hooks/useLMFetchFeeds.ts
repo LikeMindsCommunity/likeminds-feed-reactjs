@@ -277,6 +277,24 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.COMMENT_REMOVED);
   });
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.PINNED_ON_DETAIL,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.id;
+        const feedListCopy = [...feedList].map((post) => {
+          if (post.Id === id) {
+            post.isPinned = !post.isPinned;
+          }
+
+          return post;
+        });
+        setFeedList(feedListCopy);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.COMMENT_REMOVED);
+  });
   //  Effect to run when selectedTopics changes or during the initial loading of the page
   useEffect(() => {
     loadFeed();

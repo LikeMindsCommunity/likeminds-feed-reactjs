@@ -31,14 +31,14 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
         anchorEl={notificationAnchor}
         onClose={() => setNotificationAnchor(null)}
       >
-        <div className="lm-feed-activity-wrapper">
+        <div className="lm-feed-activity-wrapper" id="scroller">
           {notifications.length > 0 ? (
             <>
               <div className="lm-feed-activity-wrapper__title">
                 Notification
               </div>
 
-              <div className="notificationBody" id="scroller">
+              <div className="notificationBody">
                 <InfiniteScroll
                   dataLength={notifications.length + 1}
                   hasMore={shouldLoadMoreNotifications}

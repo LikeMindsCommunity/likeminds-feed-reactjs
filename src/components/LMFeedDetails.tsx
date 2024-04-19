@@ -22,6 +22,7 @@ const LMFeedDetails = () => {
     updateReplyOnPostReply,
     likeReply,
     likePost,
+    pinPost,
   } = useFeedDetails(id.split("-")[0]);
 
   return !post || !users ? null : (
@@ -44,6 +45,7 @@ const LMFeedDetails = () => {
           updateReplyOnPostReply,
           likeReply,
           likePost,
+          pinPost,
         }}
       >
         <LMFeedCreatePost />

@@ -14,13 +14,14 @@
   }
 
   &__body {
-    padding: pxToRem(16) pxToRem(16) pxToRem(60) pxToRem(16);
+    padding: 0 0 pxToRem(60) 0;
     overflow-y: auto;
     height: 100vh;
     &__media {
       display: flex;
+      padding: pxToRem(8) pxToRem(16);
       align-items: center;
-      margin: 0 0 pxToRem(20) 0;
+      // margin: 0 0 pxToRem(20) 0;
 
       &__imgBox {
         width: pxToRem(48);
