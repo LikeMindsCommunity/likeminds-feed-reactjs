@@ -27,6 +27,7 @@ body {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   font-size: 1rem;
   line-height: 1.5;
+  background-color: #e6ebf5;
 }
 
 h1 {
@@ -72,4 +73,27 @@ a {
 .lm-border {
   border: 1px solid $border-color;
   border-radius: 0.25rem;
+}
+
+
+.lm-wrapper{ 
+  background-color: #e6ebf5;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.lm-header-notification {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 40px;
+  border-bottom: 1px solid #e0e0e0;
+  align-items: center;
+  position: fixed;
+  background-color: #fff;
+  width: 100%;
+  z-index: 9;
+
+  h1 {
+    font-size: 20px;
+  }
 }

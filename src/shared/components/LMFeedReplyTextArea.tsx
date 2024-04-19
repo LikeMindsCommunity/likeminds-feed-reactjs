@@ -186,6 +186,7 @@ const LMFeedReplyTextArea = ({
       </div>
       <img
         src={replyAction}
+        className="lm-cursor-pointer"
         alt="reply-action"
         onClick={postReplyAndCloseReplyText}
       />
