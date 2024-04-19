@@ -18,6 +18,8 @@ import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
+
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
 interface useFetchFeedsResponse {
@@ -139,17 +141,38 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const tempPost = feedListCopy[index];
         if (tempPost.isPinned) {
           tempPost.isPinned = false;
+          tempPost.menuItems = tempPost.menuItems.map((menuItem) => {
+            if (menuItem.id.toString() === LMFeedPostMenuItems.UNPIN_POST) {
+              return {
+                id: parseInt(LMFeedPostMenuItems.PIN_POST),
+                title: "Pin Post",
+              };
+            } else {
+              return menuItem;
+            }
+          });
         } else {
           tempPost.isPinned = true;
+          tempPost.menuItems = tempPost.menuItems.map((menuItem) => {
+            if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
+              return {
+                id: parseInt(LMFeedPostMenuItems.UNPIN_POST),
+                title: "Unpin This Post",
+              };
+            } else {
+              return menuItem;
+            }
+          });
         }
-        // feedListCopy.splice(index, 1);
 
+        // feedListCopy.splice(index, 1);
+        console.log(tempPost);
         setFeedList(feedListCopy);
         if (displaySnackbarMessage) {
           if (tempPost.isPinned) {
-            displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
-          } else {
             displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+          } else {
+            displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
           }
         }
       }
@@ -284,6 +307,13 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const id = (e as CustomEvent).detail.id;
         const feedListCopy = [...feedList].map((post) => {
           if (post.Id === id) {
+            post.menuItems = post.menuItems.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
+                menuItem.id = parseInt(LMFeedPostMenuItems.UNPIN_POST);
+                menuItem.title = "Unpin This Post";
+              }
+              return menuItem;
+            });
             post.isPinned = !post.isPinned;
           }
 
@@ -293,7 +323,23 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       },
     );
     return () =>
-      customEventClient?.remove(LMFeedCustomActionEvents.COMMENT_REMOVED);
+      customEventClient?.remove(LMFeedCustomActionEvents.PINNED_ON_DETAIL);
+  });
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.DELETE_POST_ON_DETAILS,
+      async (e: Event) => {
+        const id = (e as CustomEvent).detail.postId;
+
+        await deletePost(id);
+        window.history.back();
+      },
+    );
+
+    return () =>
+      customEventClient?.remove(
+        LMFeedCustomActionEvents.DELETE_POST_ON_DETAILS,
+      );
   });
   //  Effect to run when selectedTopics changes or during the initial loading of the page
   useEffect(() => {

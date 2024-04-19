@@ -38,6 +38,7 @@ interface UseFeedDetailsInterface {
   likeReply: (id: string) => void;
   likePost: (id: string) => void;
   pinPost: (id: string) => Promise<void>;
+  deletePost: (id: string) => Promise<void>;
 }
 
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
@@ -255,6 +256,14 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       console.log(error);
     }
   }
+  async function deletePost(id: string) {
+    customEventClient?.dispatchEvent(
+      LMFeedCustomActionEvents.DELETE_POST_ON_DETAILS,
+      {
+        postId: id,
+      },
+    );
+  }
   async function pinPost(id: string) {
     try {
       const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
@@ -352,5 +361,6 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     likeReply,
     likePost,
     pinPost,
+    deletePost,
   };
 };

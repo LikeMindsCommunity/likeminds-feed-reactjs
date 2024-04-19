@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { memo, useContext, useState } from "react";
 import Slider from "react-slick";
 import cancelBtnIcon from "./../assets/images/cross-icon.svg";
 import addMoreIcon from "../assets/images/add-more.svg";
@@ -14,7 +14,7 @@ interface LMFeedCreatePostDMediaPost {
   mediaUploadDialog?: string;
 }
 // eslint-disable-next-line no-empty-pattern
-const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
+const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
   const {
     mediaList,
     addMediaItem,
@@ -119,7 +119,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
               {mediaList?.map((mediaItem) => {
                 switch (mediaItem.type) {
                   case "application/pdf": {
-                    return null;
+                    return <DocumentMediaItem file={mediaItem} />;
                   }
                   case "image/jpeg":
                   case "image/png":
@@ -174,7 +174,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
       {renderMediaItems()}
     </div>
   );
-};
+});
 interface MediaItemProps {
   file?: File;
   attachment?: Attachment;

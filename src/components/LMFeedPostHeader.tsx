@@ -90,7 +90,10 @@ const LMFeedPostHeader = () => {
   return (
     <>
       <Dialog open={openDeletePostDialog} onClose={closeDeletePostDialog}>
-        <LMFeedDeleteDialogBox mode={LMFeedDeletePostModes.POST} />
+        <LMFeedDeleteDialogBox
+          mode={LMFeedDeletePostModes.POST}
+          onClose={closeDeletePostDialog}
+        />
       </Dialog>
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
         <LMFeedReportPostDialog

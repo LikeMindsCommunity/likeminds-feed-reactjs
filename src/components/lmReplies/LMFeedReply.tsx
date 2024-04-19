@@ -98,6 +98,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
     <div className="lm-social-action-bar__lmReply">
       <Dialog open={openDeleteDialog} onClose={closeDeleteDialog}>
         <LMFeedDeleteDialogBox
+          onClose={closeDeleteDialog}
           mode={
             mode === LMFeedReplyMode.COMMENT
               ? LMFeedDeletePostModes.COMMENT
