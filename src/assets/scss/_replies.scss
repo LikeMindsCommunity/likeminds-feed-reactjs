@@ -66,9 +66,17 @@
           line-height: pxToRem(16);
           margin: 0 0 0 pxToRem(8);
           padding: 0 0 0 pxToRem(8);
-        }
-
-        .replies.bullet {
+        } 
+        // .replies::before {
+        //   content: "\2022";
+        //   color: $secondary-color;
+        //   font-size: pxToRem(20);
+        //   position: absolute;
+        //   margin: pxToRem(1) 0 0 -12px;
+        //   height: pxToRem(2);
+        //   width: pxToRem(2);
+        // }
+        .replies.bullet::before {
           content: "\2022";
           color: $secondary-color;
           font-size: pxToRem(20);
@@ -77,6 +85,15 @@
           height: pxToRem(2);
           width: pxToRem(2);
         }
+        // .replies.bullet {
+        //   content: "\2022";
+        //   color: $secondary-color;
+        //   font-size: pxToRem(20);
+        //   position: absolute;
+        //   margin: pxToRem(1) 0 0 -12px;
+        //   height: pxToRem(2);
+        //   width: pxToRem(2);
+        // }
       }
     }
   }

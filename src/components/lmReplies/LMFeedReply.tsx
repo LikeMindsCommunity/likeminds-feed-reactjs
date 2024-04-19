@@ -269,15 +269,24 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 </span>
               )}
 
+              {/* className="replies lm-cursor-pointer commentTitle" */}
               <span
-                className="replies lm-cursor-pointer commentTitle"
+                className={
+                  (reply?.commentsCount || 0) > 1
+                    ? "replies lm-cursor-pointer commentTitle bullet"
+                    : "replies lm-cursor-pointer commentTitle"
+                }
                 onClick={() => {
                   if (repliesCountClickCallback) {
                     repliesCountClickCallback(navigate);
                   }
                   setOpenReplies((current) => !current);
                 }}
-              >{`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? "Replies" : "Reply"}`}</span>
+              >
+                {/* {reply?.commentsCount} = */}
+                {(reply?.commentsCount || 0) > 1 ? "Replies" : ""}
+                {/* {`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? "Replies" : "Reply"}`} */}
+              </span>
             </span>
           </div>
           <div className="like">{formatTimeAgo(reply?.createdAt || 0)}</div>
