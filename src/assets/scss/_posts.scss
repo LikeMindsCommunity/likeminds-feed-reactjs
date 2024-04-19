@@ -330,17 +330,27 @@
 }
 
 .slick-next {
-  right: 10px !important;
+  right: 15px !important;
+}
+.slick-prev {
+  transform: scaleX(-1) !important;
 }
 .slick-prev,
 .slick-next {
-  height: 32px !important;
-  width: 32px !important;
+  height: 34px !important;
+  width: 34px !important;
+  background: url(../images/carousel-arrow.svg) no-repeat !important;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  content: none !important;
 }
 
 .slick-prev {
-  left: 10px !important;
+  left: 15px !important;
   z-index: 9 !important;
+  top: 44% !important;
 }
 
 .slick-dots li button:before {

@@ -267,6 +267,9 @@
       height: 25px;
       width: 25px;
       cursor: pointer;
+      img {
+        aspect-ratio: auto !important;
+      }
     }
   }
   img {
@@ -289,6 +292,10 @@
     .react-pdf__Document {
       aspect-ratio: 16 / 6;
       overflow: hidden;
+    }
+
+    .slick-prev {
+      top: 44% !important;
     }
   }
 
