@@ -1,8 +1,8 @@
 .lm-feed-wrapper {
-  background-color: $bg-color; 
-  width: 100%; 
+  background-color: $bg-color;
+  width: 100%;
   overflow: auto;
-  height: 100vh; 
+  height: 100vh;
   justify-content: space-between;
   position: relative;
 
@@ -17,7 +17,7 @@
     width: 100%;
     margin-bottom: pxToRem(12);
     background: $light-color;
-    border-radius: pxToRem(8); 
+    border-radius: pxToRem(8);
     margin: 0 auto 1rem;
     overflow: hidden;
 
@@ -100,7 +100,7 @@
         font-size: 1rem;
       }
       &__content {
-        padding: .5rem pxToRem(8) 0.5rem 1rem;
+        padding: 0.5rem pxToRem(8) 0.5rem 1rem;
         word-wrap: break-word;
       }
       &__attachment {
@@ -152,6 +152,11 @@
           margin: 0 auto;
           overflow: hidden;
 
+          .react-pdf__Document {
+            aspect-ratio: 16/9;
+            overflow: hidden;
+          }
+
           &__pdfViewer {
             width: 100%;
             height: pxToRem(250);
@@ -195,7 +200,7 @@
             }
           }
         }
-        .attachmentOGTag { 
+        .attachmentOGTag {
           background-color: $light-color;
           border-radius: pxToRem(8);
           border: 1px solid $bg-color;
@@ -298,22 +303,18 @@
     border-radius: 0;
     width: 415px;
   }
-  .lm-member{display: none;} 
-  .lm-feed-create-post-wrapper{
+  .lm-member {
+    display: none;
+  }
+  .lm-feed-create-post-wrapper {
     width: 21.75rem !important;
   }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .lm-feed-wrapper__card {
-    // Apply styles for medium-sized mobile screens
-  }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-  .lm-feed-wrapper__card {
-    // Apply styles for large-sized mobile screens
-  }
 }
 
 //  slick carousel css

@@ -10,6 +10,7 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
+import { PDF, PHOTO, POST, VIDEO } from "../shared/constants/lmAppConstant";
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
 }
@@ -113,8 +114,8 @@ const LMFeedCreatePost = ({
                   <div className="lm-createPost__footer__left__media--imgBox">
                     <img src={photo} alt="image" />
                   </div>
-                  <div className="lm-createPost__footer__left__media--texted">
-                    Photo
+                  <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
+                    {PHOTO}
                   </div>
                 </div>
                 <div
@@ -129,8 +130,8 @@ const LMFeedCreatePost = ({
                   <div className="lm-createPost__footer__left__media--imgBox">
                     <img src={video} alt="video" />
                   </div>
-                  <div className="lm-createPost__footer__left__media--texted">
-                    Video
+                  <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
+                    {VIDEO}
                   </div>
                 </div>
                 <div
@@ -145,19 +146,19 @@ const LMFeedCreatePost = ({
                   <div className="lm-createPost__footer__left__media--imgBox">
                     <img src={pdf} alt="pdf" />
                   </div>
-                  <div className="lm-createPost__footer__left__media--texted">
-                    PDF
+                  <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
+                    {PDF}
                   </div>
                 </div>
               </div>
               <div className="lm-createPost__footer__right">
                 <button
-                  className="lm-createPost__footer__right--btn-primary"
+                  className="lm-createPost__footer__right--btn-primary lm-text-capitalize"
                   onClick={() => {
                     setOpenCreatePostDialog(!openCreatePostDialog);
                   }}
                 >
-                  Open
+                  {POST}
                 </button>
               </div>
             </div>
