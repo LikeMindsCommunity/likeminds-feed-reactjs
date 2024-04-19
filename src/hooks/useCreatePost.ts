@@ -298,7 +298,7 @@ export function useCreatePost(): UseCreatePost {
               await lmFeedclient?.decodeURL(
                 DecodeURLRequest.builder().setURL(firstLinkDetected).build(),
               );
-            if (getOgTagData.success) {
+            if (getOgTagData?.success) {
               setOgtag(getOgTagData.data.og_tags);
             }
           }

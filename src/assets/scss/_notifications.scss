@@ -1,8 +1,9 @@
 .lm-feed-activity-wrapper{
-    max-height: pxToRem(650); 
+    max-height: pxToRem(460); 
     padding: pxToRem(0);
     border-radius: pxToRem(8);
     width: pxToRem(376);
+    overflow-y: auto;
     .notificationBody{
         overflow: auto;
     }
