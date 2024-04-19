@@ -132,7 +132,7 @@ export const LMFeedDocumentAttachmentView = ({
           className={"pdfPage"}
           renderAnnotationLayer={false}
           renderTextLayer={false}
-          height={324}
+          // height={324}
         />
       </Document>
 

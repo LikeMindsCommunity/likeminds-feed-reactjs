@@ -152,6 +152,11 @@
           margin: 0 auto;
           overflow: hidden;
 
+          .react-pdf__Document {
+            aspect-ratio: 16/9;
+            overflow: hidden;
+          }
+
           &__pdfViewer {
             width: 100%;
             height: pxToRem(250);
@@ -307,15 +312,9 @@
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .lm-feed-wrapper__card {
-    // Apply styles for medium-sized mobile screens
-  }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-  .lm-feed-wrapper__card {
-    // Apply styles for large-sized mobile screens
-  }
 }
 
 //  slick carousel css

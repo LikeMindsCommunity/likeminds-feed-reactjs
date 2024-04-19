@@ -20,3 +20,6 @@ export const DEFAULT_PAGE_SIZE = 10;
 export const CREATE_POST = "Create Post";
 export const EDIT_POST = "Edit Post";
 export const MEMBER_LIST = "Member List";
+export const PHOTO = "photo";
+export const VIDEO = "video";
+export const PDF = "pdf";
