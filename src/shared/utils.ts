@@ -250,17 +250,17 @@ export function extractTextFromNode(node: any): string {
       const id = node.getAttribute("id");
       return `<<${textContent}|route://user_profile/${id}>>`;
     } else if (node.nodeName === "BR") {
-      // Handle <br> tag
       return "\n"; // Add a new line
+    } else if (node.nodeName === "SPAN") {
+      return "";
     } else {
       let text = "";
       const childNodes = node.childNodes;
-
       for (const childNode of childNodes) {
-        text += extractTextFromNode(childNode);
+        const retText = extractTextFromNode(childNode);
+        text += retText;
       }
-
-      return text;
+      return "\n" + text;
     }
   } else {
     return "";
