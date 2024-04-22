@@ -18,6 +18,14 @@ import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 const LMFeedPostHeader = () => {
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
   const { post, users, topics, pinPost } = useContext(FeedPostContext);
+  const { LMPostHeaderStyles, CustomCallbacks = {} } = useContext(
+    CustomAgentProviderContext,
+  );
+  const {
+    postHeaderAvatarClickCallback,
+    postHeaderTitleClickCallback,
+    postHeaderCustomTitleClickCallback,
+  } = CustomCallbacks;
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
   const [openDeletePostDialog, setOpenDeletePostDialog] =
@@ -33,14 +41,7 @@ const LMFeedPostHeader = () => {
 
   const avatarContent = getAvatar({ imageUrl, name });
   const navigate = useNavigate();
-  const { LMPostHeaderStyles, CustomCallbacks = {} } = useContext(
-    CustomAgentProviderContext,
-  );
-  const {
-    postHeaderAvatarClickCallback,
-    postHeaderTitleClickCallback,
-    postHeaderCustomTitleClickCallback,
-  } = CustomCallbacks;
+
   function closeReportDialog() {
     setOpenReportPostDialogBox(false);
   }
@@ -85,7 +86,6 @@ const LMFeedPostHeader = () => {
       }
     }
   }
-
   const [anchor, setAnchor] = useState<HTMLImageElement | null>(null);
   return (
     <>

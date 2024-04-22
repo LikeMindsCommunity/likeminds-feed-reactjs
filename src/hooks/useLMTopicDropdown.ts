@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Topic } from "../shared/types/models/topic";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetTopicsRequest } from "@likeminds.community/feed-js";
 import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
+import { TopicsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
   // setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
@@ -16,6 +21,17 @@ export function useTopicDropdown(
 ): useTopicDropdownResponse {
   // Getting an instance of the client
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { TopicsCustomCallbacks = {} } = useContext(CustomAgentProviderContext);
+  const {
+    setSearchKeyCustomAction,
+    updateCheckedTopicsCustomAction,
+    clearAllCheckedTopicsCustomAction,
+  } = TopicsCustomCallbacks;
+  const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
+    useContext(GeneralContext);
+  const { logoutUser, currentUser, currentCommunity } = useContext(
+    LMFeedUserProviderContext,
+  );
   // const {} = useContext(LMFeedCon)
   // to store the ids of topics that should be checked.
   const [checkedTopics, setCheckedTopics] = useState<Topic[]>([]);
@@ -32,7 +48,7 @@ export function useTopicDropdown(
   const [searchKey, setSearchKey] = useState<string>("");
 
   //   function to load the next page of the topics
-  const getNextPage = async () => {
+  const getNextPage = useCallback(async () => {
     try {
       const getTopicsCall: GetTopicsResponse = (await lmFeedclient?.getTopics(
         GetTopicsRequest.builder()
@@ -53,7 +69,7 @@ export function useTopicDropdown(
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [currentPageCount, lmFeedclient, mode, searchKey, topics]);
 
   //   function to load the list of topics initially| | loading with page no 1
   const loadTopics = useCallback(async () => {
@@ -80,23 +96,26 @@ export function useTopicDropdown(
   }, [lmFeedclient, searchKey]);
 
   // TODO update the logic for finding index and checking the topics
-  const updateCheckedTopics = (arg: Topic) => {
-    const isTopicAlreadyChecked = checkedTopics.some((topic: Topic) => {
-      return topic.Id === arg.Id;
-    });
-    if (isTopicAlreadyChecked) {
-      const index = checkedTopics.findIndex((topic: Topic) => {
+  const updateCheckedTopics = useCallback(
+    (arg: Topic) => {
+      const isTopicAlreadyChecked = checkedTopics.some((topic: Topic) => {
         return topic.Id === arg.Id;
       });
-      const newCheckedTopics = [...checkedTopics];
-      newCheckedTopics.splice(index, 1);
-      setCheckedTopics(newCheckedTopics);
-    } else {
-      const newCheckedTopics = [...checkedTopics];
-      newCheckedTopics.push(arg);
-      setCheckedTopics(newCheckedTopics);
-    }
-  };
+      if (isTopicAlreadyChecked) {
+        const index = checkedTopics.findIndex((topic: Topic) => {
+          return topic.Id === arg.Id;
+        });
+        const newCheckedTopics = [...checkedTopics];
+        newCheckedTopics.splice(index, 1);
+        setCheckedTopics(newCheckedTopics);
+      } else {
+        const newCheckedTopics = [...checkedTopics];
+        newCheckedTopics.push(arg);
+        setCheckedTopics(newCheckedTopics);
+      }
+    },
+    [checkedTopics],
+  );
 
   // to remove all the checked topics
   const clearAllCheckedTopics = () => {
@@ -106,6 +125,57 @@ export function useTopicDropdown(
   useEffect(() => {
     loadTopics();
   }, [loadTopics, searchKey]);
+
+  const topicsActionsAndDataStore: TopicsActionsAndDataStore = useMemo(() => {
+    return {
+      topicsDataStore: {
+        checkedTopics,
+        setCheckedTopics,
+        loadNewTopics,
+        setLoadNewTopics,
+        topics,
+        setTopics,
+        currentPageCount,
+        setCurrentPageCount,
+        searchKey,
+        setSearchKey,
+      },
+      applicationGeneralStore: {
+        userDataStore: {
+          lmFeedUser: currentUser,
+          lmFeedUserCurrentCommunity: currentCommunity,
+          logOutUser: logoutUser,
+        },
+        generalDataStore: {
+          displaySnackbarMessage,
+          closeSnackbar,
+          showSnackbar,
+          message,
+        },
+      },
+      defaultActions: {
+        setSearchKey,
+        updateCheckedTopics,
+        clearAllCheckedTopics,
+        getNextPage,
+      },
+    };
+  }, [
+    checkedTopics,
+    closeSnackbar,
+    currentCommunity,
+    currentPageCount,
+    currentUser,
+    displaySnackbarMessage,
+    getNextPage,
+    loadNewTopics,
+    logoutUser,
+    message,
+    searchKey,
+    showSnackbar,
+    topics,
+    updateCheckedTopics,
+  ]);
 
   // update the checkedTopics on useFeed hooks
   useEffect(() => {
@@ -144,14 +214,19 @@ export function useTopicDropdown(
     loadNewTopics,
     getNextPage,
     searchKey,
-    setSearchKey,
-    updateCheckedTopics,
-    clearAllCheckedTopics,
+    setSearchKey: setSearchKeyCustomAction
+      ? setSearchKeyCustomAction.bind(null, topicsActionsAndDataStore)
+      : setSearchKey,
+    updateCheckedTopics: updateCheckedTopicsCustomAction
+      ? updateCheckedTopicsCustomAction.bind(null, topicsActionsAndDataStore)
+      : updateCheckedTopics,
+    clearAllCheckedTopics: clearAllCheckedTopicsCustomAction
+      ? clearAllCheckedTopicsCustomAction.bind(null, topicsActionsAndDataStore)
+      : clearAllCheckedTopics,
   };
 }
 
 interface useTopicDropdownResponse {
-  getNextPage: () => Promise<void>;
   checkedTopics: Topic[];
   topics: Topic[];
   loadNewTopics: boolean;
@@ -159,4 +234,5 @@ interface useTopicDropdownResponse {
   setSearchKey: React.Dispatch<string>;
   updateCheckedTopics: (topic: Topic) => void;
   clearAllCheckedTopics: () => void;
+  getNextPage: () => Promise<void>;
 }

@@ -11,6 +11,7 @@ import { GetNotificationResponse } from "../shared/types/api-responses/getNotifi
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { User } from "../shared/types/models/member";
+// import { NotificationsActionAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 
 export function useLMFeedNotification(
   customEventClient: LMFeedCustomEvents,
@@ -110,6 +111,23 @@ export function useLMFeedNotification(
       getNotifications();
     }
   }, [lmFeedClient]);
+  // const notificationsActionAndDataStore: NotificationsActionAndDataStore =
+  //   useMemo(() => {
+  //     return {
+  //       notificationsDataStore: {
+  //         notifications,
+  //         setNotifications,
+  //         users,
+  //         setUsers,
+  //         shouldLoadMoreNotifications,
+  //         setShouldLoadMoreNotifications,
+  //         notificationCount,
+  //         setNotificationCount,
+  //         notificationPage,
+  //         setNotificationPage,
+  //       },
+  //     };
+  //   });
   return {
     notifications,
     shouldLoadMoreNotifications,

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { User } from "../shared/types/models/member";
 import { Post } from "../shared/types/models/post";
 import { Reply } from "../shared/types/models/replies";
@@ -19,10 +19,9 @@ import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
 import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
-// import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
-// import { DeletePostRequest } from "@likeminds.community/feed-js-beta";
-// import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-// import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
+import { FeedPostDetailsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
 interface UseFeedDetailsInterface {
   post: Post | null;
@@ -35,8 +34,8 @@ interface UseFeedDetailsInterface {
   removeAComment: (id: string) => void;
   updateReplyOnPostReply: (id: string) => void;
   updateReply: (comment: Reply, usersMap: Record<string, User>) => void;
-  likeReply: (id: string) => void;
-  likePost: (id: string) => void;
+  likeReply: (id: string) => Promise<void>;
+  likePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
 }
@@ -47,8 +46,22 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const { lmFeedclient, customEventClient } = useContext(
     GlobalClientProviderContext,
   );
-  const { displaySnackbarMessage } = useContext(GeneralContext);
+  const { currentUser, currentCommunity, logoutUser } = useContext(
+    LMFeedUserProviderContext,
+  );
+  const { displaySnackbarMessage, message, showSnackbar, closeSnackbar } =
+    useContext(GeneralContext);
+  const { FeedPostDetailsCustomActions = {} } = useContext(
+    CustomAgentProviderContext,
+  );
+  const {
+    deletePostCustomAction,
+    pinPostCustomAction,
 
+    likePostCustomAction,
+
+    likeReplyCustomAction,
+  } = FeedPostDetailsCustomActions;
   // state for storing the post
   const [post, setPost] = useState<Post | null>(null);
 
@@ -103,7 +116,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   }, [lmFeedclient, postId]);
 
   //   function to load next page of replies
-  const getNextPage = async () => {
+  const getNextPage = useCallback(async () => {
     try {
       const getPostDetailsCall: GetPostDetailsResponse =
         (await lmFeedclient?.getPost(
@@ -128,178 +141,208 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [lmFeedclient, pageCount, postId, replies, topics, users]);
 
-  function updateReplyOnPostReply(replyId: string) {
-    const repliesCopy = [...replies];
-    const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
-    if (targetReply) {
-      console.log(targetReply);
-      targetReply.commentsCount++;
-    }
-    setReplies(repliesCopy);
-  }
-
-  function addNewComment(comment: Reply, usersMap: Record<string, User>) {
-    const repliesCopy = [comment, ...replies];
-    const usersCopy = { ...users, ...usersMap };
-    const postCopy = { ...post };
-    if (postCopy && postCopy?.commentsCount) {
-      postCopy.commentsCount++;
-      setPost(postCopy as Post);
-    }
-    setReplies(repliesCopy);
-    setUsers(usersCopy);
-    if (customEventClient) {
-      customEventClient.dispatchEvent(LMFeedCustomActionEvents.COMMENT_ADDED, {
-        postId: post?.Id,
-      });
-    }
-  }
-  async function removeAComment(id: string) {
-    try {
-      const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
-        DeleteCommentRequest.builder()
-          .setpostId(post?.Id || "")
-          .setcommentId(id)
-          .build(),
-      )) as never;
-      if (call.success) {
-        const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
-
-        const postCopy = { ...post };
-        if (postCopy && postCopy?.commentsCount) {
-          postCopy.commentsCount--;
-          setPost(postCopy as Post);
-          setReplies(repliesCopy);
-          if (displaySnackbarMessage) {
-            displaySnackbarMessage(LMDisplayMessages.COMMENT_DELETED_SUCCESS);
-          }
-        }
-        if (customEventClient) {
-          customEventClient.dispatchEvent(
-            LMFeedCustomActionEvents.COMMENT_REMOVED,
-            {
-              postId: post?.Id,
-            },
-          );
-        }
+  const updateReplyOnPostReply = useCallback(
+    function (replyId: string) {
+      const repliesCopy = [...replies];
+      const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
+      if (targetReply) {
+        console.log(targetReply);
+        targetReply.commentsCount++;
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  function updateReply(comment: Reply, usersMap: Record<string, User>) {
-    const repliesCopy = [...replies].map((reply) =>
-      reply.Id === comment.Id ? comment : reply,
-    );
-    const usersCopy = { ...users, ...usersMap };
-    const postCopy = { ...post };
-    if (postCopy && postCopy.isEdited) {
-      postCopy.isEdited = true;
-      setPost(postCopy as Post);
-    }
-    setReplies(repliesCopy);
-    setUsers(usersCopy);
-  }
-  async function likeReply(id: string) {
-    try {
-      const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
-        LikeCommentRequest.builder().setpostId(postId).setcommentId(id).build(),
-      )) as never;
-      if (call.success) {
-        const repliesCopy = [...replies].map((reply) => {
-          if (reply.Id === id) {
-            if (reply.isLiked) {
-              reply.isLiked = false;
-              reply.likesCount--;
-            } else {
-              reply.isLiked = true;
-              reply.likesCount++;
+      setReplies(repliesCopy);
+    },
+    [replies],
+  );
+
+  const addNewComment = useCallback(
+    function (comment: Reply, usersMap: Record<string, User>) {
+      const repliesCopy = [comment, ...replies];
+      const usersCopy = { ...users, ...usersMap };
+      const postCopy = { ...post };
+      if (postCopy && postCopy?.commentsCount) {
+        postCopy.commentsCount++;
+        setPost(postCopy as Post);
+      }
+      setReplies(repliesCopy);
+      setUsers(usersCopy);
+      if (customEventClient) {
+        customEventClient.dispatchEvent(
+          LMFeedCustomActionEvents.COMMENT_ADDED,
+          {
+            postId: post?.Id,
+          },
+        );
+      }
+    },
+    [customEventClient, post, replies, users],
+  );
+  const removeAComment = useCallback(
+    async function (id: string) {
+      try {
+        const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
+          DeleteCommentRequest.builder()
+            .setpostId(post?.Id || "")
+            .setcommentId(id)
+            .build(),
+        )) as never;
+        if (call.success) {
+          const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+
+          const postCopy = { ...post };
+          if (postCopy && postCopy?.commentsCount) {
+            postCopy.commentsCount--;
+            setPost(postCopy as Post);
+            setReplies(repliesCopy);
+            if (displaySnackbarMessage) {
+              displaySnackbarMessage(LMDisplayMessages.COMMENT_DELETED_SUCCESS);
             }
           }
-          return reply;
-        });
-        setReplies(repliesCopy);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function likePost(id: string) {
-    try {
-      const call: LikePostResponse = (await lmFeedclient?.likePost(
-        LikePostRequest.builder().setpostId(id).build(),
-      )) as never;
-      if (call.success) {
-        const postCopy = { ...post };
-        if (postCopy.isLiked) {
-          postCopy.isLiked = false;
-          postCopy.likesCount ? postCopy.likesCount-- : null;
-        } else {
-          postCopy.isLiked = true;
-          postCopy.likesCount
-            ? postCopy.likesCount++
-            : (postCopy.likesCount = 1);
-        }
-        setPost(postCopy as Post);
-        if (customEventClient) {
-          customEventClient.dispatchEvent(
-            LMFeedCustomActionEvents.LIKE_POST_CALLED,
-            {
-              postId: id,
-            },
-          );
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function deletePost(id: string) {
-    customEventClient?.dispatchEvent(
-      LMFeedCustomActionEvents.DELETE_POST_ON_DETAILS,
-      {
-        postId: id,
-      },
-    );
-  }
-  async function pinPost(id: string) {
-    try {
-      const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-        PinPostRequest.builder().setpostId(id).build(),
-      )) as never;
-      if (call.success) {
-        const tempPost = { ...post };
-
-        if (tempPost.isPinned) {
-          tempPost.isPinned = false;
-        } else {
-          tempPost.isPinned = true;
-        }
-        // feedListCopy.splice(index, 1);
-
-        setPost(tempPost as Post);
-        if (customEventClient) {
-          customEventClient.dispatchEvent(
-            LMFeedCustomActionEvents.PINNED_ON_DETAIL,
-            {
-              id: postId,
-            },
-          );
-        }
-        if (displaySnackbarMessage) {
-          if (tempPost.isPinned) {
-            displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
-          } else {
-            displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+          if (customEventClient) {
+            customEventClient.dispatchEvent(
+              LMFeedCustomActionEvents.COMMENT_REMOVED,
+              {
+                postId: post?.Id,
+              },
+            );
           }
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    },
+    [customEventClient, displaySnackbarMessage, lmFeedclient, post, replies],
+  );
+  const updateReply = useCallback(
+    function (comment: Reply, usersMap: Record<string, User>) {
+      const repliesCopy = [...replies].map((reply) =>
+        reply.Id === comment.Id ? comment : reply,
+      );
+      const usersCopy = { ...users, ...usersMap };
+      const postCopy = { ...post };
+      if (postCopy && postCopy.isEdited) {
+        postCopy.isEdited = true;
+        setPost(postCopy as Post);
+      }
+      setReplies(repliesCopy);
+      setUsers(usersCopy);
+    },
+    [post, replies, users],
+  );
+  const likeReply = useCallback(
+    async function (id: string) {
+      try {
+        const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
+          LikeCommentRequest.builder()
+            .setpostId(postId)
+            .setcommentId(id)
+            .build(),
+        )) as never;
+        if (call.success) {
+          const repliesCopy = [...replies].map((reply) => {
+            if (reply.Id === id) {
+              if (reply.isLiked) {
+                reply.isLiked = false;
+                reply.likesCount--;
+              } else {
+                reply.isLiked = true;
+                reply.likesCount++;
+              }
+            }
+            return reply;
+          });
+          setReplies(repliesCopy);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [lmFeedclient, postId, replies],
+  );
+  const likePost = useCallback(
+    async function (id: string) {
+      try {
+        const call: LikePostResponse = (await lmFeedclient?.likePost(
+          LikePostRequest.builder().setpostId(id).build(),
+        )) as never;
+        if (call.success) {
+          const postCopy = { ...post };
+          if (postCopy.isLiked) {
+            postCopy.isLiked = false;
+            postCopy.likesCount ? postCopy.likesCount-- : null;
+          } else {
+            postCopy.isLiked = true;
+            postCopy.likesCount
+              ? postCopy.likesCount++
+              : (postCopy.likesCount = 1);
+          }
+          setPost(postCopy as Post);
+          if (customEventClient) {
+            customEventClient.dispatchEvent(
+              LMFeedCustomActionEvents.LIKE_POST_CALLED,
+              {
+                postId: id,
+              },
+            );
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [customEventClient, lmFeedclient, post],
+  );
+  const deletePost = useCallback(
+    async function (id: string) {
+      customEventClient?.dispatchEvent(
+        LMFeedCustomActionEvents.DELETE_POST_ON_DETAILS,
+        {
+          postId: id,
+        },
+      );
+    },
+    [customEventClient],
+  );
+  const pinPost = useCallback(
+    async function (id: string) {
+      try {
+        const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
+          PinPostRequest.builder().setpostId(id).build(),
+        )) as never;
+        if (call.success) {
+          const tempPost = { ...post };
+
+          if (tempPost.isPinned) {
+            tempPost.isPinned = false;
+          } else {
+            tempPost.isPinned = true;
+          }
+          // feedListCopy.splice(index, 1);
+
+          setPost(tempPost as Post);
+          if (customEventClient) {
+            customEventClient.dispatchEvent(
+              LMFeedCustomActionEvents.PINNED_ON_DETAIL,
+              {
+                id: postId,
+              },
+            );
+          }
+          if (displaySnackbarMessage) {
+            if (tempPost.isPinned) {
+              displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+            } else {
+              displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [customEventClient, displaySnackbarMessage, lmFeedclient, post, postId],
+  );
 
   useEffect(() => {
     customEventClient?.listen(
@@ -343,6 +386,72 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         LMFeedCustomActionEvents.POST_EDITED_TARGET_DETAILS,
       );
   });
+  const feedPostDetailsActionsAndDataStore: FeedPostDetailsActionsAndDataStore =
+    useMemo(() => {
+      return {
+        feedPostDetailsStore: {
+          post,
+          setPost,
+          users,
+          setUsers,
+          replies,
+          setReplies,
+          loadNextPage,
+          setLoadNextPage,
+          topics,
+          setTopics,
+          pageCount,
+          setPageCount,
+        },
+        applicationGeneralStore: {
+          userDataStore: {
+            lmFeedUser: currentUser,
+            lmFeedUserCurrentCommunity: currentCommunity,
+            logOutUser: logoutUser,
+          },
+          generalDataStore: {
+            displaySnackbarMessage,
+            closeSnackbar,
+            showSnackbar,
+            message,
+          },
+        },
+        defaultActions: {
+          addNewComment,
+          removeAComment,
+          updateReply,
+          updateReplyOnPostReply,
+          likeReply,
+          likePost,
+          pinPost,
+          deletePost,
+          getNextPage,
+        },
+      };
+    }, [
+      addNewComment,
+      closeSnackbar,
+      currentCommunity,
+      currentUser,
+      deletePost,
+      displaySnackbarMessage,
+      getNextPage,
+      likePost,
+      likeReply,
+      loadNextPage,
+      logoutUser,
+      message,
+      pageCount,
+      pinPost,
+      post,
+      removeAComment,
+      replies,
+      showSnackbar,
+      topics,
+      updateReply,
+      updateReplyOnPostReply,
+      users,
+    ]);
 
   useEffect(() => {
     loadPost();
@@ -358,9 +467,17 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     removeAComment,
     updateReply,
     updateReplyOnPostReply,
-    likeReply,
-    likePost,
-    pinPost,
-    deletePost,
+    likeReply:
+      likeReplyCustomAction?.bind(null, feedPostDetailsActionsAndDataStore) ||
+      likeReply,
+    likePost:
+      likePostCustomAction?.bind(null, feedPostDetailsActionsAndDataStore) ||
+      likePost,
+    pinPost:
+      pinPostCustomAction?.bind(null, feedPostDetailsActionsAndDataStore) ||
+      pinPost,
+    deletePost:
+      deletePostCustomAction?.bind(null, feedPostDetailsActionsAndDataStore) ||
+      deletePost,
   };
 };

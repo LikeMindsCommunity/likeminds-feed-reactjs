@@ -16,6 +16,7 @@ const LMFeedPostBody = () => {
   const { postHeadingClickCallback } = CustomCallbacks;
   // Render attachments
   const renderAttachments = useCallback(() => {
+    // return null;
     if (!attachments || attachments.length === 0) return null;
 
     return (

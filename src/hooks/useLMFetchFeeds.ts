@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
@@ -19,6 +19,9 @@ import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import { LikePostResponse } from "../shared/types/api-responses/likePostResponse";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
@@ -39,7 +42,14 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const { lmFeedclient, customEventClient } = useContext(
     GlobalClientProviderContext,
   );
-  const { displaySnackbarMessage } = useContext(GeneralContext);
+  const { currentCommunity, currentUser, logoutUser } = useContext(
+    LMFeedUserProviderContext,
+  );
+  const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
+    useContext(GeneralContext);
+  const { FeedListCustomActions = {} } = useContext(CustomAgentProviderContext);
+  const { deletePostCustomAction, pinPostCustomAction, likePostCustomAction } =
+    FeedListCustomActions;
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -87,120 +97,139 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   );
 
   //   function to load the next page for the current selected topics
-  async function getNextPage() {
-    try {
-      const fetchFeedsCall: GetUniversalFeedResponse =
-        (await lmFeedclient?.getFeed(
-          GetFeedRequest.builder()
-            .setTopicIds(selectedTopics)
-            .setpage(currentPageCount)
-            .setpageSize(10)
-            .build(),
-        )) as never;
-      if (fetchFeedsCall.success) {
-        setCurrentPageCount((oldPageCount: number) => oldPageCount + 1);
-        setFeedList([...feedList, ...fetchFeedsCall.data.posts]);
-        setFeedUsersList({ ...feedUsersList, ...fetchFeedsCall.data.users });
-        setTopics({ ...topics, ...fetchFeedsCall.data.topics });
+  const getNextPage = useCallback(
+    async function () {
+      try {
+        const fetchFeedsCall: GetUniversalFeedResponse =
+          (await lmFeedclient?.getFeed(
+            GetFeedRequest.builder()
+              .setTopicIds(selectedTopics)
+              .setpage(currentPageCount)
+              .setpageSize(10)
+              .build(),
+          )) as never;
+        if (fetchFeedsCall.success) {
+          setCurrentPageCount((oldPageCount: number) => oldPageCount + 1);
+          setFeedList([...feedList, ...fetchFeedsCall.data.posts]);
+          setFeedUsersList({ ...feedUsersList, ...fetchFeedsCall.data.users });
+          setTopics({ ...topics, ...fetchFeedsCall.data.topics });
+        }
+        if (!fetchFeedsCall.data.posts.length) {
+          setLoadMoreFeeds(false);
+        }
+      } catch (error) {
+        console.log(error);
       }
-      if (!fetchFeedsCall.data.posts.length) {
-        setLoadMoreFeeds(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    },
+    [
+      currentPageCount,
+      feedList,
+      feedUsersList,
+      lmFeedclient,
+      selectedTopics,
+      topics,
+    ],
+  );
 
   // function to delete a post
-  async function deletePost(id: string) {
-    try {
-      const call: DeletePostResponse = (await lmFeedclient?.deletePost(
-        DeletePostRequest.builder().setpostId(id).build(),
-      )) as never;
-      if (call.success) {
-        const feedListCopy = [...feedList];
-        const index = feedListCopy.findIndex((feed) => feed.Id === id);
-        feedListCopy.splice(index, 1);
-        setFeedList(feedListCopy);
-        if (displaySnackbarMessage)
-          displaySnackbarMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  // function to pin a post
-  async function pinPost(id: string) {
-    try {
-      const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-        PinPostRequest.builder().setpostId(id).build(),
-      )) as never;
-      if (call.success) {
-        const feedListCopy = [...feedList];
-        const index = feedListCopy.findIndex((feed) => feed.Id === id);
-        const tempPost = feedListCopy[index];
-        if (tempPost.isPinned) {
-          tempPost.isPinned = false;
-          tempPost.menuItems = tempPost.menuItems.map((menuItem) => {
-            if (menuItem.id.toString() === LMFeedPostMenuItems.UNPIN_POST) {
-              return {
-                id: parseInt(LMFeedPostMenuItems.PIN_POST),
-                title: "Pin Post",
-              };
-            } else {
-              return menuItem;
-            }
-          });
-        } else {
-          tempPost.isPinned = true;
-          tempPost.menuItems = tempPost.menuItems.map((menuItem) => {
-            if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
-              return {
-                id: parseInt(LMFeedPostMenuItems.UNPIN_POST),
-                title: "Unpin This Post",
-              };
-            } else {
-              return menuItem;
-            }
-          });
+  const deletePost = useCallback(
+    async function (id: string) {
+      try {
+        const call: DeletePostResponse = (await lmFeedclient?.deletePost(
+          DeletePostRequest.builder().setpostId(id).build(),
+        )) as never;
+        if (call.success) {
+          const feedListCopy = [...feedList];
+          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          feedListCopy.splice(index, 1);
+          setFeedList(feedListCopy);
+          if (displaySnackbarMessage)
+            displaySnackbarMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY);
         }
-
-        // feedListCopy.splice(index, 1);
-        console.log(tempPost);
-        setFeedList(feedListCopy);
-        if (displaySnackbarMessage) {
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [displaySnackbarMessage, feedList, lmFeedclient],
+  );
+  // function to pin a post
+  const pinPost = useCallback(
+    async function (id: string) {
+      try {
+        const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
+          PinPostRequest.builder().setpostId(id).build(),
+        )) as never;
+        if (call.success) {
+          const feedListCopy = [...feedList];
+          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const tempPost = feedListCopy[index];
           if (tempPost.isPinned) {
-            displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+            tempPost.isPinned = false;
+            tempPost.menuItems = tempPost.menuItems.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.UNPIN_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.PIN_POST),
+                  title: "Pin Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
           } else {
-            displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+            tempPost.isPinned = true;
+            tempPost.menuItems = tempPost.menuItems.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.UNPIN_POST),
+                  title: "Unpin This Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          }
+
+          // feedListCopy.splice(index, 1);
+          console.log(tempPost);
+          setFeedList(feedListCopy);
+          if (displaySnackbarMessage) {
+            if (tempPost.isPinned) {
+              displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+            } else {
+              displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+            }
           }
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    },
+    [displaySnackbarMessage, feedList, lmFeedclient],
+  );
 
-  async function likePost(id: string) {
-    try {
-      const call: LikePostResponse = (await lmFeedclient?.likePost(
-        LikePostRequest.builder().setpostId(id).build(),
-      )) as never;
-      if (call.success) {
-        const feedListCopy = [...feedList];
-        const index = feedListCopy.findIndex((feed) => feed.Id === id);
-        feedListCopy[index].isLiked = !feedListCopy[index].isLiked;
-        if (feedListCopy[index].isLiked) {
-          feedListCopy[index].likesCount++;
-        } else {
-          feedListCopy[index].likesCount--;
+  const likePost = useCallback(
+    async function (id: string) {
+      try {
+        const call: LikePostResponse = (await lmFeedclient?.likePost(
+          LikePostRequest.builder().setpostId(id).build(),
+        )) as never;
+        if (call.success) {
+          const feedListCopy = [...feedList];
+          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          feedListCopy[index].isLiked = !feedListCopy[index].isLiked;
+          if (feedListCopy[index].isLiked) {
+            feedListCopy[index].likesCount++;
+          } else {
+            feedListCopy[index].likesCount--;
+          }
+          setFeedList(feedListCopy);
         }
-        setFeedList(feedListCopy);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    },
+    [feedList, lmFeedclient],
+  );
   useEffect(() => {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
       loadFeed();
@@ -345,7 +374,62 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   useEffect(() => {
     loadFeed();
   }, [loadFeed]);
-
+  const feedListActionsAndDataStore: FeedListActionsAndDataStore =
+    useMemo(() => {
+      return {
+        feedListDataStore: {
+          selectedTopics,
+          setSelectedTopics,
+          topics,
+          setTopics,
+          loadMoreFeeds,
+          setLoadMoreFeeds,
+          currentPageCount,
+          setCurrentPageCount,
+          feedList,
+          setFeedList,
+          feedUsersList,
+          setFeedUsersList,
+        },
+        applicationGeneralsStore: {
+          userDataStore: {
+            lmFeedUser: currentUser,
+            lmFeedUserCurrentCommunity: currentCommunity,
+            logOutUser: logoutUser,
+          },
+          generalDataStore: {
+            displaySnackbarMessage,
+            closeSnackbar,
+            showSnackbar,
+            message,
+          },
+        },
+        defaultActions: {
+          deletePost,
+          pinPost,
+          likePost,
+          getNextPage,
+        },
+      };
+    }, [
+      closeSnackbar,
+      currentCommunity,
+      currentPageCount,
+      currentUser,
+      deletePost,
+      displaySnackbarMessage,
+      feedList,
+      feedUsersList,
+      getNextPage,
+      likePost,
+      loadMoreFeeds,
+      logoutUser,
+      message,
+      pinPost,
+      selectedTopics,
+      showSnackbar,
+      topics,
+    ]);
   return {
     topics,
     selectedTopics,
@@ -354,8 +438,14 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     feedList,
     feedUsersList,
     getNextPage,
-    deletePost,
-    pinPost,
-    likePost,
+    deletePost: deletePostCustomAction
+      ? deletePostCustomAction.bind(null, feedListActionsAndDataStore)
+      : deletePost,
+    pinPost: pinPostCustomAction
+      ? pinPostCustomAction.bind(null, feedListActionsAndDataStore)
+      : pinPost,
+    likePost: likePostCustomAction
+      ? likePostCustomAction.bind(null, feedListActionsAndDataStore)
+      : likePost,
   };
 }

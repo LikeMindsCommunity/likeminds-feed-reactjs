@@ -41,6 +41,9 @@ function LMFeed({
   CustomCallbacks,
   useParentRouter = false,
   customEventClient,
+  FeedListCustomActions,
+  FeedPostDetailsCustomActions,
+  GeneralCustomCallbacks,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(accessToken, refreshToken, client, customEventClient);
@@ -71,6 +74,9 @@ function LMFeed({
           LMPostTopicStyles,
           CustomComponents,
           CustomCallbacks,
+          FeedListCustomActions,
+          FeedPostDetailsCustomActions,
+          GeneralCustomCallbacks,
         }}
       >
         <GeneralContext.Provider

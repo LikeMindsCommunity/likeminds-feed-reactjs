@@ -43,6 +43,17 @@ export interface FeedPostDetailsStore {
   pageCount: number;
   setPageCount: React.Dispatch<React.SetStateAction<number>>;
 }
+export interface FeedPostDetailsDefaultActions {
+  addNewComment: (comment: Reply, userMap: Record<string, User>) => void;
+  removeAComment: (id: string) => void; //
+  updateReplyOnPostReply: (id: string) => void;
+  updateReply: (comment: Reply, usersMap: Record<string, User>) => void; //
+  likeReply: (id: string) => Promise<void>; //
+  likePost: (id: string) => Promise<void>; //
+  pinPost: (id: string) => Promise<void>; //
+  deletePost: (id: string) => Promise<void>; //
+  getNextPage: () => Promise<void>;
+}
 export interface NotificationsDataStore {
   notifications: Activity[];
   setNotifications: React.Dispatch<React.SetStateAction<Activity[]>>;
@@ -54,6 +65,11 @@ export interface NotificationsDataStore {
   setNotificationCount: React.Dispatch<React.SetStateAction<number>>;
   notificationPage: number;
   setNotificationPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export interface NotificationsDefaultActions {
+  handleNotification: (id: string) => void;
+  getNotifications: () => Promise<void>;
 }
 
 export interface TopicDataStore {
@@ -69,20 +85,24 @@ export interface TopicDataStore {
   setSearchKey: React.Dispatch<React.SetStateAction<string>>;
 }
 
+export interface TopicsDefaultAction {
+  setSearchKey: React.Dispatch<string>;
+  updateCheckedTopics: (topic: Topic) => void;
+  clearAllCheckedTopics: () => void;
+  getNextPage: () => Promise<void>;
+}
+
 export interface UserDataStore {
   lmFeedUser: User | null;
-  setLmFeedUser: React.Dispatch<React.SetStateAction<User | null>>;
+  logOutUser: (() => void) | null;
   lmFeedUserCurrentCommunity: Community | null;
-  setLmFeedUserCurrentCommunity: React.Dispatch<
-    React.SetStateAction<Community | null>
-  >;
 }
 
 export interface GeneralDataStore {
-  showSnackbar: boolean;
-  setShowSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
-  message: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  displaySnackbarMessage?: (message: string) => void;
+  closeSnackbar?: () => void;
+  showSnackbar?: boolean;
+  message?: string;
 }
 
 export interface RepliesDataStore {
@@ -97,7 +117,11 @@ export interface RepliesDataStore {
   users: Record<string, User>;
   setUser: React.Dispatch<React.SetStateAction<Record<string, User>>>;
 }
-
+export interface RepliesDefaultAction {
+  deleteReply: (id: string) => Promise<void>;
+  likeReply: (id: string) => Promise<void>;
+  updateReply: (comment: Reply, usersMap: Record<string, User>) => void;
+}
 export interface PostCreationDataStore {
   openCreatePostDialog: boolean;
   setOpenCreatePostDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -121,6 +145,11 @@ export interface PostCreationDataStore {
   setOgtag: React.Dispatch<React.SetStateAction<OgTag | null>>;
   textFieldRef: React.MutableRefObject<HTMLDivElement | null>;
   containerRef: React.MutableRefObject<HTMLDivElement | null>;
+}
+
+export interface PostCreationDefaultActions {
+  postFeed: () => Promise<void>;
+  editPost: () => Promise<void>;
 }
 
 export interface ApplicationGeneralsStore {

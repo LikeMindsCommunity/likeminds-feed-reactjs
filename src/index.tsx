@@ -5,11 +5,33 @@ import LMFeed from "./components/LMFeed";
 import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import LMFeedNotificationHeader from "./shared/components/LMFeedNotificationHeader";
 import { LMFeedCustomEvents } from "./shared/customEvents";
+import { feedListCustomActionCallback } from "./shared/types/cutomCallbacks/callbacks";
 const customEventClient = new LMFeedCustomEvents();
+const likePostCustomCallback: feedListCustomActionCallback = async (
+  _store,
+  _id,
+) => {
+  console.log(_store);
+  // const feedCopy = [..._store.feedListDataStore.feedList]
+  _store.defaultActions.pinPost(_id as string);
+  // _store.feedListDataStore.setFeedList([]);
+
+  _store.applicationGeneralsStore.generalDataStore.displaySnackbarMessage!("");
+  // _store.defaultActions.pinPost(_id as string);
+};
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <div className="lm-wrapper">
     <LMFeedNotificationHeader customEventClient={customEventClient} />
     <LMFeed
+      FeedPostDetailsCustomActions={{
+        likePostCustomAction: async (store, _argTwo) => {
+          console.log(_argTwo);
+          console.log(store);
+        },
+      }}
+      FeedListCustomActions={{
+        likePostCustomAction: likePostCustomCallback,
+      }}
       client={LMFeedClient.Builder()
         .setPlatformCode("rt")
         .setVersionCode(2)
