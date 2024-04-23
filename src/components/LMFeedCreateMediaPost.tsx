@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { memo, useContext, useState } from "react";
 import Slider from "react-slick";
 import cancelBtnIcon from "./../assets/images/cross-icon.svg";
 import addMoreIcon from "../assets/images/add-more.svg";
@@ -14,7 +14,7 @@ interface LMFeedCreatePostDMediaPost {
   mediaUploadDialog?: string;
 }
 // eslint-disable-next-line no-empty-pattern
-const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
+const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
   const {
     mediaList,
     addMediaItem,
@@ -35,6 +35,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
   function renderMediaItems() {
     if (temporaryPost) {
       const attachmentsArray = temporaryPost.attachments;
+      console.log(attachmentsArray);
       switch (attachmentsArray.length) {
         case 0:
           return null;
@@ -83,6 +84,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
         }
       }
     } else {
+      console.log(mediaList);
       switch (mediaList?.length) {
         case 0:
           return null;
@@ -117,7 +119,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
               {mediaList?.map((mediaItem) => {
                 switch (mediaItem.type) {
                   case "application/pdf": {
-                    return null;
+                    return <DocumentMediaItem file={mediaItem} />;
                   }
                   case "image/jpeg":
                   case "image/png":
@@ -172,7 +174,7 @@ const LMFeedCreateMediaPost = ({}: LMFeedCreatePostDMediaPost) => {
       {renderMediaItems()}
     </div>
   );
-};
+});
 interface MediaItemProps {
   file?: File;
   attachment?: Attachment;
@@ -228,7 +230,7 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
             className={"pdfPage"}
             renderAnnotationLayer={false}
             renderTextLayer={false}
-            height={200}
+            // height={200}
           />
         </Document>
 
@@ -254,37 +256,39 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
       </div>
     );
   } else if (file) {
-    <div className="attachmentPdf">
-      <Document file={URL.createObjectURL(file)}>
-        <Page
-          pageNumber={1}
-          className={"pdfPage"}
-          renderAnnotationLayer={false}
-          renderTextLayer={false}
-          height={324}
-        />
-      </Document>
+    return (
+      <div className="attachmentPdf">
+        <Document file={URL.createObjectURL(file)}>
+          <Page
+            pageNumber={1}
+            className={"pdfPage"}
+            renderAnnotationLayer={false}
+            renderTextLayer={false}
+            // height={324}
+          />
+        </Document>
 
-      <div className="attachmentPdf__content">
-        <img
-          src={pdfIcon}
-          alt="pdf"
-          className="attachmentOGTag__content--icon"
-        />
-        <div>
-          <a
-            className="attachmentPdf__content--title"
-            target="_blank"
-            // href={url}
-          >
-            {file.name}
-          </a>
-          <div className="attachmentPdf__content--url">
-            {formatFileSize(file.size)}
+        <div className="attachmentPdf__content">
+          <img
+            src={pdfIcon}
+            alt="pdf"
+            className="attachmentOGTag__content--icon"
+          />
+          <div>
+            <a
+              className="attachmentPdf__content--title"
+              target="_blank"
+              // href={url}
+            >
+              {file.name}
+            </a>
+            <div className="attachmentPdf__content--url">
+              {formatFileSize(file.size)}
+            </div>
           </div>
         </div>
       </div>
-    </div>;
+    );
   }
 };
 

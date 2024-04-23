@@ -3,6 +3,7 @@ import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 import { User } from "../shared/types/models/member";
 import { Reply } from "../shared/types/models/replies";
+// import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 
 export const FeedPostContext = React.createContext<FeedPostContextInterface>({
   post: null,
@@ -25,4 +26,8 @@ interface FeedPostContextInterface {
   updateReply?: (comment: Reply, usersMap: Record<string, User>) => void;
   likeReply?: (id: string) => void;
   likePost?: (id: string) => void;
+  postComponentClickCustomCallback?: (
+    // feedListStore: FeedListActionsAndDataStore,
+    event: React.MouseEvent<HTMLDivElement>,
+  ) => void;
 }

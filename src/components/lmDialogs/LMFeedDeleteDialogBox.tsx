@@ -5,8 +5,9 @@ import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 interface LMDeletePostDialogProps {
   mode: LMFeedDeletePostModes;
+  onClose: () => void;
 }
-const LMFeedDeleteDialogBox = ({ mode }: LMDeletePostDialogProps) => {
+const LMFeedDeleteDialogBox = ({ mode, onClose }: LMDeletePostDialogProps) => {
   const { deletePost, post, removeAComment } = useContext(FeedPostContext);
   const { reply, deleteReply } = useContext(ReplyContext);
   function confirmDelete() {
@@ -37,6 +38,7 @@ const LMFeedDeleteDialogBox = ({ mode }: LMDeletePostDialogProps) => {
         src={closeIcon}
         className="lmReportPostWrapper__header__closeIcon"
         alt="close-icon"
+        onClick={onClose}
       />
       <div className="lmReportPostWrapper__body">
         <div className="lmReportPostWrapper__body__content">

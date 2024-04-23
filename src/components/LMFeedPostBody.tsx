@@ -16,17 +16,87 @@ const LMFeedPostBody = () => {
   const { postHeadingClickCallback } = CustomCallbacks;
   // Render attachments
   const renderAttachments = useCallback(() => {
+    // return null;
     if (!attachments || attachments.length === 0) return null;
 
     return (
-      <div className="attachments">
+      <div
+        className="attachments"
+        lm-feed-component-id={`lm-feed-post-wrapper-dn2pl-${post?.Id}`}
+      >
         <LMFeedAttachments attachments={attachments} />
       </div>
     );
-  }, [attachments]);
+  }, [attachments, post?.Id]);
 
   return (
-    <div className="lm-feed-wrapper__card__body">
+    // <div className="lm-feed-wrapper__card__body">
+    //   {heading.length > 0 && (
+    //     <h1
+    //       className="lm-feed-wrapper__card__body__heading"
+    //       style={{
+    //         cursor: !window.location.pathname.includes("/post")
+    //           ? "pointer"
+    //           : undefined,
+    //         ...LMPostBodyStyles?.heading,
+    //       }}
+    //       onClick={() => {
+    //         if (postHeadingClickCallback) {
+    //           postHeadingClickCallback(navigate);
+    //         } else {
+    //           if (!window.location.pathname.includes("/post")) {
+    //             navigate(
+    //               `/community/post/${`${post?.Id}-${post?.heading}`.substring(0, 59)}`,
+    //             );
+    //           }
+    //         }
+    //       }}
+    //     >
+    //       {heading}
+    //     </h1>
+    //   )}
+    //   {/* post text */}
+    //   {text ? (
+    //     <div
+    //       className="lm-feed-wrapper__card__body__content"
+    //       style={LMPostBodyStyles?.content}
+    //     >
+    //       {(() => {
+    //         const processedText = textPreprocessor(text);
+    //         if (processedText.showReadMore && !hasReadMoreTapped) {
+    //           return (
+    //             <>
+    //               {parseAndReplaceTags(processedText.text)}
+    //               <span
+    //                 className="lm-feed-wrapper__card__body__content__read-more-tap-icon"
+    //                 style={{
+    //                   color: "gray",
+    //                   fontWeight: "400",
+    //                   cursor: "pointer",
+    //                   fontSize: "14px",
+    //                 }}
+    //                 onClick={() => setHasReadMoreTapped(true)}
+    //               >
+    //                 ...ReadMore
+    //               </span>
+    //             </>
+    //           );
+    //         } else {
+    //           return parseAndReplaceTags(text);
+    //         }
+    //       })()}
+    //     </div>
+    //   ) : null}
+    //   {/* post text */}
+
+    //   <div className="lm-feed-wrapper__card__body__attachment">
+    //     {renderAttachments()}
+    //   </div>
+    // </div>
+    <div
+      className="lm-feed-wrapper__card__body"
+      lm-feed-component-id={`lm-feed-post-wrapper-vwxyz-${post?.Id}`}
+    >
       {heading.length > 0 && (
         <h1
           className="lm-feed-wrapper__card__body__heading"
@@ -47,6 +117,7 @@ const LMFeedPostBody = () => {
               }
             }
           }}
+          lm-feed-component-id={`lm-feed-post-wrapper-abcde-${post?.Id}`}
         >
           {heading}
         </h1>
@@ -56,6 +127,7 @@ const LMFeedPostBody = () => {
         <div
           className="lm-feed-wrapper__card__body__content"
           style={LMPostBodyStyles?.content}
+          lm-feed-component-id={`lm-feed-post-wrapper-fghij-${post?.Id}`}
         >
           {(() => {
             const processedText = textPreprocessor(text);
@@ -72,6 +144,7 @@ const LMFeedPostBody = () => {
                       fontSize: "14px",
                     }}
                     onClick={() => setHasReadMoreTapped(true)}
+                    lm-feed-component-id={`lm-feed-post-wrapper-klmno-${post?.Id}`}
                   >
                     ...ReadMore
                   </span>
@@ -84,8 +157,10 @@ const LMFeedPostBody = () => {
         </div>
       ) : null}
       {/* post text */}
-
-      <div className="lm-feed-wrapper__card__body__attachment">
+      <div
+        className="lm-feed-wrapper__card__body__attachment"
+        lm-feed-component-id={`lm-feed-post-wrapper-pqrst-${post?.Id}`}
+      >
         {renderAttachments()}
       </div>
     </div>

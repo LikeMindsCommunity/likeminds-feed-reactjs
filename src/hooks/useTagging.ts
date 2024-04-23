@@ -21,8 +21,9 @@ export function useTagging(): UseTagging {
   const [tagString, setTagString] = useState<string | null>(null);
   const [fetchMoreTags, setFetchMoreTags] = useState<boolean>(true);
   function clearTaggingList() {
-    setTaggingList([]);
+    setTaggingList(() => []);
     setTagString(null);
+    setPageNo(() => 1);
   }
   function setTaggingString(str: string | null) {
     setTagString(str);
@@ -37,15 +38,10 @@ export function useTagging(): UseTagging {
           .build(),
       );
       if (call.success) {
-        // setTaggingList([...taggingList, ...call.data.members]);
         setTaggingList((previousState) => {
-          console.log("the previous state value");
-          console.log(previousState);
-          console.log("the new state value");
-          console.log([...taggingList, ...call.data.members]);
           return [...previousState, ...call.data.members];
         });
-        setPageNo(pageNo + 1);
+        setPageNo((pg) => pg + 1);
       }
       if (!call.data.members.length) {
         setFetchMoreTags(false);
@@ -58,13 +54,15 @@ export function useTagging(): UseTagging {
     if (tagString !== null) {
       setFetchMoreTags(true);
       setTaggingList((previousState) => {
-        console.log("the previous state value");
-        console.log(previousState);
-        console.log("the new state value");
-        console.log([]);
         return [];
       });
+      setPageNo(() => 1);
       fetchTaggingList(1);
+    } else {
+      setTaggingList((previousState) => {
+        return [];
+      });
+      setPageNo(() => 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagString]);

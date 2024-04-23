@@ -5,6 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useTagging } from "../../hooks/useTagging";
 
 import { convertTextToHTML, setTagUserImage } from "../taggingParser";
+// import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
 
 const LMFeedTextArea = () => {
   const {
@@ -17,12 +18,8 @@ const LMFeedTextArea = () => {
   const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
     LMFeedCreatePostContext,
   );
-  useEffect(() => {
-    if (temporaryPost && textFieldRef?.current) {
-      textFieldRef.current.innerHTML = convertTextToHTML(
-        temporaryPost.text,
-      ).innerHTML;
-    }
+  // const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
+  function setCursorToTheEnd() {
     if (textFieldRef?.current) {
       // Setting the cursor at the end of the div
       textFieldRef.current.focus();
@@ -39,6 +36,25 @@ const LMFeedTextArea = () => {
         selection.addRange(range);
       }
     }
+  }
+  // useEffect(() => {
+  //   if (textFieldRef?.current && customEventClient) {
+  //     const eventL = customEventClient.createEventListener(() => {});
+  //     textFieldRef.current.addEventListener(
+  //       "click",
+  //       (() => console.log(this)).bind(eventL),
+  //     );
+  //   }
+  // }, [customEventClient, textFieldRef]);
+
+  useEffect(() => {
+    console.log("asdf");
+    if (temporaryPost && textFieldRef?.current) {
+      textFieldRef.current.innerHTML = convertTextToHTML(
+        temporaryPost.text,
+      ).innerHTML;
+    }
+    setCursorToTheEnd();
   }, [textFieldRef, temporaryPost]);
   return (
     <div ref={containerRef}>
@@ -63,7 +79,14 @@ const LMFeedTextArea = () => {
                   onClick={(e) => {
                     e.preventDefault();
 
-                    const focusNode = window.getSelection()!.focusNode;
+                    const selection = window.getSelection();
+                    console.log(selection);
+                    if (!selection) {
+                      return;
+                    }
+
+                    const focusNode = selection.focusNode;
+
                     if (focusNode === null) {
                       return;
                     }
@@ -99,7 +122,7 @@ const LMFeedTextArea = () => {
                     const anchorNode = document.createElement("a");
                     anchorNode.id = item?.id.toString();
                     anchorNode.href = "#";
-                    anchorNode.textContent = `@${item?.name.trim()}`;
+                    anchorNode.textContent = `@${item?.name.trim()} `;
                     anchorNode.contentEditable = "false";
                     const textNode2 = document.createTextNode(textNode2Text);
                     const dummyNode = document.createElement("span");
@@ -145,6 +168,28 @@ const LMFeedTextArea = () => {
         id="editableDiv"
         data-placeholder="Write something here..."
         className="lm-feed-create-post-text-area"
+        onKeyDown={(event) => {
+          // console.log(event);
+          if (event.key === "Enter") {
+            event.preventDefault();
+            //prevent the default behaviour (where the browser would add a new text node)
+            // document.execCommand("insertLineBreak");
+            // event.preventDefault();
+            console.log("Enter key pressed");
+            const selection = window.getSelection()!;
+            const range = selection.getRangeAt(0).cloneRange();
+            const p = document.createElement("p");
+            // const textNode = document.createTextNode("");
+            const br = document.createElement("br");
+            p.appendChild(br);
+            // p.style.height = "20px";
+            textFieldRef?.current?.appendChild(p);
+            range.setStart(p, 0);
+            range.setEnd(p, 0);
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        }}
         onInput={(event: React.KeyboardEvent<HTMLDivElement>) => {
           const selection = window.getSelection();
           setPostText!(event.currentTarget.textContent!);

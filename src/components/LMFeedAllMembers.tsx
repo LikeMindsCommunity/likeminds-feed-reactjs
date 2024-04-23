@@ -52,7 +52,9 @@ const LMFeedAllMembers = () => {
     fetchMembers(1);
     fetchMembers(2);
   }, [lmFeedclient]);
-
+  useEffect(() => {
+    console.log(pageCount);
+  }, [pageCount]);
   const getNextPage = () => {
     fetchMembers(pageCount + 1);
   };
@@ -73,7 +75,7 @@ const LMFeedAllMembers = () => {
           {members ? (
             members.map((member: Member) => (
               <div
-                key={member.id}
+                key={member.uuid}
                 className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"
               >
                 <div className="lm-member-wrapper__body__media__imgBox lm-avatar">
