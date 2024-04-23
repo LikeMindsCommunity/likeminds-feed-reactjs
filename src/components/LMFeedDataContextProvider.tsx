@@ -21,6 +21,7 @@ const LMFeedDataContextProvider = () => {
     deletePost,
     pinPost,
     likePost,
+    postComponentClickCustomCallback,
   } = useFetchFeeds();
   const { useParentRouter, routes } = useContext(GeneralContext);
   return (
@@ -36,6 +37,7 @@ const LMFeedDataContextProvider = () => {
         deletePost,
         pinPost,
         likePost,
+        postComponentClickCustomCallback,
       }}
     >
       {useParentRouter ? (

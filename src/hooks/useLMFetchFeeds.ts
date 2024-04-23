@@ -36,6 +36,10 @@ interface useFetchFeedsResponse {
   deletePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   likePost: (id: string) => Promise<void>;
+  postComponentClickCustomCallback?: (
+    // feedListStore: FeedListActionsAndDataStore,
+    event: React.MouseEvent<HTMLDivElement>,
+  ) => void;
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
@@ -47,7 +51,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   );
   const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
     useContext(GeneralContext);
-  const { FeedListCustomActions = {} } = useContext(CustomAgentProviderContext);
+  const { FeedListCustomActions = {}, postComponentClickCustomCallback } =
+    useContext(CustomAgentProviderContext);
   const { deletePostCustomAction, pinPostCustomAction, likePostCustomAction } =
     FeedListCustomActions;
   // to maintain the list of selected topics for rendering posts
@@ -447,5 +452,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     likePost: likePostCustomAction
       ? likePostCustomAction.bind(null, feedListActionsAndDataStore)
       : likePost,
+    postComponentClickCustomCallback: postComponentClickCustomCallback
+      ? postComponentClickCustomCallback.bind(null, feedListActionsAndDataStore)
+      : undefined,
   };
 }

@@ -11,7 +11,7 @@ import {
 } from "@likeminds.community/feed-js-beta";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
-import { RepliesActionAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import { RepliesActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
@@ -206,7 +206,7 @@ export const useReply: (
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.REPLY_POSTED);
   });
-  const repliesActionAndDataStore: RepliesActionAndDataStore = useMemo(() => {
+  const repliesActionAndDataStore: RepliesActionsAndDataStore = useMemo(() => {
     return {
       repliesDataStore: {
         reply,

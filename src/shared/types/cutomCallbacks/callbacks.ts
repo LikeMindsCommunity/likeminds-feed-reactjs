@@ -1,8 +1,9 @@
 import {
   FeedListActionsAndDataStore,
   FeedPostDetailsActionsAndDataStore,
-  PostCreationActionAndDataStore,
-  RepliesActionAndDataStore,
+  NotificationsActionsAndDataStore,
+  PostCreationActionsAndDataStore,
+  RepliesActionsAndDataStore,
   TopicsActionsAndDataStore,
 } from "./dataProvider";
 
@@ -55,7 +56,7 @@ export interface RepliesCustomActions {
 }
 
 export type RepliesCustomActionCallback = (
-  store: RepliesActionAndDataStore,
+  store: RepliesActionsAndDataStore,
   argumentOne: unknown,
 ) => Promise<void>;
 
@@ -65,5 +66,13 @@ export type PostCreationCustomActions = {
 };
 
 export type PostCreationCustomActionCallback = (
-  store: PostCreationActionAndDataStore,
+  store: PostCreationActionsAndDataStore,
 ) => Promise<void>;
+
+export interface NotificationsCustomActions {
+  handleNotificationCustomAction?: NotificationCustomActionCallback;
+}
+export type NotificationCustomActionCallback = (
+  store: NotificationsActionsAndDataStore,
+  argumentOne?: unknown,
+) => void;

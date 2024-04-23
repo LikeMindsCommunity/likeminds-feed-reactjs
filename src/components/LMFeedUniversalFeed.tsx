@@ -36,6 +36,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     deletePost,
     pinPost,
     likePost,
+    postComponentClickCustomCallback,
   } = useContext(LMFeedDataContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -62,6 +63,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             deletePost: deletePost,
             pinPost: pinPost,
             likePost: likePost,
+            postComponentClickCustomCallback,
           }}
         >
           {CustomComponents?.PostView || (
@@ -77,6 +79,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     feedUsersList,
     likePost,
     pinPost,
+    postComponentClickCustomCallback,
     topics,
   ]);
   useEffect(() => {

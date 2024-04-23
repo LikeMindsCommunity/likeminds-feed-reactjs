@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Activity } from "../shared/types/models/Activity";
 import { GetNotificationCountResponse } from "../shared/types/api-responses/getNotificationCount";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
@@ -11,7 +11,8 @@ import { GetNotificationResponse } from "../shared/types/api-responses/getNotifi
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { User } from "../shared/types/models/member";
-// import { NotificationsActionAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import { NotificationsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
 export function useLMFeedNotification(
   customEventClient: LMFeedCustomEvents,
@@ -75,6 +76,10 @@ export function useLMFeedNotification(
     },
     [lmFeedClient, notificationPage, notifications, users],
   );
+  const { NotificationsCustomCallbacks = {} } = useContext(
+    CustomAgentProviderContext,
+  );
+  const { handleNotificationCustomAction } = NotificationsCustomCallbacks;
   function handleNotification(id: string) {
     const notificationsCopy = [...notifications];
     const index = notificationsCopy.findIndex(
@@ -111,30 +116,47 @@ export function useLMFeedNotification(
       getNotifications();
     }
   }, [lmFeedClient]);
-  // const notificationsActionAndDataStore: NotificationsActionAndDataStore =
-  //   useMemo(() => {
-  //     return {
-  //       notificationsDataStore: {
-  //         notifications,
-  //         setNotifications,
-  //         users,
-  //         setUsers,
-  //         shouldLoadMoreNotifications,
-  //         setShouldLoadMoreNotifications,
-  //         notificationCount,
-  //         setNotificationCount,
-  //         notificationPage,
-  //         setNotificationPage,
-  //       },
-  //     };
-  //   });
+  const notificationsActionAndDataStore: NotificationsActionsAndDataStore =
+    useMemo(() => {
+      return {
+        notificationsDataStore: {
+          notifications,
+          setNotifications,
+          users,
+          setUsers,
+          shouldLoadMoreNotifications,
+          setShouldLoadMoreNotifications,
+          notificationCount,
+          setNotificationCount,
+          notificationPage,
+          setNotificationPage,
+        },
+        defaultActions: {
+          getNotifications,
+          handleNotification,
+        },
+      };
+    }, [
+      getNotifications,
+      handleNotification,
+      notificationCount,
+      notificationPage,
+      notifications,
+      shouldLoadMoreNotifications,
+      users,
+    ]);
   return {
     notifications,
     shouldLoadMoreNotifications,
     getNotifications,
     notificationCount,
     users,
-    handleNotification,
+    handleNotification: handleNotificationCustomAction
+      ? handleNotificationCustomAction.bind(
+          null,
+          notificationsActionAndDataStore,
+        )
+      : handleNotification,
   };
 }
 

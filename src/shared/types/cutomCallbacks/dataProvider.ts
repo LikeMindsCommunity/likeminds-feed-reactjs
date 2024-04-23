@@ -31,19 +31,19 @@ export interface TopicsActionsAndDataStore {
   defaultActions: TopicsDefaultAction;
 }
 
-export interface RepliesActionAndDataStore {
+export interface RepliesActionsAndDataStore {
   repliesDataStore: RepliesDataStore;
   applicationGeneralStore: ApplicationGeneralsStore;
   defaultActions: RepliesDefaultAction;
 }
 
-export interface PostCreationActionAndDataStore {
+export interface PostCreationActionsAndDataStore {
   postCreationDataStore: PostCreationDataStore;
   applicationGeneralStore: ApplicationGeneralsStore;
   defaultActions: PostCreationDefaultActions;
 }
 
-export interface NotificationsActionAndDataStore {
+export interface NotificationsActionsAndDataStore {
   notificationsDataStore: NotificationsDataStore;
   defaultActions: NotificationsDefaultActions;
 }

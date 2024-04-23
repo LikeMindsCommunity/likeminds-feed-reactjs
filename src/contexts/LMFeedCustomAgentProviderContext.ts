@@ -1,4 +1,4 @@
-import { CSSProperties, createContext } from "react";
+import React, { CSSProperties, createContext } from "react";
 import {
   LMPostBodyStyles,
   LMPostFooterStyles,
@@ -13,10 +13,13 @@ import {
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
   GeneralClickCallbacks,
+  NotificationsCustomActions,
   PostCreationCustomActions,
   RepliesCustomActions,
   TopicsCustomActions,
 } from "../shared/types/cutomCallbacks/callbacks";
+import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+// import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 
 export interface CustomAgentProviderInterface {
   likeActionCall?: () => void;
@@ -33,6 +36,11 @@ export interface CustomAgentProviderInterface {
   TopicsCustomCallbacks?: TopicsCustomActions;
   RepliesCustomCallbacks?: RepliesCustomActions;
   PostCreationCustomCallbacks?: PostCreationCustomActions;
+  NotificationsCustomCallbacks?: NotificationsCustomActions;
+  postComponentClickCustomCallback?: (
+    store: FeedListActionsAndDataStore,
+    event: React.MouseEvent<HTMLDivElement>,
+  ) => void;
 }
 export const CustomAgentProviderContext =
   createContext<CustomAgentProviderInterface>({});

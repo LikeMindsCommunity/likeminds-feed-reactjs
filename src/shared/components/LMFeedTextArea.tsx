@@ -5,6 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useTagging } from "../../hooks/useTagging";
 
 import { convertTextToHTML, setTagUserImage } from "../taggingParser";
+// import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
 
 const LMFeedTextArea = () => {
   const {
@@ -17,6 +18,7 @@ const LMFeedTextArea = () => {
   const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
     LMFeedCreatePostContext,
   );
+  // const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
   function setCursorToTheEnd() {
     if (textFieldRef?.current) {
       // Setting the cursor at the end of the div
@@ -35,6 +37,15 @@ const LMFeedTextArea = () => {
       }
     }
   }
+  // useEffect(() => {
+  //   if (textFieldRef?.current && customEventClient) {
+  //     const eventL = customEventClient.createEventListener(() => {});
+  //     textFieldRef.current.addEventListener(
+  //       "click",
+  //       (() => console.log(this)).bind(eventL),
+  //     );
+  //   }
+  // }, [customEventClient, textFieldRef]);
 
   useEffect(() => {
     console.log("asdf");

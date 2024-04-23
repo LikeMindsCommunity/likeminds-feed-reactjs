@@ -102,7 +102,10 @@ const LMFeedPostHeader = () => {
           entityId={post?.Id || ""}
         />
       </Dialog>
-      <div className="lm-feed-wrapper__card__header">
+      {/* <div
+        className="lm-feed-wrapper__card__header"
+        lm-feed-component-id={`lm-feed-post-wrapper-INSERT_RANDOM_STRING_HERE-${post?.Id}`}
+      >
         <div className="lm-flex-container">
           <div
             className="lm-avatar lm-mr-5"
@@ -198,6 +201,129 @@ const LMFeedPostHeader = () => {
                   onClick={onMenuItemClick}
                   id={menuItem?.id?.toString()}
                   key={menuItem?.id}
+                >
+                  {menuItem?.title}
+                </div>
+              );
+            })}
+          </Menu>
+        </div>
+      </div> */}
+      <div
+        className="lm-feed-wrapper__card__header"
+        lm-feed-component-id={`lm-feed-post-wrapper-abcde-${post?.Id}`}
+      >
+        <div className="lm-flex-container">
+          <div
+            className="lm-avatar lm-mr-5"
+            style={LMPostHeaderStyles?.avatar}
+            onClick={() => {
+              if (postHeaderAvatarClickCallback) {
+                postHeaderAvatarClickCallback(navigate);
+              }
+            }}
+            lm-feed-component-id={`lm-feed-post-wrapper-fghij-${post?.Id}`}
+          >
+            {avatarContent}
+          </div>
+          <div lm-feed-component-id={`lm-feed-post-wrapper-klmno-${post?.Id}`}>
+            <div
+              className="lm-feed-wrapper__card__header--title"
+              style={LMPostHeaderStyles?.title}
+              onClick={() => {
+                if (postHeaderTitleClickCallback) {
+                  postHeaderTitleClickCallback(navigate);
+                }
+              }}
+              lm-feed-component-id={`lm-feed-post-wrapper-pqrst-${post?.Id}`}
+            >
+              {name}{" "}
+              {customTitle ? (
+                <span
+                  style={LMPostHeaderStyles?.customTitle}
+                  onClick={() => {
+                    if (postHeaderCustomTitleClickCallback) {
+                      postHeaderCustomTitleClickCallback(navigate);
+                    }
+                  }}
+                  lm-feed-component-id={`lm-feed-post-wrapper-uvwxy-${post?.Id}`}
+                >
+                  {customTitle}
+                </span>
+              ) : null}
+            </div>
+            <div
+              className="lm-feed-wrapper__card__header--text"
+              lm-feed-component-id={`lm-feed-post-wrapper-zabcd-${post?.Id}`}
+            >
+              {isEdited ? (
+                <>
+                  <span
+                    className="edited"
+                    lm-feed-component-id={`lm-feed-post-wrapper-efghi-${post?.Id}`}
+                  >
+                    {formatTimeAgo(createdAt)}
+                  </span>
+                  <span
+                    className="lm-primary-text"
+                    style={LMPostHeaderStyles?.editBadge}
+                    lm-feed-component-id={`lm-feed-post-wrapper-jklmn-${post?.Id}`}
+                  >
+                    {LMPostHeaderStyles?.editBadgeCustomText
+                      ? LMPostHeaderStyles.editBadgeCustomText
+                      : EDITED}
+                  </span>
+                </>
+              ) : (
+                <>
+                  {LMPostHeaderStyles?.postBadgeText || POST}
+                  <span
+                    lm-feed-component-id={`lm-feed-post-wrapper-opqrs-${post?.Id}`}
+                  >
+                    {formatTimeAgo(createdAt)}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <div
+          className="lm-feed-wrapper__card__header__menu-items-container"
+          lm-feed-component-id={`lm-feed-post-wrapper-tuvwx-${post?.Id}`}
+        >
+          {isPinned ? (
+            <img
+              className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
+              src={pinIcon}
+              alt="3-dot-menu"
+              lm-feed-component-id={`lm-feed-post-wrapper-yzabc-${post?.Id}`}
+            />
+          ) : null}
+          <img
+            className="three-dot-menu-image lm-cursor-pointer"
+            src={threeDotMenuIcon}
+            alt="3-dot-menu"
+            onClick={(e) => {
+              setAnchor(e.currentTarget);
+            }}
+            lm-feed-component-id={`lm-feed-post-wrapper-defgh-${post?.Id}`}
+          />
+          <Menu
+            anchorEl={anchor}
+            open={Boolean(anchor)}
+            anchorOrigin={{ horizontal: "right", vertical: "top" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            onClose={() => setAnchor(null)}
+            lm-feed-component-id={`lm-feed-post-wrapper-ijklm-${post?.Id}`}
+          >
+            {menuItems?.map((menuItem) => {
+              return (
+                <div
+                  className="three-dot-menu-options lm-cursor-pointer lm-hover-effect"
+                  onClick={onMenuItemClick}
+                  id={menuItem?.id?.toString()}
+                  key={menuItem?.id}
+                  lm-feed-component-id={`lm-feed-post-wrapper-nopqr-${post?.Id}`}
                 >
                   {menuItem?.title}
                 </div>

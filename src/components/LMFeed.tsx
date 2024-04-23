@@ -44,6 +44,7 @@ function LMFeed({
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
   GeneralCustomCallbacks,
+  postComponentClickCustomCallback,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(accessToken, refreshToken, client, customEventClient);
@@ -77,6 +78,7 @@ function LMFeed({
           FeedListCustomActions,
           FeedPostDetailsCustomActions,
           GeneralCustomCallbacks,
+          postComponentClickCustomCallback,
         }}
       >
         <GeneralContext.Provider

@@ -29,7 +29,7 @@ import {
   AddPostResponse,
   EditPostResponse,
 } from "../shared/types/api-responses/addPostResponse";
-import { PostCreationActionAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import { PostCreationActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
@@ -388,7 +388,7 @@ export function useCreatePost(): UseCreatePost {
       resetStates();
     }
   }, [openCreatePostDialog]);
-  const postCreationActionAndDataStore: PostCreationActionAndDataStore =
+  const postCreationActionAndDataStore: PostCreationActionsAndDataStore =
     useMemo(() => {
       return {
         postCreationDataStore: {
