@@ -1,6 +1,6 @@
 .lm-feed-wrapper {
   background-color: $bg-color;
-  width: 100%; 
+  width: 100%;
   margin: 67px 0 0 0;
   justify-content: space-between;
   position: relative;
@@ -295,26 +295,6 @@
 }
 
 // Member list
-
-// Responsive Styles for different mobile screens
-@media (max-width: 767px) {
-  .lm-feed-wrapper__card {
-    border-radius: 0;
-    width: 415px;
-  }
-  .lm-member {
-    display: none;
-  }
-  .lm-feed-create-post-wrapper {
-    width: 21.75rem !important;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-}
 
 //  slick carousel css
 .slick-dots {
