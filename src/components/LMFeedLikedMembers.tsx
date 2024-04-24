@@ -26,7 +26,7 @@ const LMFeedLikedMembers = (props: any) => {
       const response: GetPostLikesResponse = (await lmFeedclient?.getPostLikes(
         GetPostLikesRequest.builder()
           .setpage(page)
-          .setpageSize(10)
+          .setpageSize(20)
           .setpostId(postId)
           .build(),
       )) as never;
@@ -34,17 +34,17 @@ const LMFeedLikedMembers = (props: any) => {
       if (response && response.data && response.data.likes) {
         if (response.data.likes.length > 0) {
           response.data.likes.map((like: any) => {
-            const user = response.data.users[like.uuid]; // Assuming the like's uuid matches the user's uuid
+            const user = response.data.users[like.uuid];
             if (!user) {
               throw new Error(`No user found with UUID: ${like.uuid}`);
             }
             return memberObj.push(user);
-            // return { like, user };
           });
 
           console.log(memberObj);
-          setMembers((memberObj) => [...memberObj]);
-          setPageCount(page); // set current page
+          setMembers(memberObj);
+          // setMembers((memberObj) => [...memberObj]);
+          setPageCount(page);
           setTotalMemberCounts(response.data.totalCount);
         }
 
@@ -73,7 +73,9 @@ const LMFeedLikedMembers = (props: any) => {
 
   return (
     <div className="lm-member-wrapper">
-      <div className="lm-member-wrapper__header">Likes</div>
+      <div className="lm-member-wrapper__header">
+        Likes ({totalMemberCounts})
+      </div>
       <div className="lm-member-wrapper__body" id="member-scroll-container">
         <InfiniteScroll
           dataLength={members ? members.length : 0}

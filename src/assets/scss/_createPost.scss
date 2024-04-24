@@ -2,8 +2,7 @@
 
 .lm-feed-create-post-wrapper {
   padding: pxToRem(20) pxToRem(36) pxToRem(36) pxToRem(36);
-  max-width: pxToRem(460);
-  width: 100%;
+  width: pxToRem(460);
   border-radius: pxToRem(16);
   position: relative;
   // min-height: pxToRem(388);
@@ -178,6 +177,8 @@
       font-size: pxToRem(16);
       line-height: pxToRem(20);
       font-weight: 400;
+      width: 100%;
+      cursor: text;
     }
   }
   &__footer {
