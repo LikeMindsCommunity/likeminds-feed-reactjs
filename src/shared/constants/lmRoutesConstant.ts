@@ -6,6 +6,6 @@ export const ROUTES = {
   TOPIC: "/topic/:topicId",
 };
 export enum LMAppRoutesConstant {
-  ROOT_PATHNAME = "/community",
-  POST_DETAILS_PATHNAME = "/community/post",
+  ROOT_PATHNAME = "community",
+  POST_DETAILS_PATHNAME = "community/post",
 }

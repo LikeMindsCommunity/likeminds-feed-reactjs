@@ -7,7 +7,6 @@ import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedDetails from "./LMFeedDetails";
-import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
 
 const LMFeedListDataContextProvider = () => {
   const {
@@ -76,7 +75,6 @@ const LMFeedListDataContextProvider = () => {
               </HelmetProvider>
             }
           ></Route>
-          <Route path={ROUTES.TOPIC} element={<LMFeedTopicFlatFeed />} />
         </Routes>
       )}
     </LMFeedDataContext.Provider>
