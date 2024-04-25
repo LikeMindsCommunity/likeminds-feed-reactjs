@@ -11,12 +11,12 @@ import { setTagUserImage } from "../taggingParser";
 import { useLMPostReply } from "../../hooks/useLMPostReply";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import { useParams } from "react-router-dom";
-
+export interface LMFeedReplyTextAreaProps {
+  setReplyViewVisibility?: React.Dispatch<boolean>;
+}
 const LMFeedReplyTextArea = ({
-  setOpenReplyText,
-}: {
-  setOpenReplyText?: React.Dispatch<boolean>;
-}) => {
+  setReplyViewVisibility,
+}: LMFeedReplyTextAreaProps) => {
   const { reply } = useContext(ReplyContext);
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const { id } = useParams();
@@ -37,9 +37,9 @@ const LMFeedReplyTextArea = ({
   } = useLMPostReply(id?.split("-")[0].toString() || "", reply?.Id || "");
 
   function postReplyAndCloseReplyText() {
-    if (setOpenReplyText) {
+    if (setReplyViewVisibility) {
       postReply();
-      setOpenReplyText(false);
+      setReplyViewVisibility(false);
     } else {
       postComment();
       while (textFieldRef.current?.firstChild) {

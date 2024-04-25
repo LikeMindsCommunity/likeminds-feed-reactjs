@@ -10,7 +10,7 @@ import {
 export interface FeedListCustomActions {
   deletePostCustomAction?: feedListCustomActionCallback;
   pinPostCustomAction?: feedListCustomActionCallback;
-
+  clickNavigationCustomAction?: feedListCustomActionCallback;
   likePostCustomAction?: feedListCustomActionCallback;
   commentPostCustomAction?: feedListCustomActionCallback;
 }
@@ -34,6 +34,7 @@ export interface FeedPostDetailsCustomActions {
   pinPostCustomAction?: feedPostDetailsCustomActionCallback;
   likePostCustomAction?: feedPostDetailsCustomActionCallback;
   likeReplyCustomAction?: feedPostDetailsCustomActionCallback;
+  clickNavigationCustomAction?: feedPostDetailsCustomActionCallback;
 }
 
 export type TopicsCustomActionCallback = (

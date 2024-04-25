@@ -4,13 +4,9 @@ import { formatTimeAgo } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
 import commentLiked from "../../assets/images/liked-sm.png";
 import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
-import { useNavigate, useParams } from "react-router-dom";
-import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
-import {
-  COMMENT_TILE_MODE,
-  LIKE,
-  LIKES,
-} from "../../shared/constants/lmAppConstant";
+import { useParams } from "react-router-dom";
+
+import { LIKE, LIKES } from "../../shared/constants/lmAppConstant";
 import LMFeedReplyTextArea from "../../shared/components/LMFeedReplyTextArea";
 import repliesThreeDotMenu from "../../assets/images/three-dot-menu-replies.svg";
 import { Dialog, Menu } from "@mui/material";
@@ -22,23 +18,17 @@ import LMFeedReplyEditTextArea from "../../shared/components/LMFeedReplyEditText
 import { parseAndReplaceTags } from "../../shared/taggingParser";
 import LMFeedDeleteDialogBox from "../lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../../shared/enums/lmDeleteDialogModes";
+import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
 
-interface LMFeedReplyInterface {
+export interface LMFeedReplyInterface {
   mode: string;
 }
 const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   const { reply, user, likeReply } = useContext(ReplyContext);
-  const { CustomCallbacks = {} } = useContext(CustomAgentProviderContext);
-  const {
-    // commentLikeActionCallback,
-    commentTextContentClickCallback,
-    commentUsernameClickCallback,
-    // replyLikeActionCallback,
-    repliesCountClickCallback,
-    replyTextContentClickCallback,
-    replyUsernameClickCallback,
-    replyActionButtonClickCallback,
-  } = CustomCallbacks;
+  const { LMFeedCustomIcons = {}, CustomComponents = {} } = useContext(
+    CustomAgentProviderContext,
+  );
+
   const { id = "" } = useParams();
 
   const { name } = user || {};
@@ -86,7 +76,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   function openReportDialog() {
     setOpenReportPostDialogBox(true);
   }
-  const navigate = useNavigate();
+
   function openThreeDotMenu(e: React.MouseEvent<HTMLImageElement>) {
     setThreeDotMenuAnchor(e.currentTarget);
   }
@@ -146,48 +136,20 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
       <div className="lm-social-action-bar__lmReply__userMeta lm-flex-direction">
         <div className="lm-social-action-bar__lmReply__userMeta__content lm-mb-5">
           {editMode ? (
-            <LMFeedReplyEditTextArea closeEditMode={closeEditMode} />
+            CustomComponents.CustomEditReplyTextArea ? (
+              <CustomComponents.CustomEditReplyTextArea
+                closeEditMode={closeEditMode}
+              />
+            ) : (
+              <LMFeedReplyEditTextArea closeEditMode={closeEditMode} />
+            )
           ) : (
             <>
               <div className="content-area">
-                <div
-                  className="lm-social-action-bar__lmReply__userMeta__content--name"
-                  onClick={() => {
-                    switch (mode) {
-                      case COMMENT_TILE_MODE: {
-                        if (commentUsernameClickCallback) {
-                          commentUsernameClickCallback(navigate);
-                        }
-                        break;
-                      }
-                      default: {
-                        if (replyUsernameClickCallback) {
-                          replyUsernameClickCallback(navigate);
-                        }
-                      }
-                    }
-                  }}
-                >
+                <div className="lm-social-action-bar__lmReply__userMeta__content--name">
                   {name}
                 </div>
-                <div
-                  className="lm-social-action-bar__lmReply__userMeta__content--title"
-                  onClick={() => {
-                    switch (mode) {
-                      case COMMENT_TILE_MODE: {
-                        if (commentTextContentClickCallback) {
-                          commentTextContentClickCallback(navigate);
-                        }
-                        break;
-                      }
-                      default: {
-                        if (replyTextContentClickCallback) {
-                          replyTextContentClickCallback(navigate);
-                        }
-                      }
-                    }
-                  }}
-                >
+                <div className="lm-social-action-bar__lmReply__userMeta__content--title">
                   {parseAndReplaceTags(reply?.text || "")}
                 </div>
               </div>
@@ -202,57 +164,36 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
         </div>
         <div className="lm-d-flex lm-justify-content-space-between lm-align-items-center lm-mb-5">
           <div className="like lm-d-flex">
-            {reply?.isLiked ? (
-              <img
-                src={commentLiked}
-                className="lm-cursor-pointer liked-comment"
-                alt="Like"
-                onClick={() => {
-                  // switch (mode) {
-                  //   case COMMENT_TILE_MODE: {
-                  //     if (commentLikeActionCallback) {
-                  //       commentLikeActionCallback(navigate);
-                  //     }
-                  //     break;
-                  //   }
-                  //   default: {
-                  //     if (replyLikeActionCallback) {
-                  //       replyLikeActionCallback(navigate);
-                  //     }
-                  //   }
-                  // }
-                  if (likeReply) {
-                    likeReply(reply?.Id || "");
-                  }
-                }}
-                loading="lazy"
-              />
-            ) : (
-              <img
-                src={likeIcon}
-                className="lm-cursor-pointer"
-                alt="Like"
-                onClick={() => {
-                  // switch (mode) {
-                  //   case COMMENT_TILE_MODE: {
-                  //     if (commentLikeActionCallback) {
-                  //       commentLikeActionCallback(navigate);
-                  //     }
-                  //     break;
-                  //   }
-                  //   default: {
-                  //     if (replyLikeActionCallback) {
-                  //       replyLikeActionCallback(navigate);
-                  //     }
-                  //   }
-                  // }
-                  if (likeReply) {
-                    likeReply(reply?.Id || "");
-                  }
-                }}
-                loading="lazy"
-              />
-            )}
+            <span
+              className="lm-feed-post-like-container"
+              onClick={() => {
+                if (likeReply) {
+                  likeReply(reply?.Id || "");
+                }
+              }}
+            >
+              {reply?.isLiked ? (
+                LMFeedCustomIcons.repliesLikesLikedCustomIcon ? (
+                  <LMFeedCustomIcons.repliesLikesLikedCustomIcon />
+                ) : (
+                  <img
+                    src={commentLiked}
+                    className="lm-cursor-pointer liked-comment"
+                    alt="Like"
+                    loading="lazy"
+                  />
+                )
+              ) : LMFeedCustomIcons.repliesLikesNormalCustomIcon ? (
+                <LMFeedCustomIcons.repliesLikesNormalCustomIcon />
+              ) : (
+                <img
+                  src={likeIcon}
+                  className="lm-cursor-pointer"
+                  alt="Like"
+                  loading="lazy"
+                />
+              )}
+            </span>
 
             {reply?.likesCount ? (
               <span>
@@ -272,9 +213,6 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                 <span
                   className="reply-badge lm-cursor-pointer"
                   onClick={() => {
-                    if (replyActionButtonClickCallback) {
-                      replyActionButtonClickCallback(navigate);
-                    }
                     setOpenReplyText(!openReplyText);
                   }}
                 >
@@ -292,9 +230,6 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                       : "replies lm-cursor-pointer commentTitle"
                 }
                 onClick={() => {
-                  if (repliesCountClickCallback) {
-                    repliesCountClickCallback(navigate);
-                  }
                   setOpenReplies((current) => !current);
                 }}
               >
@@ -312,17 +247,24 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
         </div>
         {openReplyText ? (
           <div className="lm-d-flex lm-flex-grow lm-align-items-center lm-mb-5 lm-feed-reply">
-            <LMFeedReplyTextArea setOpenReplyText={setOpenReplyText} />
+            {CustomComponents.CustomPostReplyTextArea ? (
+              <CustomComponents.CustomPostReplyTextArea
+                setReplyViewVisibility={setOpenReplyText}
+              />
+            ) : (
+              <LMFeedReplyTextArea setReplyViewVisibility={setOpenReplyText} />
+            )}
           </div>
         ) : null}
       </div>
       <div className="lm-social-action-bar__lmReply__commentsScroller">
-        {openReplies && (
-          <LMFeedRepliesScroller
-            postId={id.split("-")[0]}
-            replyId={reply?.Id || ""}
-          />
-        )}
+        {openReplies &&
+          (CustomComponents.CustomRepliesScroller || (
+            <LMFeedRepliesScroller
+              postId={id.split("-")[0]}
+              replyId={reply?.Id || ""}
+            />
+          ))}
       </div>
     </div>
   );

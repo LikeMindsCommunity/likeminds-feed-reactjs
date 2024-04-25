@@ -37,9 +37,13 @@ const getAvatar = ({ imageUrl, name, onError }: AvatarProps): JSX.Element => {
       onError={handleImageError}
       alt="avatar"
       loading="lazy"
+      lm-feed-component-id={`lm-feed-user-avatar-opqrs-${imageUrl}`}
     />
   ) : (
-    <div className="avatar-initials lm-flex-container lm-justify-content-center lm-align-items-center">
+    <div
+      lm-feed-component-id={`lm-feed-post-wrapper-tuvwx-${imageUrl}`}
+      className="avatar-initials lm-flex-container lm-justify-content-center lm-align-items-center"
+    >
       {name ? getInitials(name) : ""}
     </div>
   );

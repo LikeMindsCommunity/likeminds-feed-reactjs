@@ -3,17 +3,14 @@ import { parseAndReplaceTags, textPreprocessor } from "../shared/taggingParser";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedAttachments from "../shared/components/LMFeedAttachments";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { useNavigate } from "react-router-dom";
 
 const LMFeedPostBody = () => {
   const { post } = useContext(FeedPostContext);
   const { text, attachments, heading } = post!;
-  const { LMPostBodyStyles, CustomCallbacks = {} } = useContext(
-    CustomAgentProviderContext,
-  );
+  const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
+  const { CustomPostViewAttachment } = CustomComponents;
   const [hasReadMoreTapped, setHasReadMoreTapped] = useState<boolean>(false);
-  const navigate = useNavigate();
-  const { postHeadingClickCallback } = CustomCallbacks;
+
   // Render attachments
   const renderAttachments = useCallback(() => {
     // return null;
@@ -22,12 +19,22 @@ const LMFeedPostBody = () => {
     return (
       <div
         className="attachments"
-        lm-feed-component-id={`lm-feed-post-wrapper-dn2pl-${post?.Id}`}
+        lm-feed-component-id={`lm-feed-post-body-dn2pl-${post?.Id}`}
       >
-        <LMFeedAttachments attachments={attachments} />
+        {CustomPostViewAttachment ? (
+          <CustomPostViewAttachment
+            postId={post?.Id || ""}
+            attachments={attachments}
+          />
+        ) : (
+          <LMFeedAttachments
+            postId={post?.Id || ""}
+            attachments={attachments}
+          />
+        )}
       </div>
     );
-  }, [attachments, post?.Id]);
+  }, [CustomPostViewAttachment, attachments, post?.Id]);
 
   return (
     // <div className="lm-feed-wrapper__card__body">
@@ -95,7 +102,7 @@ const LMFeedPostBody = () => {
     // </div>
     <div
       className="lm-feed-wrapper__card__body"
-      lm-feed-component-id={`lm-feed-post-wrapper-vwxyz-${post?.Id}`}
+      lm-feed-component-id={`lm-feed-post-body-vwxyz-${post?.Id}`}
     >
       {heading.length > 0 && (
         <h1
@@ -104,20 +111,8 @@ const LMFeedPostBody = () => {
             cursor: !window.location.pathname.includes("/post")
               ? "pointer"
               : undefined,
-            ...LMPostBodyStyles?.heading,
           }}
-          onClick={() => {
-            if (postHeadingClickCallback) {
-              postHeadingClickCallback(navigate);
-            } else {
-              if (!window.location.pathname.includes("/post")) {
-                navigate(
-                  `/community/post/${`${post?.Id}-${post?.heading}`.substring(0, 59)}`,
-                );
-              }
-            }
-          }}
-          lm-feed-component-id={`lm-feed-post-wrapper-abcde-${post?.Id}`}
+          lm-feed-component-id={`lm-feed-post-body-abcde-${post?.Id}`}
         >
           {heading}
         </h1>
@@ -126,8 +121,7 @@ const LMFeedPostBody = () => {
       {text ? (
         <div
           className="lm-feed-wrapper__card__body__content"
-          style={LMPostBodyStyles?.content}
-          lm-feed-component-id={`lm-feed-post-wrapper-fghij-${post?.Id}`}
+          lm-feed-component-id={`lm-feed-post-body-fghij-${post?.Id}`}
         >
           {(() => {
             const processedText = textPreprocessor(text);
@@ -144,7 +138,7 @@ const LMFeedPostBody = () => {
                       fontSize: "14px",
                     }}
                     onClick={() => setHasReadMoreTapped(true)}
-                    lm-feed-component-id={`lm-feed-post-wrapper-klmno-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-body-klmno-${post?.Id}`}
                   >
                     ...ReadMore
                   </span>
@@ -159,7 +153,7 @@ const LMFeedPostBody = () => {
       {/* post text */}
       <div
         className="lm-feed-wrapper__card__body__attachment"
-        lm-feed-component-id={`lm-feed-post-wrapper-pqrst-${post?.Id}`}
+        lm-feed-component-id={`lm-feed-post-body-pqrst-${post?.Id}`}
       >
         {renderAttachments()}
       </div>

@@ -11,14 +11,16 @@ const customEventClient = new LMFeedCustomEvents();
 
 const likePostCustomCallback: feedListCustomActionCallback = async (
   _store,
-  _id,
+  // _id,
 ) => {
   console.log(_store);
   // const feedCopy = [..._store.feedListDataStore.feedList]
-  _store.defaultActions.pinPost(_id as string);
+  // _store.defaultActions.pinPost(_id as string);
   // _store.feedListDataStore.setFeedList([]);
 
-  _store.applicationGeneralsStore.generalDataStore.displaySnackbarMessage!("");
+  _store.applicationGeneralsStore.generalDataStore.displaySnackbarMessage!(
+    "hello",
+  );
   // _store.defaultActions.pinPost(_id as string);
 };
 const customClickFunction = (
@@ -33,10 +35,8 @@ const customClickFunction = (
   const isPinIcon = clickedElementAttribute?.split("-")[4];
   console.log(isPinIcon);
   if (isPinIcon === "yzabc") {
-    console.log("Target Element Clicked");
+    console.log("Target Element Clickejd");
   }
-  // console.log(e);
-  // console.log((e.target as HTMLElement).getAttribute("lm-feed-component-id"));
 };
 // ReactDOM.createRoot(document.getElementById("root")!).render(
 //   <div className="lm-wrapper">
@@ -63,17 +63,18 @@ const customClickFunction = (
 // );
 ReactDOM.createRoot(document.getElementById("root")!).render(<ReactApp />);
 
-function ReactApp() {
+export function ReactApp() {
   return (
     <div className="lm-wrapper">
       <LMFeedNotificationHeader customEventClient={customEventClient} />
       <LMFeed
-        FeedPostDetailsCustomActions={{
-          likePostCustomAction: async (store, _argTwo) => {
-            console.log(_argTwo);
-            console.log(store);
-          },
-        }}
+        // FeedPostDetailsCustomActions={{
+        //   likePostCustomAction: async (store, _argTwo) => {
+        //     console.log(_argTwo);
+        //     console.log(store);
+        //   },
+        // }}
+
         postComponentClickCustomCallback={customClickFunction}
         FeedListCustomActions={{
           likePostCustomAction: likePostCustomCallback,

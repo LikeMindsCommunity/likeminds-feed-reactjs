@@ -30,7 +30,7 @@ const LMFeedCommentsScroller = () => {
           }}
           key={reply.Id}
         >
-          {CustomComponents?.Reply || (
+          {CustomComponents?.CustomReply || (
             <LMFeedReply mode={LMFeedReplyMode.COMMENT} />
           )}
         </ReplyContext.Provider>

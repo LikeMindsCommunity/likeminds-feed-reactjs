@@ -77,6 +77,7 @@ const LMFeedAllMembers = () => {
               <div
                 key={member.uuid}
                 className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"
+                lm-feed-component-id={`lm-feed-member-wrapper-klmno-${member?.uuid}`}
               >
                 <div className="lm-member-wrapper__body__media__imgBox lm-avatar">
                   {getAvatar({

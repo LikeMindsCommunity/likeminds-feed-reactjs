@@ -7,19 +7,20 @@ import {
   CustomAgentProviderContext,
   CustomAgentProviderInterface,
 } from "../contexts/LMFeedCustomAgentProviderContext";
-import { RouteModifiers } from "../shared/types/customProps/routes";
+import { LMFeedCustomAppRoutes } from "../shared/types/customProps/routes";
 import "../assets/scss/styles.scss";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { pdfjs } from "react-pdf";
 import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContextProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import LMFeedDataContextProvider from "./LMFeedDataContextProvider";
+import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
-  routes?: RouteModifiers[];
+  routes?: LMFeedCustomAppRoutes;
   useParentRouter?: boolean;
   accessToken: string;
   refreshToken: string;
@@ -31,14 +32,14 @@ function LMFeed({
   refreshToken,
   client,
   likeActionCall,
-  topicBlocksWrapperStyles,
+
   LMPostHeaderStyles,
-  LMPostFooterStyles,
-  LMPostTopicStyles,
+  LMFeedCustomIcons: LMPostFooterStyles,
+
   routes,
-  LMPostBodyStyles,
+
   CustomComponents,
-  CustomCallbacks,
+
   useParentRouter = false,
   customEventClient,
   FeedListCustomActions,
@@ -68,13 +69,12 @@ function LMFeed({
       <CustomAgentProviderContext.Provider
         value={{
           likeActionCall: likeActionCall,
-          topicBlocksWrapperStyles,
+
           LMPostHeaderStyles,
-          LMPostFooterStyles,
-          LMPostBodyStyles,
-          LMPostTopicStyles,
+          LMFeedCustomIcons: LMPostFooterStyles,
+
           CustomComponents,
-          CustomCallbacks,
+
           FeedListCustomActions,
           FeedPostDetailsCustomActions,
           GeneralCustomCallbacks,
@@ -98,7 +98,13 @@ function LMFeed({
               logoutUser: logoutUser,
             }}
           >
-            <LMFeedDataContextProvider />
+            {!useParentRouter ? (
+              <BrowserRouter>
+                <LMFeedListDataContextProvider />
+              </BrowserRouter>
+            ) : (
+              <LMFeedListDataContextProvider />
+            )}
           </UserProviderContext.Provider>
         </GeneralContext.Provider>
       </CustomAgentProviderContext.Provider>

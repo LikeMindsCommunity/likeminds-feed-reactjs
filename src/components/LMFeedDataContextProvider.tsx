@@ -2,14 +2,14 @@ import React, { useContext } from "react";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedDetails from "./LMFeedDetails";
 import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
 
-const LMFeedDataContextProvider = () => {
+const LMFeedListDataContextProvider = () => {
   const {
     topics,
     selectedTopics,
@@ -22,8 +22,24 @@ const LMFeedDataContextProvider = () => {
     pinPost,
     likePost,
     postComponentClickCustomCallback,
+    clickNavigator,
   } = useFetchFeeds();
-  const { useParentRouter, routes } = useContext(GeneralContext);
+  const { routes } = useContext(GeneralContext);
+  function renderCustomRoutes() {
+    if (!routes) {
+      return null;
+    }
+    const routeKeys = Object.keys(routes);
+    return routeKeys.map((routeKey) => {
+      const { pathname, params, element } = routes[routeKey];
+      const route = pathname.concat(
+        params.reduce((accumulatedRoute, currentParam) =>
+          accumulatedRoute.concat(`/:${currentParam}`),
+        ),
+      );
+      return <Route key={route} path={route} element={element} />;
+    });
+  }
   return (
     <LMFeedDataContext.Provider
       value={{
@@ -31,6 +47,7 @@ const LMFeedDataContextProvider = () => {
         selectedTopics,
         setSelectedTopics,
         loadMoreFeeds,
+        clickNavigator,
         feedList,
         feedUsersList,
         getNextPage,
@@ -40,70 +57,30 @@ const LMFeedDataContextProvider = () => {
         postComponentClickCustomCallback,
       }}
     >
-      {useParentRouter ? (
+      {routes ? (
         <>
-          {routes ? (
-            <>
-              <Routes>
-                {routes.map((routeObject) => (
-                  <Route key={routeObject.route} path={routeObject.route} />
-                ))}
-              </Routes>
-            </>
-          ) : (
-            <Routes>
-              <Route
-                path={ROUTES.ROOT_PATH}
-                element={<LMFeedUniversalFeed />}
-              ></Route>
-
-              <Route
-                path={ROUTES.POST_DETAIL}
-                element={
-                  <HelmetProvider>
-                    <LMFeedDetails />
-                  </HelmetProvider>
-                }
-              ></Route>
-              <Route path={ROUTES.TOPIC} element={<LMFeedTopicFlatFeed />} />
-            </Routes>
-          )}
+          <Routes>{renderCustomRoutes()}</Routes>
         </>
       ) : (
-        <BrowserRouter>
-          {routes ? (
-            <>
-              <Routes>
-                {routes.map((routeObject) => (
-                  <Route
-                    path={routeObject.route}
-                    element={routeObject.element}
-                  />
-                ))}
-              </Routes>
-            </>
-          ) : (
-            <Routes>
-              <Route
-                path={ROUTES.ROOT_PATH}
-                element={<LMFeedUniversalFeed />}
-              ></Route>
+        <Routes>
+          <Route
+            path={ROUTES.ROOT_PATH}
+            element={<LMFeedUniversalFeed />}
+          ></Route>
 
-              <Route
-                path={ROUTES.POST_DETAIL}
-                element={
-                  <HelmetProvider>
-                    <LMFeedDetails />
-                  </HelmetProvider>
-                }
-              ></Route>
-              <Route path={ROUTES.TOPIC} element={<LMFeedTopicFlatFeed />} />
-            </Routes>
-          )}
-        </BrowserRouter>
+          <Route
+            path={ROUTES.POST_DETAIL}
+            element={
+              <HelmetProvider>
+                <LMFeedDetails />
+              </HelmetProvider>
+            }
+          ></Route>
+          <Route path={ROUTES.TOPIC} element={<LMFeedTopicFlatFeed />} />
+        </Routes>
       )}
     </LMFeedDataContext.Provider>
   );
 };
 
-export default LMFeedDataContextProvider;
+export default LMFeedListDataContextProvider;

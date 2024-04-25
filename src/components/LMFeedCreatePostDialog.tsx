@@ -14,6 +14,7 @@ import { Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 import { CREATE_POST, EDIT_POST } from "../shared/constants/lmAppConstant";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -32,6 +33,8 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     setOpenCreatePostDialog,
     ogTag,
   } = useContext(LMFeedCreatePostContext);
+  const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
+  const { CustomTopicDropDown } = CustomComponents;
   return (
     <div className="lm-feed-create-post-wrapper">
       <div className="lm-feed-create-post-wrapper__dialog-heading">
@@ -56,18 +59,20 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         </div>
         <div>{currentUser?.name}</div>
       </div>
-      <LMFeedViewTopicDropdown
-        mode={
-          temporaryPost ? TopicsDropdownMode.edit : TopicsDropdownMode.modify
-        }
-        setSelectedTopicsIds={setSelectedTopicIds}
-        selectedTopicIds={selectedTopicIds}
-        preSelectedTopics={preSelectedTopics}
-        setPreSelectedTopics={setPreSelectedTopics}
-      />
+      {CustomTopicDropDown || (
+        <LMFeedViewTopicDropdown
+          mode={
+            temporaryPost ? TopicsDropdownMode.edit : TopicsDropdownMode.modify
+          }
+          setSelectedTopicsIds={setSelectedTopicIds}
+          selectedTopicIds={selectedTopicIds}
+          preSelectedTopics={preSelectedTopics}
+          setPreSelectedTopics={setPreSelectedTopics}
+        />
+      )}
       <Divider className="lm-feed-create-post-topic-text-area-divider" />
       <div className="lm-textarea">
-        <LMFeedTextArea />
+        {CustomComponents.CustomCreatePostTextArea || <LMFeedTextArea />}
       </div>
 
       {showOGTagViewContainer &&

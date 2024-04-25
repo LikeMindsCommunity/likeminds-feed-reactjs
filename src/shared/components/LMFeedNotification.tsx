@@ -11,7 +11,10 @@ import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
 // import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
 // import threeDotMenuIcon from "../../";
-const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
+const LMFeedNotification = ({
+  customEventClient,
+  NotificationBellCustomIcon,
+}: LMFeedNotificationProps) => {
   const {
     notificationCount,
     notifications,
@@ -22,7 +25,6 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
   } = useLMFeedNotification(customEventClient);
   const [notificationAnchor, setNotificationAnchor] =
     useState<HTMLElement | null>(null);
-  const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null);
 
   function renderNotification() {
     return (
@@ -31,14 +33,23 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
         anchorEl={notificationAnchor}
         onClose={() => setNotificationAnchor(null)}
       >
-        <div className="lm-feed-activity-wrapper" id="scroller">
+        <div
+          className="lm-feed-activity-wrapper"
+          id="scroller"
+          lm-feed-component-id={`lm-feed-notifications-wrapper-yzabc`}
+        >
           {notifications.length > 0 ? (
             <>
-              <div className="lm-feed-activity-wrapper__title">
+              <div
+                className="lm-feed-activity-wrapper__title"
+                lm-feed-component-id={`lm-feed-notifications-wrapper-defgh`}
+              >
                 Notification
               </div>
-
-              <div className="notificationBody">
+              <div
+                className="notificationBody"
+                lm-feed-component-id={`lm-feed-notifications-wrapper-ijklm`}
+              >
                 <InfiniteScroll
                   dataLength={notifications.length + 1}
                   hasMore={shouldLoadMoreNotifications}
@@ -48,57 +59,42 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
                 >
                   {notifications.map((activity: Activity) => {
                     const { imageUrl, name } = users[activity?.actionBy[0]];
-                    const avatar = getAvatar({
-                      imageUrl,
-                      name,
-                    });
+                    const avatar = getAvatar({ imageUrl, name });
                     return (
                       <div
                         key={activity?.Id}
                         className={`lm-feed-activity-wrapper__activity-item lm-cursor-pointer ${!activity.isRead ? "non-interacted-activity" : ""} lm-hover-effect`}
                         onClick={() => handleNotification(activity.Id)}
+                        lm-feed-component-id={`lm-feed-notifications-wrapper-nopqr-${activity.Id}`}
                       >
-                        <div className="user-image">{avatar}</div>
-                        <div className="notification-content">
+                        <div
+                          className="user-image"
+                          lm-feed-component-id={`lm-feed-notifications-wrapper-stuvw-${activity.Id}`}
+                        >
+                          {avatar}
+                        </div>
+                        <div
+                          className="notification-content"
+                          lm-feed-component-id={`lm-feed-notifications-wrapper-xyzab-${activity.Id}`}
+                        >
                           <div
                             className="notification-text"
                             dangerouslySetInnerHTML={{
                               __html: convertTextToHTML(activity?.activityText)
                                 ?.innerHTML,
                             }}
+                            lm-feed-component-id={`lm-feed-notifications-wrapper-cdefg-${activity.Id}`}
                           ></div>
-                          <div className="notification-time-before">
+                          <div
+                            className="notification-time-before"
+                            lm-feed-component-id={`lm-feed-notifications-wrapper-hijkl-${activity.Id}`}
+                          >
                             {dayjs(activity?.updatedAt).fromNow()}
                           </div>
                         </div>
-                        <div>
-                          {/* <img
-                            className="three-dot-menu-image lm-cursor-pointer"
-                            src={threeDotMenuIcon}
-                            alt="3-dot-menu"
-                            
-                          /> */}
-                          {/* <IconButton
-                          onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                            setMenuAnchor(e.currentTarget)
-                          }>
-                          <MoreVertIcon />
-                        </IconButton> */}
-                        </div>
-
-                        <Menu
-                          open={Boolean(menuAnchor)}
-                          onClose={() => setMenuAnchor(null)}
-                          anchorEl={menuAnchor}
-                          className="menu-block"
-                        >
-                          <div className="menu-block-item">
-                            Remove this notification
-                          </div>
-                          <div className="menu-block-item">
-                            Mute this notification
-                          </div>
-                        </Menu>
+                        <div
+                          lm-feed-component-id={`lm-feed-notifications-wrapper-mnopq-${activity.Id}`}
+                        ></div>
                       </div>
                     );
                   })}
@@ -106,9 +102,18 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
               </div>
             </>
           ) : (
-            <div className="lmNoNotification noNotifications lm-d-flex">
-              <div>
-                <img src={noNotifications} alt="default image" />
+            <div
+              className="lmNoNotification noNotifications lm-d-flex"
+              lm-feed-component-id={`lm-feed-no-notifications-wrapper-rstuw`}
+            >
+              <div
+                lm-feed-component-id={`lm-feed-no-notifications-wrapper-vwxyz`}
+              >
+                <img
+                  src={noNotifications}
+                  alt="default image"
+                  lm-feed-component-id={`lm-feed-no-notifications-wrapper-abcde`}
+                />
               </div>
               Oops! You do not have any no notifications yet.
             </div>
@@ -119,17 +124,25 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
     );
   }
   return (
-    <span>
+    <span className="lm-feed-notification-badge">
       <Badge badgeContent={notificationCount.toString()} color="error">
-        <img
-          src={notificationBell}
-          alt="notification"
-          className="lm-cursor-pointer"
+        <span
           onClick={(e) => {
             setNotificationAnchor(e.currentTarget);
           }}
-        />
+        >
+          {NotificationBellCustomIcon ? (
+            <NotificationBellCustomIcon />
+          ) : (
+            <img
+              src={notificationBell}
+              alt="notification"
+              className="lm-cursor-pointer"
+            />
+          )}
+        </span>
       </Badge>
+
       {renderNotification()}
     </span>
   );
@@ -137,6 +150,7 @@ const LMFeedNotification = ({ customEventClient }: LMFeedNotificationProps) => {
 
 interface LMFeedNotificationProps {
   customEventClient: LMFeedCustomEvents;
+  NotificationBellCustomIcon?: () => JSX.Element;
 }
 
 export default LMFeedNotification;

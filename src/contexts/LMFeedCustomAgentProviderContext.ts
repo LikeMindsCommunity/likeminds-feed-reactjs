@@ -1,14 +1,9 @@
-import React, { CSSProperties, createContext } from "react";
+import React, { createContext } from "react";
 import {
-  LMPostBodyStyles,
-  LMPostFooterStyles,
+  LMFeedCustomIcons,
   LMPostHeaderStyles,
-  LMPostTopicsStyles,
 } from "../shared/types/customProps/styleProps";
-import {
-  CustomCallbacks,
-  CustomComponents,
-} from "../shared/types/customProps/customComponentsProps";
+import { CustomComponents } from "../shared/types/customProps/customComponentsProps";
 import {
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
@@ -19,17 +14,12 @@ import {
   TopicsCustomActions,
 } from "../shared/types/cutomCallbacks/callbacks";
 import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
-// import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 
 export interface CustomAgentProviderInterface {
   likeActionCall?: () => void;
-  topicBlocksWrapperStyles?: CSSProperties;
   LMPostHeaderStyles?: LMPostHeaderStyles;
-  LMPostBodyStyles?: LMPostBodyStyles;
-  LMPostFooterStyles?: LMPostFooterStyles;
-  LMPostTopicStyles?: LMPostTopicsStyles;
+  LMFeedCustomIcons?: LMFeedCustomIcons;
   CustomComponents?: CustomComponents;
-  CustomCallbacks?: CustomCallbacks;
   FeedListCustomActions?: FeedListCustomActions;
   FeedPostDetailsCustomActions?: FeedPostDetailsCustomActions;
   GeneralCustomCallbacks?: GeneralClickCallbacks;

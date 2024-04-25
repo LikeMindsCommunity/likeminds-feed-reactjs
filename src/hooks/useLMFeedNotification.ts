@@ -80,19 +80,24 @@ export function useLMFeedNotification(
     CustomAgentProviderContext,
   );
   const { handleNotificationCustomAction } = NotificationsCustomCallbacks;
-  function handleNotification(id: string) {
-    const notificationsCopy = [...notifications];
-    const index = notificationsCopy.findIndex(
-      (notification) => notification.Id === id,
-    );
-    const clickedNotification = notificationsCopy[index];
-    if (!clickedNotification.isRead) {
-      clickedNotification.isRead = true;
-    }
-    markReadNotification(id);
-    window.location.href = `community/post/${clickedNotification.activityEntityData.Id}`;
-    setNotifications(notificationsCopy);
-  }
+  const handleNotification = useCallback(
+    (id: string) => {
+      const notificationsCopy = [...notifications];
+      const index = notificationsCopy.findIndex(
+        (notification) => notification.Id === id,
+      );
+      const clickedNotification = notificationsCopy[index];
+      if (!clickedNotification.isRead) {
+        clickedNotification.isRead = true;
+      }
+      markReadNotification(id);
+
+      window.location.href = `/community/post/${clickedNotification.activityEntityData.Id}`;
+
+      setNotifications(notificationsCopy);
+    },
+    [markReadNotification, notifications],
+  );
   useEffect(() => {
     if (lmFeedClient) {
       getNotificationCount();

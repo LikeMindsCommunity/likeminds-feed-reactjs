@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
 import { PDF, PHOTO, POST, VIDEO } from "../shared/constants/lmAppConstant";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
 }
@@ -18,6 +19,9 @@ const LMFeedCreatePost = ({
   showStarterComponent,
 }: LMFeedCreatePostInterface) => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
+  const { LMFeedCustomIcons, CustomComponents = {} } = useContext(
+    CustomAgentProviderContext,
+  );
   const { name, imageUrl } = currentUser!;
   const avatar = getAvatar({
     imageUrl,
@@ -112,7 +116,11 @@ const LMFeedCreatePost = ({
                   }}
                 >
                   <div className="lm-createPost__footer__left__media--imgBox">
-                    <img src={photo} alt="image" />
+                    {LMFeedCustomIcons?.createPostFooterImageIcon ? (
+                      <LMFeedCustomIcons.createPostFooterImageIcon />
+                    ) : (
+                      <img src={photo} alt="image icons" />
+                    )}
                   </div>
                   <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
                     {PHOTO}
@@ -128,7 +136,11 @@ const LMFeedCreatePost = ({
                   }}
                 >
                   <div className="lm-createPost__footer__left__media--imgBox">
-                    <img src={video} alt="video" />
+                    {LMFeedCustomIcons?.createPostFooterVideoIcon ? (
+                      <LMFeedCustomIcons.createPostFooterVideoIcon />
+                    ) : (
+                      <img src={video} alt="video icon" />
+                    )}
                   </div>
                   <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
                     {VIDEO}
@@ -144,7 +156,11 @@ const LMFeedCreatePost = ({
                   }}
                 >
                   <div className="lm-createPost__footer__left__media--imgBox">
-                    <img src={pdf} alt="pdf" />
+                    {LMFeedCustomIcons?.createPostFooterDocumentIcon ? (
+                      <LMFeedCustomIcons.createPostFooterDocumentIcon />
+                    ) : (
+                      <img src={pdf} alt="pdf" />
+                    )}
                   </div>
                   <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
                     {PDF}
@@ -172,7 +188,7 @@ const LMFeedCreatePost = ({
           setOpenCreatePostDialog(false);
         }}
       >
-        <LMFeedCreatePostDialog />
+        {CustomComponents.CustomCreatePostDialog || <LMFeedCreatePostDialog />}
       </Dialog>
     </LMFeedCreatePostContext.Provider>
   );

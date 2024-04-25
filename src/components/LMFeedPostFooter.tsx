@@ -14,32 +14,33 @@ import {
   LIKES,
 } from "../shared/constants/lmAppConstant";
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
-import { useNavigate } from "react-router-dom";
+
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
 import { Divider } from "@mui/material";
 
 const LMFeedPostFooter = () => {
-  const { post, likePost } = useContext(FeedPostContext);
+  const { post, likePost, clickNavigator } = useContext(FeedPostContext);
   const { likesCount, commentsCount, Id } = post!;
-  const {
-    LMPostFooterStyles,
-    CustomComponents = null,
-    CustomCallbacks = {},
-  } = useContext(CustomAgentProviderContext);
-  const {
-    likeTextCountClickCallback,
-    // commentIconClickCallback,
-    commentTextCountClickCallback,
-    postFooterClickCallback,
-  } = CustomCallbacks;
+  const { LMFeedCustomIcons, CustomComponents = {} } = useContext(
+    CustomAgentProviderContext,
+  );
 
-  const navigation = useNavigate();
+  if (!post) {
+    return null;
+  }
   function renderCommentBox() {
     return window.location.pathname.includes("post") ? (
       <>
         <Divider className="lm-footer-reply-divider" />
-        <div className="lm-d-flex lm-flex-grow lm-position-relative lm-align-items-center lm-mb-5 lm-feed-reply lm-pl-4 lm-pr-4 lm-pt-4 lm-pb-4">
-          <LMFeedReplyTextArea />
+        <div
+          lm-feed-component-id={`lm-feed-post-footer-zabcd-${post?.Id}`}
+          className="lm-d-flex lm-flex-grow lm-position-relative lm-align-items-center lm-mb-5 lm-feed-reply lm-pl-4 lm-pr-4 lm-pt-4 lm-pb-4"
+        >
+          {CustomComponents.CustomPostReplyTextArea ? (
+            <CustomComponents.CustomPostReplyTextArea />
+          ) : (
+            <LMFeedReplyTextArea />
+          )}
         </div>
       </>
     ) : null;
@@ -48,42 +49,43 @@ const LMFeedPostFooter = () => {
     <>
       <div
         className="lm-feed-wrapper__card__footer"
-        onClick={() =>
-          postFooterClickCallback ? postFooterClickCallback(navigation) : null
-        }
+        lm-feed-component-id={`lm-feed-post-footer-vwxyz-${post?.Id}`}
       >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
             <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
               {post?.isLiked ? (
-                <img
-                  onClick={() => {
-                    console.log(Id);
-                    likePost!(Id);
-                  }}
-                  src={postLiked}
-                  className="lm-cursor-pointer"
-                  alt="Like"
-                />
+                LMFeedCustomIcons?.postLikesLikedCustomIcon ? (
+                  <LMFeedCustomIcons.postLikesLikedCustomIcon />
+                ) : (
+                  <img
+                    onClick={() => {
+                      console.log(Id);
+                      likePost!(Id);
+                    }}
+                    src={postLiked}
+                    className="lm-cursor-pointer"
+                    alt="Like"
+                    lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.Id}`}
+                  />
+                )
+              ) : LMFeedCustomIcons?.postLikesNormalCustomIcon ? (
+                <LMFeedCustomIcons.postLikesNormalCustomIcon />
               ) : (
                 <img
                   onClick={() => {
-                    console.log(Id);
                     likePost!(Id);
                   }}
                   src={like}
                   className="lm-cursor-pointer"
                   alt="Like"
+                  lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.Id}`}
                 />
               )}
 
               <span
-                style={LMPostFooterStyles?.likesCountStyles}
-                onClick={() =>
-                  likeTextCountClickCallback
-                    ? likeTextCountClickCallback(navigation)
-                    : null
-                }
+                className="lm-feed-wrapper__card__footer_likes-count"
+                lm-feed-component-id={`lm-feed-post-footer-klmno-${post?.Id}`}
               >
                 {" "}
                 {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
@@ -92,45 +94,34 @@ const LMFeedPostFooter = () => {
             <div
               className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
               onClick={() => {
-                sessionStorage.setItem("scroll-pos", Id);
-                navigation(
-                  `/community/post/${`${Id}-${post?.heading}`.substring(0, 59)}`,
-                );
+                // TODO
+                if (clickNavigator) {
+                  clickNavigator(post);
+                }
               }}
             >
-              {LMPostFooterStyles?.commentButtonCustom ? (
-                <LMPostFooterStyles.commentButtonCustom />
+              {LMFeedCustomIcons?.postCommentsCustomIcon ? (
+                <LMFeedCustomIcons.postCommentsCustomIcon />
               ) : (
                 <img
                   className="lm-cursor-pointer"
                   src={commnent}
                   alt="commnent"
+                  lm-feed-component-id={`lm-feed-post-footer-pqrst-${post?.Id}`}
                 />
               )}
               <span
-                style={LMPostFooterStyles?.commentsCountStyles}
-                className="comments"
-                onClick={() =>
-                  commentTextCountClickCallback
-                    ? commentTextCountClickCallback(navigation)
-                    : null
-                }
+                className="comments lm-feed-wrapper__card__footer_comments-count"
+                lm-feed-component-id={`lm-feed-post-footer-uvwxy-${post?.Id}`}
               >
                 {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
               </span>
             </div>
           </div>
-          <div className="lm-social-action-bar__actions">
-            {/* <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
-              <img src={bookmark} alt="bookmark" />
-            </div> */}
-            {/* <div className="lm-d-flex lm-align-items-center lm-cursor-pointer">
-              <img src={share} alt="share" />
-            </div> */}
-          </div>
+          <div className="lm-social-action-bar__actions"></div>
         </div>
         {renderCommentBox()}
-        {CustomComponents?.RepliesScroller || <LMCommentsScroller />}
+        {CustomComponents?.CustomRepliesScroller || <LMCommentsScroller />}
       </div>
     </>
   );

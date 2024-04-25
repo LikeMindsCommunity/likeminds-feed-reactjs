@@ -149,6 +149,7 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
           <label className="postImgSlider__header--addMore">
             <img src={addMoreIcon} alt="icon" /> Add More
             <input
+              lm-feed-component-id={`lm-feed-create-media-vwxyz`}
               onChange={addMediaItem}
               type="file"
               accept={
@@ -167,6 +168,7 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
                   removeMedia(activeSlide || 0);
                 }
               }}
+              lm-feed-component-id={`lm-feed-create-media-fghij`}
             />
           </div>
         </div>
@@ -185,6 +187,7 @@ const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
     return (
       <img
         className="lm-feed-create-post-media-item"
+        lm-feed-component-id={`lm-feed-create-media-vwxyz-${file.name}`}
         src={URL.createObjectURL(file)}
         alt="image"
       />
@@ -193,6 +196,7 @@ const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
     return (
       <img
         className="lm-feed-create-post-media-item"
+        lm-feed-component-id={`lm-feed-edit-media-vwxyz-${attachment.attachmentMeta.url}`}
         src={attachment.attachmentMeta.url}
         alt="image"
       />
@@ -206,6 +210,7 @@ const VideoMediaItem = ({ file, attachment }: MediaItemProps) => {
         className="lm-feed-create-post-media-item"
         src={URL.createObjectURL(file)}
         controls
+        lm-feed-component-id={`lm-feed-create-media-fghij-${file.name}`}
       />
     );
   } else if (attachment) {
@@ -214,6 +219,7 @@ const VideoMediaItem = ({ file, attachment }: MediaItemProps) => {
         className="lm-feed-create-post-media-item"
         src={attachment.attachmentMeta.url}
         controls
+        lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.attachmentMeta.url}`}
       />
     );
   } else return null;
@@ -223,7 +229,10 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
     const { attachmentMeta } = attachment;
     const { name, url, size } = attachmentMeta;
     return (
-      <div className="attachmentPdf">
+      <div
+        className="attachmentPdf"
+        lm-feed-component-id={`lm-feed-edit-media-klmno-${attachment.attachmentMeta.url}`}
+      >
         <Document file={attachmentMeta?.url}>
           <Page
             pageNumber={1}
@@ -257,7 +266,10 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
     );
   } else if (file) {
     return (
-      <div className="attachmentPdf">
+      <div
+        className="attachmentPdf"
+        lm-feed-component-id={`lm-feed-create-media-klmno-${file.name}`}
+      >
         <Document file={URL.createObjectURL(file)}>
           <Page
             pageNumber={1}

@@ -22,6 +22,8 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { useNavigate } from "react-router-dom";
+import { ClickNavigator } from "../shared/types/customProps/routes";
 
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
@@ -40,12 +42,14 @@ interface useFetchFeedsResponse {
     // feedListStore: FeedListActionsAndDataStore,
     event: React.MouseEvent<HTMLDivElement>,
   ) => void;
+  clickNavigator: ClickNavigator;
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const { lmFeedclient, customEventClient } = useContext(
     GlobalClientProviderContext,
   );
+  const { routes } = useContext(GeneralContext);
   const { currentCommunity, currentUser, logoutUser } = useContext(
     LMFeedUserProviderContext,
   );
@@ -53,8 +57,13 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     useContext(GeneralContext);
   const { FeedListCustomActions = {}, postComponentClickCustomCallback } =
     useContext(CustomAgentProviderContext);
-  const { deletePostCustomAction, pinPostCustomAction, likePostCustomAction } =
-    FeedListCustomActions;
+  const {
+    deletePostCustomAction,
+    pinPostCustomAction,
+    likePostCustomAction,
+    clickNavigationCustomAction,
+  } = FeedListCustomActions;
+  const navigation = useNavigate();
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -235,6 +244,16 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     },
     [feedList, lmFeedclient],
   );
+  const clickNavigator = useCallback(
+    (post: Post) => {
+      sessionStorage.setItem("scroll-pos", post.Id || "");
+      const detailsRoute = routes?.feedDetailsRoute.pathname;
+      navigation(
+        `/${detailsRoute}/${`${post.Id}-${post?.heading}`.substring(0, 59)}`,
+      );
+    },
+    [navigation, routes?.feedDetailsRoute.pathname],
+  );
   useEffect(() => {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
       loadFeed();
@@ -414,26 +433,30 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           pinPost,
           likePost,
           getNextPage,
+          clickNavigator,
         },
+        navigate: navigation,
       };
     }, [
-      closeSnackbar,
-      currentCommunity,
+      selectedTopics,
+      topics,
+      loadMoreFeeds,
       currentPageCount,
-      currentUser,
-      deletePost,
-      displaySnackbarMessage,
       feedList,
       feedUsersList,
-      getNextPage,
-      likePost,
-      loadMoreFeeds,
+      currentUser,
+      currentCommunity,
       logoutUser,
-      message,
-      pinPost,
-      selectedTopics,
+      displaySnackbarMessage,
+      closeSnackbar,
       showSnackbar,
-      topics,
+      message,
+      deletePost,
+      pinPost,
+      likePost,
+      getNextPage,
+      clickNavigator,
+      navigation,
     ]);
   return {
     topics,
@@ -455,5 +478,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     postComponentClickCustomCallback: postComponentClickCustomCallback
       ? postComponentClickCustomCallback.bind(null, feedListActionsAndDataStore)
       : undefined,
+    clickNavigator: clickNavigationCustomAction
+      ? clickNavigationCustomAction.bind(null, feedListActionsAndDataStore)
+      : clickNavigator,
   };
 }

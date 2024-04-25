@@ -32,6 +32,7 @@ import {
 import { PostCreationActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { useNavigate } from "react-router-dom";
 
 interface UseCreatePost {
   postText: string | null;
@@ -73,6 +74,7 @@ export function useCreatePost(): UseCreatePost {
   );
   const { postFeedCustomAction, editPostCustomAction } =
     PostCreationCustomCallbacks;
+  const navigate = useNavigate();
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
@@ -430,8 +432,10 @@ export function useCreatePost(): UseCreatePost {
           postFeed,
           editPost,
         },
+        navigate: navigate,
       };
     }, [
+      navigate,
       closeSnackbar,
       currentCommunity,
       currentUser,
