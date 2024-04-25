@@ -6,27 +6,7 @@ import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import LMFeedNotificationHeader from "./shared/components/LMFeedNotificationHeader";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 
-import {
-  FeedListActionsAndDataStore,
-  FeedPostDetailsActionsAndDataStore,
-} from "./shared/types/cutomCallbacks/dataProvider";
 const customEventClient = new LMFeedCustomEvents();
-
-const customClickFunction = (
-  arg1: FeedListActionsAndDataStore | FeedPostDetailsActionsAndDataStore,
-  e: React.MouseEvent,
-) => {
-  // lm-feed-post-wrapper-yzabc-6626163603a62c83c4e3d08a
-  const clickedElementAttribute = (e.target as HTMLElement).getAttribute(
-    "lm-feed-component-id",
-  );
-  console.log(clickedElementAttribute);
-  const isPinIcon = clickedElementAttribute?.split("-")[4];
-
-  if (isPinIcon === "yzabc") {
-    console.log("Target Element Clickejd");
-  }
-};
 
 ReactDOM.createRoot(document.getElementById("root")!).render(<ReactApp />);
 
@@ -35,7 +15,21 @@ export function ReactApp() {
     <div className="lm-wrapper">
       <LMFeedNotificationHeader customEventClient={customEventClient} />
       <LMFeed
-        postComponentClickCustomCallback={customClickFunction}
+        topicComponentClickCustomCallback={(store, e) => {
+          console.log(store);
+          console.log(e);
+        }}
+        postComponentClickCustomCallback={(store, e) => {
+          console.log(store);
+          console.log(e);
+        }}
+        memberComponentClickCustomCallback={(e) => {
+          console.log(e);
+        }}
+        createPostComponentClickCustomCallback={(store, e) => {
+          console.log(store);
+          console.log(e);
+        }}
         client={LMFeedClient.Builder()
           .setPlatformCode("rt")
           .setVersionCode(2)

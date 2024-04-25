@@ -38,6 +38,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     setSearchKey,
     updateCheckedTopics,
     clearAllCheckedTopics,
+    topicComponentClickCustomCallback,
   } = useTopicDropdown(
     selectedTopicIds,
     setSelectedTopicsIds,
@@ -350,7 +351,18 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
       }
     }
   };
-  return setView();
+  return (
+    <div
+      onClick={(e) => {
+        if (topicComponentClickCustomCallback) {
+          topicComponentClickCustomCallback(e);
+        }
+      }}
+      lm-feed-component-id={`lm-feed-topic-dropdown-rstuw`}
+    >
+      {setView()}
+    </div>
+  );
 };
 
 export default LMFeedViewTopicDropdown;

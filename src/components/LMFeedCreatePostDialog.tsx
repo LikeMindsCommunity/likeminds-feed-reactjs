@@ -31,12 +31,20 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     temporaryPost,
     showOGTagViewContainer,
     setOpenCreatePostDialog,
+    createPostComponentClickCustomCallback,
     ogTag,
   } = useContext(LMFeedCreatePostContext);
   const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
   return (
-    <div className="lm-feed-create-post-wrapper">
+    <div
+      className="lm-feed-create-post-wrapper"
+      onClick={(e) => {
+        if (createPostComponentClickCustomCallback) {
+          createPostComponentClickCustomCallback(e);
+        }
+      }}
+    >
       <div className="lm-feed-create-post-wrapper__dialog-heading">
         {temporaryPost ? EDIT_POST : CREATE_POST}
         <img
