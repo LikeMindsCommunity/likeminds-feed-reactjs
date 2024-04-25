@@ -237,7 +237,7 @@ export const LMFeedDocumentAttachmentView = ({
       <Document file={attachmentMeta?.url}>
         <Page
           pageNumber={1}
-          className={"pdfPage"}
+          // className={"pdfPage"}
           renderAnnotationLayer={false}
           renderTextLayer={false}
           lm-feed-component-id={`lm-feed-post-attachments-vwxyz-${postId}`}

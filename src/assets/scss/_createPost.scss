@@ -177,6 +177,8 @@
       font-size: pxToRem(16);
       line-height: pxToRem(20);
       font-weight: 400;
+      width: 100%;
+      cursor: text;
     }
   }
   &__footer {
@@ -345,7 +347,6 @@
   pointer-events: none;
   display: block; /* For Firefox */
   color: $secondary-color;
-
 }
 
 .lm-feed-create-post-topic-text-area-divider {

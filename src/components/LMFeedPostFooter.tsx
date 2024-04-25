@@ -16,10 +16,15 @@ import {
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
-import { Divider } from "@mui/material";
+import { Divider, Drawer } from "@mui/material";
+import LMFeedLikedMembers from "./LMFeedLikedMembers";
 
 const LMFeedPostFooter = () => {
   const { post, likePost, clickNavigator } = useContext(FeedPostContext);
+  const [open, setOpen] = React.useState(false);
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
+  };
   const { likesCount, commentsCount, Id } = post!;
   const { LMFeedCustomIcons, CustomComponents = {} } = useContext(
     CustomAgentProviderContext,
@@ -47,13 +52,21 @@ const LMFeedPostFooter = () => {
   }
   return (
     <>
+      <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
+        <div className="lmLikedMemberWrapper">
+          <LMFeedLikedMembers postId={post?.Id} />
+        </div>
+      </Drawer>
       <div
         className="lm-feed-wrapper__card__footer"
         lm-feed-component-id={`lm-feed-post-footer-vwxyz-${post?.Id}`}
       >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
-            <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
+            <div
+              className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
+              onClick={toggleDrawer(true)}
+            >
               {post?.isLiked ? (
                 LMFeedCustomIcons?.postLikesLikedCustomIcon ? (
                   <LMFeedCustomIcons.postLikesLikedCustomIcon />
