@@ -1,6 +1,14 @@
+.lm-all-topic {
+  border-bottom: 1px solid #edeff3;
+  width: 100%;
+  margin: 0 pxToRem(8);
+  padding: 0 0 pxToRem(10) 0;
+}
+
 .lm-topic-btn-box {
   margin: 0 auto;
   max-width: pxToRem(576);
+  width: 100%;
 }
 .lm-all-topic-button {
   @extend .lm-d-flex;
@@ -8,7 +16,7 @@
   @extend .lm-text-capitalize;
   @extend .lm-cursor-pointer;
   @extend .lm-fw-400;
-  width: pxToRem(122);
+  // width: pxToRem(122);
   border-radius: pxToRem(4);
   padding: pxToRem(8) pxToRem(16);
   font-size: pxToRem(16);
@@ -40,7 +48,7 @@
       color: #848488;
       font-size: pxToRem(17);
       font-weight: 400;
-      line-height: 22px;
+      line-height: pxToRem(22);
       &:focus {
         border: none;
         outline: none;
@@ -53,31 +61,44 @@
     @extend .lm-align-items-center;
     @extend .lm-ts-16;
     @extend .lm-fw-400;
-    color: #333333;
-    gap: 10px;
+    color: $card-content-heading;
+    width: 100%;
+    margin: 0 8px;
+
+    span {
+      margin-left: 0;
+      padding-left: 0;
+    }
   }
 }
 
 // Selected Topic Feed Container
 
 .lmSelectedTopics {
+  // padding: 0px 5px;
   display: flex;
   justify-content: space-between;
-  margin: 10px 0 0 0;
-  align-items: center;
+  gap: 10px;
+  margin: pxToRem(10) 0 0 0;
+  width: 100%;
+  max-width: pxToRem(576);
+  margin: pxToRem(16) auto 0;
+  overflow: hidden;
   &__tags {
-    // @extend .lm-feed-topic-tile;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
   &--clear {
     color: $primary-color;
-    font-size: 14px;
+    font-size: pxToRem(14);
     cursor: pointer;
   }
 }
 
 .lm-feed-topic-tile {
-  padding: pxToRem(2) pxToRem(8) pxToRem(2) pxToRem(8);
+  padding: pxToRem(5) pxToRem(8);
   border-radius: pxToRem(4);
   color: $primary-color;
   background-color: rgba(80, 70, 229, 0.1);
@@ -85,4 +106,59 @@
   line-height: pxToRem(20);
   font-weight: 400;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+
+  span {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.lm-post-creation-all-topic-button {
+  padding: pxToRem(2) pxToRem(8);
+  border-radius: pxToRem(4);
+  background-color: rgba(80, 70, 229, 0.1);
+  line-height: pxToRem(20);
+  border-width: 0;
+  color: $primary-color;
+  display: flex;
+  align-items: center;
+  gap: pxToRem(4);
+}
+.lm-display-selected-topics-container {
+  width: 100%;
+  display: flex;
+  .lm-topic-tags-container {
+    flex: 1;
+  }
+}
+
+.lm-feed-topic-tile-create {
+  align-items: center;
+  background: #5046e51a;
+  border: none;
+  border-radius: pxToRem(4);
+  color: $primary-color;
+  display: inline-flex;
+  font-size: pxToRem(14);
+  font-weight: 400;
+  height: pxToRem(24);
+  line-height: pxToRem(20);
+  margin-bottom: pxToRem(4);
+  margin-right: pxToRem(4);
+  padding: pxToRem(2) pxToRem(8);
+}
+.lm-edit-topics-icon {
+  border-radius: pxToRem(4);
+  display: inline-flex;
+  margin-top: pxToRem(4);
+  transform: translateY(-5px);
+  width: pxToRem(36);
+  background: #5046e51a;
+  cursor: pointer;
+  height: pxToRem(24);
+  padding: pxToRem(2) pxToRem(8);
 }

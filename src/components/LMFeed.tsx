@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import UserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -7,41 +7,55 @@ import {
   CustomAgentProviderContext,
   CustomAgentProviderInterface,
 } from "../contexts/LMFeedCustomAgentProviderContext";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
-import { ROUTES } from "../shared/constants/lmRoutesConstant";
-import LMFeedDetails from "./LMFeedDetails";
-import { HelmetProvider } from "react-helmet-async";
-import LMFeedTopicFlatFeed from "./LMFeedTopicFlatFeed";
-import { RouteModifiers } from "../shared/types/customProps/routes";
+import { LMFeedCustomAppRoutes } from "../shared/types/customProps/routes";
 import "../assets/scss/styles.scss";
+import { LMFeedCustomEvents } from "../shared/customEvents";
+import { pdfjs } from "react-pdf";
+import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContextProvider";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
+import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
+import { Snackbar } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
-  routes?: RouteModifiers[];
+  routes?: LMFeedCustomAppRoutes;
   useParentRouter?: boolean;
   accessToken: string;
   refreshToken: string;
+  customEventClient: LMFeedCustomEvents;
 }
 
 function LMFeed({
+  useParentRouter = false,
   accessToken,
   refreshToken,
   client,
-  likeActionCall,
-  topicBlocksWrapperStyles,
-  LMPostHeaderStyles,
-  LMPostFooterStyles,
-  LMPostTopicStyles,
   routes,
-  LMPostBodyStyles,
+  customEventClient,
+  LMPostHeaderStyles,
+  LMFeedCustomIcons,
   CustomComponents,
-  CustomCallbacks,
-  useParentRouter = false,
+  FeedListCustomActions,
+  FeedPostDetailsCustomActions,
+  GeneralCustomCallbacks,
+  TopicsCustomCallbacks,
+  RepliesCustomCallbacks,
+  PostCreationCustomCallbacks,
+  postComponentClickCustomCallback,
+  createPostComponentClickCustomCallback,
+  topicComponentClickCustomCallback,
+  memberComponentClickCustomCallback,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
-    useUserProvider(accessToken, refreshToken, client);
+    useUserProvider(accessToken, refreshToken, client, customEventClient);
+  const { showSnackbar, message, closeSnackbar, displaySnackbarMessage } =
+    useLMFeedGeneralContextProvider();
+  useEffect(() => {
+    const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+    pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
+  }, []);
   if (!lmFeedUser) {
     return null;
   }
@@ -50,97 +64,59 @@ function LMFeed({
     <GlobalClientProviderContext.Provider
       value={{
         lmFeedclient: client,
+        customEventClient: customEventClient,
       }}
     >
       <CustomAgentProviderContext.Provider
         value={{
-          likeActionCall: likeActionCall,
-          topicBlocksWrapperStyles,
           LMPostHeaderStyles,
-          LMPostFooterStyles,
-          LMPostBodyStyles,
-          LMPostTopicStyles,
+          LMFeedCustomIcons,
           CustomComponents,
-          CustomCallbacks,
+          FeedListCustomActions,
+          FeedPostDetailsCustomActions,
+          GeneralCustomCallbacks,
+          postComponentClickCustomCallback,
+          topicComponentClickCustomCallback,
+          createPostComponentClickCustomCallback,
+          memberComponentClickCustomCallback,
+          TopicsCustomCallbacks,
+          RepliesCustomCallbacks,
+          PostCreationCustomCallbacks,
         }}
       >
-        <UserProviderContext.Provider
+        <GeneralContext.Provider
           value={{
-            currentUser: lmFeedUser,
-            currentCommunity: lmFeedUserCurrentCommunity,
-            logoutUser: logoutUser,
+            message,
+            showSnackbar,
+            closeSnackbar,
+            displaySnackbarMessage,
+            useParentRouter,
+            routes,
           }}
         >
-          {useParentRouter ? (
-            <>
-              {routes ? (
-                <>
-                  <Routes>
-                    {routes.map((routeObject) => (
-                      <Route key={routeObject.route} path={routeObject.route} />
-                    ))}
-                  </Routes>
-                </>
-              ) : (
-                <Routes>
-                  <Route
-                    path={ROUTES.ROOT_PATH}
-                    element={<LMFeedUniversalFeed />}
-                  ></Route>
-
-                  <Route
-                    path={ROUTES.POST_DETAIL}
-                    element={
-                      <HelmetProvider>
-                        <LMFeedDetails />
-                      </HelmetProvider>
-                    }
-                  ></Route>
-                  <Route
-                    path={ROUTES.TOPIC}
-                    element={<LMFeedTopicFlatFeed />}
-                  />
-                </Routes>
-              )}
-            </>
-          ) : (
-            <BrowserRouter>
-              {routes ? (
-                <>
-                  <Routes>
-                    {routes.map((routeObject) => (
-                      <Route
-                        path={routeObject.route}
-                        element={routeObject.element}
-                      />
-                    ))}
-                  </Routes>
-                </>
-              ) : (
-                <Routes>
-                  <Route
-                    path={ROUTES.ROOT_PATH}
-                    element={<LMFeedUniversalFeed />}
-                  ></Route>
-
-                  <Route
-                    path={ROUTES.POST_DETAIL}
-                    element={
-                      <HelmetProvider>
-                        <LMFeedDetails />
-                      </HelmetProvider>
-                    }
-                  ></Route>
-                  <Route
-                    path={ROUTES.TOPIC}
-                    element={<LMFeedTopicFlatFeed />}
-                  />
-                </Routes>
-              )}
-            </BrowserRouter>
-          )}
-        </UserProviderContext.Provider>
+          <UserProviderContext.Provider
+            value={{
+              currentUser: lmFeedUser,
+              currentCommunity: lmFeedUserCurrentCommunity,
+              logoutUser: logoutUser,
+            }}
+          >
+            {!useParentRouter ? (
+              <BrowserRouter>
+                <LMFeedListDataContextProvider />
+              </BrowserRouter>
+            ) : (
+              <LMFeedListDataContextProvider />
+            )}
+          </UserProviderContext.Provider>
+        </GeneralContext.Provider>
       </CustomAgentProviderContext.Provider>
+      <Snackbar
+        open={showSnackbar}
+        message={message}
+        onClose={closeSnackbar}
+        autoHideDuration={3000}
+      />
     </GlobalClientProviderContext.Provider>
   );
 }

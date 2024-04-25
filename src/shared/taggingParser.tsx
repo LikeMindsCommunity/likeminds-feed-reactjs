@@ -94,3 +94,97 @@ export const textPreprocessor = (
 const handleRouteClick = (route: string) => {
   alert(route); // Replace with your desired action
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function setTagUserImage(user: any) {
+  const imageLink = user?.imageUrl;
+  if (imageLink !== "") {
+    return (
+      <img
+        src={imageLink}
+        alt={""}
+        style={{
+          width: "100%",
+          height: "100%",
+          borderRadius: "50%",
+        }}
+      />
+    );
+  } else {
+    return (
+      <div
+        style={{
+          minWidth: "36px",
+          width: "36px",
+          height: "36px",
+          borderRadius: "50%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#5046e5",
+          fontSize: "14px",
+          fontWeight: "bold",
+          color: "#fff",
+          letterSpacing: "1px",
+        }}
+        className="reply-editor"
+      >
+        {user?.name?.split(" ").map((part: string) => {
+          return part.charAt(0)?.toUpperCase();
+        })}
+      </div>
+    );
+  }
+}
+interface MatchPattern {
+  type: number;
+  displayName?: string;
+  routeId?: string;
+  link?: string;
+}
+export function convertTextToHTML(text: string) {
+  const regex =
+    /<<.*?>>|(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*|www\.[^\s/$.?#].[^\s]*/g;
+  const matches = text?.match(regex) || [];
+  const splits = text?.split(regex);
+
+  const container = document.createElement("div");
+
+  for (let i = 0; i < splits?.length; i++) {
+    const splitNode = document.createTextNode(splits[i]);
+    container.appendChild(splitNode);
+
+    if (matches[i]) {
+      const text = matches[i];
+      const getInfoPattern = /<<([^|]+)\|([^>>]+)>>/;
+      const match = text.match(getInfoPattern);
+      const userObject: MatchPattern = {
+        type: 1,
+      };
+      if (match) {
+        const userName = match[1];
+        const userId = match[2];
+        userObject.displayName = userName;
+        userObject.routeId = userId;
+      } else {
+        userObject.type = 2;
+        userObject.link = text;
+      }
+      if (userObject.type === 1) {
+        // const matchText = matches[i].slice(2, -2); // Remove '<<' and '>>'
+        const linkNode = document.createElement("a");
+        linkNode.href = "#"; // You can set the appropriate URL here
+        linkNode.textContent = userObject.displayName!;
+        linkNode.id = userObject.routeId!;
+        container.appendChild(linkNode);
+      } else {
+        const linkNode = document.createElement("a");
+        linkNode.href = userObject.link!; // You can set the appropriate URL here
+        linkNode.textContent = userObject.link!;
+        container.appendChild(linkNode);
+      }
+    }
+  }
+
+  return container;
+}
