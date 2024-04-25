@@ -25,6 +25,8 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { ClickNavigator } from "../shared/types/customProps/routes";
 import { useNavigate } from "react-router-dom";
 import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
+import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { LMAppRoutesConstant } from "../shared/constants/lmRoutesConstant";
 
 interface UseFeedDetailsInterface {
   post: Post | null;
@@ -42,6 +44,7 @@ interface UseFeedDetailsInterface {
   pinPost: (id: string) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
   clickNavigator: ClickNavigator;
+  postComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
@@ -56,9 +59,10 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   );
   const { displaySnackbarMessage, message, showSnackbar, closeSnackbar } =
     useContext(GeneralContext);
-  const { FeedPostDetailsCustomActions = {} } = useContext(
-    CustomAgentProviderContext,
-  );
+  const {
+    FeedPostDetailsCustomActions = {},
+    postComponentClickCustomCallback,
+  } = useContext(CustomAgentProviderContext);
   const {
     deletePostCustomAction,
     pinPostCustomAction,
@@ -152,12 +156,17 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const clickNavigator = useCallback(
     (post: Post) => {
       sessionStorage.setItem("scroll-pos", post.Id || "");
-      const detailsRoute = routes?.feedDetailsRoute.pathname;
+      let detailsRoute = "";
+      if (routes) {
+        detailsRoute = routes?.feedDetailsRoute.pathname;
+      } else {
+        detailsRoute = LMAppRoutesConstant.POST_DETAILS_PATHNAME;
+      }
       navigation(
         `/${detailsRoute}/${`${post.Id}-${post?.heading}`.substring(0, 59)}`,
       );
     },
-    [navigation, routes?.feedDetailsRoute.pathname],
+    [navigation, routes],
   );
 
   const updateReplyOnPostReply = useCallback(
@@ -165,7 +174,6 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       const repliesCopy = [...replies];
       const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
       if (targetReply) {
-        console.log(targetReply);
         targetReply.commentsCount++;
       }
       setReplies(repliesCopy);
@@ -530,5 +538,11 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           feedPostDetailsActionsAndDataStore,
         )
       : clickNavigator,
+    postComponentClickCustomCallback: postComponentClickCustomCallback
+      ? postComponentClickCustomCallback?.bind(
+          null,
+          feedPostDetailsActionsAndDataStore,
+        )
+      : undefined,
   };
 };

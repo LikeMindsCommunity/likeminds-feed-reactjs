@@ -77,3 +77,5 @@ export type NotificationCustomActionCallback = (
   store: NotificationsActionsAndDataStore,
   argumentOne?: unknown,
 ) => void;
+
+export type ComponentDelegatorListener = (event: React.MouseEvent) => void;

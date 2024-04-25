@@ -48,7 +48,6 @@ const LMFeedTextArea = () => {
   // }, [customEventClient, textFieldRef]);
 
   useEffect(() => {
-    console.log("asdf");
     if (temporaryPost && textFieldRef?.current) {
       textFieldRef.current.innerHTML = convertTextToHTML(
         temporaryPost.text,
@@ -80,7 +79,7 @@ const LMFeedTextArea = () => {
                     e.preventDefault();
 
                     const selection = window.getSelection();
-                    console.log(selection);
+
                     if (!selection) {
                       return;
                     }
@@ -175,14 +174,11 @@ const LMFeedTextArea = () => {
             //prevent the default behaviour (where the browser would add a new text node)
             // document.execCommand("insertLineBreak");
             // event.preventDefault();
-            console.log("Enter key pressed");
             const selection = window.getSelection()!;
             const range = selection.getRangeAt(0).cloneRange();
             const p = document.createElement("p");
-            // const textNode = document.createTextNode("");
             const br = document.createElement("br");
             p.appendChild(br);
-            // p.style.height = "20px";
             textFieldRef?.current?.appendChild(p);
             range.setStart(p, 0);
             range.setEnd(p, 0);

@@ -8,29 +8,49 @@ import {
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
   GeneralClickCallbacks,
-  NotificationsCustomActions,
   PostCreationCustomActions,
   RepliesCustomActions,
   TopicsCustomActions,
 } from "../shared/types/cutomCallbacks/callbacks";
-import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import {
+  FeedListActionsAndDataStore,
+  FeedPostDetailsActionsAndDataStore,
+  PostCreationActionsAndDataStore,
+  TopicsActionsAndDataStore,
+} from "../shared/types/cutomCallbacks/dataProvider";
 
 export interface CustomAgentProviderInterface {
-  likeActionCall?: () => void;
-  LMPostHeaderStyles?: LMPostHeaderStyles;
-  LMFeedCustomIcons?: LMFeedCustomIcons;
-  CustomComponents?: CustomComponents;
-  FeedListCustomActions?: FeedListCustomActions;
-  FeedPostDetailsCustomActions?: FeedPostDetailsCustomActions;
+  LMPostHeaderStyles?: LMPostHeaderStyles; //
+  LMFeedCustomIcons?: LMFeedCustomIcons; //
+  CustomComponents?: CustomComponents; //
+  FeedListCustomActions?: FeedListCustomActions; //
+  FeedPostDetailsCustomActions?: FeedPostDetailsCustomActions; //
   GeneralCustomCallbacks?: GeneralClickCallbacks;
   TopicsCustomCallbacks?: TopicsCustomActions;
   RepliesCustomCallbacks?: RepliesCustomActions;
   PostCreationCustomCallbacks?: PostCreationCustomActions;
-  NotificationsCustomCallbacks?: NotificationsCustomActions;
-  postComponentClickCustomCallback?: (
-    store: FeedListActionsAndDataStore,
-    event: React.MouseEvent<HTMLDivElement>,
-  ) => void;
+
+  postComponentClickCustomCallback?: PostComponentCustomClickEventDelegatorCallback;
+  createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
+  topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;
+  memberComponentClickCustomCallback?: MemberComponentCustomClickEventDelegatorCallback;
 }
 export const CustomAgentProviderContext =
   createContext<CustomAgentProviderInterface>({});
+
+export type PostComponentCustomClickEventDelegatorCallback = (
+  store: FeedListActionsAndDataStore | FeedPostDetailsActionsAndDataStore,
+  event: React.MouseEvent,
+) => void;
+
+export type TopicComponentCustomClickEventDelegatorCallback = (
+  store: TopicsActionsAndDataStore,
+  event: React.MouseEvent,
+) => void;
+export type CreatePostComponentCustomClickEventDelegatorCallback = (
+  store: PostCreationActionsAndDataStore,
+  event: React.MouseEvent,
+) => void;
+export type MemberComponentCustomClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;

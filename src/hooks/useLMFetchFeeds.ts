@@ -24,6 +24,8 @@ import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/data
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useNavigate } from "react-router-dom";
 import { ClickNavigator } from "../shared/types/customProps/routes";
+import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { LMAppRoutesConstant } from "../shared/constants/lmRoutesConstant";
 
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
@@ -38,10 +40,7 @@ interface useFetchFeedsResponse {
   deletePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   likePost: (id: string) => Promise<void>;
-  postComponentClickCustomCallback?: (
-    // feedListStore: FeedListActionsAndDataStore,
-    event: React.MouseEvent<HTMLDivElement>,
-  ) => void;
+  postComponentClickCustomCallback?: ComponentDelegatorListener;
   clickNavigator: ClickNavigator;
 }
 
@@ -204,7 +203,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           }
 
           // feedListCopy.splice(index, 1);
-          console.log(tempPost);
+
           setFeedList(feedListCopy);
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
@@ -247,12 +246,17 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const clickNavigator = useCallback(
     (post: Post) => {
       sessionStorage.setItem("scroll-pos", post.Id || "");
-      const detailsRoute = routes?.feedDetailsRoute.pathname;
+      let detailsRoute = "";
+      if (routes) {
+        detailsRoute = routes?.feedDetailsRoute.pathname;
+      } else {
+        detailsRoute = LMAppRoutesConstant.POST_DETAILS_PATHNAME;
+      }
       navigation(
         `/${detailsRoute}/${`${post.Id}-${post?.heading}`.substring(0, 59)}`,
       );
     },
-    [navigation, routes?.feedDetailsRoute.pathname],
+    [navigation, routes],
   );
   useEffect(() => {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {

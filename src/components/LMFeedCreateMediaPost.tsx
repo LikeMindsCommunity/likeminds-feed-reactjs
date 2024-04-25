@@ -35,7 +35,7 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
   function renderMediaItems() {
     if (temporaryPost) {
       const attachmentsArray = temporaryPost.attachments;
-      console.log(attachmentsArray);
+
       switch (attachmentsArray.length) {
         case 0:
           return null;
@@ -84,7 +84,6 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
         }
       }
     } else {
-      console.log(mediaList);
       switch (mediaList?.length) {
         case 0:
           return null;

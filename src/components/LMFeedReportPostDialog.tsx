@@ -80,7 +80,6 @@ const LMFeedReportPostDialog = ({
                   className={`${selectedTag?.id === tag.id ? "active" : ""}`}
                   key={tag.id}
                   onClick={() => {
-                    console.log(tag);
                     setSelectedTag(tag);
                   }}
                 >

@@ -28,24 +28,25 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 }
 
 function LMFeed({
+  useParentRouter = false,
   accessToken,
   refreshToken,
   client,
-  likeActionCall,
-
-  LMPostHeaderStyles,
-  LMFeedCustomIcons: LMPostFooterStyles,
-
   routes,
-
-  CustomComponents,
-
-  useParentRouter = false,
   customEventClient,
+  LMPostHeaderStyles,
+  LMFeedCustomIcons,
+  CustomComponents,
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
   GeneralCustomCallbacks,
+  TopicsCustomCallbacks,
+  RepliesCustomCallbacks,
+  PostCreationCustomCallbacks,
   postComponentClickCustomCallback,
+  createPostComponentClickCustomCallback,
+  topicComponentClickCustomCallback,
+  memberComponentClickCustomCallback,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(accessToken, refreshToken, client, customEventClient);
@@ -68,17 +69,19 @@ function LMFeed({
     >
       <CustomAgentProviderContext.Provider
         value={{
-          likeActionCall: likeActionCall,
-
           LMPostHeaderStyles,
-          LMFeedCustomIcons: LMPostFooterStyles,
-
+          LMFeedCustomIcons,
           CustomComponents,
-
           FeedListCustomActions,
           FeedPostDetailsCustomActions,
           GeneralCustomCallbacks,
           postComponentClickCustomCallback,
+          topicComponentClickCustomCallback,
+          createPostComponentClickCustomCallback,
+          memberComponentClickCustomCallback,
+          TopicsCustomCallbacks,
+          RepliesCustomCallbacks,
+          PostCreationCustomCallbacks,
         }}
       >
         <GeneralContext.Provider

@@ -63,17 +63,13 @@ const LMFeedPostFooter = () => {
       >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
-            <div
-              className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
-              onClick={toggleDrawer(true)}
-            >
+            <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
               {post?.isLiked ? (
                 LMFeedCustomIcons?.postLikesLikedCustomIcon ? (
                   <LMFeedCustomIcons.postLikesLikedCustomIcon />
                 ) : (
                   <img
                     onClick={() => {
-                      console.log(Id);
                       likePost!(Id);
                     }}
                     src={postLiked}
@@ -99,6 +95,7 @@ const LMFeedPostFooter = () => {
               <span
                 className="lm-feed-wrapper__card__footer_likes-count"
                 lm-feed-component-id={`lm-feed-post-footer-klmno-${post?.Id}`}
+                onClick={toggleDrawer(true)}
               >
                 {" "}
                 {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
@@ -107,7 +104,6 @@ const LMFeedPostFooter = () => {
             <div
               className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
               onClick={() => {
-                // TODO
                 if (clickNavigator) {
                   clickNavigator(post);
                 }

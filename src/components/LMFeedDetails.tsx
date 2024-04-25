@@ -28,6 +28,7 @@ const LMFeedDetails = () => {
     pinPost,
     deletePost,
     clickNavigator,
+    postComponentClickCustomCallback,
   } = useFeedDetails(id.split("-")[0]);
 
   return !post || !users ? null : (
@@ -53,6 +54,7 @@ const LMFeedDetails = () => {
           pinPost,
           deletePost,
           clickNavigator,
+          postComponentClickCustomCallback,
         }}
       >
         <LMFeedCreatePost />

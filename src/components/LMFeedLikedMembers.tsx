@@ -41,7 +41,6 @@ const LMFeedLikedMembers = (props: any) => {
             return memberObj.push(user);
           });
 
-          console.log(memberObj);
           setMembers(memberObj);
           // setMembers((memberObj) => [...memberObj]);
           setPageCount(page);
@@ -64,9 +63,7 @@ const LMFeedLikedMembers = (props: any) => {
   useEffect(() => {
     fetchLikes(1);
   }, [lmFeedclient]);
-  useEffect(() => {
-    console.log(pageCount);
-  }, [pageCount]);
+
   const getNextPage = () => {
     fetchLikes(pageCount + 1);
   };

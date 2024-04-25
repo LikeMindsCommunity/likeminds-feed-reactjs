@@ -83,11 +83,10 @@ export function useLMPostReply(
           .settext(commentText)
           .build(),
       )) as never;
-      console.log(updateReply);
+
       if (call.success && updateReply) {
         updateReply(call.data.comment, call.data.users);
       }
-      console.log(call);
     } catch (error) {
       console.log(error);
     }

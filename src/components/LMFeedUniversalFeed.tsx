@@ -83,12 +83,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     postComponentClickCustomCallback,
     topics,
   ]);
-  useEffect(() => {
-    const el = wrapperRef.current;
-    return () => {
-      console.log(el?.scrollTop);
-    };
-  }, [wrapperRef]);
+
   return (
     <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
       <div className="lm-flex-grow" id="feed-scroller">

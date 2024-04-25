@@ -9,11 +9,13 @@ import { convertTextToHTML } from "../taggingParser";
 import dayjs from "dayjs";
 import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
+import { NotificationsCustomActions } from "../types/cutomCallbacks/callbacks";
 // import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
 // import threeDotMenuIcon from "../../";
 const LMFeedNotification = ({
   customEventClient,
   NotificationBellCustomIcon,
+  NotificationsCustomCallbacks,
 }: LMFeedNotificationProps) => {
   const {
     notificationCount,
@@ -22,7 +24,7 @@ const LMFeedNotification = ({
     shouldLoadMoreNotifications,
     users,
     handleNotification,
-  } = useLMFeedNotification(customEventClient);
+  } = useLMFeedNotification(customEventClient, NotificationsCustomCallbacks);
   const [notificationAnchor, setNotificationAnchor] =
     useState<HTMLElement | null>(null);
 
@@ -151,6 +153,7 @@ const LMFeedNotification = ({
 interface LMFeedNotificationProps {
   customEventClient: LMFeedCustomEvents;
   NotificationBellCustomIcon?: () => JSX.Element;
+  NotificationsCustomCallbacks?: NotificationsCustomActions;
 }
 
 export default LMFeedNotification;

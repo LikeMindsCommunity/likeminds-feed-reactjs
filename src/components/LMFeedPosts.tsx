@@ -25,12 +25,10 @@ const LMFeedPost: React.FC<LMFeedPostProps> = () => {
       lm-feed-data-id={post?.Id}
       lm-feed-component-id={`lm-feed-post-wrapper-${post?.Id}`}
       onClick={(e) => {
-        // console.log(e);
         if (postComponentClickCustomCallback) {
           postComponentClickCustomCallback(e);
         }
       }}
-      // onClick={(e) => console.log(e)}
     >
       {CustomComponents?.CustomPostViewHeader ? (
         CustomComponents?.CustomPostViewHeader

@@ -5,3 +5,7 @@ export const ROUTES = {
   PAGE_NOT_FOUND_PATH: "404",
   TOPIC: "/topic/:topicId",
 };
+export enum LMAppRoutesConstant {
+  ROOT_PATHNAME = "/community",
+  POST_DETAILS_PATHNAME = "/community/post",
+}

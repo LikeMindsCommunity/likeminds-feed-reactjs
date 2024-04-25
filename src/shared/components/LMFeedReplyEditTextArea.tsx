@@ -63,7 +63,7 @@ const LMFeedReplyEditTextArea = ({
         }
       }
     }
-    console.log(document.activeElement === textFieldRef.current);
+
     if (containerRef && containerRef.current) {
       document.addEventListener("click", handleClickOutside);
 

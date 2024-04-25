@@ -50,10 +50,12 @@ const LMFeedCreatePost = ({
     setPreSelectedTopics,
     showOGTagViewContainer,
     closeOGTagContainer,
+    createPostComponentClickCustomCallback,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
       value={{
+        createPostComponentClickCustomCallback,
         postText,
         setPostText,
         mediaList,

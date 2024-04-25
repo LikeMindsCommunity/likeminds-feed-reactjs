@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Activity } from "../shared/types/models/Activity";
 import { GetNotificationCountResponse } from "../shared/types/api-responses/getNotificationCount";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
@@ -12,10 +12,11 @@ import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { User } from "../shared/types/models/member";
 import { NotificationsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
-import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { NotificationsCustomActions } from "../shared/types/cutomCallbacks/callbacks";
 
 export function useLMFeedNotification(
   customEventClient: LMFeedCustomEvents,
+  NotificationsCustomCallbacks: NotificationsCustomActions = {},
 ): UseLMFeedNotification {
   const [notifications, setNotifications] = useState<Activity[]>([]);
   const [users, setUsers] = useState<Record<string, User>>({});
@@ -25,7 +26,7 @@ export function useLMFeedNotification(
   const [notificationPage, setNotificationPage] = useState<number>(1);
   const [lmFeedClient, setLMFeedClient] = useState<LMClient | null>(null);
   const [, setUser] = useState<User | null>(null);
-
+  const { handleNotificationCustomAction } = NotificationsCustomCallbacks;
   const getNotificationCount = useCallback(
     async function () {
       try {
@@ -76,10 +77,10 @@ export function useLMFeedNotification(
     },
     [lmFeedClient, notificationPage, notifications, users],
   );
-  const { NotificationsCustomCallbacks = {} } = useContext(
-    CustomAgentProviderContext,
-  );
-  const { handleNotificationCustomAction } = NotificationsCustomCallbacks;
+  // const { NotificationsCustomCallbacks = {} } = useContext(
+  //   CustomAgentProviderContext,
+  // );
+
   const handleNotification = useCallback(
     (id: string) => {
       const notificationsCopy = [...notifications];
@@ -173,3 +174,4 @@ interface UseLMFeedNotification {
   users: Record<string, User>;
   handleNotification: (id: string) => void;
 }
+// NotificationsCustomCallbacks?: NotificationsCustomActions;
