@@ -129,7 +129,7 @@ export const LMFeedDocumentAttachmentView = ({
       <Document file={attachmentMeta?.url}>
         <Page
           pageNumber={1}
-          className={"pdfPage"}
+          // className={"pdfPage"}
           renderAnnotationLayer={false}
           renderTextLayer={false}
           // height={324}

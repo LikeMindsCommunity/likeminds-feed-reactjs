@@ -16,10 +16,15 @@ import {
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 import { useNavigate } from "react-router-dom";
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
-import { Divider } from "@mui/material";
+import { Divider, Drawer } from "@mui/material";
+import LMFeedLikedMembers from "./LMFeedLikedMembers";
 
 const LMFeedPostFooter = () => {
   const { post, likePost } = useContext(FeedPostContext);
+  const [open, setOpen] = React.useState(false);
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
+  };
   const { likesCount, commentsCount, Id } = post!;
   const {
     LMPostFooterStyles,
@@ -46,6 +51,11 @@ const LMFeedPostFooter = () => {
   }
   return (
     <>
+      <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
+        <div className="lmLikedMemberWrapper">
+          <LMFeedLikedMembers postId={post?.Id} />
+        </div>
+      </Drawer>
       <div
         className="lm-feed-wrapper__card__footer"
         onClick={() =>
@@ -54,7 +64,10 @@ const LMFeedPostFooter = () => {
       >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
-            <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
+            <div
+              className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
+              onClick={toggleDrawer(true)}
+            >
               {post?.isLiked ? (
                 <img
                   onClick={() => {
