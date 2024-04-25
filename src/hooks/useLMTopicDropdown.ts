@@ -9,7 +9,12 @@ import { TopicsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataPr
 
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import {
+  CustomAgentProviderContext,
+  TopicComponentCustomClickEventDelegatorCallback,
+} from "../contexts/LMFeedCustomAgentProviderContext";
+import { useNavigate } from "react-router-dom";
+import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
   // setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
@@ -21,7 +26,8 @@ export function useTopicDropdown(
 ): useTopicDropdownResponse {
   // Getting an instance of the client
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
-  const { TopicsCustomCallbacks = {} } = useContext(CustomAgentProviderContext);
+  const { TopicsCustomCallbacks = {}, topicComponentClickCustomCallback } =
+    useContext(CustomAgentProviderContext);
   const {
     setSearchKeyCustomAction,
     updateCheckedTopicsCustomAction,
@@ -34,6 +40,7 @@ export function useTopicDropdown(
   );
   // const {} = useContext(LMFeedCon)
   // to store the ids of topics that should be checked.
+  const navigate = useNavigate();
   const [checkedTopics, setCheckedTopics] = useState<Topic[]>([]);
 
   // to detect whether a new topic page should be loaded or not
@@ -93,7 +100,7 @@ export function useTopicDropdown(
     } catch (error) {
       console.log(error);
     }
-  }, [lmFeedclient, searchKey]);
+  }, [lmFeedclient, mode, searchKey]);
 
   // TODO update the logic for finding index and checking the topics
   const updateCheckedTopics = useCallback(
@@ -159,6 +166,7 @@ export function useTopicDropdown(
         clearAllCheckedTopics,
         getNextPage,
       },
+      navigate: navigate,
     };
   }, [
     checkedTopics,
@@ -171,6 +179,7 @@ export function useTopicDropdown(
     loadNewTopics,
     logoutUser,
     message,
+    navigate,
     searchKey,
     showSnackbar,
     topics,
@@ -223,6 +232,9 @@ export function useTopicDropdown(
     clearAllCheckedTopics: clearAllCheckedTopicsCustomAction
       ? clearAllCheckedTopicsCustomAction.bind(null, topicsActionsAndDataStore)
       : clearAllCheckedTopics,
+    topicComponentClickCustomCallback: topicComponentClickCustomCallback
+      ? topicComponentClickCustomCallback.bind(null, topicsActionsAndDataStore)
+      : undefined,
   };
 }
 
@@ -235,4 +247,5 @@ interface useTopicDropdownResponse {
   updateCheckedTopics: (topic: Topic) => void;
   clearAllCheckedTopics: () => void;
   getNextPage: () => Promise<void>;
+  topicComponentClickCustomCallback?: ComponentDelegatorListener;
 }

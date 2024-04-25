@@ -7,19 +7,20 @@ import {
   CustomAgentProviderContext,
   CustomAgentProviderInterface,
 } from "../contexts/LMFeedCustomAgentProviderContext";
-import { RouteModifiers } from "../shared/types/customProps/routes";
+import { LMFeedCustomAppRoutes } from "../shared/types/customProps/routes";
 import "../assets/scss/styles.scss";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { pdfjs } from "react-pdf";
 import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContextProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import LMFeedDataContextProvider from "./LMFeedDataContextProvider";
+import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
-  routes?: RouteModifiers[];
+  routes?: LMFeedCustomAppRoutes;
   useParentRouter?: boolean;
   accessToken: string;
   refreshToken: string;
@@ -27,24 +28,25 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 }
 
 function LMFeed({
+  useParentRouter = false,
   accessToken,
   refreshToken,
   client,
-  likeActionCall,
-  topicBlocksWrapperStyles,
-  LMPostHeaderStyles,
-  LMPostFooterStyles,
-  LMPostTopicStyles,
   routes,
-  LMPostBodyStyles,
-  CustomComponents,
-  CustomCallbacks,
-  useParentRouter = false,
   customEventClient,
+  LMPostHeaderStyles,
+  LMFeedCustomIcons,
+  CustomComponents,
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
   GeneralCustomCallbacks,
+  TopicsCustomCallbacks,
+  RepliesCustomCallbacks,
+  PostCreationCustomCallbacks,
   postComponentClickCustomCallback,
+  createPostComponentClickCustomCallback,
+  topicComponentClickCustomCallback,
+  memberComponentClickCustomCallback,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(accessToken, refreshToken, client, customEventClient);
@@ -67,18 +69,19 @@ function LMFeed({
     >
       <CustomAgentProviderContext.Provider
         value={{
-          likeActionCall: likeActionCall,
-          topicBlocksWrapperStyles,
           LMPostHeaderStyles,
-          LMPostFooterStyles,
-          LMPostBodyStyles,
-          LMPostTopicStyles,
+          LMFeedCustomIcons,
           CustomComponents,
-          CustomCallbacks,
           FeedListCustomActions,
           FeedPostDetailsCustomActions,
           GeneralCustomCallbacks,
           postComponentClickCustomCallback,
+          topicComponentClickCustomCallback,
+          createPostComponentClickCustomCallback,
+          memberComponentClickCustomCallback,
+          TopicsCustomCallbacks,
+          RepliesCustomCallbacks,
+          PostCreationCustomCallbacks,
         }}
       >
         <GeneralContext.Provider
@@ -98,7 +101,13 @@ function LMFeed({
               logoutUser: logoutUser,
             }}
           >
-            <LMFeedDataContextProvider />
+            {!useParentRouter ? (
+              <BrowserRouter>
+                <LMFeedListDataContextProvider />
+              </BrowserRouter>
+            ) : (
+              <LMFeedListDataContextProvider />
+            )}
           </UserProviderContext.Provider>
         </GeneralContext.Provider>
       </CustomAgentProviderContext.Provider>

@@ -8,10 +8,14 @@ import { getAvatar } from "../shared/components/LMUserMedia";
 import { Member } from "../shared/types/models/member";
 import { GetAllMembersResponse } from "../shared/types/api-responses/getAllMembersResponse";
 import { MEMBER_LIST } from "../shared/constants/lmAppConstant";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
 const LMFeedAllMembers = () => {
   const { lmFeedclient, customEventClient } = useContext(
     LMFeedGlobalClientProviderContext,
+  );
+  const { memberComponentClickCustomCallback } = useContext(
+    CustomAgentProviderContext,
   );
   const [members, setMembers] = useState<Member[]>([]);
   const [loadMoreFeeds, setLoadMoreFeeds] = useState<boolean>(true);
@@ -52,9 +56,7 @@ const LMFeedAllMembers = () => {
     fetchMembers(1);
     fetchMembers(2);
   }, [lmFeedclient]);
-  useEffect(() => {
-    console.log(pageCount);
-  }, [pageCount]);
+
   const getNextPage = () => {
     fetchMembers(pageCount + 1);
   };
@@ -77,6 +79,12 @@ const LMFeedAllMembers = () => {
               <div
                 key={member.uuid}
                 className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"
+                lm-feed-component-id={`lm-feed-member-wrapper-klmno-${member?.uuid}`}
+                onClick={(e) => {
+                  if (memberComponentClickCustomCallback) {
+                    memberComponentClickCustomCallback(e);
+                  }
+                }}
               >
                 <div className="lm-member-wrapper__body__media__imgBox lm-avatar">
                   {getAvatar({

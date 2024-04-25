@@ -22,6 +22,11 @@ import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResp
 import { FeedPostDetailsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { ClickNavigator } from "../shared/types/customProps/routes";
+import { useNavigate } from "react-router-dom";
+import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
+import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { LMAppRoutesConstant } from "../shared/constants/lmRoutesConstant";
 
 interface UseFeedDetailsInterface {
   post: Post | null;
@@ -38,11 +43,14 @@ interface UseFeedDetailsInterface {
   likePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
+  clickNavigator: ClickNavigator;
+  postComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 
 export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   postId: string,
 ) => {
+  const { routes } = useContext(GeneralContext);
   const { lmFeedclient, customEventClient } = useContext(
     GlobalClientProviderContext,
   );
@@ -51,17 +59,19 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   );
   const { displaySnackbarMessage, message, showSnackbar, closeSnackbar } =
     useContext(GeneralContext);
-  const { FeedPostDetailsCustomActions = {} } = useContext(
-    CustomAgentProviderContext,
-  );
+  const {
+    FeedPostDetailsCustomActions = {},
+    postComponentClickCustomCallback,
+  } = useContext(CustomAgentProviderContext);
   const {
     deletePostCustomAction,
     pinPostCustomAction,
 
     likePostCustomAction,
-
+    clickNavigationCustomAction,
     likeReplyCustomAction,
   } = FeedPostDetailsCustomActions;
+  const navigation = useNavigate();
   // state for storing the post
   const [post, setPost] = useState<Post | null>(null);
 
@@ -113,7 +123,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     } catch (error) {
       console.log(error);
     }
-  }, [lmFeedclient, postId]);
+  }, [displaySnackbarMessage, lmFeedclient, postId]);
 
   //   function to load next page of replies
   const getNextPage = useCallback(async () => {
@@ -143,12 +153,27 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     }
   }, [lmFeedclient, pageCount, postId, replies, topics, users]);
 
+  const clickNavigator = useCallback(
+    (post: Post) => {
+      sessionStorage.setItem("scroll-pos", post.Id || "");
+      let detailsRoute = "";
+      if (routes) {
+        detailsRoute = routes?.feedDetailsRoute.pathname;
+      } else {
+        detailsRoute = LMAppRoutesConstant.POST_DETAILS_PATHNAME;
+      }
+      navigation(
+        `/${detailsRoute}/${`${post.Id}-${post?.heading}`.substring(0, 59)}`,
+      );
+    },
+    [navigation, routes],
+  );
+
   const updateReplyOnPostReply = useCallback(
     function (replyId: string) {
       const repliesCopy = [...replies];
       const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
       if (targetReply) {
-        console.log(targetReply);
         targetReply.commentsCount++;
       }
       setReplies(repliesCopy);
@@ -312,12 +337,36 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         )) as never;
         if (call.success) {
           const tempPost = { ...post };
-
           if (tempPost.isPinned) {
             tempPost.isPinned = false;
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.UNPIN_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.PIN_POST),
+                  title: "Pin Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
           } else {
             tempPost.isPinned = true;
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.UNPIN_POST),
+                  title: "Unpin This Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
           }
+          // if (tempPost.isPinned) {
+          //   tempPost.isPinned = false;
+          // } else {
+          //   tempPost.isPinned = true;
+          // }
           // feedListCopy.splice(index, 1);
 
           setPost(tempPost as Post);
@@ -422,14 +471,17 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           updateReply,
           updateReplyOnPostReply,
           likeReply,
+          clickNavigator,
           likePost,
           pinPost,
           deletePost,
           getNextPage,
         },
+        navigate: navigation,
       };
     }, [
       addNewComment,
+      clickNavigator,
       closeSnackbar,
       currentCommunity,
       currentUser,
@@ -441,6 +493,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       loadNextPage,
       logoutUser,
       message,
+      navigation,
       pageCount,
       pinPost,
       post,
@@ -479,5 +532,17 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     deletePost:
       deletePostCustomAction?.bind(null, feedPostDetailsActionsAndDataStore) ||
       deletePost,
+    clickNavigator: clickNavigationCustomAction
+      ? clickNavigationCustomAction.bind(
+          null,
+          feedPostDetailsActionsAndDataStore,
+        )
+      : clickNavigator,
+    postComponentClickCustomCallback: postComponentClickCustomCallback
+      ? postComponentClickCustomCallback?.bind(
+          null,
+          feedPostDetailsActionsAndDataStore,
+        )
+      : undefined,
   };
 };

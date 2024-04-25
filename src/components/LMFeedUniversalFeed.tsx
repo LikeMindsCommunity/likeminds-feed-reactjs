@@ -7,9 +7,7 @@ import { HelmetProvider } from "react-helmet-async";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import LMFeedDetails from "./LMFeedDetails";
 import { Post } from "../shared/types/models/post";
-import { ROUTES } from "../shared/constants/lmRoutesConstant";
 import Posts from "./LMFeedPosts";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import LMFeedCreatePost from "./LMFeedCreatePost";
@@ -36,6 +34,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     deletePost,
     pinPost,
     likePost,
+    clickNavigator,
     postComponentClickCustomCallback,
   } = useContext(LMFeedDataContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
@@ -64,16 +63,18 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             pinPost: pinPost,
             likePost: likePost,
             postComponentClickCustomCallback,
+            clickNavigator: clickNavigator,
           }}
         >
-          {CustomComponents?.PostView || (
+          {CustomComponents?.CustomPostView || (
             <Posts post={post} user={filteredUser} />
           )}
         </FeedPostContext.Provider>
       );
     });
   }, [
-    CustomComponents?.PostView,
+    CustomComponents?.CustomPostView,
+    clickNavigator,
     deletePost,
     feedList,
     feedUsersList,
@@ -82,28 +83,20 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     postComponentClickCustomCallback,
     topics,
   ]);
-  useEffect(() => {
-    const el = wrapperRef.current;
-    return () => {
-      console.log(el?.scrollTop);
-    };
-  }, [wrapperRef]);
+
   return (
     <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
-      <div
-        className="lm-flex-grow"
-        id="feed-scroller"
-        // style={{
-        //   overflow: "auto",
-        // }}
-      >
+      <div className="lm-flex-grow" id="feed-scroller">
         <LMFeedCreatePost showStarterComponent />
         {/* <div> */}
         {/* Topics */}
-        {CustomComponents?.TopicDropDown ? (
-          CustomComponents.TopicDropDown
+        {CustomComponents?.CustomTopicDropDown ? (
+          CustomComponents.CustomTopicDropDown
         ) : (
-          <div className="lm-mb-4 lm-mt-4">
+          <div
+            className="lm-mb-4 lm-mt-4"
+            lm-feed-component-id={`lm-feed-topic-dropdown`}
+          >
             <LMFeedViewTopicDropdown
               mode={TopicsDropdownMode.view}
               selectedTopicIds={selectedTopics}

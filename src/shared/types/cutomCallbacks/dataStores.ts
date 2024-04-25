@@ -1,4 +1,5 @@
 import { LMFeedCreatePostMediaUploadMode } from "../../enums/lmCreatePostMediaHandlingMode";
+import { ClickNavigator } from "../customProps/routes";
 import { Activity } from "../models/Activity";
 import { Community } from "../models/community";
 import { User } from "../models/member";
@@ -27,6 +28,7 @@ export interface FeedListDefaultActions {
   pinPost: (id: string) => Promise<void>;
   likePost: (id: string) => Promise<void>;
   getNextPage: () => Promise<void>;
+  clickNavigator: ClickNavigator;
 }
 
 export interface FeedPostDetailsStore {
@@ -53,6 +55,7 @@ export interface FeedPostDetailsDefaultActions {
   pinPost: (id: string) => Promise<void>; //
   deletePost: (id: string) => Promise<void>; //
   getNextPage: () => Promise<void>;
+  clickNavigator: ClickNavigator;
 }
 export interface NotificationsDataStore {
   notifications: Activity[];

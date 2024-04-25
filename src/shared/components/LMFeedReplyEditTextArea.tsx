@@ -11,14 +11,12 @@ import { convertTextToHTML, setTagUserImage } from "../taggingParser";
 import { useLMPostReply } from "../../hooks/useLMPostReply";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import { useParams } from "react-router-dom";
-
+export interface LMFeedReplyEditTextAreaProps {
+  closeEditMode?: () => void;
+}
 const LMFeedReplyEditTextArea = ({
   closeEditMode,
-}: {
-  setOpenReplyText?: React.Dispatch<boolean>;
-
-  closeEditMode?: () => void;
-}) => {
+}: LMFeedReplyEditTextAreaProps) => {
   const { reply } = useContext(ReplyContext);
   //   const { currentUser } = useContext(LMFeedUserProviderContext);
   const { id } = useParams();
@@ -65,7 +63,7 @@ const LMFeedReplyEditTextArea = ({
         }
       }
     }
-    console.log(document.activeElement === textFieldRef.current);
+
     if (containerRef && containerRef.current) {
       document.addEventListener("click", handleClickOutside);
 

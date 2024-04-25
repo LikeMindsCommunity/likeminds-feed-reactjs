@@ -4,7 +4,6 @@ import { formatTimeAgo } from "../shared/utils";
 import { EDITED, POST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { getAvatar } from "../shared/components/LMUserMedia";
-import { useNavigate } from "react-router-dom";
 import { Dialog, Menu } from "@mui/material";
 import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
@@ -18,14 +17,10 @@ import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 const LMFeedPostHeader = () => {
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
   const { post, users, topics, pinPost } = useContext(FeedPostContext);
-  const { LMPostHeaderStyles, CustomCallbacks = {} } = useContext(
+  const { LMPostHeaderStyles, LMFeedCustomIcons } = useContext(
     CustomAgentProviderContext,
   );
-  const {
-    postHeaderAvatarClickCallback,
-    postHeaderTitleClickCallback,
-    postHeaderCustomTitleClickCallback,
-  } = CustomCallbacks;
+
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
   const [openDeletePostDialog, setOpenDeletePostDialog] =
@@ -40,7 +35,6 @@ const LMFeedPostHeader = () => {
   );
 
   const avatarContent = getAvatar({ imageUrl, name });
-  const navigate = useNavigate();
 
   function closeReportDialog() {
     setOpenReportPostDialogBox(false);
@@ -102,151 +96,30 @@ const LMFeedPostHeader = () => {
           entityId={post?.Id || ""}
         />
       </Dialog>
-      {/* <div
-        className="lm-feed-wrapper__card__header"
-        lm-feed-component-id={`lm-feed-post-wrapper-INSERT_RANDOM_STRING_HERE-${post?.Id}`}
-      >
-        <div className="lm-flex-container">
-          <div
-            className="lm-avatar lm-mr-5"
-            style={LMPostHeaderStyles?.avatar}
-            onClick={() => {
-              if (postHeaderAvatarClickCallback) {
-                postHeaderAvatarClickCallback(navigate);
-              }
-            }}
-          >
-            {avatarContent}
-          </div>
-          <div>
-            <div
-              className="lm-feed-wrapper__card__header--title"
-              style={LMPostHeaderStyles?.title}
-              onClick={() => {
-                if (postHeaderTitleClickCallback) {
-                  postHeaderTitleClickCallback(navigate);
-                }
-              }}
-            >
-              {name}{" "}
-              {customTitle ? (
-                <span
-                  style={LMPostHeaderStyles?.customTitle}
-                  onClick={() => {
-                    if (postHeaderCustomTitleClickCallback) {
-                      postHeaderCustomTitleClickCallback(navigate);
-                    }
-                  }}
-                >
-                  {customTitle}
-                </span>
-              ) : null}
-            </div>
-            <div className="lm-feed-wrapper__card__header--text">
-              {isEdited ? (
-                <>
-                  <span className="edited">{formatTimeAgo(createdAt)}</span>
-                  <span
-                    className="lm-primary-text"
-                    style={LMPostHeaderStyles?.editBadge}
-                  >
-                    {LMPostHeaderStyles?.editBadgeCustomText
-                      ? LMPostHeaderStyles.editBadgeCustomText
-                      : EDITED}
-                  </span>
-                </>
-              ) : (
-                <>
-                  {LMPostHeaderStyles?.postBadgeText || POST}
-                  <span>{formatTimeAgo(createdAt)}</span>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="lm-feed-wrapper__card__header__menu-items-container">
-          {isPinned ? (
-            <img
-              className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
-              src={pinIcon}
-              alt="3-dot-menu"
-            />
-          ) : null}
 
-          <img
-            className="three-dot-menu-image lm-cursor-pointer"
-            src={threeDotMenuIcon}
-            alt="3-dot-menu"
-            onClick={(e) => {
-              setAnchor(e.currentTarget);
-            }}
-          />
-          <Menu
-            anchorEl={anchor}
-            open={Boolean(anchor)}
-            anchorOrigin={{
-              horizontal: "right",
-              vertical: "top",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            onClose={() => setAnchor(null)}
-          >
-            {menuItems?.map((menuItem) => {
-              return (
-                <div
-                  className="three-dot-menu-options lm-cursor-pointer lm-hover-effect"
-                  onClick={onMenuItemClick}
-                  id={menuItem?.id?.toString()}
-                  key={menuItem?.id}
-                >
-                  {menuItem?.title}
-                </div>
-              );
-            })}
-          </Menu>
-        </div>
-      </div> */}
       <div
         className="lm-feed-wrapper__card__header"
-        lm-feed-component-id={`lm-feed-post-wrapper-abcde-${post?.Id}`}
+        lm-feed-component-id={`lm-feed-post-header-abcde-${post?.Id}`}
       >
         <div className="lm-flex-container">
           <div
             className="lm-avatar lm-mr-5"
             style={LMPostHeaderStyles?.avatar}
-            onClick={() => {
-              if (postHeaderAvatarClickCallback) {
-                postHeaderAvatarClickCallback(navigate);
-              }
-            }}
-            lm-feed-component-id={`lm-feed-post-wrapper-fghij-${post?.Id}`}
+            lm-feed-component-id={`lm-feed-post-header-fghij-${post?.Id}`}
           >
             {avatarContent}
           </div>
-          <div lm-feed-component-id={`lm-feed-post-wrapper-klmno-${post?.Id}`}>
+          <div lm-feed-component-id={`lm-feed-post-header-klmno-${post?.Id}`}>
             <div
               className="lm-feed-wrapper__card__header--title"
               style={LMPostHeaderStyles?.title}
-              onClick={() => {
-                if (postHeaderTitleClickCallback) {
-                  postHeaderTitleClickCallback(navigate);
-                }
-              }}
-              lm-feed-component-id={`lm-feed-post-wrapper-pqrst-${post?.Id}`}
+              lm-feed-component-id={`lm-feed-post-header-pqrst-${post?.Id}`}
             >
               {name}{" "}
               {customTitle ? (
                 <span
                   style={LMPostHeaderStyles?.customTitle}
-                  onClick={() => {
-                    if (postHeaderCustomTitleClickCallback) {
-                      postHeaderCustomTitleClickCallback(navigate);
-                    }
-                  }}
-                  lm-feed-component-id={`lm-feed-post-wrapper-uvwxy-${post?.Id}`}
+                  lm-feed-component-id={`lm-feed-post-header-uvwxy-${post?.Id}`}
                 >
                   {customTitle}
                 </span>
@@ -254,20 +127,20 @@ const LMFeedPostHeader = () => {
             </div>
             <div
               className="lm-feed-wrapper__card__header--text"
-              lm-feed-component-id={`lm-feed-post-wrapper-zabcd-${post?.Id}`}
+              lm-feed-component-id={`lm-feed-post-header-zabcd-${post?.Id}`}
             >
               {isEdited ? (
                 <>
                   <span
                     className="edited"
-                    lm-feed-component-id={`lm-feed-post-wrapper-efghi-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-header-efghi-${post?.Id}`}
                   >
                     {formatTimeAgo(createdAt)}
                   </span>
                   <span
-                    className="lm-primary-text"
+                    className="lm-primary-text lm-post-badge"
                     style={LMPostHeaderStyles?.editBadge}
-                    lm-feed-component-id={`lm-feed-post-wrapper-jklmn-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-header-jklmn-${post?.Id}`}
                   >
                     {LMPostHeaderStyles?.editBadgeCustomText
                       ? LMPostHeaderStyles.editBadgeCustomText
@@ -278,7 +151,7 @@ const LMFeedPostHeader = () => {
                 <>
                   {LMPostHeaderStyles?.postBadgeText || POST}
                   <span
-                    lm-feed-component-id={`lm-feed-post-wrapper-opqrs-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-header-opqrs-${post?.Id}`}
                   >
                     {formatTimeAgo(createdAt)}
                   </span>
@@ -289,15 +162,19 @@ const LMFeedPostHeader = () => {
         </div>
         <div
           className="lm-feed-wrapper__card__header__menu-items-container"
-          lm-feed-component-id={`lm-feed-post-wrapper-tuvwx-${post?.Id}`}
+          lm-feed-component-id={`lm-feed-post-header-tuvwx-${post?.Id}`}
         >
           {isPinned ? (
-            <img
-              className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
-              src={pinIcon}
-              alt="3-dot-menu"
-              lm-feed-component-id={`lm-feed-post-wrapper-yzabc-${post?.Id}`}
-            />
+            LMFeedCustomIcons?.postPinCustomIcon ? (
+              <LMFeedCustomIcons.postPinCustomIcon />
+            ) : (
+              <img
+                className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
+                src={pinIcon}
+                alt="pinned post"
+                lm-feed-component-id={`lm-feed-post-header-yzabc-${post?.Id}`}
+              />
+            )
           ) : null}
           <img
             className="three-dot-menu-image lm-cursor-pointer"
@@ -306,7 +183,7 @@ const LMFeedPostHeader = () => {
             onClick={(e) => {
               setAnchor(e.currentTarget);
             }}
-            lm-feed-component-id={`lm-feed-post-wrapper-defgh-${post?.Id}`}
+            lm-feed-component-id={`lm-feed-post-header-defgh-${post?.Id}`}
           />
           <Menu
             anchorEl={anchor}
@@ -314,7 +191,7 @@ const LMFeedPostHeader = () => {
             anchorOrigin={{ horizontal: "right", vertical: "top" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
             onClose={() => setAnchor(null)}
-            lm-feed-component-id={`lm-feed-post-wrapper-ijklm-${post?.Id}`}
+            lm-feed-component-id={`lm-feed-post-header-ijklm-${post?.Id}`}
           >
             {menuItems?.map((menuItem) => {
               return (
@@ -323,7 +200,7 @@ const LMFeedPostHeader = () => {
                   onClick={onMenuItemClick}
                   id={menuItem?.id?.toString()}
                   key={menuItem?.id}
-                  lm-feed-component-id={`lm-feed-post-wrapper-nopqr-${post?.Id}`}
+                  lm-feed-component-id={`lm-feed-post-header-nopqr-${post?.Id}`}
                 >
                   {menuItem?.title}
                 </div>

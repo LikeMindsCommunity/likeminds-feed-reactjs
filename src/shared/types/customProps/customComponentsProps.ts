@@ -1,18 +1,28 @@
 import { ReactNode } from "react";
 import { Topic } from "../models/topic";
 import { NavigateFunction } from "react-router-dom";
+import { LMFeedAttachmentsProps } from "../../components/LMFeedAttachments";
+import { LMFeedReplyTextAreaProps } from "../../components/LMFeedReplyTextArea";
+import { LMFeedReplyEditTextAreaProps } from "../../components/LMFeedReplyEditTextArea";
 
 export interface CustomComponents {
-  PostViewHeader?: ReactNode;
-  PostViewFooter?: ReactNode;
-  PostViewTopicsWrapper?: ReactNode;
-  PostViewBody?: ReactNode;
-  TopicDropDown?: ReactNode;
-  Reply?: ReactNode;
-  PostView?: ReactNode;
-  RepliesScroller?: ReactNode;
-  PostTopicTile?: React.FC<{ key: string; topic: Topic }>;
-  PostDetailsView?: ReactNode;
+  CustomPostViewHeader?: ReactNode;
+  CustomPostViewFooter?: ReactNode;
+  CustomPostViewTopicsWrapper?: ReactNode;
+  CustomPostViewBody?: ReactNode;
+  CustomTopicDropDown?: ReactNode;
+  CustomReply?: ReactNode;
+  CustomPostView?: ReactNode;
+  CustomRepliesScroller?: ReactNode;
+  CustomCommentsScroller?: ReactNode;
+  CustomPostTopicTile?: React.FC<{ key: string; topic: Topic }>;
+  CustomPostDetailsView?: ReactNode; //
+  CustomPostViewAttachment?: React.FC<LMFeedAttachmentsProps>;
+  // CustomPDFViewer?: ReactNode;
+  CustomEditReplyTextArea?: React.FC<LMFeedReplyEditTextAreaProps>;
+  CustomPostReplyTextArea?: React.FC<LMFeedReplyTextAreaProps>;
+  CustomCreatePostTextArea?: ReactNode;
+  CustomCreatePostDialog?: ReactNode;
 }
 
 export interface CustomCallbacks {

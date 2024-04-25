@@ -22,6 +22,10 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { useNavigate } from "react-router-dom";
+import { ClickNavigator } from "../shared/types/customProps/routes";
+import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { LMAppRoutesConstant } from "../shared/constants/lmRoutesConstant";
 
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
@@ -36,16 +40,15 @@ interface useFetchFeedsResponse {
   deletePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   likePost: (id: string) => Promise<void>;
-  postComponentClickCustomCallback?: (
-    // feedListStore: FeedListActionsAndDataStore,
-    event: React.MouseEvent<HTMLDivElement>,
-  ) => void;
+  postComponentClickCustomCallback?: ComponentDelegatorListener;
+  clickNavigator: ClickNavigator;
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const { lmFeedclient, customEventClient } = useContext(
     GlobalClientProviderContext,
   );
+  const { routes } = useContext(GeneralContext);
   const { currentCommunity, currentUser, logoutUser } = useContext(
     LMFeedUserProviderContext,
   );
@@ -53,8 +56,13 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     useContext(GeneralContext);
   const { FeedListCustomActions = {}, postComponentClickCustomCallback } =
     useContext(CustomAgentProviderContext);
-  const { deletePostCustomAction, pinPostCustomAction, likePostCustomAction } =
-    FeedListCustomActions;
+  const {
+    deletePostCustomAction,
+    pinPostCustomAction,
+    likePostCustomAction,
+    clickNavigationCustomAction,
+  } = FeedListCustomActions;
+  const navigation = useNavigate();
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -195,7 +203,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           }
 
           // feedListCopy.splice(index, 1);
-          console.log(tempPost);
+
           setFeedList(feedListCopy);
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
@@ -234,6 +242,21 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       }
     },
     [feedList, lmFeedclient],
+  );
+  const clickNavigator = useCallback(
+    (post: Post) => {
+      sessionStorage.setItem("scroll-pos", post.Id || "");
+      let detailsRoute = "";
+      if (routes) {
+        detailsRoute = routes?.feedDetailsRoute.pathname;
+      } else {
+        detailsRoute = LMAppRoutesConstant.POST_DETAILS_PATHNAME;
+      }
+      navigation(
+        `/${detailsRoute}/${`${post.Id}-${post?.heading}`.substring(0, 59)}`,
+      );
+    },
+    [navigation, routes],
   );
   useEffect(() => {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
@@ -414,26 +437,30 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           pinPost,
           likePost,
           getNextPage,
+          clickNavigator,
         },
+        navigate: navigation,
       };
     }, [
-      closeSnackbar,
-      currentCommunity,
+      selectedTopics,
+      topics,
+      loadMoreFeeds,
       currentPageCount,
-      currentUser,
-      deletePost,
-      displaySnackbarMessage,
       feedList,
       feedUsersList,
-      getNextPage,
-      likePost,
-      loadMoreFeeds,
+      currentUser,
+      currentCommunity,
       logoutUser,
-      message,
-      pinPost,
-      selectedTopics,
+      displaySnackbarMessage,
+      closeSnackbar,
       showSnackbar,
-      topics,
+      message,
+      deletePost,
+      pinPost,
+      likePost,
+      getNextPage,
+      clickNavigator,
+      navigation,
     ]);
   return {
     topics,
@@ -455,5 +482,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     postComponentClickCustomCallback: postComponentClickCustomCallback
       ? postComponentClickCustomCallback.bind(null, feedListActionsAndDataStore)
       : undefined,
+    clickNavigator: clickNavigationCustomAction
+      ? clickNavigationCustomAction.bind(null, feedListActionsAndDataStore)
+      : clickNavigator,
   };
 }

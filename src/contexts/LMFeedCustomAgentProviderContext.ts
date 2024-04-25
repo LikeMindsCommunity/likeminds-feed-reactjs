@@ -1,46 +1,56 @@
-import React, { CSSProperties, createContext } from "react";
+import React, { createContext } from "react";
 import {
-  LMPostBodyStyles,
-  LMPostFooterStyles,
+  LMFeedCustomIcons,
   LMPostHeaderStyles,
-  LMPostTopicsStyles,
 } from "../shared/types/customProps/styleProps";
-import {
-  CustomCallbacks,
-  CustomComponents,
-} from "../shared/types/customProps/customComponentsProps";
+import { CustomComponents } from "../shared/types/customProps/customComponentsProps";
 import {
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
   GeneralClickCallbacks,
-  NotificationsCustomActions,
   PostCreationCustomActions,
   RepliesCustomActions,
   TopicsCustomActions,
 } from "../shared/types/cutomCallbacks/callbacks";
-import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
-// import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
+import {
+  FeedListActionsAndDataStore,
+  FeedPostDetailsActionsAndDataStore,
+  PostCreationActionsAndDataStore,
+  TopicsActionsAndDataStore,
+} from "../shared/types/cutomCallbacks/dataProvider";
 
 export interface CustomAgentProviderInterface {
-  likeActionCall?: () => void;
-  topicBlocksWrapperStyles?: CSSProperties;
-  LMPostHeaderStyles?: LMPostHeaderStyles;
-  LMPostBodyStyles?: LMPostBodyStyles;
-  LMPostFooterStyles?: LMPostFooterStyles;
-  LMPostTopicStyles?: LMPostTopicsStyles;
-  CustomComponents?: CustomComponents;
-  CustomCallbacks?: CustomCallbacks;
-  FeedListCustomActions?: FeedListCustomActions;
-  FeedPostDetailsCustomActions?: FeedPostDetailsCustomActions;
+  LMPostHeaderStyles?: LMPostHeaderStyles; //
+  LMFeedCustomIcons?: LMFeedCustomIcons; //
+  CustomComponents?: CustomComponents; //
+  FeedListCustomActions?: FeedListCustomActions; //
+  FeedPostDetailsCustomActions?: FeedPostDetailsCustomActions; //
   GeneralCustomCallbacks?: GeneralClickCallbacks;
   TopicsCustomCallbacks?: TopicsCustomActions;
   RepliesCustomCallbacks?: RepliesCustomActions;
   PostCreationCustomCallbacks?: PostCreationCustomActions;
-  NotificationsCustomCallbacks?: NotificationsCustomActions;
-  postComponentClickCustomCallback?: (
-    store: FeedListActionsAndDataStore,
-    event: React.MouseEvent<HTMLDivElement>,
-  ) => void;
+
+  postComponentClickCustomCallback?: PostComponentCustomClickEventDelegatorCallback;
+  createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
+  topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;
+  memberComponentClickCustomCallback?: MemberComponentCustomClickEventDelegatorCallback;
 }
 export const CustomAgentProviderContext =
   createContext<CustomAgentProviderInterface>({});
+
+export type PostComponentCustomClickEventDelegatorCallback = (
+  store: FeedListActionsAndDataStore | FeedPostDetailsActionsAndDataStore,
+  event: React.MouseEvent,
+) => void;
+
+export type TopicComponentCustomClickEventDelegatorCallback = (
+  store: TopicsActionsAndDataStore,
+  event: React.MouseEvent,
+) => void;
+export type CreatePostComponentCustomClickEventDelegatorCallback = (
+  store: PostCreationActionsAndDataStore,
+  event: React.MouseEvent,
+) => void;
+export type MemberComponentCustomClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;

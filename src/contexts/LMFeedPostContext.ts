@@ -3,6 +3,7 @@ import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 import { User } from "../shared/types/models/member";
 import { Reply } from "../shared/types/models/replies";
+import { ClickNavigator } from "../shared/types/customProps/routes";
 // import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 
 export const FeedPostContext = React.createContext<FeedPostContextInterface>({
@@ -27,7 +28,7 @@ interface FeedPostContextInterface {
   likeReply?: (id: string) => void;
   likePost?: (id: string) => void;
   postComponentClickCustomCallback?: (
-    // feedListStore: FeedListActionsAndDataStore,
     event: React.MouseEvent<HTMLDivElement>,
   ) => void;
+  clickNavigator?: ClickNavigator;
 }

@@ -32,6 +32,8 @@ import {
 import { PostCreationActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { useNavigate } from "react-router-dom";
+import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 
 interface UseCreatePost {
   postText: string | null;
@@ -56,6 +58,7 @@ interface UseCreatePost {
   setPreSelectedTopics: React.Dispatch<Topic[]>;
   showOGTagViewContainer: boolean;
   closeOGTagContainer: () => void;
+  createPostComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 export function useCreatePost(): UseCreatePost {
   // Getting context values
@@ -68,11 +71,13 @@ export function useCreatePost(): UseCreatePost {
   );
   const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
     useContext(GeneralContext);
-  const { PostCreationCustomCallbacks = {} } = useContext(
-    CustomAgentProviderContext,
-  );
+  const {
+    PostCreationCustomCallbacks = {},
+    createPostComponentClickCustomCallback,
+  } = useContext(CustomAgentProviderContext);
   const { postFeedCustomAction, editPostCustomAction } =
     PostCreationCustomCallbacks;
+  const navigate = useNavigate();
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
@@ -110,7 +115,7 @@ export function useCreatePost(): UseCreatePost {
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
     const mediaArray = event.target.files;
     const mediaCopy = [...mediaList, ...Array.from(mediaArray!)];
-    console.log(mediaCopy);
+
     setMediaList(mediaCopy);
   }
   function removeMedia(index: number) {
@@ -266,7 +271,6 @@ export function useCreatePost(): UseCreatePost {
                 attachment.attachmentType === 3,
             )
           ) {
-            console.log(attachmentResponseArray);
             attachmentResponseArray.pop();
             attachmentResponseArray.push(
               Attachment.builder()
@@ -373,7 +377,6 @@ export function useCreatePost(): UseCreatePost {
           },
         );
         if (ogTagAttchmentObject.length) {
-          console.log(ogTagAttchmentObject[0].attachmentMeta.ogTags);
           setOgtag(ogTagAttchmentObject[0].attachmentMeta.ogTags);
         }
         setPreSelectedTopics(preSelectedTopicsArr);
@@ -430,8 +433,10 @@ export function useCreatePost(): UseCreatePost {
           postFeed,
           editPost,
         },
+        navigate: navigate,
       };
     }, [
+      navigate,
       closeSnackbar,
       currentCommunity,
       currentUser,
@@ -478,5 +483,12 @@ export function useCreatePost(): UseCreatePost {
     setPreSelectedTopics,
     showOGTagViewContainer,
     closeOGTagContainer,
+    createPostComponentClickCustomCallback:
+      createPostComponentClickCustomCallback
+        ? createPostComponentClickCustomCallback.bind(
+            null,
+            postCreationActionAndDataStore,
+          )
+        : undefined,
   };
 }

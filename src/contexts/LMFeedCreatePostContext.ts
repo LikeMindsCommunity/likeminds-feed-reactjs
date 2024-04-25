@@ -3,6 +3,7 @@ import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMed
 import { OgTag } from "../shared/types/models/ogTag";
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
+import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 interface LMFeedCreatePostContextInterface {
   postText?: string | null;
   setPostText?: (text: string) => void;
@@ -26,6 +27,7 @@ interface LMFeedCreatePostContextInterface {
   setPreSelectedTopics?: React.Dispatch<Topic[]>;
   showOGTagViewContainer?: boolean;
   closeOGTagContainer?: () => void;
+  createPostComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>({});

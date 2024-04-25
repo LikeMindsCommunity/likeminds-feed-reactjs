@@ -76,10 +76,10 @@ const LMFeedReportPostDialog = ({
             {reportTags.map((tag) => {
               return (
                 <span
+                  lm-feed-component-id={`lm-feed-report-tag-vwxyz`}
                   className={`${selectedTag?.id === tag.id ? "active" : ""}`}
                   key={tag.id}
                   onClick={() => {
-                    console.log(tag);
                     setSelectedTag(tag);
                   }}
                 >
@@ -98,6 +98,7 @@ const LMFeedReportPostDialog = ({
                 }}
                 placeholder="Enter the reason here..."
                 type="text"
+                lm-feed-component-id={`lm-feed-report-input-fghij`}
                 className="lmReportPostWrapper__body__content__actions--input"
               />
             ) : null}
@@ -105,6 +106,7 @@ const LMFeedReportPostDialog = ({
               onClick={report}
               disabled={!selectedTag}
               className="lmReportPostWrapper__body__content__actions--btnReport"
+              lm-feed-component-id={`lm-feed-report-submit-klmno`}
             >
               Report
             </button>
