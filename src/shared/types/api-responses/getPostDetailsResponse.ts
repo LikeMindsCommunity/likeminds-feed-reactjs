@@ -11,4 +11,5 @@ export interface GetPostDetailsResponse {
     users: Record<string, User>; // Replace 'Record<string, User>' with actual type if known
     // widgets: Record<string, any>; // Replace 'Record<string, any>' with actual type if known
   };
+  errorMessage?: string;
 }

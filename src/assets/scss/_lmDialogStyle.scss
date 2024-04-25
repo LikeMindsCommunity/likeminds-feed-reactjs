@@ -1,0 +1,105 @@
+// Report Post Dialog
+
+.lmReportPostWrapper{
+    max-width: pxToRem(400);
+    width: 100%;
+    background: $light-color;
+    position: relative;
+    &__header{
+        position: relative;
+        font-size: pxToRem(20);
+        font-weight: 500;
+        line-height: pxToRem(24);
+        @extend .lm-d-flex;
+        justify-content: center;
+        margin: pxToRem(20) 0 pxToRem(36) 0;
+        color: $dark-color;
+         &__closeIcon {
+            position: absolute;
+            top: pxToRem(16);
+            right: pxToRem(16);
+            cursor: pointer;
+         }
+    }
+
+    &__body{
+        padding: 0 pxToRem(30);
+
+        &__content{
+            margin-bottom: pxToRem(30);
+
+            &--texted{
+                margin: 0 0 pxToRem(5) 0;
+                padding: 0;
+                font-size: 1rem;
+                font-weight: 400;
+                color: $dark-color;
+
+                span{
+                    font-weight: 500;
+                }
+            }
+
+            &__types{
+                @extend .lm-d-flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+                margin: pxToRem(10) 0 0 0;
+                span{
+                    border-radius: pxToRem(20);
+                    border: pxToRem(1) solid rgba(72, 79, 103, 0.5);
+                    padding: pxToRem(10) pxToRem(20);
+                    color: rgba(72, 79, 103, 0.5);
+                    font-size: 1rem;
+                    font-weight: 400;
+                    line-height: pxToRem(20);
+                    float: left; 
+                    cursor: pointer;
+                }
+                span.active{
+                    border: pxToRem(1) solid $primary-color;
+                    color: $primary-color;
+                }
+            }
+
+            &__actions{
+                @extend .lm-d-flex;
+                margin: pxToRem(20) 0 0 0;
+                flex-direction: column;
+                gap: pxToRem(20);
+
+                &--input{
+                    width: 100%; 
+                    padding: pxToRem(12) pxToRem(15);
+                    border-radius: pxToRem(8);
+                    border: 1px solid rgba(72, 79, 103, 0.5);
+                   outline: none;
+                }
+                &--btnReport{
+                    width: 100%;
+                    border: none;
+                    color: $light-color;
+                    background-color: $primary-color;
+                    font-weight: 500;
+                    font-size: pxToRem(20);
+                    border-radius: pxToRem(8);
+                    padding: pxToRem(12) pxToRem(15);
+                    cursor: pointer; 
+                }
+                &--btnReport:disabled{
+                    width: 100%;
+                    border: none;
+                    color: $light-color;
+                    background-color: #e6ebf5;
+                    font-weight: 500;
+                    font-size: pxToRem(20);
+                    border-radius: pxToRem(8);
+                    padding: pxToRem(12) pxToRem(15);
+                    cursor: pointer; 
+                }
+            }
+        }
+    }
+}
+
+// Report Post Dialog

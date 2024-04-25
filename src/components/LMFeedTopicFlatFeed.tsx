@@ -2,16 +2,10 @@
 // Base component for setting Feed List.
 
 import { useCallback } from "react";
-
 import InfiniteScroll from "react-infinite-scroll-component";
-
-import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
-import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
-
 import { Post } from "../shared/types/models/post";
-
 import Posts from "./LMFeedPosts";
 import { useParams } from "react-router-dom";
 
@@ -25,12 +19,6 @@ interface LMFeedUniversalFeedProps {
 
 const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
   const params = useParams();
-  const {
-    PostView = null,
-    Shimmer = null,
-    FooterView = null,
-    HeaderView = null,
-  } = props;
 
   const {
     topics,
@@ -66,7 +54,7 @@ const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
   }, [feedList, feedUsersList, topics]);
 
   return (
-    <div className="lm-feed-wrapper">
+    <div className="lm-feed-wrapper lm-d-flex">
       <div>
         {/* Topics */}
         {/* <div className="lm-mb-4">

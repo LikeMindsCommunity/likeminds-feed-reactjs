@@ -1,0 +1,74 @@
+.lm-feed-activity-wrapper {
+  max-height: pxToRem(460);
+  padding: pxToRem(0);
+  border-radius: pxToRem(8);
+  max-width: pxToRem(376);
+  width: 100%;
+  overflow-y: auto;
+  .notificationBody {
+    overflow: auto;
+  }
+  &__title {
+    padding: 5px pxToRem(20) pxToRem(10);
+    font-size: pxToRem(20);
+    line-height: pxToRem(24);
+    font-weight: 500;
+    color: $dark-color;
+  }
+
+  &__activity-item {
+    padding: pxToRem(10) 16px;
+    display: flex;
+    gap: pxToRem(8);
+    justify-content: space-between;
+    border-bottom: 1px solid #fff;
+
+    .user-image {
+      height: pxToRem(48);
+      width: pxToRem(48);
+      border-radius: 50%;
+      background-color: $primary-color;
+      color: $light-color;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .notification-content {
+      width: 72%;
+      .notification-text {
+        color: $dark-color;
+        display: -webkit-box;
+        font-size: pxToRem(14);
+        font-weight: 400;
+        line-height: pxToRem(20);
+        margin-bottom: 5px;
+        max-width: pxToRem(325);
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .notification-time-before {
+        color: #484f6780;
+        font-size: pxToRem(14);
+        line-height: pxToRem(20);
+      }
+    }
+  }
+}
+.non-interacted-activity {
+  background-color: $bg-color;
+}
+
+.lmNoNotification {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  padding: pxToRem(50) pxToRem(32);
+  text-align: center;
+
+  .lmNoNotification {
+    width: pxToRem(64);
+    height: pxToRem(64);
+  }
+}

@@ -1,32 +1,109 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { parseAndReplaceTags, textPreprocessor } from "../shared/taggingParser";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedAttachments from "../shared/components/LMFeedAttachments";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { useNavigate } from "react-router-dom";
 
 const LMFeedPostBody = () => {
   const { post } = useContext(FeedPostContext);
   const { text, attachments, heading } = post!;
-  const { LMPostBodyStyles, CustomCallbacks = {} } = useContext(
-    CustomAgentProviderContext,
-  );
+  const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
+  const { CustomPostViewAttachment } = CustomComponents;
   const [hasReadMoreTapped, setHasReadMoreTapped] = useState<boolean>(false);
-  const navigate = useNavigate();
-  const { postHeadingClickCallback } = CustomCallbacks;
+
   // Render attachments
-  const renderAttachments = () => {
+  const renderAttachments = useCallback(() => {
+    // return null;
     if (!attachments || attachments.length === 0) return null;
 
     return (
-      <div className="attachments">
-        <LMFeedAttachments attachments={attachments} />
+      <div
+        className="attachments"
+        lm-feed-component-id={`lm-feed-post-body-dn2pl-${post?.Id}`}
+      >
+        {CustomPostViewAttachment ? (
+          <CustomPostViewAttachment
+            postId={post?.Id || ""}
+            attachments={attachments}
+          />
+        ) : (
+          <LMFeedAttachments
+            postId={post?.Id || ""}
+            attachments={attachments}
+          />
+        )}
       </div>
     );
-  };
+  }, [CustomPostViewAttachment, attachments, post?.Id]);
 
   return (
-    <div className="lm-feed-wrapper__card__body">
+    // <div className="lm-feed-wrapper__card__body">
+    //   {heading.length > 0 && (
+    //     <h1
+    //       className="lm-feed-wrapper__card__body__heading"
+    //       style={{
+    //         cursor: !window.location.pathname.includes("/post")
+    //           ? "pointer"
+    //           : undefined,
+    //         ...LMPostBodyStyles?.heading,
+    //       }}
+    //       onClick={() => {
+    //         if (postHeadingClickCallback) {
+    //           postHeadingClickCallback(navigate);
+    //         } else {
+    //           if (!window.location.pathname.includes("/post")) {
+    //             navigate(
+    //               `/community/post/${`${post?.Id}-${post?.heading}`.substring(0, 59)}`,
+    //             );
+    //           }
+    //         }
+    //       }}
+    //     >
+    //       {heading}
+    //     </h1>
+    //   )}
+    //   {/* post text */}
+    //   {text ? (
+    //     <div
+    //       className="lm-feed-wrapper__card__body__content"
+    //       style={LMPostBodyStyles?.content}
+    //     >
+    //       {(() => {
+    //         const processedText = textPreprocessor(text);
+    //         if (processedText.showReadMore && !hasReadMoreTapped) {
+    //           return (
+    //             <>
+    //               {parseAndReplaceTags(processedText.text)}
+    //               <span
+    //                 className="lm-feed-wrapper__card__body__content__read-more-tap-icon"
+    //                 style={{
+    //                   color: "gray",
+    //                   fontWeight: "400",
+    //                   cursor: "pointer",
+    //                   fontSize: "14px",
+    //                 }}
+    //                 onClick={() => setHasReadMoreTapped(true)}
+    //               >
+    //                 ...ReadMore
+    //               </span>
+    //             </>
+    //           );
+    //         } else {
+    //           return parseAndReplaceTags(text);
+    //         }
+    //       })()}
+    //     </div>
+    //   ) : null}
+    //   {/* post text */}
+
+    //   <div className="lm-feed-wrapper__card__body__attachment">
+    //     {renderAttachments()}
+    //   </div>
+    // </div>
+    <div
+      className="lm-feed-wrapper__card__body"
+      lm-feed-component-id={`lm-feed-post-body-vwxyz-${post?.Id}`}
+    >
       {heading.length > 0 && (
         <h1
           className="lm-feed-wrapper__card__body__heading"
@@ -34,54 +111,50 @@ const LMFeedPostBody = () => {
             cursor: !window.location.pathname.includes("/post")
               ? "pointer"
               : undefined,
-            ...LMPostBodyStyles?.heading,
           }}
-          onClick={() => {
-            if (postHeadingClickCallback) {
-              postHeadingClickCallback(navigate);
-            } else {
-              if (!window.location.pathname.includes("/post")) {
-                navigate(
-                  `/community/post/${`${post?.Id}-${post?.heading}`.substring(0, 59)}`,
-                );
-              }
-            }
-          }}
+          lm-feed-component-id={`lm-feed-post-body-abcde-${post?.Id}`}
         >
           {heading}
         </h1>
       )}
+      {/* post text */}
+      {text ? (
+        <div
+          className="lm-feed-wrapper__card__body__content"
+          lm-feed-component-id={`lm-feed-post-body-fghij-${post?.Id}`}
+        >
+          {(() => {
+            const processedText = textPreprocessor(text);
+            if (processedText.showReadMore && !hasReadMoreTapped) {
+              return (
+                <>
+                  {parseAndReplaceTags(processedText.text)}
+                  <span
+                    className="lm-feed-wrapper__card__body__content__read-more-tap-icon"
+                    style={{
+                      color: "gray",
+                      fontWeight: "400",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                    }}
+                    onClick={() => setHasReadMoreTapped(true)}
+                    lm-feed-component-id={`lm-feed-post-body-klmno-${post?.Id}`}
+                  >
+                    ...ReadMore
+                  </span>
+                </>
+              );
+            } else {
+              return parseAndReplaceTags(text);
+            }
+          })()}
+        </div>
+      ) : null}
+      {/* post text */}
       <div
-        className="lm-feed-wrapper__card__body__content"
-        style={LMPostBodyStyles?.content}
+        className="lm-feed-wrapper__card__body__attachment"
+        lm-feed-component-id={`lm-feed-post-body-pqrst-${post?.Id}`}
       >
-        {/* {parseAndReplaceTags(text)} */}
-        {(() => {
-          const processedText = textPreprocessor(text);
-          if (processedText.showReadMore && !hasReadMoreTapped) {
-            return (
-              <>
-                {parseAndReplaceTags(processedText.text)}
-                <span
-                  className="lm-feed-wrapper__card__body__content__read-more-tap-icon"
-                  style={{
-                    color: "gray",
-                    fontWeight: "400",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                  }}
-                  onClick={() => setHasReadMoreTapped(true)}
-                >
-                  ...ReadMore
-                </span>
-              </>
-            );
-          } else {
-            return parseAndReplaceTags(text);
-          }
-        })()}
-      </div>
-      <div className="lm-feed-wrapper__card__body__attachment">
         {renderAttachments()}
       </div>
     </div>

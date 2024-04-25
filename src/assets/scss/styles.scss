@@ -23,5 +23,25 @@
 
 // Import post styles
 @import "posts";
+
 // Import replies styles
-@import "replies"
+@import "replies";
+
+
+@import "tagging";
+// Import Create post styles
+@import "createPost";
+
+// Import all members styles
+@import "allMembers";
+
+// Import dialog box styles
+@import "lmDialogStyle";
+
+// Import notifications styles
+@import "notifications";
+
+// Import responsive styles
+@import "responsive";
+
+@import "delete"

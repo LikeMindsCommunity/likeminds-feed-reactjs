@@ -1,9 +1,9 @@
 .lm-feed-wrapper {
   background-color: $bg-color;
-  min-height: 100vh;
   width: 100%;
-  height: auto;
-  overflow: hidden;
+  margin: 67px 0 0 0;
+  justify-content: space-between;
+  position: relative;
 
   .lm-feed {
     margin: 0 auto;
@@ -12,13 +12,13 @@
   }
 
   &__card {
+    max-width: pxToRem(576);
     width: 100%;
     margin-bottom: pxToRem(12);
     background: $light-color;
     border-radius: pxToRem(8);
+    margin: 0 auto 1rem;
     overflow: hidden;
-    max-width: pxToRem(576);
-    margin: 0 auto 0.5rem;
 
     &__topic-view-wrapper {
       display: flex;
@@ -31,6 +31,7 @@
       padding: pxToRem(8) pxToRem(16);
       display: flex;
       justify-content: space-between;
+      align-items: center;
 
       &--title {
         font-size: 1rem;
@@ -89,15 +90,16 @@
     }
 
     &__body {
+      width: 100%;
       &__heading {
-        padding: 1rem pxToRem(8) pxToRem(0) 1rem;
+        padding: 0 pxToRem(8) pxToRem(0) 1rem;
         word-wrap: break-word;
         font-weight: 500;
         color: $card-content-heading;
         font-size: 1rem;
       }
       &__content {
-        padding: 1rem pxToRem(8) 1rem 1rem;
+        padding: 0.5rem pxToRem(8) 0.5rem 1rem;
         word-wrap: break-word;
       }
       &__attachment {
@@ -140,7 +142,6 @@
           }
         }
         .attachmentPdf {
-          width: 100%;
           background-color: $light-color;
           border-radius: pxToRem(8);
           border: 1px solid $bg-color;
@@ -149,10 +150,16 @@
           margin: 0 auto;
           overflow: hidden;
 
+          .react-pdf__Document {
+            aspect-ratio: 16/9;
+            overflow: hidden;
+          }
+
           &__pdfViewer {
             width: 100%;
             height: pxToRem(250);
             overflow: hidden;
+            aspect-ratio: 16/9;
           }
 
           &__content {
@@ -192,7 +199,6 @@
           }
         }
         .attachmentOGTag {
-          width: 100%;
           background-color: $light-color;
           border-radius: pxToRem(8);
           border: 1px solid $bg-color;
@@ -204,14 +210,18 @@
           &__img {
             width: 100%;
             object-fit: cover;
+            aspect-ratio: 16/8;
           }
           &__noImg {
             @extend .lm-d-flex;
             @extend .lm-justify-content-center;
             @extend .lm-align-items-center;
             background-color: #e5f3f2;
-            height: pxToRem(215);
+            min-height: pxToRem(215);
+            width: 100%;
+            object-fit: cover;
             color: #00897b;
+            aspect-ratio: 16/8;
           }
           &__content {
             padding: 1rem;
@@ -247,7 +257,7 @@
             }
           }
         }
-        .attachment-unsupported{
+        .attachment-unsupported {
           padding: pxToRem(0) pxToRem(20);
         }
       }
@@ -271,24 +281,19 @@
   font-weight: 400;
 }
 
-// Responsive Styles for different mobile screens
-@media (max-width: 767px) {
-  .lm-feed-wrapper__card {
-    border-radius: 0;
-  }
+// Member list
+.lm-member {
+  height: auto;
+  max-width: 360px;
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  border: none;
+  position: sticky;
+  top: 0;
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
-  .lm-feed-wrapper__card {
-    // Apply styles for medium-sized mobile screens
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  .lm-feed-wrapper__card {
-    // Apply styles for large-sized mobile screens
-  }
-}
+// Member list
 
 //  slick carousel css
 .slick-dots {
@@ -297,27 +302,40 @@
 .slick-prev:before,
 .slick-next:before {
   font-size: 30px !important;
+  // background: url(../images/carousel-arrow.svg) no-repeat ;
+  // width: 30px;
+  // height: 30px;
 }
 
 .slick-next {
-  right: 10px !important;
+  right: 15px !important;
+}
+.slick-prev {
+  transform: scaleX(-1) !important;
 }
 .slick-prev,
 .slick-next {
-  height: 32px !important;
-  width: 32px !important;
+  height: 34px !important;
+  width: 34px !important;
+  background: url(../images/carousel-arrow.svg) no-repeat !important;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  content: none !important;
 }
 
 .slick-prev {
-  left: 10px !important;
+  left: 15px !important;
   z-index: 9 !important;
+  top: 44% !important;
 }
 
 .slick-dots li button:before {
   font-size: 8px !important;
 }
 .slick-dots li.slick-active button:before {
-  color: #00897b !important;
+  color: $primary-color !important;
 }
 
 .slick-dots li {
@@ -326,7 +344,18 @@
   width: 15px !important;
 }
 
-.react-pdf__Page__canvas{
+.react-pdf__Page__canvas {
   width: 100% !important;
-  aspect-ratio: 16/9;
+  // aspect-ratio: 16/9;
+}
+
+.three-dot-menu-options {
+  padding: 18px;
+  width: pxToRem(196);
+}
+
+// Liked member list
+.lmLikedMemberWrapper {
+  width: 360px;
+  background-color: #fff;
 }

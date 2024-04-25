@@ -1,0 +1,81 @@
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+
+// Mixin for responsive mobile-up
+@mixin respond-mobile-up {
+  @media (min-width: $breakpoint-xs) {
+    @content;
+  }
+}
+
+// Mixin for tablet-up
+@mixin respond-tablet-up {
+  @media (min-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+// Mixin for desktop-up
+@mixin respond-desktop-up {
+  @media (min-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+// Mixin for large desktop-up
+@mixin respond-large-desktop-up {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+// Responsive Styles for different mobile screens
+/* Mobile devices */
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  .lm-flex-grow {
+    flex-grow: initial;
+    width: 100%;
+  }
+  .lm-member {
+    display: none;
+  }
+  .lm-feed-wrapper__card {
+    border-radius: 0;
+  }
+  .lm-feed-create-post-wrapper {
+    width: 295px;
+    padding: 1rem;
+  }
+}
+
+/* iPads, Tablets */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  .lm-flex-grow {
+    flex-grow: initial;
+    width: 100%;
+  }
+  .lm-member {
+    display: none;
+  }
+  .lm-feed-wrapper__card {
+    border-radius: 0;
+  }
+}
+
+/* Small screens, laptops */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  /* Your CSS styles for small screens and laptops */
+}
+
+/* Desktops, large screens */
+@media only screen and (min-width: 1025px) and (max-width: 1200px) {
+  /* Your CSS styles for desktops and large screens */
+}
+
+/* Extra large screens, TV */
+@media only screen and (min-width: 1201px) {
+  /* Your CSS styles for extra large screens and TV */
+}

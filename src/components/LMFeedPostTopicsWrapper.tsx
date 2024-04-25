@@ -6,18 +6,16 @@ import LMFeedTopicsTile from "./lmTopicFeed/LMFeedTopicsTile";
 const LMFeedPostTopicsWrapper = () => {
   const { post, topics: topicsMap } = useContext(FeedPostContext);
   const { topics } = post!;
-  const { LMPostTopicStyles, CustomComponents } = useContext(
-    CustomAgentProviderContext,
-  );
+  const { CustomComponents } = useContext(CustomAgentProviderContext);
   return (
     <>
       <div
-        className="lm-feed-wrapper__card__topic-view-wrapper"
-        style={LMPostTopicStyles?.topicWrapperStyles}
+        className="lm-feed-wrapper__card__topic-view-wrapper  lm-mb-3"
+        lm-feed-component-id={`lm-feed-topic-wrapper-vwxyz-${post?.Id}`}
       >
         {topics?.map((topicId: string) => {
-          return CustomComponents?.PostTopicTile ? (
-            <CustomComponents.PostTopicTile
+          return CustomComponents?.CustomPostTopicTile ? (
+            <CustomComponents.CustomPostTopicTile
               key={topicId}
               topic={topicsMap![topicId]}
             />

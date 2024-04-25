@@ -1,0 +1,37 @@
+.lm-feed-delete-dialog{
+   width: pxToRem(400);
+   height: pxToRem(284);
+   position: relative; 
+   padding-left: pxToRem(36);
+   padding-right: pxToRem(36);
+   &__close-icon{
+    position: absolute;
+   }
+   &__title{
+    font-size: pxToRem(20);
+    line-height: pxToRem(24);
+    font-weight: 500;
+    color: $dark-color;
+    text-align: center;
+    margin-top: pxToRem(20);
+    margin-bottom: pxToRem(36);
+   }
+   &__content{
+    font-size: pxToRem(16);
+    line-height: pxToRem(20);
+    font-weight: 400;
+    color: #666666;
+   }
+   &__submit{
+    font-size: pxToRem(16);
+    line-height: pxToRem(20);
+    font-weight: 500;
+    padding: pxToRem(14) pxToRem(135);
+    background-color: $primary-color;
+    color: $light-color;
+    border-radius: pxToRem(8);
+    outline: none;
+    border: none;
+    margin-top: pxToRem(24);
+   }
+}

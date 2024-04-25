@@ -169,6 +169,9 @@
 .lm-justify-content-space-between {
   justify-content: space-between;
 }
+.lm-flex-grow {
+  flex-grow: 1;
+}
 
 .lm-flex-gap{
   gap: 6px;
@@ -222,7 +225,9 @@
 .lm-cursor-pointer{
   cursor: pointer;
 }
-
+.lm-hover-effect:hover{
+  background-color: rgba(72, 79, 103, 0.1);
+}
 .lm-w-full{
   width: 100%;
 }

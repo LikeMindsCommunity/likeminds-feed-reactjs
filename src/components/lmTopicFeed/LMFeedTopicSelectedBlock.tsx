@@ -14,18 +14,22 @@ export const LMFeedTopicSelectedBlock = ({
 
   switch (isCreateMode) {
     case true: {
-      return <span>{name}</span>;
+      return (
+        <div className="lm-float-left lm-mr-3 lm-feed-topic-tile-create lm-d-flex lm-align-items-center">
+          <span>{name}</span>
+        </div>
+      );
     }
 
     default: {
       return (
-        <div className="lm-float-left lm-mr-3 lm-feed-topic-tile lm-d-flex lm-align-items-center">
+        <div className="lm-feed-topic-tile">
           <span>{name}</span>
           <span onClick={() => onDeleteClick(topic)}>
             <img
               src={lmCancelIcon}
               alt="cross-icon"
-              className="lm-mt-2 lm-cursor-pointer"
+              className="lm-cursor-pointer"
             />
           </span>
         </div>

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { TopicsDropdownMode } from "../../shared/enums/lmTopicFeedDropdownMode";
+import { LMTopicsDropdownMode } from "../../shared/enums/lmTopicFeedDropdownMode";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -14,15 +14,19 @@ import { Checkbox } from "@mui/material";
 
 interface LMFeedTopicDropdownProps {
   // view for topic view && modify for creating or editing post
-  mode: TopicsDropdownMode;
-  selectedTopic?: string[];
-  setSelectedTopics?: React.Dispatch<string[]>;
+  mode: LMTopicsDropdownMode;
+  selectedTopicIds?: string[];
+  setSelectedTopicsIds?: React.Dispatch<string[]>;
+  preSelectedTopics?: Topic[];
+  setPreSelectedTopics?: React.Dispatch<Topic[]>;
 }
 
 const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
   mode,
-
-  setSelectedTopics,
+  setSelectedTopicsIds,
+  selectedTopicIds,
+  preSelectedTopics,
+  setPreSelectedTopics,
 }) => {
   // using the useTopicHook to get all the required data.
   const {
@@ -34,11 +38,19 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     setSearchKey,
     updateCheckedTopics,
     clearAllCheckedTopics,
-  } = useTopicDropdown(undefined, setSelectedTopics);
+    topicComponentClickCustomCallback,
+  } = useTopicDropdown(
+    selectedTopicIds,
+    setSelectedTopicsIds,
+    preSelectedTopics,
+    setPreSelectedTopics,
+    mode,
+  );
 
   // state to handle the view || setting it to true will render a view for selection topics.
-  const [isTopicSelectionMode, setIsTopicSelectionMode] =
-    useState<boolean>(true);
+  const [isTopicSelectionMode, setIsTopicSelectionMode] = useState<boolean>(
+    preSelectedTopics?.length ? false : true,
+  );
 
   // state to hold the anchor element for the topicMenuBox
   const [topicMenuAnchor, setTopicMenuAnchor] = useState<HTMLElement | null>(
@@ -55,8 +67,8 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
     if (checkedTopics.length) {
       setIsTopicSelectionMode(false);
     }
-    setSelectedTopics
-      ? setSelectedTopics(checkedTopics.map((topic) => topic.Id))
+    setSelectedTopicsIds
+      ? setSelectedTopicsIds(checkedTopics.map((topic) => topic.Id))
       : null;
     setTopicMenuAnchor(null);
   };
@@ -98,9 +110,10 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
 
   const setView = () => {
     switch (mode) {
-      case TopicsDropdownMode.modify:
+      case LMTopicsDropdownMode.modify:
+      case LMTopicsDropdownMode.edit:
         return setTopicsForPostView();
-      case TopicsDropdownMode.view:
+      case LMTopicsDropdownMode.view:
         return handleFilterView();
     }
   };
@@ -160,7 +173,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                     checkedList={checkedTopics}
                   /> */}
                   <div
-                    className="lm-topic-dropdown__topic"
+                    className="lm-topic-dropdown__topic lm-all-topic"
                     onClick={clearAllCheckedTopics}
                   >
                     <Checkbox
@@ -168,9 +181,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                       checked={!checkedTopics.length}
                       className="lm-topic-checkbox"
                     />
-                    <span className="lm-topic-name-container">
-                      {"All Topics"}
-                    </span>
+                    <span>{"All Topics"}</span>
                   </div>
                 </MenuItem>
 
@@ -249,7 +260,6 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                 paper: {
                   sx: {
                     height: "284px",
-                    paddingX: "24px",
                     marginTop: "6px",
                     borderRadius: "8px",
                     paddingTop: "0px",
@@ -288,7 +298,6 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                 paper: {
                   sx: {
                     height: "284px",
-                    paddingX: "24px",
                     marginTop: "6px",
                     borderRadius: "8px",
                     paddingTop: "0px",
@@ -342,7 +351,18 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
       }
     }
   };
-  return setView();
+  return (
+    <div
+      onClick={(e) => {
+        if (topicComponentClickCustomCallback) {
+          topicComponentClickCustomCallback(e);
+        }
+      }}
+      lm-feed-component-id={`lm-feed-topic-dropdown-rstuw`}
+    >
+      {setView()}
+    </div>
+  );
 };
 
 export default LMFeedViewTopicDropdown;
