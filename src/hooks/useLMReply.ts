@@ -8,7 +8,7 @@ import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventN
 import {
   DeleteCommentRequest,
   LikeCommentRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
 import { RepliesActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";

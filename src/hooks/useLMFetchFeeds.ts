@@ -11,7 +11,7 @@ import {
   // GetReportTagsRequest,
   PinPostRequest,
   // PostReportRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -324,11 +324,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
           if (post.Id === id) {
-            console.log(post);
             post.commentsCount++;
-            console.log(post);
           }
-
           return post;
         });
         setFeedList(feedListCopy);
@@ -344,11 +341,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
           if (post.Id === id) {
-            console.log(post);
             post.commentsCount--;
-            console.log(post);
           }
-
           return post;
         });
         setFeedList(feedListCopy);

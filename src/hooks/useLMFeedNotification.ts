@@ -5,7 +5,7 @@ import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import {
   GetNotificationFeedRequest,
   MarkReadNotificationRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { DEFAULT_PAGE_SIZE } from "../shared/constants/lmAppConstant";
 import { GetNotificationResponse } from "../shared/types/api-responses/getNotificationResponse";
 import { LMFeedCustomEvents } from "../shared/customEvents";
@@ -43,10 +43,9 @@ export function useLMFeedNotification(
   );
   async function markReadNotification(id: string) {
     try {
-      const call = await lmFeedClient?.markReadNotification(
+      await lmFeedClient?.markReadNotification(
         MarkReadNotificationRequest.builder().setactivityId(id).build(),
       );
-      console.log(call);
     } catch (error) {
       console.log(error);
     }

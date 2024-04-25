@@ -12,7 +12,7 @@ import {
   LikeCommentRequest,
   LikePostRequest,
   PinPostRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { TopicsDropdownMode } from "../../shared/enums/lmTopicFeedDropdownMode";
+import { LMTopicsDropdownMode } from "../../shared/enums/lmTopicFeedDropdownMode";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -14,7 +14,7 @@ import { Checkbox } from "@mui/material";
 
 interface LMFeedTopicDropdownProps {
   // view for topic view && modify for creating or editing post
-  mode: TopicsDropdownMode;
+  mode: LMTopicsDropdownMode;
   selectedTopicIds?: string[];
   setSelectedTopicsIds?: React.Dispatch<string[]>;
   preSelectedTopics?: Topic[];
@@ -110,10 +110,10 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
 
   const setView = () => {
     switch (mode) {
-      case TopicsDropdownMode.modify:
-      case TopicsDropdownMode.edit:
+      case LMTopicsDropdownMode.modify:
+      case LMTopicsDropdownMode.edit:
         return setTopicsForPostView();
-      case TopicsDropdownMode.view:
+      case LMTopicsDropdownMode.view:
         return handleFilterView();
     }
   };

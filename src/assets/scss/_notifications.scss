@@ -64,7 +64,8 @@
   gap: 1rem;
   justify-content: center;
   align-items: center;
-  padding: pxToRem(50) 0;
+  padding: pxToRem(50) pxToRem(32);
+  text-align: center;
 
   .lmNoNotification {
     width: pxToRem(64);

@@ -9,7 +9,7 @@ import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
-import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
+import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
@@ -70,7 +70,9 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       {CustomTopicDropDown || (
         <LMFeedViewTopicDropdown
           mode={
-            temporaryPost ? TopicsDropdownMode.edit : TopicsDropdownMode.modify
+            temporaryPost
+              ? LMTopicsDropdownMode.edit
+              : LMTopicsDropdownMode.modify
           }
           setSelectedTopicsIds={setSelectedTopicIds}
           selectedTopicIds={selectedTopicIds}

@@ -92,7 +92,7 @@
     &__body {
       width: 100%;
       &__heading {
-        padding: 1rem pxToRem(8) pxToRem(0) 1rem;
+        padding: 0 pxToRem(8) pxToRem(0) 1rem;
         word-wrap: break-word;
         font-weight: 500;
         color: $card-content-heading;

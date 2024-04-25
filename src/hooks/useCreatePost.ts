@@ -16,7 +16,7 @@ import {
   AttachmentMeta,
   DecodeURLRequest,
   EditPostRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -34,6 +34,7 @@ import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { useNavigate } from "react-router-dom";
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 
 interface UseCreatePost {
   postText: string | null;
@@ -139,10 +140,13 @@ export function useCreatePost(): UseCreatePost {
         const attachmentResponseArray: Attachment[] = [];
         for (let index = 0; index < mediaList.length; index++) {
           const file: File = mediaList[index];
-          const resp: UploadMediaModel = await HelperFunctionsClass.uploadMedia(
-            file,
-            currentUser?.uuid,
-          );
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const resp: UploadMediaModel =
+            (await HelperFunctionsClass.uploadMedia(
+              file,
+              currentUser?.uuid || "",
+            )) as never;
+          const uploadedFileKey = `https://${LMAppAwsKeys.bucketNameProd}.s3.${LMAppAwsKeys.region}.amazonaws.com/${`files/post/${currentUser?.uuid || ""}/${file.name}`}`;
           const attachmentType = file.type.includes("image")
             ? 1
             : file.type.includes("video")
@@ -157,7 +161,7 @@ export function useCreatePost(): UseCreatePost {
                   .setAttachmentType(1)
                   .setAttachmentMeta(
                     AttachmentMeta.builder()
-                      .seturl(resp.Location)
+                      .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
                       .setname(file.name)
@@ -173,7 +177,7 @@ export function useCreatePost(): UseCreatePost {
                   .setAttachmentType(2)
                   .setAttachmentMeta(
                     AttachmentMeta.builder()
-                      .seturl(resp.Location)
+                      .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
                       .setname(file.name)
@@ -184,26 +188,13 @@ export function useCreatePost(): UseCreatePost {
               );
               break;
             }
-            // case 4: {
-            //   if (!mediaList.length) {
-            //     attachmentResponseArray.push(
-            //       Attachment.builder()
-            //         .setAttachmentType(4)
-            //         .setAttachmentMeta(
-            //           AttachmentMeta.builder().setogTags(ogTag).build(),
-            //         )
-            //         .build(),
-            //     );
-            //   }
-            //   break;
-            // }
             case 3: {
               attachmentResponseArray.push(
                 Attachment.builder()
                   .setAttachmentType(3)
                   .setAttachmentMeta(
                     AttachmentMeta.builder()
-                      .seturl(resp.Location)
+                      .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
                       .setname(file.name)

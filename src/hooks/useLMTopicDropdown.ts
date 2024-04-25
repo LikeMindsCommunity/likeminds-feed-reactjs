@@ -4,7 +4,7 @@ import { Topic } from "../shared/types/models/topic";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetTopicsRequest } from "@likeminds.community/feed-js";
 import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
-import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
+import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { TopicsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -22,7 +22,7 @@ export function useTopicDropdown(
   setCurrentSelectedTopicIds?: any,
   preSelectedTopics?: Topic[],
   setPreSelectedTopics?: React.Dispatch<Topic[]>,
-  mode?: TopicsDropdownMode,
+  mode?: LMTopicsDropdownMode,
 ): useTopicDropdownResponse {
   // Getting an instance of the client
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
@@ -63,7 +63,7 @@ export function useTopicDropdown(
           .setSearchType("name")
           .setSearch(searchKey)
           .setPageSize(10)
-          .setIsEnabled(TopicsDropdownMode.edit === mode ? true : null)
+          .setIsEnabled(LMTopicsDropdownMode.edit === mode ? true : null)
           .build(),
       )) as never;
       if (getTopicsCall.success) {
@@ -87,7 +87,7 @@ export function useTopicDropdown(
           .setSearchType("name")
           .setSearch(searchKey)
           .setPageSize(10)
-          .setIsEnabled(TopicsDropdownMode.edit === mode ? true : null)
+          .setIsEnabled(LMTopicsDropdownMode.edit === mode ? true : null)
           .build(),
       )) as never;
       if (getTopicsCall.success) {

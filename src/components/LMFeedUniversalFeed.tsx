@@ -5,7 +5,7 @@ import { useCallback, useContext, useEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { HelmetProvider } from "react-helmet-async";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
-import { TopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
+import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { Post } from "../shared/types/models/post";
 import Posts from "./LMFeedPosts";
@@ -98,7 +98,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             lm-feed-component-id={`lm-feed-topic-dropdown`}
           >
             <LMFeedViewTopicDropdown
-              mode={TopicsDropdownMode.view}
+              mode={LMTopicsDropdownMode.view}
               selectedTopicIds={selectedTopics}
               setSelectedTopicsIds={setSelectedTopics}
             />
