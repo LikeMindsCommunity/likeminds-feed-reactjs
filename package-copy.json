@@ -112,9 +112,17 @@
     "vite-plugin-dts": "^3.7.3",
     "vite-plugin-lib-inject-css": "^2.0.0"
   },
-  
+  "main": "dist/index.js",
+"module": "dist/index.js",
 "files": [
   "dist"
-]
-
+],
+"types": "dist/index.d.ts",
+"type": "module",
+"exports": {
+  ".": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.umd.cjs"
+  }
+}
 }
