@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import UserProviderContext from "../contexts/LMFeedUserProviderContext";
-import useUserProvider from "../hooks/useLMUserProvider";
+import useUserProvider, { UserDetails } from "../hooks/useLMUserProvider";
 import {
   CustomAgentProviderContext,
   CustomAgentProviderInterface,
@@ -22,15 +22,13 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   showMember?: boolean;
   routes?: LMFeedCustomAppRoutes;
   useParentRouter?: boolean;
-  accessToken: string;
-  refreshToken: string;
+  userDetails: UserDetails;
   customEventClient: LMFeedCustomEvents;
 }
 
 function LMFeed({
   useParentRouter = false,
-  accessToken,
-  refreshToken,
+  userDetails,
   client,
   routes,
   customEventClient,
@@ -49,7 +47,7 @@ function LMFeed({
   memberComponentClickCustomCallback,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
-    useUserProvider(accessToken, refreshToken, client, customEventClient);
+    useUserProvider(client, customEventClient, userDetails);
   const { showSnackbar, message, closeSnackbar, displaySnackbarMessage } =
     useLMFeedGeneralContextProvider();
   useEffect(() => {

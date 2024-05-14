@@ -4,11 +4,19 @@ import LMFeed from "./components/LMFeed";
 import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import LMFeedNotificationHeader from "./shared/components/LMFeedNotificationHeader";
 import { LMFeedCustomEvents } from "./shared/customEvents";
+import { UserDetails } from "./hooks/useLMUserProvider";
 
 const customEventClient = new LMFeedCustomEvents();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(<ReactApp />);
-
+const userDetails: UserDetails = {
+  accessToken: undefined,
+  refreshToken: undefined,
+  uuid: undefined,
+  username: undefined,
+  isGuest: undefined,
+  //   Add api key
+};
 export function ReactApp() {
   return (
     <div className="lm-wrapper">
@@ -19,8 +27,7 @@ export function ReactApp() {
           .setVersionCode(2)
           .build()}
         customEventClient={customEventClient}
-        accessToken=""
-        refreshToken=""
+        userDetails={userDetails}
       ></LMFeed>
     </div>
   );
