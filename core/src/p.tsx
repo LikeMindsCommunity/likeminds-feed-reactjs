@@ -39,7 +39,7 @@ export function ReactApp() {
           .setVersionCode(2)
           .build()}
         customEventClient={customEventClient}
-        userDetails={userDetails}
+        // userDetails={userDetails}
       ></LMFeed>
     </div>
   );
