@@ -11,7 +11,7 @@ import {
 } from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
-import { TokenValues } from "../shared/enums/tokens";
+// import { TokenValues } from "../shared/enums/tokens";
 export interface UserDetails {
   accessToken?: string;
   refreshToken?: string;
@@ -45,9 +45,8 @@ export default function useUserProvider(
       accessToken: string,
       refreshToken: string,
     ) {
-      // TODO set api key in local storage
-      localStorage.setItem(TokenValues.LOCAL_ACCESS_TOKEN, accessToken);
-      localStorage.setItem(TokenValues.LOCAL_REFRESH_TOKEN, refreshToken);
+      lmFeedclient.setAccessTokenInLocalStorage(accessToken);
+      lmFeedclient.setRefreshTokenInLocalStorage(refreshToken);
     }
     async function validateFeedUser(
       localAccessToken: string,
@@ -118,18 +117,20 @@ export default function useUserProvider(
         console.log(error);
       }
     }
+    customEventClient.listen(
+      LMFeedCustomActionEvents.TRIGGER_SET_USER,
+      setUser,
+    );
 
     // calling initiateuser and memberstate apis and setting the user details
     // TODO add a check for tokens
     async function setUser() {
       try {
         if (apiKey && username && uuid) {
-          const localAccessToken = localStorage.getItem(
-            TokenValues.LOCAL_ACCESS_TOKEN,
-          );
-          const localRefreshToken = localStorage.getItem(
-            TokenValues.LOCAL_REFRESH_TOKEN,
-          );
+          const localAccessToken =
+            lmFeedclient.getAccessTokenFromLocalStorage();
+          const localRefreshToken =
+            lmFeedclient.getRefreshTokenFromLocalStorage();
           if (localAccessToken && localRefreshToken) {
             await validateFeedUser(localAccessToken, localRefreshToken);
           } else {
@@ -140,19 +141,16 @@ export default function useUserProvider(
             setTokensInLocalStorage(accessToken, refreshToken);
             await validateFeedUser(accessToken, refreshToken);
           } else {
-            const localAccessToken = localStorage.getItem(
-              TokenValues.LOCAL_ACCESS_TOKEN,
-            );
-            const localRefreshToken = localStorage.getItem(
-              TokenValues.LOCAL_REFRESH_TOKEN,
-            );
+            // Change the logic to throw error
+            const localAccessToken =
+              lmFeedclient.getAccessTokenFromLocalStorage();
+            const localRefreshToken =
+              lmFeedclient.getRefreshTokenFromLocalStorage();
             await validateFeedUser(
               localAccessToken || "",
               localRefreshToken || "",
             );
           }
-
-          //
         }
       } catch (error) {
         console.log(error);
@@ -160,9 +158,13 @@ export default function useUserProvider(
     }
 
     setUser();
+    return () => {
+      customEventClient.remove(LMFeedCustomActionEvents.TRIGGER_SET_USER);
+    };
   }, [
     accessToken,
     apiKey,
+    customEventClient,
     isGuest,
     lmFeedclient,
     refreshToken,

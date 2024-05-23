@@ -5,7 +5,8 @@ import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import LMFeedNotificationHeader from "./shared/components/LMFeedNotificationHeader";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 import { UserDetails } from "./hooks/useLMUserProvider";
-import { LMSDKCallbacks } from "@likeminds.community/feed-js-beta/dist/LMCallback";
+
+import { LMCoreCallbacks } from "./shared/LMSDKCoreCallbacks";
 
 const customEventClient = new LMFeedCustomEvents();
 
@@ -37,9 +38,17 @@ const userDetails: UserDetails = {
 //   }
 
 // }
-
-const lmSDKCallbackImpl = new LMSDKCallbackImpl();
-
+const LMCORECALLBACKS = new LMCoreCallbacks(
+  (a: string, b: string) => {
+    console.log(a, b);
+  },
+  () => {
+    return {
+      accessToken: "sadf",
+      refreshToken: "adsf",
+    };
+  },
+);
 export function ReactApp() {
   return (
     <div className="lm-wrapper">
@@ -48,10 +57,10 @@ export function ReactApp() {
         client={LMFeedClient.Builder()
           .setPlatformCode("rt")
           .setVersionCode(2)
-          .setLMSDKCallback(lmSDKCallbackImpl)
           .build()}
         customEventClient={customEventClient}
         userDetails={userDetails}
+        LMFeedCoreCallbacks={LMCORECALLBACKS}
       ></LMFeed>
     </div>
   );

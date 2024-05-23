@@ -16,6 +16,10 @@ import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
+import {
+  LMCoreCallbacks,
+  LMSDKCallbacksImplementations,
+} from "../shared/LMSDKCoreCallbacks";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -24,10 +28,12 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   useParentRouter?: boolean;
   userDetails: UserDetails;
   customEventClient: LMFeedCustomEvents;
+  LMFeedCoreCallbacks: LMCoreCallbacks;
 }
 
 function LMFeed({
   useParentRouter = false,
+  LMFeedCoreCallbacks,
   userDetails,
   client,
   routes,
@@ -54,6 +60,15 @@ function LMFeed({
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
   }, []);
+  useEffect(() => {
+    client.setLMSDKCallbacks(
+      new LMSDKCallbacksImplementations(
+        LMFeedCoreCallbacks,
+        client,
+        customEventClient,
+      ),
+    );
+  }, [LMFeedCoreCallbacks, client, customEventClient]);
   if (!lmFeedUser) {
     return null;
   }
