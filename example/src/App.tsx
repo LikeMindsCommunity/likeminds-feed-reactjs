@@ -36,8 +36,8 @@ function App() {
           .setVersionCode(2)
           .build()}
         customEventClient={customEventClient}
-        accessToken=""
-        refreshToken=""
+        accessToken={accessToken}
+        refreshToken={refreshToken}
       ></LMFeed>
     </div>
   );
