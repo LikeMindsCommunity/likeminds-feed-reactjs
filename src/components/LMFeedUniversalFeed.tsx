@@ -13,6 +13,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import LMFeedCreatePost from "./LMFeedCreatePost";
 import LMFeedAllMembers from "./LMFeedAllMembers";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
+import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -37,6 +38,9 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     clickNavigator,
     postComponentClickCustomCallback,
   } = useContext(LMFeedDataContext);
+  const { lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -45,6 +49,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
       const el = document.getElementById(scrollPos);
       el?.scrollIntoView();
     }
+    lmfeedAnalyticsClient?.sendFeedOpenedEvent();
   }, [wrapperRef]);
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {

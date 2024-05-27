@@ -1,5 +1,7 @@
 import { AnalyticsCallback } from "./types/analyticsCallback";
 import { Post } from "./types/models/post";
+import { Reply } from "./types/models/replies";
+import { Topic } from "./types/models/topic";
 
 // class LMFeedAnalytics {
 //   private lmFeedClient: LMFeedClient;
@@ -87,6 +89,7 @@ class LMFeedAnalytics {
     VIDEO_ATTACHED_TO_POST: "Video attached to post",
     DOCUMENT_ATTACHED_TO_POST: "Document attached in post",
     POST_CREATION_COMPLETED: "Post creation completed",
+    POST_CREATION_ERROR: "Post creation error",
     POST_PINNED: "Post pinned",
     POST_UNPINNED: "Post unpinned",
     POST_REPORTED: "Post reported",
@@ -165,13 +168,26 @@ class LMFeedAnalytics {
     this.track(this.Events.CLICKED_ON_ATTACHMENT, eventDetails);
   }
 
-  sendPostLikedEvent(uuid: string, postId: string, postLiked: boolean) {
-    const event = postLiked ? this.Events.POST_LIKED : this.Events.POST_UNLIKED;
+  sendPostLikedEvent(post: Post, topics: Record<string, Topic>) {
+    const details: Record<string, string> = {};
+    details["post_id"] = post.Id;
+    details["created_by_uuid"] = post.uuid;
+    details["topics"] = Object.values(topics)
+      .filter((topic) => post.topics.includes(topic.Id))
+      .toString();
 
-    this.track(event, {
-      [this.Keys.UUID]: uuid,
-      [this.Keys.POST_ID]: postId,
-    });
+    this.track(this.Events.POST_LIKED, details);
+  }
+
+  sendPostUnLikedEvent(post: Post, topics: Record<string, Topic>) {
+    const details: Record<string, string> = {};
+    details["post_id"] = post.Id;
+    details["created_by_uuid"] = post.uuid;
+    details["topics"] = Object.values(topics)
+      .filter((topic) => post.topics.includes(topic.Id))
+      .toString();
+
+    this.track(this.Events.POST_UNLIKED, details);
   }
 
   sendPostSavedEvent(uuid: string, postId: string, postSaved: boolean) {
@@ -183,17 +199,24 @@ class LMFeedAnalytics {
     });
   }
 
-  sendPostPinnedEvent(post: LMFeedPostViewData) {
-    const headerViewData = post.headerViewData;
-    const event = headerViewData.isPinned
-      ? this.Events.POST_PINNED
-      : this.Events.POST_UNPINNED;
+  sendPostPinnedEvent(post: Post, topics: Record<string, Topic>) {
+    const details: Record<string, string> = {};
+    details["post_id"] = post.Id;
+    details["post_created_by_uuid"] = post.uuid;
+    // details['post_type'] =
+    // Ask what should be the post type
+    details["post_topics"] = Object.values(topics).toString();
+    this.track(this.Events.POST_PINNED, details);
+  }
 
-    this.track(event, {
-      [this.Keys.UUID]: headerViewData.user.sdkClientInfoViewData.uuid,
-      [this.Keys.POST_ID]: post.id,
-      post_type: LMFeedViewUtils.getPostTypeFromViewType(post.viewType),
-    });
+  sendPostUnPinnedEvent(post: Post, topics: Record<string, Topic>) {
+    const details: Record<string, string> = {};
+    details["post_id"] = post.Id;
+    details["post_created_by_uuid"] = post.uuid;
+    // details['post_type'] =
+    // Ask what should be the post type
+    details["post_topics"] = Object.values(topics).toString();
+    this.track(this.Events.POST_UNPINNED, details);
   }
 
   sendCommentListOpenEvent() {
@@ -211,6 +234,86 @@ class LMFeedAnalytics {
     });
   }
 
+  sendPostCreatedEvent(post: Post) {
+    const details: Record<string, string> = {
+      created_by_uuid: post.uuid,
+      [this.Keys.POST_ID]: post.Id,
+    };
+    if (
+      post.attachments.some((attachment) => attachment.attachmentType === 4)
+    ) {
+      const targetAttachment = post.attachments.find(
+        (att) => att.attachmentType === 4,
+      );
+
+      if (targetAttachment) {
+        details["link_attached"] = targetAttachment?.attachmentMeta.ogTags.url;
+      }
+    }
+    const imageCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 1 ? true : false,
+    ).length;
+    const videoCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 2 ? true : false,
+    ).length;
+    const docCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 3 ? true : false,
+    ).length;
+    if (imageCount) {
+      details["image_count"] = imageCount.toString();
+    }
+    if (videoCount) {
+      details["video_count"] = videoCount.toString();
+    }
+    if (docCount) {
+      details["document_count"] = docCount.toString();
+    }
+    if (post.topics.length) {
+      details["post_topics"] = post.topics.toString();
+    }
+    this.track(this.Events.POST_CREATION_COMPLETED, details);
+  }
+
+  sendPostCreationErrorEvent(post: Post) {
+    const details: Record<string, string> = {
+      created_by_uuid: post.uuid,
+      [this.Keys.POST_ID]: post.Id,
+    };
+    if (
+      post.attachments.some((attachment) => attachment.attachmentType === 4)
+    ) {
+      const targetAttachment = post.attachments.find(
+        (att) => att.attachmentType === 4,
+      );
+
+      if (targetAttachment) {
+        details["link_attached"] = targetAttachment?.attachmentMeta.ogTags.url;
+      }
+    }
+    const imageCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 1 ? true : false,
+    ).length;
+    const videoCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 2 ? true : false,
+    ).length;
+    const docCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 3 ? true : false,
+    ).length;
+    if (imageCount) {
+      details["image_count"] = imageCount.toString();
+    }
+    if (videoCount) {
+      details["video_count"] = videoCount.toString();
+    }
+    if (docCount) {
+      details["document_count"] = docCount.toString();
+    }
+    if (post.topics.length) {
+      details["post_topics"] = post.topics.toString();
+    }
+    this.track(this.Events.POST_CREATION_ERROR, details);
+  }
+
   sendPostEditedEvent(post: Post) {
     const details: Record<string, string> = {
       created_by_uuid: post.uuid,
@@ -222,9 +325,31 @@ class LMFeedAnalytics {
       const targetAttachment = post.attachments.find(
         (att) => att.attachmentType === 4,
       );
+
       if (targetAttachment) {
         details["link_attached"] = targetAttachment?.attachmentMeta.ogTags.url;
       }
+    }
+    const imageCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 1 ? true : false,
+    ).length;
+    const videoCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 2 ? true : false,
+    ).length;
+    const docCount = post.attachments.filter((attachment) =>
+      attachment.attachmentType === 3 ? true : false,
+    ).length;
+    if (imageCount) {
+      details["image_count"] = imageCount.toString();
+    }
+    if (videoCount) {
+      details["video_count"] = videoCount.toString();
+    }
+    if (docCount) {
+      details["document_count"] = docCount.toString();
+    }
+    if (post.topics.length) {
+      details["post_topics"] = post.topics.toString();
     }
     this.track(this.Events.POST_EDITED, details);
   }
@@ -242,16 +367,36 @@ class LMFeedAnalytics {
     }
   }
 
-  sendPostDeletedEvent(post: LMFeedPostViewData, reason?: string) {
-    const userStateString = reason ? "Community Manager" : "Member";
-    const postCreatorUUID = post.headerViewData.user.sdkClientInfoViewData.uuid;
+  sendPostDeletedEvent(
+    post: Post,
+    topics: Record<string, Topic>,
+    userState: string,
+  ) {
+    const details: Record<string, string> = {};
+    details["user_state"] = userState;
+    (details["post_topics"] = Object.values(topics)
+      .filter((topic) => post.topics.includes(topic.Id))
+      .toString()),
+      (details["post_created_by_uuid"] = post.uuid);
+    details["post_id"] = post.Id;
+    // Ask what is post_type
+    this.track(this.Events.POST_DELETED, details);
+  }
 
-    this.track(this.Events.POST_DELETED, {
-      user_state: userStateString,
-      [this.Keys.UUID]: postCreatorUUID,
-      [this.Keys.POST_ID]: post.id,
-      post_type: LMFeedViewUtils.getPostTypeFromViewType(post.viewType),
-    });
+  sendCommentDeletedEvent(
+    post: Post,
+    comment: Reply,
+    topics: Record<string, Topic>,
+  ) {
+    const details: Record<string, string> = {};
+    details["post_id"] = post.Id;
+    details["comment_id"] = comment.Id;
+    details["post_topics"] = Object.values(topics)
+      .filter((topic) => post.topics.includes(topic.Id))
+      .toString();
+    details["post_created_by_uuid"] = post.uuid;
+    details["comment_created_by_uuid"] = comment.uuid;
+    this.track(this.Events.COMMENT_DELETED, details);
   }
 
   sendCommentReplyDeletedEvent(

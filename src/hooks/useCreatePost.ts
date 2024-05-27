@@ -225,11 +225,13 @@ export function useCreatePost(): UseCreatePost {
             .build(),
         );
         if (call.success) {
+          lmfeedAnalyticsClient?.sendPostCreatedEvent(call.data.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
           );
         }
       } catch (error) {
+        // lmfeedAnalyticsClient?.sendPostCreationErrorEvent(call.data.post);
         console.log(error);
       }
     },
