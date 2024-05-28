@@ -3,12 +3,12 @@ import { User } from "../shared/types/models/member";
 import { Reply } from "../shared/types/models/replies";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
-import { GetCommentRequest } from "@likeminds.community/feed-js";
+import { GetCommentRequest } from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import {
   DeleteCommentRequest,
   LikeCommentRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
 import { RepliesActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";

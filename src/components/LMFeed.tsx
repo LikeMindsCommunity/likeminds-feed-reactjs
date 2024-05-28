@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import UserProviderContext from "../contexts/LMFeedUserProviderContext";
-import useUserProvider from "../hooks/useLMUserProvider";
+import useUserProvider, { UserDetails } from "../hooks/useLMUserProvider";
 import {
   CustomAgentProviderContext,
   CustomAgentProviderInterface,
@@ -16,21 +16,25 @@ import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
+import {
+  LMCoreCallbacks,
+  LMSDKCallbacksImplementations,
+} from "../shared/LMSDKCoreCallbacks";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
   routes?: LMFeedCustomAppRoutes;
   useParentRouter?: boolean;
-  accessToken: string;
-  refreshToken: string;
+  userDetails: UserDetails;
   customEventClient: LMFeedCustomEvents;
+  LMFeedCoreCallbacks: LMCoreCallbacks;
 }
 
 function LMFeed({
   useParentRouter = false,
-  accessToken,
-  refreshToken,
+  LMFeedCoreCallbacks,
+  userDetails,
   client,
   routes,
   customEventClient,
@@ -49,13 +53,23 @@ function LMFeed({
   memberComponentClickCustomCallback,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
-    useUserProvider(accessToken, refreshToken, client, customEventClient);
+    useUserProvider(client, customEventClient, userDetails);
   const { showSnackbar, message, closeSnackbar, displaySnackbarMessage } =
     useLMFeedGeneralContextProvider();
   useEffect(() => {
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
   }, []);
+  useEffect(() => {
+    client.setLMSDKCallbacks(
+      new LMSDKCallbacksImplementations(
+        LMFeedCoreCallbacks,
+        client,
+        customEventClient,
+      ),
+    );
+    console.log(client);
+  }, [LMFeedCoreCallbacks, client, customEventClient]);
   if (!lmFeedUser) {
     return null;
   }
