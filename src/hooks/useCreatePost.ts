@@ -64,7 +64,7 @@ interface UseCreatePost {
 export function useCreatePost(): UseCreatePost {
   // Getting context values
 
-  const { lmFeedclient, customEventClient } = useContext(
+  const { lmFeedclient, customEventClient, lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
   const { currentCommunity, currentUser, logoutUser } = useContext(
@@ -225,11 +225,13 @@ export function useCreatePost(): UseCreatePost {
             .build(),
         );
         if (call.success) {
+          lmfeedAnalyticsClient?.sendPostCreatedEvent(call.data.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
           );
         }
       } catch (error) {
+        // lmfeedAnalyticsClient?.sendPostCreationErrorEvent(call.data.post);
         console.log(error);
       }
     },
@@ -290,6 +292,7 @@ export function useCreatePost(): UseCreatePost {
             .build(),
         )) as never;
         if (call.success) {
+          lmfeedAnalyticsClient?.sendPostEditedEvent(call.data.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_EDITED,
             {
@@ -447,6 +450,33 @@ export function useCreatePost(): UseCreatePost {
       temporaryPost,
       text,
     ]);
+
+  // effects fo running analytics
+  useEffect(() => {
+    if (openCreatePostDialog) {
+      lmfeedAnalyticsClient?.sendPostCreationStartedEvent();
+    }
+  }, [lmfeedAnalyticsClient, openCreatePostDialog]);
+  useEffect(() => {
+    if (!temporaryPost) {
+      lmfeedAnalyticsClient?.sendClickedOnAttachmentEvent(
+        null,
+        mediaUploadMode,
+      );
+    } else {
+      lmfeedAnalyticsClient?.sendClickedOnAttachmentEvent(
+        temporaryPost.Id,
+        mediaUploadMode,
+      );
+    }
+  }, [lmfeedAnalyticsClient, mediaUploadMode, temporaryPost]);
+  useEffect(() => {
+    if (ogTag && temporaryPost) {
+      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url, temporaryPost.Id);
+    } else if (ogTag) {
+      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url);
+    }
+  }, [lmfeedAnalyticsClient, ogTag, temporaryPost]);
   return {
     postText: text,
     mediaList,

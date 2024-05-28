@@ -16,6 +16,8 @@ import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
+import { AnalyticsCallback } from "../shared/types/analyticsCallback";
+import { LMFeedAnalytics } from "../shared/analytics";
 import {
   LMCoreCallbacks,
   LMSDKCallbacksImplementations,
@@ -28,6 +30,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   useParentRouter?: boolean;
   userDetails: UserDetails;
   customEventClient: LMFeedCustomEvents;
+  analyticsCallback: AnalyticsCallback;
   LMFeedCoreCallbacks: LMCoreCallbacks;
 }
 
@@ -38,6 +41,10 @@ function LMFeed({
   client,
   routes,
   customEventClient,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  analyticsCallback = (_event: string, _details: Record<string, string>) => {
+    return;
+  },
   LMPostHeaderStyles,
   LMFeedCustomIcons,
   CustomComponents,
@@ -79,6 +86,7 @@ function LMFeed({
       value={{
         lmFeedclient: client,
         customEventClient: customEventClient,
+        lmfeedAnalyticsClient: new LMFeedAnalytics(analyticsCallback),
       }}
     >
       <CustomAgentProviderContext.Provider

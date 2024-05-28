@@ -51,7 +51,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   postId: string,
 ) => {
   const { routes } = useContext(GeneralContext);
-  const { lmFeedclient, customEventClient } = useContext(
+  const { lmFeedclient, customEventClient, lmfeedAnalyticsClient } = useContext(
     GlobalClientProviderContext,
   );
   const { currentUser, currentCommunity, logoutUser } = useContext(
@@ -214,7 +214,12 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         )) as never;
         if (call.success) {
           const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
-
+          const targetReply = [...replies].find((reply) => reply.Id === id);
+          lmfeedAnalyticsClient?.sendCommentDeletedEvent(
+            post!,
+            targetReply!,
+            topics,
+          );
           const postCopy = { ...post };
           if (postCopy && postCopy?.commentsCount) {
             postCopy.commentsCount--;
@@ -339,6 +344,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           const tempPost = { ...post };
           if (tempPost.isPinned) {
             tempPost.isPinned = false;
+            lmfeedAnalyticsClient?.sendPostUnPinnedEvent(post!, topics);
             tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
               if (menuItem.id.toString() === LMFeedPostMenuItems.UNPIN_POST) {
                 return {
@@ -351,6 +357,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             });
           } else {
             tempPost.isPinned = true;
+            lmfeedAnalyticsClient?.sendPostPinnedEvent(post!, topics);
             tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
               if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
                 return {
