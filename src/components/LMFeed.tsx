@@ -68,6 +68,7 @@ function LMFeed({
         customEventClient,
       ),
     );
+    console.log(client);
   }, [LMFeedCoreCallbacks, client, customEventClient]);
   if (!lmFeedUser) {
     return null;

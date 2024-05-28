@@ -3,7 +3,8 @@ import {
   LMSDKCallbacks,
 } from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomEvents } from "./customEvents";
-import { LMFeedCustomActionEvents } from "../temp";
+import { LMFeedCustomActionEvents } from "./constants/lmFeedCustomEventNames";
+// import { LMFeedCustomActionEvents } from "../temp";
 
 export class LMCoreCallbacks {
   constructor(
@@ -40,13 +41,16 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
     accessToken: string;
     refreshToken: string;
   } | null {
+    console.log("inside refresh token expired");
     const apiKey: string = this.client.getApiKeyFromLocalStorage();
     if (apiKey && apiKey.length) {
+      console.log("a");
       this.customEventsClient.dispatchEvent(
         LMFeedCustomActionEvents.TRIGGER_SET_USER,
       );
       return null;
     } else {
+      console.log("here");
       return this.lmCoreCallbacks.onRefreshTokenExpired();
     }
   }

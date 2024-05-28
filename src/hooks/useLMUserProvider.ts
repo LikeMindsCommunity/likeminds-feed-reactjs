@@ -89,6 +89,7 @@ export default function useUserProvider(
     ) {
       try {
         // TODO Fix the initiateUser model
+        lmFeedclient.setApiKeyInLocalStorage(apiKey);
         const initiateUserCall: ValidateUserResponse =
           (await lmFeedclient?.initiateUser(
             InitiateUserRequest.builder()
