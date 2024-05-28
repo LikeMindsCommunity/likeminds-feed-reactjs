@@ -12,6 +12,7 @@ import { LMFeedCustomEvents } from "./shared/customEvents";
 // import { UserDetails } from "./hooks/useLMUserProvider";
 
 import { LMCoreCallbacks } from "./shared/LMSDKCoreCallbacks";
+import { LMFeedAnalytics } from "./shared/analytics";
 
 const customEventClient = new LMFeedCustomEvents();
 
@@ -96,6 +97,10 @@ export function ReactApp() {
         customEventClient={customEventClient}
         userDetails={userDetails}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
+        analyticsCallback={(event: string, details: Record<string, string>) => {
+          console.log("fired");
+          return;
+        }}
       ></LMFeed>
     </div>
   );
