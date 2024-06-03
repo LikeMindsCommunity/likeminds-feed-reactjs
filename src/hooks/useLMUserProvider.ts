@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { GetMemberStateResponse } from "../shared/types/api-responses/getMemberStateResponse";
 import { User } from "../shared/types/models/member";
@@ -37,6 +37,10 @@ export default function useUserProvider(
 
   const [lmFeedUserCurrentCommunity, setLmFeedUserCurrentCommunity] =
     useState<Community | null>(null);
+  const count = useRef<number>(1);
+  function incrementCount() {
+    count.current += 1;
+  }
   useEffect(() => {
     if (!lmFeedclient) {
       return;
@@ -125,37 +129,84 @@ export default function useUserProvider(
 
     // calling initiateuser and memberstate apis and setting the user details
     // TODO add a check for tokens
+
     async function setUser() {
       try {
+        console.log("Step " + count);
+        incrementCount();
+        console.log(userCreds);
         if (apiKey && username && uuid) {
           const localAccessToken =
             lmFeedclient.getAccessTokenFromLocalStorage();
           const localRefreshToken =
             lmFeedclient.getRefreshTokenFromLocalStorage();
+          console.log("Local Access Token: " + localAccessToken);
+          console.log("Local Refresh Token: " + localRefreshToken);
+          console.log("Step " + count);
+          incrementCount();
           if (localAccessToken && localRefreshToken) {
+            console.log("Entering into validate user block");
+            console.log("Step " + count);
+            incrementCount();
             await validateFeedUser(localAccessToken, localRefreshToken);
           } else {
             await initiateFeedUser(apiKey, uuid, username, isGuest || false);
           }
         } else {
+          console.log("Step " + count);
+          incrementCount();
+          console.log(
+            "API key block passed, Starting with Access and Refresh token block",
+          );
           if (accessToken && refreshToken) {
             setTokensInLocalStorage(accessToken, refreshToken);
             await validateFeedUser(accessToken, refreshToken);
           } else {
             // Change the logic to throw error
-            const localAccessToken =
-              lmFeedclient.getAccessTokenFromLocalStorage();
-            const localRefreshToken =
-              lmFeedclient.getRefreshTokenFromLocalStorage();
-            await validateFeedUser(
-              localAccessToken || "",
-              localRefreshToken || "",
-            );
+            throw Error("Provide something");
+            // const localAccessToken =
+            //   lmFeedclient.getAccessTokenFromLocalStorage();
+            // const localRefreshToken =
+            //   lmFeedclient.getRefreshTokenFromLocalStorage();
+            // await validateFeedUser(
+            //   localAccessToken || "",
+            //   localRefreshToken || "",
+            // );
           }
         }
       } catch (error) {
         console.log(error);
       }
+      // try {
+      //   if (apiKey && username && uuid) {
+      //     const localAccessToken =
+      //       lmFeedclient.getAccessTokenFromLocalStorage();
+      //     const localRefreshToken =
+      //       lmFeedclient.getRefreshTokenFromLocalStorage();
+      //     if (localAccessToken && localRefreshToken) {
+      //       await validateFeedUser(localAccessToken, localRefreshToken);
+      //     } else {
+      //       await initiateFeedUser(apiKey, uuid, username, isGuest || false);
+      //     }
+      //   } else {
+      //     if (accessToken && refreshToken) {
+      //       setTokensInLocalStorage(accessToken, refreshToken);
+      //       await validateFeedUser(accessToken, refreshToken);
+      //     } else {
+      //       // Change the logic to throw error
+      //       const localAccessToken =
+      //         lmFeedclient.getAccessTokenFromLocalStorage();
+      //       const localRefreshToken =
+      //         lmFeedclient.getRefreshTokenFromLocalStorage();
+      //       await validateFeedUser(
+      //         localAccessToken || "",
+      //         localRefreshToken || "",
+      //       );
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
 
     setUser();
