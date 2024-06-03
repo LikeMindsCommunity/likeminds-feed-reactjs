@@ -1,6 +1,6 @@
 {
-  "name": "@likeminds.community/likeminds-feed-reactjs",
-  "version": "1.0.0",
+  "name": "likeminds-feed-reactjs-beta",
+  "version": "2.0.11",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -115,7 +115,17 @@
     "vite-plugin-dts": "^3.7.3",
     "vite-plugin-lib-inject-css": "^2.0.0"
   },
-  "files": [
-    "dist"
-  ]
+  "main": "dist/index.js",
+"module": "dist/index.js",
+"files": [
+  "dist"
+],
+"types": "dist/index.d.ts",
+"type": "module",
+"exports": {
+  ".": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.umd.cjs"
+  }
+}
 }
