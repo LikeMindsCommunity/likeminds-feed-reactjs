@@ -12,7 +12,9 @@ export class LMCoreCallbacks {
       accessToken: string,
       refreshToken: string,
     ) => void,
-    onRefreshTokenExpired: () => { accessToken: string; refreshToken: string },
+    onRefreshTokenExpired:
+      | (() => { accessToken: string; refreshToken: string })
+      | (() => Promise<{ accessToken: string; refreshToken: string }>),
   ) {
     (this.onAccessTokenExpiredAndRefreshed = onAccessTokenExpiredAndRefreshed),
       (this.onRefreshTokenExpired = onRefreshTokenExpired);
@@ -21,7 +23,9 @@ export class LMCoreCallbacks {
     accessToken: string,
     refreshToken: string,
   ) => void;
-  onRefreshTokenExpired: () => { accessToken: string; refreshToken: string };
+  onRefreshTokenExpired:
+    | (() => { accessToken: string; refreshToken: string })
+    | (() => Promise<{ accessToken: string; refreshToken: string }>);
 }
 
 export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
@@ -37,10 +41,16 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
       refreshToken,
     );
   }
-  onRefreshTokenExpired(): {
-    accessToken: string;
-    refreshToken: string;
-  } | null {
+  onRefreshTokenExpired():
+    | {
+        accessToken: string;
+        refreshToken: string;
+      }
+    | null
+    | Promise<{
+        accessToken: string;
+        refreshToken: string;
+      }> {
     console.log("inside refresh token expired");
     const apiKey: string = this.client.getApiKeyFromLocalStorage();
     if (apiKey && apiKey.length) {

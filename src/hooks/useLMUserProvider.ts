@@ -31,13 +31,14 @@ export default function useUserProvider(
   customEventClient: LMFeedCustomEvents,
   userCreds: UserDetails,
 ): UserProviderInterface {
-  const { accessToken, refreshToken, username, uuid, isGuest, apiKey } =
-    userCreds;
   const [lmFeedUser, setLmFeedUser] = useState<null | User>(null);
 
   const [lmFeedUserCurrentCommunity, setLmFeedUserCurrentCommunity] =
     useState<Community | null>(null);
   useEffect(() => {
+    const { accessToken, refreshToken, username, uuid, isGuest, apiKey } =
+      userCreds;
+    console.log(userCreds);
     if (!lmFeedclient) {
       return;
     }
@@ -53,31 +54,38 @@ export default function useUserProvider(
       localRefreshToken: string,
     ) {
       try {
-        const initiateUserCall: ValidateUserResponse =
+        setTokensInLocalStorage(localAccessToken, localRefreshToken);
+        const validateUserCall: ValidateUserResponse =
           (await lmFeedclient?.validateUser(
             ValidateUserRequest.builder()
               .setaccessToken(localAccessToken)
               .setrefreshToken(localRefreshToken)
               .build(),
           )) as never;
-        setTokensInLocalStorage(
-          initiateUserCall.data?.accessToken || "",
-          initiateUserCall.data?.refreshToken || "",
-        );
+        console.log("Outside validate user request");
+        console.log(validateUserCall);
+        if (validateUserCall.success) {
+          // Setting tokens in local storage
+          setTokensInLocalStorage(localAccessToken, localRefreshToken);
+          lmFeedclient.setUserInLocalStorage(
+            JSON.stringify(validateUserCall.data?.user),
+          );
+        }
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
-        if (initiateUserCall && memberStateCall.success) {
+        if (validateUserCall && memberStateCall.success) {
           const user = {
-            ...initiateUserCall.data?.user,
+            ...validateUserCall.data?.user,
             ...memberStateCall.data.member,
           };
           setLmFeedUser(user || null);
           setLmFeedUserCurrentCommunity(
-            initiateUserCall?.data?.community || null,
+            validateUserCall?.data?.community || null,
           );
         }
       } catch (error) {
         console.log(error);
+        return error;
       }
     }
 
@@ -89,19 +97,31 @@ export default function useUserProvider(
     ) {
       try {
         // TODO Fix the initiateUser model
-        lmFeedclient.setApiKeyInLocalStorage(apiKey);
+        if (!(apiKey && uuid && username)) {
+          throw Error("Either API key or UUID or Username not provided");
+        }
+        alert();
         const initiateUserCall: ValidateUserResponse =
           (await lmFeedclient?.initiateUser(
             InitiateUserRequest.builder()
               .setUUID(uuid || "")
               .setIsGuest(isGuest || false)
               .setUserName(username || "")
+              .setApiKey(apiKey)
               .build(),
           )) as never;
-        setTokensInLocalStorage(
-          initiateUserCall.data?.accessToken || "",
-          initiateUserCall.data?.refreshToken || "",
-        );
+        alert();
+        if (initiateUserCall) {
+          // Setting the tokens, API key and User in local storage
+          setTokensInLocalStorage(
+            initiateUserCall.data?.accessToken || "",
+            initiateUserCall.data?.refreshToken || "",
+          );
+          lmFeedclient.setApiKeyInLocalStorage(apiKey);
+          lmFeedclient.setUserInLocalStorage(
+            JSON.stringify(initiateUserCall.data?.user),
+          );
+        }
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
         if (initiateUserCall && memberStateCall.success) {
@@ -116,6 +136,7 @@ export default function useUserProvider(
         }
       } catch (error) {
         console.log(error);
+        return error;
       }
     }
     customEventClient.listen(
@@ -125,6 +146,7 @@ export default function useUserProvider(
 
     // calling initiateuser and memberstate apis and setting the user details
     // TODO add a check for tokens
+
     async function setUser() {
       try {
         if (apiKey && username && uuid) {
@@ -132,46 +154,112 @@ export default function useUserProvider(
             lmFeedclient.getAccessTokenFromLocalStorage();
           const localRefreshToken =
             lmFeedclient.getRefreshTokenFromLocalStorage();
-          if (localAccessToken && localRefreshToken) {
+          console.log("The local access tokens are: ", localAccessToken);
+          console.log("The local refresh tokens are: ", localRefreshToken);
+          if (
+            localAccessToken &&
+            localRefreshToken &&
+            localAccessToken.length &&
+            localRefreshToken.length
+          ) {
             await validateFeedUser(localAccessToken, localRefreshToken);
           } else {
             await initiateFeedUser(apiKey, uuid, username, isGuest || false);
           }
+        } else if (accessToken && refreshToken) {
+          await validateFeedUser(accessToken, refreshToken);
         } else {
-          if (accessToken && refreshToken) {
-            setTokensInLocalStorage(accessToken, refreshToken);
-            await validateFeedUser(accessToken, refreshToken);
-          } else {
-            // Change the logic to throw error
-            const localAccessToken =
-              lmFeedclient.getAccessTokenFromLocalStorage();
-            const localRefreshToken =
-              lmFeedclient.getRefreshTokenFromLocalStorage();
-            await validateFeedUser(
-              localAccessToken || "",
-              localRefreshToken || "",
-            );
-          }
+          // Change the logic to throw error
+          throw Error("Neither API key nor Tokens provided");
+          // const localAccessToken =
+          //   lmFeedclient.getAccessTokenFromLocalStorage();
+          // const localRefreshToken =
+          //   lmFeedclient.getRefreshTokenFromLocalStorage();
+          // await validateFeedUser(
+          //   localAccessToken || "",
+          //   localRefreshToken || "",
+          // );
         }
       } catch (error) {
         console.log(error);
       }
+      // try {
+      //   if (apiKey && username && uuid) {
+      //     const localAccessToken =
+      //       lmFeedclient.getAccessTokenFromLocalStorage();
+      //     const localRefreshToken =
+      //       lmFeedclient.getRefreshTokenFromLocalStorage();
+      //     if (localAccessToken && localRefreshToken) {
+      //       await validateFeedUser(localAccessToken, localRefreshToken);
+      //     } else {
+      //       await initiateFeedUser(apiKey, uuid, username, isGuest || false);
+      //     }
+      //   } else {
+      //     if (accessToken && refreshToken) {
+      //       setTokensInLocalStorage(accessToken, refreshToken);
+      //       await validateFeedUser(accessToken, refreshToken);
+      //     } else {
+      //       // Change the logic to throw error
+      //       const localAccessToken =
+      //         lmFeedclient.getAccessTokenFromLocalStorage();
+      //       const localRefreshToken =
+      //         lmFeedclient.getRefreshTokenFromLocalStorage();
+      //       await validateFeedUser(
+      //         localAccessToken || "",
+      //         localRefreshToken || "",
+      //       );
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
+
+    customEventClient.listen(
+      LMFeedCustomActionEvents.TRIGGER_SET_USER,
+      setUser,
+    );
+
+    // calling initiateuser and memberstate apis and setting the user details
+    // TODO add a check for tokens
+    // async function setUser() {
+    //   try {
+    //     if (apiKey && username && uuid) {
+    //       const localAccessToken =
+    //         lmFeedclient.getAccessTokenFromLocalStorage();
+    //       const localRefreshToken =
+    //         lmFeedclient.getRefreshTokenFromLocalStorage();
+    //       if (localAccessToken && localRefreshToken) {
+    //         await validateFeedUser(localAccessToken, localRefreshToken);
+    //       } else {
+    //         await initiateFeedUser(apiKey, uuid, username, isGuest || false);
+    //       }
+    //     } else {
+    //       if (accessToken && refreshToken) {
+    //         setTokensInLocalStorage(accessToken, refreshToken);
+    //         await validateFeedUser(accessToken, refreshToken);
+    //       } else {
+    //         // Change the logic to throw error
+    //         const localAccessToken =
+    //           lmFeedclient.getAccessTokenFromLocalStorage();
+    //         const localRefreshToken =
+    //           lmFeedclient.getRefreshTokenFromLocalStorage();
+    //         await validateFeedUser(
+    //           localAccessToken || "",
+    //           localRefreshToken || "",
+    //         );
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
     setUser();
     return () => {
       customEventClient.remove(LMFeedCustomActionEvents.TRIGGER_SET_USER);
     };
-  }, [
-    accessToken,
-    apiKey,
-    customEventClient,
-    isGuest,
-    lmFeedclient,
-    refreshToken,
-    username,
-    uuid,
-  ]);
+  }, [customEventClient, lmFeedclient, userCreds]);
   useEffect(() => {
     if (lmFeedUser) {
       customEventClient.dispatchEvent(LMFeedCustomActionEvents.USER_INITIATED, {
