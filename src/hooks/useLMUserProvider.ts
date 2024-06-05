@@ -35,7 +35,6 @@ export default function useUserProvider(
 
   const [lmFeedUserCurrentCommunity, setLmFeedUserCurrentCommunity] =
     useState<Community | null>(null);
-
   useEffect(() => {
     const { accessToken, refreshToken, username, uuid, isGuest, apiKey } =
       userCreds;
@@ -215,6 +214,46 @@ export default function useUserProvider(
       //   console.log(error);
       // }
     }
+
+    customEventClient.listen(
+      LMFeedCustomActionEvents.TRIGGER_SET_USER,
+      setUser,
+    );
+
+    // calling initiateuser and memberstate apis and setting the user details
+    // TODO add a check for tokens
+    // async function setUser() {
+    //   try {
+    //     if (apiKey && username && uuid) {
+    //       const localAccessToken =
+    //         lmFeedclient.getAccessTokenFromLocalStorage();
+    //       const localRefreshToken =
+    //         lmFeedclient.getRefreshTokenFromLocalStorage();
+    //       if (localAccessToken && localRefreshToken) {
+    //         await validateFeedUser(localAccessToken, localRefreshToken);
+    //       } else {
+    //         await initiateFeedUser(apiKey, uuid, username, isGuest || false);
+    //       }
+    //     } else {
+    //       if (accessToken && refreshToken) {
+    //         setTokensInLocalStorage(accessToken, refreshToken);
+    //         await validateFeedUser(accessToken, refreshToken);
+    //       } else {
+    //         // Change the logic to throw error
+    //         const localAccessToken =
+    //           lmFeedclient.getAccessTokenFromLocalStorage();
+    //         const localRefreshToken =
+    //           lmFeedclient.getRefreshTokenFromLocalStorage();
+    //         await validateFeedUser(
+    //           localAccessToken || "",
+    //           localRefreshToken || "",
+    //         );
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
     setUser();
     return () => {

@@ -45,7 +45,7 @@ interface useFetchFeedsResponse {
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
-  const { lmFeedclient, customEventClient } = useContext(
+  const { lmFeedclient, customEventClient, lmfeedAnalyticsClient } = useContext(
     GlobalClientProviderContext,
   );
   const { routes } = useContext(GeneralContext);
@@ -154,6 +154,12 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         if (call.success) {
           const feedListCopy = [...feedList];
           const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const post = feedListCopy[index];
+          lmfeedAnalyticsClient?.sendPostDeletedEvent(
+            post,
+            topics,
+            currentUser?.state === 4 ? "member" : "CM",
+          );
           feedListCopy.splice(index, 1);
           setFeedList(feedListCopy);
           if (displaySnackbarMessage)
@@ -229,10 +235,13 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         if (call.success) {
           const feedListCopy = [...feedList];
           const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const post = feedListCopy[index];
           feedListCopy[index].isLiked = !feedListCopy[index].isLiked;
           if (feedListCopy[index].isLiked) {
+            lmfeedAnalyticsClient?.sendPostLikedEvent(post, topics);
             feedListCopy[index].likesCount++;
           } else {
+            lmfeedAnalyticsClient?.sendPostUnLikedEvent(post, topics);
             feedListCopy[index].likesCount--;
           }
           setFeedList(feedListCopy);

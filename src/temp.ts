@@ -52,7 +52,8 @@ import LMFeedPDFViewer from "./shared/components/LMFeedPDFViewer";
 import LMFeedReplyEditTextArea from "./shared/components/LMFeedReplyEditTextArea";
 import LMFeedReplyTextArea from "./shared/components/LMFeedReplyTextArea";
 import LMFeedTextArea from "./shared/components/LMFeedTextArea";
-
+import { LMFeedAnalytics } from "./shared/analytics";
+import { LMCoreCallbacks } from "./shared/LMSDKCoreCallbacks";
 // enums
 import { LMDisplayMessages } from "./shared/constants/lmDisplayMessages";
 import { LMFeedEntityType } from "./shared/constants/lmEntityType";
@@ -122,6 +123,8 @@ export {
   LMFeedReplyEditTextArea,
   LMFeedReplyTextArea,
   LMFeedTextArea,
+  LMFeedAnalytics,
+  LMCoreCallbacks,
   LMDisplayMessages,
   LMFeedEntityType,
   LMFeedCustomActionEvents,
