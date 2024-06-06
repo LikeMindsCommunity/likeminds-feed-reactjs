@@ -104,6 +104,8 @@ function App() {
           refreshToken: result_1.data.refresh_token,
         };
       } catch (error) {
+        console.log(error);
+        alert(`Error occoured: ${error}`);
         return {
           accessToken: "sadf",
           refreshToken: "adsf",
