@@ -108,10 +108,12 @@ export default function useUserProvider(
               .setIsGuest(isGuest || false)
               .setUserName(username || "")
               .setApiKey(apiKey)
+              .setTokenExpiryBeta(2)
+              .setRTMTokenExpiryBeta(4)
               .build(),
           )) as never;
         alert();
-        if (initiateUserCall) {
+        if (initiateUserCall.success) {
           // Setting the tokens, API key and User in local storage
           setTokensInLocalStorage(
             initiateUserCall.data?.accessToken || "",
@@ -124,7 +126,7 @@ export default function useUserProvider(
         }
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
-        if (initiateUserCall && memberStateCall.success) {
+        if (initiateUserCall.success && memberStateCall.success) {
           const user = {
             ...initiateUserCall.data?.user,
             ...memberStateCall.data.member,
@@ -133,6 +135,10 @@ export default function useUserProvider(
           setLmFeedUserCurrentCommunity(
             initiateUserCall?.data?.community || null,
           );
+          return {
+            accessToken: initiateUserCall.data?.accessToken,
+            refreshToken: initiateUserCall.data?.refreshToken,
+          };
         }
       } catch (error) {
         console.log(error);
@@ -141,7 +147,11 @@ export default function useUserProvider(
     }
     customEventClient.listen(
       LMFeedCustomActionEvents.TRIGGER_SET_USER,
-      setUser,
+      (event) => {
+        const { user, community } = (event as CustomEvent).detail;
+        setLmFeedUser(user || null);
+        setLmFeedUserCurrentCommunity(community || null);
+      },
     );
 
     // calling initiateuser and memberstate apis and setting the user details
@@ -169,92 +179,30 @@ export default function useUserProvider(
         } else if (accessToken && refreshToken) {
           await validateFeedUser(accessToken, refreshToken);
         } else {
-          // Change the logic to throw error
           throw Error("Neither API key nor Tokens provided");
-          // const localAccessToken =
-          //   lmFeedclient.getAccessTokenFromLocalStorage();
-          // const localRefreshToken =
-          //   lmFeedclient.getRefreshTokenFromLocalStorage();
-          // await validateFeedUser(
-          //   localAccessToken || "",
-          //   localRefreshToken || "",
-          // );
         }
       } catch (error) {
         console.log(error);
       }
-      // try {
-      //   if (apiKey && username && uuid) {
-      //     const localAccessToken =
-      //       lmFeedclient.getAccessTokenFromLocalStorage();
-      //     const localRefreshToken =
-      //       lmFeedclient.getRefreshTokenFromLocalStorage();
-      //     if (localAccessToken && localRefreshToken) {
-      //       await validateFeedUser(localAccessToken, localRefreshToken);
-      //     } else {
-      //       await initiateFeedUser(apiKey, uuid, username, isGuest || false);
-      //     }
-      //   } else {
-      //     if (accessToken && refreshToken) {
-      //       setTokensInLocalStorage(accessToken, refreshToken);
-      //       await validateFeedUser(accessToken, refreshToken);
-      //     } else {
-      //       // Change the logic to throw error
-      //       const localAccessToken =
-      //         lmFeedclient.getAccessTokenFromLocalStorage();
-      //       const localRefreshToken =
-      //         lmFeedclient.getRefreshTokenFromLocalStorage();
-      //       await validateFeedUser(
-      //         localAccessToken || "",
-      //         localRefreshToken || "",
-      //       );
-      //     }
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
     }
 
     customEventClient.listen(
       LMFeedCustomActionEvents.TRIGGER_SET_USER,
-      setUser,
+      // setUser,
+      () => {
+        const user = lmFeedclient.getUserFromLocalStorage();
+        const { uuid, name, isGuest } = JSON.parse(user);
+        console.log(
+          `Calling initiateFeedUser with ${uuid}, ${name}, ${isGuest}, ${lmFeedclient.getApiKeyFromLocalStorage()}`,
+        );
+        initiateFeedUser(
+          lmFeedclient.getApiKeyFromLocalStorage(),
+          uuid,
+          name,
+          isGuest,
+        );
+      },
     );
-
-    // calling initiateuser and memberstate apis and setting the user details
-    // TODO add a check for tokens
-    // async function setUser() {
-    //   try {
-    //     if (apiKey && username && uuid) {
-    //       const localAccessToken =
-    //         lmFeedclient.getAccessTokenFromLocalStorage();
-    //       const localRefreshToken =
-    //         lmFeedclient.getRefreshTokenFromLocalStorage();
-    //       if (localAccessToken && localRefreshToken) {
-    //         await validateFeedUser(localAccessToken, localRefreshToken);
-    //       } else {
-    //         await initiateFeedUser(apiKey, uuid, username, isGuest || false);
-    //       }
-    //     } else {
-    //       if (accessToken && refreshToken) {
-    //         setTokensInLocalStorage(accessToken, refreshToken);
-    //         await validateFeedUser(accessToken, refreshToken);
-    //       } else {
-    //         // Change the logic to throw error
-    //         const localAccessToken =
-    //           lmFeedclient.getAccessTokenFromLocalStorage();
-    //         const localRefreshToken =
-    //           lmFeedclient.getRefreshTokenFromLocalStorage();
-    //         await validateFeedUser(
-    //           localAccessToken || "",
-    //           localRefreshToken || "",
-    //         );
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-
     setUser();
     return () => {
       customEventClient.remove(LMFeedCustomActionEvents.TRIGGER_SET_USER);

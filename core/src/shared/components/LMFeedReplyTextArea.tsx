@@ -11,12 +11,16 @@ import { setTagUserImage } from "../taggingParser";
 import { useLMPostReply } from "../../hooks/useLMPostReply";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import { useParams } from "react-router-dom";
+import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
 export interface LMFeedReplyTextAreaProps {
   setReplyViewVisibility?: React.Dispatch<boolean>;
 }
 const LMFeedReplyTextArea = ({
   setReplyViewVisibility,
 }: LMFeedReplyTextAreaProps) => {
+  const { lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
   const { reply } = useContext(ReplyContext);
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const { id } = useParams();
@@ -104,7 +108,9 @@ const LMFeedReplyTextArea = ({
                       const textNode2Text = textContentFocusNode.substring(
                         limitRight + 1,
                       );
-
+                      lmfeedAnalyticsClient?.sendUserTaggedInPostEvent(
+                        item?.id?.toString() || "",
+                      );
                       const textNode1 = document.createTextNode(textNode1Text);
                       const anchorNode = document.createElement("a");
                       anchorNode.id = item?.id.toString();

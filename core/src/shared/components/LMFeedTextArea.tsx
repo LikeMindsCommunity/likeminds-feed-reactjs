@@ -5,6 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useTagging } from "../../hooks/useTagging";
 
 import { convertTextToHTML, setTagUserImage } from "../taggingParser";
+import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
 // import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
 
 const LMFeedTextArea = () => {
@@ -17,6 +18,9 @@ const LMFeedTextArea = () => {
   } = useTagging();
   const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
     LMFeedCreatePostContext,
+  );
+  const { lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
   );
   // const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
   function setCursorToTheEnd() {
@@ -116,7 +120,9 @@ const LMFeedTextArea = () => {
                     const textNode2Text = textContentFocusNode.substring(
                       limitRight + 1,
                     );
-
+                    lmfeedAnalyticsClient?.sendUserTaggedInPostEvent(
+                      item?.id?.toString() || "",
+                    );
                     const textNode1 = document.createTextNode(textNode1Text);
                     const anchorNode = document.createElement("a");
                     anchorNode.id = item?.id.toString();

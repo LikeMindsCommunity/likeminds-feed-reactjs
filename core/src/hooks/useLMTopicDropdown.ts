@@ -25,7 +25,9 @@ export function useTopicDropdown(
   mode?: LMTopicsDropdownMode,
 ): useTopicDropdownResponse {
   // Getting an instance of the client
-  const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { lmFeedclient, lmfeedAnalyticsClient } = useContext(
+    GlobalClientProviderContext,
+  );
   const { TopicsCustomCallbacks = {}, topicComponentClickCustomCallback } =
     useContext(CustomAgentProviderContext);
   const {
@@ -104,7 +106,7 @@ export function useTopicDropdown(
 
   // TODO update the logic for finding index and checking the topics
   const updateCheckedTopics = useCallback(
-    (arg: Topic) => {
+    (arg: Topic, postId?: string) => {
       const isTopicAlreadyChecked = checkedTopics.some((topic: Topic) => {
         return topic.Id === arg.Id;
       });
@@ -117,11 +119,15 @@ export function useTopicDropdown(
         setCheckedTopics(newCheckedTopics);
       } else {
         const newCheckedTopics = [...checkedTopics];
+        lmfeedAnalyticsClient?.sendTopicsAddedInThePostEvent(
+          newCheckedTopics,
+          postId,
+        );
         newCheckedTopics.push(arg);
         setCheckedTopics(newCheckedTopics);
       }
     },
-    [checkedTopics],
+    [checkedTopics, lmfeedAnalyticsClient],
   );
 
   // to remove all the checked topics

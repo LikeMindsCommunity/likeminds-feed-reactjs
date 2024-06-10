@@ -116,7 +116,13 @@ export function useCreatePost(): UseCreatePost {
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
     const mediaArray = event.target.files;
     const mediaCopy = [...mediaList, ...Array.from(mediaArray!)];
-
+    if (temporaryPost) {
+      const feedAttachmentType = mediaArray?.item(0)?.type;
+      lmfeedAnalyticsClient?.sendAddMoreAttachmentClickedEvent(
+        temporaryPost.Id,
+        feedAttachmentType || "",
+      );
+    }
     setMediaList(mediaCopy);
   }
   function removeMedia(index: number) {
@@ -239,6 +245,7 @@ export function useCreatePost(): UseCreatePost {
       currentUser?.uuid,
       customEventClient,
       lmFeedclient,
+      lmfeedAnalyticsClient,
       mediaList,
       ogTag,
       selectedTopicIds,

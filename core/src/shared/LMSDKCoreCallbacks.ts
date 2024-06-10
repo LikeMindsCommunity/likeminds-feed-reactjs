@@ -1,9 +1,12 @@
 import {
+  InitiateUserRequest,
   LMFeedClient,
   LMSDKCallbacks,
 } from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomEvents } from "./customEvents";
 import { LMFeedCustomActionEvents } from "./constants/lmFeedCustomEventNames";
+import { ValidateUserResponse } from "./types/api-responses/initiateUserResponse";
+import { GetMemberStateResponse } from "./types/api-responses/getMemberStateResponse";
 // import { LMFeedCustomActionEvents } from "../temp";
 
 export class LMCoreCallbacks {
@@ -32,6 +35,58 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
   lmCoreCallbacks: LMCoreCallbacks;
   client: LMFeedClient;
   customEventsClient: LMFeedCustomEvents;
+  setTokensInLocalStorage(accessToken: string, refreshToken: string) {
+    this.client.setAccessTokenInLocalStorage(accessToken);
+    this.client.setRefreshTokenInLocalStorage(refreshToken);
+  }
+  async loginFunction() {
+    try {
+      const user = this.client.getUserFromLocalStorage();
+      const { sdkClientInfo, name, isGuest } = JSON.parse(user);
+      const { uuid } = sdkClientInfo;
+      const initiateUserCall: ValidateUserResponse =
+        (await this.client.initiateUser(
+          InitiateUserRequest.builder()
+            .setApiKey(this.client.getApiKeyFromLocalStorage())
+            .setUUID(uuid)
+            .setUserName(name)
+            .setIsGuest(isGuest)
+            .build(),
+        )) as never;
+      if (initiateUserCall.success) {
+        this.setTokensInLocalStorage(
+          initiateUserCall.data?.accessToken || "",
+          initiateUserCall.data?.refreshToken || "",
+        );
+
+        this.client.setUserInLocalStorage(
+          JSON.stringify(initiateUserCall.data?.user),
+        );
+      }
+      const memberStateCall: GetMemberStateResponse =
+        (await this.client?.getMemberState()) as never;
+      const userObject = {
+        ...initiateUserCall.data?.user,
+        ...memberStateCall.data.member,
+      };
+      this.customEventsClient.dispatchEvent(
+        LMFeedCustomActionEvents.TRIGGER_SET_USER,
+        {
+          user: userObject,
+          community: initiateUserCall.data?.community,
+        },
+      );
+      return {
+        accessToken: initiateUserCall.data?.accessToken,
+        refreshToken: initiateUserCall.data?.refreshToken,
+      };
+    } catch (error) {
+      return {
+        accessToken: "",
+        refreshToken: "",
+      };
+    }
+  }
   onAccessTokenExpiredAndRefreshed(
     accessToken: string,
     refreshToken: string,
@@ -54,13 +109,14 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
     console.log("inside refresh token expired");
     const apiKey: string = this.client.getApiKeyFromLocalStorage();
     if (apiKey && apiKey.length) {
-      console.log("a");
-      this.customEventsClient.dispatchEvent(
-        LMFeedCustomActionEvents.TRIGGER_SET_USER,
-      );
-      return null;
+      return this.loginFunction()
+        .then(function (res) {
+          return res;
+        })
+        .catch(function (err) {
+          return err;
+        });
     } else {
-      console.log("here");
       return this.lmCoreCallbacks.onRefreshTokenExpired();
     }
   }

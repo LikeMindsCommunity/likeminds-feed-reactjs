@@ -3,52 +3,6 @@ import { Post } from "./types/models/post";
 import { Reply } from "./types/models/replies";
 import { Topic } from "./types/models/topic";
 
-// class LMFeedAnalytics {
-//   private lmFeedClient: LMFeedClient;
-//   constructor(lmFeedClient: LMFeedClient) {
-//     this.lmFeedClient = lmFeedClient;
-//   }
-//   static EVENTS = class {
-//     POST_CREATION_STARTED = "Post creation started";
-//     CLICKED_ON_ATTACHMENT = "Clicked on Attachment";
-//     USER_TAGGED_IN_POST = "User tagged in a post";
-//     LINK_ATTACHED_IN_POST = "link attached in the post";
-//     IMAGE_ATTACHED_TO_POST = "Image attached to post";
-//     VIDEO_ATTACHED_TO_POST = "Video attached to post";
-//     DOCUMENT_ATTACHED_TO_POST = "Document attached in post";
-//     POST_CREATION_COMPLETED = "Post creation completed";
-//     POST_PINNED = "Post pinned";
-//     POST_UNPINNED = "Post unpinned";
-//     POST_REPORTED = "Post reported";
-//     POST_DELETED = "Post deleted";
-//     FEED_OPENED = "Feed opened";
-//     LIKE_LIST_OPEN = "Like list open";
-//     COMMENT_LIST_OPEN = "Comment list open";
-//     COMMENT_DELETED = "Comment deleted";
-//     COMMENT_REPORTED = "Comment reported";
-//     COMMENT_POSTED = "Comment posted";
-//     REPLY_POSTED = "Reply posted";
-//     REPLY_DELETED = "Reply deleted";
-//     REPLY_REPORTED = "Reply reported";
-//     POST_EDITED = "Post edited";
-//     POST_SHARED = "Post shared";
-//     POST_LIKED = "Post Liked";
-//     POST_UNLIKED = "Post Unliked";
-//     POST_SAVED = "Post Saved";
-//     POST_UNSAVED = "Post Unsaved";
-//     COMMENT_LIKED = "Comment Liked";
-//     COMMENT_UNLIKED = "Comment Unliked";
-//     COMMENT_EDITED = "Comment edited";
-
-//     NOTIFICATION_RECEIVED = "Notification Received";
-//     NOTIFICATION_CLICKED = "Notification Clicked";
-
-//     NOTIFICATION_PAGE_OPENED = "Notification page opened";
-//   };
-
-// }
-// lmFeedAnalytics.ts
-
 interface LMFeedPostViewData {
   id: string;
   viewType: string;
@@ -83,11 +37,13 @@ class LMFeedAnalytics {
   Events = {
     POST_CREATION_STARTED: "Post creation started",
     CLICKED_ON_ATTACHMENT: "Clicked on Attachment",
-    USER_TAGGED_IN_POST: "User tagged in a post",
+    ADD_MORE_ATTACHMENT_CLICKED: "add_more_attachment_clicked", //
+    USER_TAGGED_IN_POST: "User tagged in a post", //
     LINK_ATTACHED_IN_POST: "link attached in the post",
-    IMAGE_ATTACHED_TO_POST: "Image attached to post",
-    VIDEO_ATTACHED_TO_POST: "Video attached to post",
-    DOCUMENT_ATTACHED_TO_POST: "Document attached in post",
+    IMAGE_ATTACHED_TO_POST: "Image attached to post", //
+    VIDEO_ATTACHED_TO_POST: "Video attached to post", //
+    DOCUMENT_ATTACHED_TO_POST: "Document attached in post", //
+    TOPICS_ADDED_IN_THE_POST: "Topics added in the post", //
     POST_CREATION_COMPLETED: "Post creation completed",
     POST_CREATION_ERROR: "Post creation error",
     POST_PINNED: "Post pinned",
@@ -95,23 +51,37 @@ class LMFeedAnalytics {
     POST_REPORTED: "Post reported",
     POST_DELETED: "Post deleted",
     FEED_OPENED: "Feed opened",
+    POST_LIKE_LIST_CLICK: "post_like_list_click", //
+    COMMENT_LIKE_LIST_CLICK: "comment_like_list_click", //
+    REPLY_LIKE_LIST_CLICK: "reply_like_list_click", //
     LIKE_LIST_OPEN: "Like list open",
     COMMENT_LIST_OPEN: "Comment list open",
     COMMENT_DELETED: "Comment deleted",
     COMMENT_REPORTED: "Comment reported",
-    COMMENT_POSTED: "Comment posted",
-    REPLY_POSTED: "Reply posted",
+    COMMENT_POSTED: "comment_posted",
+    REPLY_POSTED: "reply_posted",
+    REPLY_EDITED: "reply_edited", //
     REPLY_DELETED: "Reply deleted",
     REPLY_REPORTED: "Reply reported",
     POST_EDITED: "Post edited",
     POST_SHARED: "Post shared",
     POST_LIKED: "Post Liked",
-    POST_UNLIKED: "Post Unliked",
+    POST_UNLIKED: "post_unliked",
+    POST_PROFILE_PIC_CLICK: "post_profile_pic_click", //
+    POST_PROFILE_NAME_CLICK: "post_profile_name_click", //
+    POST_MENU_CLICK: "post_menu_click", //
+    POST_TOPIC_CLICK: "post_topic_click", //
+    POST_COMMENT_CLICK: "post_comment_click", //
+    COMMENT_PROFILE_PICTURE_CLICK: "comment_profile_picture_click", //
+    COMMENT_PROFILE_NAME_CLICK: "comment_profile_name_click", //
+    COMMENT_MENU_CLICK: "comment_menu_click", //
+    REPLY_PROFILE_PICTURE_CLICK: "reply_profile_picture_click", //
+    REPLY_PROFILE_NAME_CLICK: "reply_profile_name_click", //
     POST_SAVED: "Post Saved",
     POST_UNSAVED: "Post Unsaved",
     COMMENT_LIKED: "Comment Liked",
     COMMENT_UNLIKED: "Comment Unliked",
-    COMMENT_EDITED: "Comment edited",
+    COMMENT_EDITED: "comment_edited",
     NOTIFICATION_RECEIVED: "Notification Received",
     NOTIFICATION_CLICKED: "Notification Clicked",
     NOTIFICATION_PAGE_OPENED: "Notification page opened",
@@ -147,7 +117,107 @@ class LMFeedAnalytics {
 
     this.callback(eventName, eventProperties);
   }
+  sendAddMoreAttachmentClickedEvent(postId: string, type: string) {
+    this.track(this.Events.ADD_MORE_ATTACHMENT_CLICKED, {
+      post_id: postId,
+      type: type,
+    });
+  }
 
+  sendUserTaggedInPostEvent(uuid: string) {
+    this.track(this.Events.USER_TAGGED_IN_POST, {
+      tagged_user_uuid: uuid,
+    });
+  }
+
+  sendImageAttachedToPostEvent(postId: string, imageCount: number) {
+    this.track(this.Events.IMAGE_ATTACHED_TO_POST, {
+      post_id: postId,
+      image_count: imageCount.toString() || "",
+    });
+  }
+
+  sendVideoAttachedToPostEvent(postId: string, imageCount: number) {
+    this.track(this.Events.VIDEO_ATTACHED_TO_POST, {
+      post_id: postId,
+      video_count: imageCount.toString() || "",
+    });
+  }
+
+  sendDocumentAttachedToPostEvent(postId: string, imageCount: number) {
+    this.track(this.Events.DOCUMENT_ATTACHED_TO_POST, {
+      post_id: postId,
+      documnent_count: imageCount.toString() || "",
+    });
+  }
+
+  sendTopicsAddedInThePostEvent(topics: Topic[], postId?: string) {
+    const details: Record<string, string> = {
+      post_topics: topics.toString(),
+    };
+    if (postId) {
+      details["post_id"] = postId;
+    }
+    this.track(this.Events.TOPICS_ADDED_IN_THE_POST, details);
+  }
+
+  sendPostLikeListClickEvent() {
+    this.track(this.Events.POST_LIKE_LIST_CLICK);
+  }
+
+  sendCommentLikeListClickEvent() {
+    this.track(this.Events.COMMENT_LIKE_LIST_CLICK);
+  }
+
+  sendReplyLikeListClickEvent() {
+    this.track(this.Events.REPLY_LIKE_LIST_CLICK);
+  }
+
+  sendReplyEditedEvent() {
+    this.track(this.Events.REPLY_EDITED);
+  }
+
+  sendPostProfilePicClickEvent() {
+    this.track(this.Events.POST_PROFILE_PIC_CLICK);
+  }
+
+  sendPostProfileNameClickEvent() {
+    this.track(this.Events.POST_PROFILE_NAME_CLICK);
+  }
+
+  sendPostMenuClickEvent() {
+    this.track(this.Events.POST_MENU_CLICK);
+  }
+
+  sendPostTopicClickEvent() {
+    this.track(this.Events.POST_TOPIC_CLICK);
+  }
+
+  sendPostCommentClickEvent() {
+    this.track(this.Events.POST_COMMENT_CLICK);
+  }
+
+  sendCommentProfilePictureClickEvent() {
+    this.track(this.Events.COMMENT_PROFILE_PICTURE_CLICK);
+  }
+
+  sendCommentProfileNameClickEvent() {
+    this.track(this.Events.COMMENT_PROFILE_NAME_CLICK);
+  }
+
+  sendCommentMenuClickEvent() {
+    this.track(this.Events.COMMENT_MENU_CLICK);
+  }
+
+  sendReplyProfilePictureClickEvent() {
+    this.track(this.Events.REPLY_PROFILE_PICTURE_CLICK);
+  }
+
+  sendReplyProfileNameClickEvent() {
+    this.track(this.Events.REPLY_PROFILE_NAME_CLICK);
+  }
+
+  // /////////////////
   sendFeedOpenedEvent() {
     this.track(this.Events.FEED_OPENED, {
       feed_type: "universal_feed",

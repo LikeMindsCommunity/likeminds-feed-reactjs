@@ -20,7 +20,7 @@ export function useLMPostReply(
   postId: string,
   commentId?: string,
 ): UseLMPostReply {
-  const { lmFeedclient, customEventClient } = useContext(
+  const { lmFeedclient, customEventClient, lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
   const { addNewComment, updateReplyOnPostReply } = useContext(FeedPostContext);
@@ -67,6 +67,10 @@ export function useLMPostReply(
           .build(),
       )) as never;
       if (call.success && addNewComment) {
+        lmfeedAnalyticsClient?.sendCommentPostedEvent(
+          postId,
+          call.data.comment.Id,
+        );
         addNewComment(call.data.comment, call.data.users);
       }
     } catch (error) {
@@ -85,6 +89,7 @@ export function useLMPostReply(
       )) as never;
 
       if (call.success && updateReply) {
+        lmfeedAnalyticsClient?.sendCommentEditedEvent();
         updateReply(call.data.comment, call.data.users);
       }
     } catch (error) {
