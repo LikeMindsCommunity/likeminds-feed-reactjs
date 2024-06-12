@@ -8,7 +8,7 @@ import { ValidateUserResponse } from "../shared/types/api-responses/initiateUser
 import {
   InitiateUserRequest,
   ValidateUserRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 // import { TokenValues } from "../shared/enums/tokens";
@@ -99,7 +99,7 @@ export default function useUserProvider(
         if (!(apiKey && uuid && username)) {
           throw Error("Either API key or UUID or Username not provided");
         }
-        alert();
+
         const initiateUserCall: ValidateUserResponse =
           (await lmFeedclient?.initiateUser(
             InitiateUserRequest.builder()
@@ -111,7 +111,7 @@ export default function useUserProvider(
               .setRTMTokenExpiryBeta(24)
               .build(),
           )) as never;
-        alert();
+        console.log(initiateUserCall);
         if (initiateUserCall.success) {
           // Setting the tokens, API key and User in local storage
           setTokensInLocalStorage(
@@ -125,15 +125,18 @@ export default function useUserProvider(
         }
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
+        console.log(memberStateCall);
         if (initiateUserCall.success && memberStateCall.success) {
           const user = {
             ...initiateUserCall.data?.user,
             ...memberStateCall.data.member,
           };
+          console.log(user);
           setLmFeedUser(user || null);
           setLmFeedUserCurrentCommunity(
             initiateUserCall?.data?.community || null,
           );
+
           return {
             accessToken: initiateUserCall.data?.accessToken,
             refreshToken: initiateUserCall.data?.refreshToken,

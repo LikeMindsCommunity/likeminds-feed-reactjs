@@ -62,7 +62,7 @@ function App() {
     },
     async () => {
       const myHeaders = new Headers();
-      myHeaders.append("x-api-key", "69edd43f-4a5e-4077-9c50-2b7aa740acce");
+      myHeaders.append("x-api-key", "");
       myHeaders.append("x-platform-code", "rt");
       myHeaders.append("x-version-code", "1");
       myHeaders.append("x-sdk-source", "feed");
@@ -76,8 +76,8 @@ function App() {
       }
 
       const raw: RequestBody = {
-        user_name: "GuestOP",
-        user_unique_id: "123456789987654321",
+        user_name: "",
+        user_unique_id: "",
         token_expiry_beta: 2,
         rtm_token_expiry_beta: 4,
       };
@@ -104,8 +104,8 @@ function App() {
         console.log(error);
         alert(`Error occoured: ${error}`);
         return {
-          accessToken: "sadf",
-          refreshToken: "adsf",
+          accessToken: "",
+          refreshToken: "",
         };
       }
     }
@@ -113,7 +113,7 @@ function App() {
 
   async function proceedWithout() {
     const myHeaders = new Headers();
-    myHeaders.append("x-api-key", "69edd43f-4a5e-4077-9c50-2b7aa740acce");
+    myHeaders.append("x-api-key", "");
     myHeaders.append("x-platform-code", "rt");
     myHeaders.append("x-version-code", "1");
     myHeaders.append("x-sdk-source", "feed");
@@ -127,8 +127,8 @@ function App() {
     }
 
     const raw: RequestBody = {
-      user_name: "GuestOP",
-      user_unique_id: "123456789987654321",
+      user_name: "",
+      user_unique_id: "",
       token_expiry_beta: 2,
       rtm_token_expiry_beta: 4,
     };
@@ -153,8 +153,8 @@ function App() {
       };
     } catch (error) {
       return {
-        accessToken: "sadf",
-        refreshToken: "adsf",
+        accessToken: "",
+        refreshToken: "",
       };
     }
   }
