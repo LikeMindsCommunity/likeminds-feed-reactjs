@@ -42,7 +42,7 @@ const LMFeedReplyTextArea = ({
 
   function postReplyAndCloseReplyText() {
     if (setReplyViewVisibility) {
-      postReply();
+      postReply(reply!);
       setReplyViewVisibility(false);
     } else {
       postComment();

@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
 import { NotificationsCustomActions } from "../types/cutomCallbacks/callbacks";
+import { LMFeedNotificationAnalytics } from "../enums/lmNotificationAnalytics";
 // import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
 // import threeDotMenuIcon from "../../";
 const LMFeedNotification = ({
@@ -27,7 +28,6 @@ const LMFeedNotification = ({
   } = useLMFeedNotification(customEventClient, NotificationsCustomCallbacks);
   const [notificationAnchor, setNotificationAnchor] =
     useState<HTMLElement | null>(null);
-
   function renderNotification() {
     return (
       <Menu
@@ -130,6 +130,11 @@ const LMFeedNotification = ({
       <Badge badgeContent={notificationCount.toString()} color="error">
         <span
           onClick={(e) => {
+            if (!notificationAnchor) {
+              customEventClient.dispatchEvent(
+                LMFeedNotificationAnalytics.NOTIFICATION_PAGE_OPENED,
+              );
+            }
             setNotificationAnchor(e.currentTarget);
           }}
         >

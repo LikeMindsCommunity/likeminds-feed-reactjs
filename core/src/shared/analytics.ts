@@ -153,7 +153,7 @@ class LMFeedAnalytics {
 
   sendTopicsAddedInThePostEvent(topics: Topic[], postId?: string) {
     const details: Record<string, string> = {
-      post_topics: topics.toString(),
+      post_topics: JSON.stringify(topics),
     };
     if (postId) {
       details["post_id"] = postId;
@@ -161,8 +161,14 @@ class LMFeedAnalytics {
     this.track(this.Events.TOPICS_ADDED_IN_THE_POST, details);
   }
 
-  sendPostLikeListClickEvent() {
-    this.track(this.Events.POST_LIKE_LIST_CLICK);
+  sendPostLikeListClickEvent(post: Post) {
+    const details = {
+      post_id: post.Id,
+      post_topics: JSON.stringify(post.topics),
+      post_created_by_uuid: post.uuid,
+    };
+
+    this.track(this.Events.POST_LIKE_LIST_CLICK, details);
   }
 
   sendCommentLikeListClickEvent() {
@@ -173,48 +179,120 @@ class LMFeedAnalytics {
     this.track(this.Events.REPLY_LIKE_LIST_CLICK);
   }
 
-  sendReplyEditedEvent() {
-    this.track(this.Events.REPLY_EDITED);
+  sendReplyEditedEvent(post: Post, comment: Reply, reply: Reply) {
+    const details = {
+      post_id: post.Id,
+      comment_id: comment.Id,
+      comment_reply_id: reply.Id,
+      post_topics: JSON.stringify(post.topics),
+      post_created_by_uuid: post.uuid,
+      comment_created_by_uuid: comment.uuid,
+    };
+
+    this.track(this.Events.REPLY_EDITED, details);
   }
 
-  sendPostProfilePicClickEvent() {
-    this.track(this.Events.POST_PROFILE_PIC_CLICK);
+  sendPostProfilePicClickEvent(post: Post) {
+    const details = {
+      // "post_type": post.att,
+      post_id: post.Id,
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+    };
+    this.track(this.Events.POST_PROFILE_PIC_CLICK, details);
   }
 
-  sendPostProfileNameClickEvent() {
-    this.track(this.Events.POST_PROFILE_NAME_CLICK);
+  sendPostProfileNameClickEvent(post: Post) {
+    const details = {
+      // "post_type": post.att,
+      post_id: post.Id,
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+    };
+    this.track(this.Events.POST_PROFILE_NAME_CLICK, details);
   }
 
-  sendPostMenuClickEvent() {
-    this.track(this.Events.POST_MENU_CLICK);
+  sendPostMenuClickEvent(post: Post) {
+    const details = {
+      // "post_type": "general",
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+    };
+    this.track(this.Events.POST_MENU_CLICK, details);
   }
 
-  sendPostTopicClickEvent() {
-    this.track(this.Events.POST_TOPIC_CLICK);
+  sendPostTopicClickEvent(post: Post, topic: Topic) {
+    const details = {
+      // "post_type": "general",
+      post_id: post.Id,
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+      topic_clicked: "true",
+      topic_id: topic.Id,
+    };
+    this.track(this.Events.POST_TOPIC_CLICK, details);
   }
 
-  sendPostCommentClickEvent() {
-    this.track(this.Events.POST_COMMENT_CLICK);
+  sendPostCommentClickEvent(post: Post) {
+    const details = {
+      // "post_type": "general",
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+      post_id: post.Id,
+    };
+    this.track(this.Events.POST_COMMENT_CLICK, details);
   }
 
-  sendCommentProfilePictureClickEvent() {
-    this.track(this.Events.COMMENT_PROFILE_PICTURE_CLICK);
+  sendCommentProfilePictureClickEvent(post: Post, comment: Reply) {
+    const details = {
+      // "post_type": "general",
+      post_id: post.Id,
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+      comment_id: comment.Id,
+    };
+    this.track(this.Events.COMMENT_PROFILE_PICTURE_CLICK, details);
   }
 
-  sendCommentProfileNameClickEvent() {
-    this.track(this.Events.COMMENT_PROFILE_NAME_CLICK);
+  sendCommentProfileNameClickEvent(post: Post, comment: Reply) {
+    const details = {
+      // "post_type": post.Id,
+      post_id: post.Id,
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+      comment_id: comment.Id,
+    };
+
+    this.track(this.Events.COMMENT_PROFILE_NAME_CLICK, details);
   }
 
-  sendCommentMenuClickEvent() {
-    this.track(this.Events.COMMENT_MENU_CLICK);
+  sendCommentMenuClickEvent(post: Post, comment: Reply) {
+    const details = {
+      post_id: post.Id,
+      comment_id: comment.Id,
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+      // "post_type": ""
+    };
+
+    this.track(this.Events.COMMENT_MENU_CLICK, details);
   }
 
   sendReplyProfilePictureClickEvent() {
     this.track(this.Events.REPLY_PROFILE_PICTURE_CLICK);
   }
 
-  sendReplyProfileNameClickEvent() {
-    this.track(this.Events.REPLY_PROFILE_NAME_CLICK);
+  sendReplyProfileNameClickEvent(post: Post, comment: Reply, reply: Reply) {
+    const details = {
+      post_id: post.Id,
+      reply_id: reply.Id,
+      comment_id: comment.Id || "",
+      // "post_type": "",
+      post_topics: JSON.stringify(post.topics),
+      created_by_uuid: post.uuid,
+    };
+
+    this.track(this.Events.REPLY_PROFILE_NAME_CLICK, details);
   }
 
   // /////////////////
@@ -242,9 +320,9 @@ class LMFeedAnalytics {
     const details: Record<string, string> = {};
     details["post_id"] = post.Id;
     details["created_by_uuid"] = post.uuid;
-    details["topics"] = Object.values(topics)
-      .filter((topic) => post.topics.includes(topic.Id))
-      .toString();
+    details["topics"] = JSON.stringify(
+      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+    );
 
     this.track(this.Events.POST_LIKED, details);
   }
@@ -253,9 +331,9 @@ class LMFeedAnalytics {
     const details: Record<string, string> = {};
     details["post_id"] = post.Id;
     details["created_by_uuid"] = post.uuid;
-    details["topics"] = Object.values(topics)
-      .filter((topic) => post.topics.includes(topic.Id))
-      .toString();
+    details["topics"] = JSON.stringify(
+      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+    );
 
     this.track(this.Events.POST_UNLIKED, details);
   }
@@ -275,7 +353,7 @@ class LMFeedAnalytics {
     details["post_created_by_uuid"] = post.uuid;
     // details['post_type'] =
     // Ask what should be the post type
-    details["post_topics"] = Object.values(topics).toString();
+    details["post_topics"] = JSON.stringify(Object.values(topics));
     this.track(this.Events.POST_PINNED, details);
   }
 
@@ -285,7 +363,7 @@ class LMFeedAnalytics {
     details["post_created_by_uuid"] = post.uuid;
     // details['post_type'] =
     // Ask what should be the post type
-    details["post_topics"] = Object.values(topics).toString();
+    details["post_topics"] = JSON.stringify(Object.values(topics));
     this.track(this.Events.POST_UNPINNED, details);
   }
 
@@ -339,7 +417,7 @@ class LMFeedAnalytics {
       details["document_count"] = docCount.toString();
     }
     if (post.topics.length) {
-      details["post_topics"] = post.topics.toString();
+      details["post_topics"] = JSON.stringify(post.topics);
     }
     this.track(this.Events.POST_CREATION_COMPLETED, details);
   }
@@ -379,7 +457,7 @@ class LMFeedAnalytics {
       details["document_count"] = docCount.toString();
     }
     if (post.topics.length) {
-      details["post_topics"] = post.topics.toString();
+      details["post_topics"] = JSON.stringify(post.topics);
     }
     this.track(this.Events.POST_CREATION_ERROR, details);
   }
@@ -419,7 +497,7 @@ class LMFeedAnalytics {
       details["document_count"] = docCount.toString();
     }
     if (post.topics.length) {
-      details["post_topics"] = post.topics.toString();
+      details["post_topics"] = JSON.stringify(post.topics);
     }
     this.track(this.Events.POST_EDITED, details);
   }
@@ -444,9 +522,9 @@ class LMFeedAnalytics {
   ) {
     const details: Record<string, string> = {};
     details["user_state"] = userState;
-    (details["post_topics"] = Object.values(topics)
-      .filter((topic) => post.topics.includes(topic.Id))
-      .toString()),
+    (details["post_topics"] = JSON.stringify(
+      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+    )),
       (details["post_created_by_uuid"] = post.uuid);
     details["post_id"] = post.Id;
     // Ask what is post_type
@@ -461,12 +539,26 @@ class LMFeedAnalytics {
     const details: Record<string, string> = {};
     details["post_id"] = post.Id;
     details["comment_id"] = comment.Id;
-    details["post_topics"] = Object.values(topics)
-      .filter((topic) => post.topics.includes(topic.Id))
-      .toString();
+    details["post_topics"] = JSON.stringify(
+      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+    );
     details["post_created_by_uuid"] = post.uuid;
     details["comment_created_by_uuid"] = comment.uuid;
     this.track(this.Events.COMMENT_DELETED, details);
+  }
+  sendReplyDeletedEvent(
+    post: Post,
+    parentReply: Reply,
+    deletedReplyId: string,
+  ) {
+    const details = {
+      post_id: post.Id,
+      comment_id: parentReply.Id,
+      comment_reply_id: deletedReplyId,
+      post_created_by_uuid: post.uuid,
+      comment_created_by_uuid: parentReply.Id,
+    };
+    this.track(this.Events.REPLY_DELETED, details);
   }
 
   sendCommentReplyDeletedEvent(
@@ -502,11 +594,13 @@ class LMFeedAnalytics {
     });
   }
 
-  sendCommentPostedEvent(postId: string, commentId: string) {
-    this.track(this.Events.COMMENT_POSTED, {
-      [this.Keys.POST_ID]: postId,
-      [this.Keys.COMMENT_ID]: commentId,
-    });
+  sendCommentPostedEvent(comment: Reply) {
+    const details = {
+      post_id: comment.postId,
+      comment_id: comment.Id,
+      comment_created_by_uuid: comment.uuid,
+    };
+    this.track(this.Events.COMMENT_POSTED, details);
   }
 
   sendCommentLikedEvent(
@@ -526,58 +620,56 @@ class LMFeedAnalytics {
     });
   }
 
-  sendCommentEditedEvent(comment: LMFeedCommentViewData) {
-    this.track(this.Events.COMMENT_EDITED, {
-      created_by_uuid: comment.user.sdkClientInfoViewData.uuid,
-      [this.Keys.COMMENT_ID]: comment.id,
-      level: comment.level.toString(),
-    });
+  sendCommentEditedEvent(post: Post, comment: Reply) {
+    const details = {
+      post_id: post.Id,
+      comment_id: comment.Id,
+      post_topics: JSON.stringify(post.topics),
+      post_created_by_uuid: post.uuid,
+      comment_created_by_uuid: comment.uuid,
+    };
+
+    this.track(this.Events.COMMENT_EDITED, details);
   }
 
-  sendPostReportedEvent(
-    postId: string,
-    uuid: string,
-    postType: string,
-    reason: string,
-  ) {
-    this.track(this.Events.POST_REPORTED, {
-      created_by_uuid: uuid,
-      [this.Keys.POST_ID]: postId,
+  sendPostReportedEvent(post: Post, reason: string) {
+    const details = {
+      post_topics: JSON.stringify(post.topics),
+      post_created_by_uuid: post.uuid,
+      post_id: post.Id,
       report_reason: reason,
-      post_type: postType,
-    });
+    };
+    this.track(this.Events.POST_REPORTED, details);
   }
 
-  sendCommentReportedEvent(
-    postId: string,
-    uuid: string,
-    commentId: string,
-    reason: string,
-  ) {
-    this.track(this.Events.COMMENT_REPORTED, {
-      [this.Keys.POST_ID]: postId,
-      [this.Keys.UUID]: uuid,
-      [this.Keys.COMMENT_ID]: commentId,
+  sendCommentReportedEvent(post: Post, comment: Reply, reason: string) {
+    const details = {
+      post_id: post.Id,
+      post_topics: JSON.stringify(post.topics),
+      post_created_by_uuid: post.uuid,
+      comment_created_by_uuid: comment.uuid,
+      comment_id: comment.Id,
       reason: reason,
-    });
+    };
+    this.track(this.Events.COMMENT_REPORTED, details);
   }
 
   sendReplyReportedEvent(
-    postId: string,
-    uuid: string,
-    parentCommentId: string | null,
-    replyId: string,
+    post: Post,
+    comment: Reply,
+    reply: Reply,
     reason: string,
   ) {
-    const updatedParentId = parentCommentId ?? "";
-
-    this.track(this.Events.REPLY_REPORTED, {
-      [this.Keys.POST_ID]: postId,
-      [this.Keys.COMMENT_ID]: updatedParentId,
-      [this.Keys.COMMENT_REPLY_ID]: replyId,
-      [this.Keys.UUID]: uuid,
+    const details = {
+      post_id: post.Id,
+      comment_id: comment.Id,
+      comment_reply_id: reply.Id,
+      post_topics: JSON.stringify(post.topics),
+      post_created_by_uuid: post.uuid,
+      comment_created_by_uuid: comment.uuid,
       reason: reason,
-    });
+    };
+    this.track(this.Events.REPLY_REPORTED, details);
   }
 
   sendLikeListOpenEvent(postId: string, commentId?: string) {

@@ -38,7 +38,7 @@ export default function useUserProvider(
   useEffect(() => {
     const { accessToken, refreshToken, username, uuid, isGuest, apiKey } =
       userCreds;
-    console.log(userCreds);
+
     if (!lmFeedclient) {
       return;
     }
@@ -62,8 +62,7 @@ export default function useUserProvider(
               .setrefreshToken(localRefreshToken)
               .build(),
           )) as never;
-        console.log("Outside validate user request");
-        console.log(validateUserCall);
+
         if (validateUserCall.success) {
           // Setting tokens in local storage
           setTokensInLocalStorage(localAccessToken, localRefreshToken);
@@ -108,8 +107,8 @@ export default function useUserProvider(
               .setIsGuest(isGuest || false)
               .setUserName(username || "")
               .setApiKey(apiKey)
-              .setTokenExpiryBeta(2)
-              .setRTMTokenExpiryBeta(4)
+              .setTokenExpiryBeta(12)
+              .setRTMTokenExpiryBeta(24)
               .build(),
           )) as never;
         alert();
@@ -164,8 +163,6 @@ export default function useUserProvider(
             lmFeedclient.getAccessTokenFromLocalStorage();
           const localRefreshToken =
             lmFeedclient.getRefreshTokenFromLocalStorage();
-          console.log("The local access tokens are: ", localAccessToken);
-          console.log("The local refresh tokens are: ", localRefreshToken);
           if (
             localAccessToken &&
             localRefreshToken &&
@@ -192,9 +189,6 @@ export default function useUserProvider(
       () => {
         const user = lmFeedclient.getUserFromLocalStorage();
         const { uuid, name, isGuest } = JSON.parse(user);
-        console.log(
-          `Calling initiateFeedUser with ${uuid}, ${name}, ${isGuest}, ${lmFeedclient.getApiKeyFromLocalStorage()}`,
-        );
         initiateFeedUser(
           lmFeedclient.getApiKeyFromLocalStorage(),
           uuid,

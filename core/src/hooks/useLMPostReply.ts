@@ -15,6 +15,7 @@ import {
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { ReplyContext } from "../contexts/LMFeedReplyContext";
+import { Reply } from "../shared/types/models/replies";
 
 export function useLMPostReply(
   postId: string,
@@ -31,7 +32,7 @@ export function useLMPostReply(
   const setReplyText = useCallback(function (replyText: string) {
     setText(replyText);
   }, []);
-  async function postReply() {
+  async function postReply(reply: Reply) {
     try {
       const replyText = extractTextFromNode(textFieldRef.current).trim();
       const call: PostReplyResponse = (await lmFeedclient?.replyComment(
@@ -42,6 +43,12 @@ export function useLMPostReply(
           .build(),
       )) as never;
       if (call.success) {
+        lmfeedAnalyticsClient?.sendReplyPostedEvent(
+          reply.uuid,
+          postId,
+          commentId?.toString() || "",
+          call.data.comment.Id,
+        );
         if (updateReplyOnPostReply) {
           updateReplyOnPostReply(call.data.comment.parentComment?.Id || "");
         }
@@ -67,10 +74,7 @@ export function useLMPostReply(
           .build(),
       )) as never;
       if (call.success && addNewComment) {
-        lmfeedAnalyticsClient?.sendCommentPostedEvent(
-          postId,
-          call.data.comment.Id,
-        );
+        lmfeedAnalyticsClient?.sendCommentPostedEvent(call.data.comment);
         addNewComment(call.data.comment, call.data.users);
       }
     } catch (error) {
@@ -89,7 +93,6 @@ export function useLMPostReply(
       )) as never;
 
       if (call.success && updateReply) {
-        lmfeedAnalyticsClient?.sendCommentEditedEvent();
         updateReply(call.data.comment, call.data.users);
       }
     } catch (error) {
@@ -111,7 +114,7 @@ interface UseLMPostReply {
   setReplyText: (text: string) => void;
   textFieldRef: React.MutableRefObject<HTMLDivElement | null>;
   containerRef: React.MutableRefObject<HTMLDivElement | null>;
-  postReply: () => void;
+  postReply: (reply: Reply) => void;
   postComment: () => void;
   editComment: () => void;
 }

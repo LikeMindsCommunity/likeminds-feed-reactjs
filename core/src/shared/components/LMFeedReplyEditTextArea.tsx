@@ -11,12 +11,18 @@ import { convertTextToHTML, setTagUserImage } from "../taggingParser";
 import { useLMPostReply } from "../../hooks/useLMPostReply";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
 import { useParams } from "react-router-dom";
+import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
+import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 export interface LMFeedReplyEditTextAreaProps {
   closeEditMode?: () => void;
 }
 const LMFeedReplyEditTextArea = ({
   closeEditMode,
 }: LMFeedReplyEditTextAreaProps) => {
+  const { lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
+  const { post } = useContext(FeedPostContext);
   const { reply } = useContext(ReplyContext);
   //   const { currentUser } = useContext(LMFeedUserProviderContext);
   const { id } = useParams();
@@ -30,6 +36,7 @@ const LMFeedReplyEditTextArea = ({
     containerRef,
     editComment,
   } = useLMPostReply(id?.split("-")[0].toString() || "", reply?.Id || "");
+
   useEffect(() => {
     if (textFieldRef?.current) {
       textFieldRef.current.innerHTML = convertTextToHTML(
@@ -72,6 +79,15 @@ const LMFeedReplyEditTextArea = ({
   }, [containerRef, closeEditMode, textFieldRef]);
   function editReply() {
     if (closeEditMode) {
+      if (!reply?.parentComment) {
+        lmfeedAnalyticsClient?.sendCommentEditedEvent(post!, reply!);
+      } else {
+        lmfeedAnalyticsClient?.sendReplyEditedEvent(
+          post!,
+          reply!.parentComment!,
+          reply!,
+        );
+      }
       editComment();
       closeEditMode();
     }

@@ -106,7 +106,6 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
         accessToken: string;
         refreshToken: string;
       }> {
-    console.log("inside refresh token expired");
     const apiKey: string = this.client.getApiKeyFromLocalStorage();
     if (apiKey && apiKey.length) {
       return this.loginFunction()

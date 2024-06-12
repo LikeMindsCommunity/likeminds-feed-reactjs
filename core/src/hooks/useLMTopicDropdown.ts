@@ -119,11 +119,11 @@ export function useTopicDropdown(
         setCheckedTopics(newCheckedTopics);
       } else {
         const newCheckedTopics = [...checkedTopics];
+        newCheckedTopics.push(arg);
         lmfeedAnalyticsClient?.sendTopicsAddedInThePostEvent(
           newCheckedTopics,
           postId,
         );
-        newCheckedTopics.push(arg);
         setCheckedTopics(newCheckedTopics);
       }
     },

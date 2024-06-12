@@ -8,19 +8,30 @@ import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTa
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { LMFeedEntityType } from "../shared/constants/lmEntityType";
+import { Reply } from "../shared/types/models/replies";
+import { Post } from "../shared/types/models/post";
 
 interface LMFeedReportPostDialogProps {
   closeReportDialog: () => void;
   entityId: string;
   entityType: number;
+  post?: Post;
+  comment?: Reply;
+  reply?: Reply;
 }
 // eslint-disable-next-line no-empty-pattern
 const LMFeedReportPostDialog = ({
   closeReportDialog,
   entityId,
   entityType,
+  post,
+  comment,
+  reply,
 }: LMFeedReportPostDialogProps) => {
-  const { lmFeedclient } = useContext(LMFeedGlobalClientProviderContext);
+  const { lmFeedclient, lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const [reportTags, setReportTags] = useState<ReportObject[]>([]);
   const [selectedTag, setSelectedTag] = useState<ReportObject | null>(null);
@@ -38,6 +49,25 @@ const LMFeedReportPostDialog = ({
           .setEntityType(entityType)
           .build(),
       );
+      if (entityType === LMFeedEntityType.REPLY) {
+        lmfeedAnalyticsClient?.sendReplyReportedEvent(
+          post!,
+          comment!,
+          reply!,
+          selectedTag?.name || "",
+        );
+      } else if (entityType === LMFeedEntityType.COMMENT) {
+        lmfeedAnalyticsClient?.sendCommentReportedEvent(
+          post!,
+          comment!,
+          selectedTag?.name || "",
+        );
+      } else {
+        lmfeedAnalyticsClient?.sendPostReportedEvent(
+          post!,
+          selectedTag?.name || "",
+        );
+      }
       closeReportDialog();
     } catch (error) {
       console.log(error);

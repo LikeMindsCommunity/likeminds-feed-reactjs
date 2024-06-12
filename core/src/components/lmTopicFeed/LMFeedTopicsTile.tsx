@@ -6,7 +6,11 @@ interface LMFeedTopicTileInterface {
 }
 
 const LMFeedTopicsTile = ({ topic }: LMFeedTopicTileInterface) => {
-  return <div className="lm-feed-topic-tile">{topic.name}</div>;
+  return (
+    <div className="lm-feed-topic-tile" onClick={() => {}}>
+      {topic.name}
+    </div>
+  );
 };
 
 export default LMFeedTopicsTile;

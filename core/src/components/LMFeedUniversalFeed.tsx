@@ -14,6 +14,7 @@ import LMFeedCreatePost from "./LMFeedCreatePost";
 import LMFeedAllMembers from "./LMFeedAllMembers";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -38,7 +39,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     clickNavigator,
     postComponentClickCustomCallback,
   } = useContext(LMFeedDataContext);
-  const { lmfeedAnalyticsClient } = useContext(
+  const { lmfeedAnalyticsClient, customEventClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
   const { CustomComponents } = useContext(CustomAgentProviderContext);
@@ -49,8 +50,23 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
       const el = document.getElementById(scrollPos);
       el?.scrollIntoView();
     }
-    lmfeedAnalyticsClient?.sendFeedOpenedEvent();
   }, [wrapperRef]);
+  useEffect(() => {
+    lmfeedAnalyticsClient?.sendFeedOpenedEvent();
+  }, [lmfeedAnalyticsClient]);
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedNotificationAnalytics.NOTIFICATION_PAGE_OPENED,
+      () => {
+        lmfeedAnalyticsClient?.sendNotificationPageOpenedEvent();
+      },
+    );
+    return () => {
+      customEventClient?.remove(
+        LMFeedNotificationAnalytics.NOTIFICATION_PAGE_OPENED,
+      );
+    };
+  }, [customEventClient, lmfeedAnalyticsClient]);
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
       const postUuid = post.uuid;

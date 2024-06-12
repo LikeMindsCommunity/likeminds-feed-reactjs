@@ -16,6 +16,7 @@ import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { useNavigate } from "react-router-dom";
+import { Post } from "../shared/types/models/post";
 
 interface UseReplyInterface {
   reply: Reply | null;
@@ -31,9 +32,14 @@ interface UseReplyInterface {
 export const useReply: (
   postId: string,
   replyId: string,
-) => UseReplyInterface = (postId: string, replyId: string) => {
+  post: Post | null,
+) => UseReplyInterface = (
+  postId: string,
+  replyId: string,
+  post: Post | null,
+) => {
   // to get the instance of the client from the client context
-  const { lmFeedclient, customEventClient } = useContext(
+  const { lmFeedclient, customEventClient, lmfeedAnalyticsClient } = useContext(
     GlobalClientProviderContext,
   );
   const { displaySnackbarMessage, message, showSnackbar, closeSnackbar } =
@@ -128,6 +134,9 @@ export const useReply: (
             .build(),
         )) as never;
         if (call.success) {
+          if (post) {
+            lmfeedAnalyticsClient?.sendReplyDeletedEvent(post, reply!, id);
+          }
           const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
           const replyCopy = { ...reply };
           if (replyCopy && replyCopy.commentsCount) {

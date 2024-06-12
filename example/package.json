@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@likeminds.community/feed-js-beta": "^1.11.64",
-    "likeminds-feed-reactjs-beta": "^2.0.20",
+    "likeminds-feed-reactjs-beta": "^2.0.23",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

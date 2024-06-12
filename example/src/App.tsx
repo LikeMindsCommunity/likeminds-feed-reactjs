@@ -22,7 +22,7 @@ function App() {
       setUserDetails((userDetails) => {
         userDetails.accessToken = accessToken;
         userDetails.refreshToken = refreshToken;
-        console.log(userDetails);
+
         return userDetails;
       });
       setShowFeed(true);
@@ -31,7 +31,7 @@ function App() {
         userDetails.apiKey = apiKey;
         userDetails.username = username;
         userDetails.uuid = uuid;
-        console.log(userDetails);
+
         return userDetails;
       });
       setShowFeed(true);
@@ -54,9 +54,6 @@ function App() {
 
   const LMCORECALLBACKS = new LMCoreCallbacks(
     (a: string, b: string) => {
-      console.log("Running access token expired and refreshed");
-      console.log(a);
-      console.log(b);
       setUserDetails((userDetails) => {
         userDetails.accessToken = a;
         userDetails.refreshToken = b;
@@ -98,7 +95,7 @@ function App() {
           requestOptions
         );
         const result_1 = await response.json();
-        console.log(result_1);
+
         return {
           accessToken: result_1.data.access_token,
           refreshToken: result_1.data.refresh_token,
@@ -115,11 +112,6 @@ function App() {
   );
 
   async function proceedWithout() {
-    // console.log("refresh triggered");
-    // return {
-    //   accessToken: "sadf",
-    //   refreshToken: "adsf",
-    // };
     const myHeaders = new Headers();
     myHeaders.append("x-api-key", "69edd43f-4a5e-4077-9c50-2b7aa740acce");
     myHeaders.append("x-platform-code", "rt");
@@ -154,7 +146,7 @@ function App() {
         requestOptions
       );
       const result_1 = await response.json();
-      console.log(result_1);
+
       return {
         accessToken: result_1.data.access_token,
         refreshToken: result_1.data.refresh_token,
@@ -194,7 +186,7 @@ function App() {
           .build()}
         customEventClient={customEventClient}
         analyticsCallback={() => {
-          console.log("callback fired");
+          //
         }}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
         userDetails={userDetails}

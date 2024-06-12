@@ -6,6 +6,7 @@ import LMFeedReply from "./LMFeedReply";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
 import { useReply } from "../../hooks/useLMReply";
 import { LMFeedReplyMode } from "../../shared/constants/lmFeedReplyMode";
+import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 interface LMFeedRepliesScrollerProps {
   replyId: string;
   postId: string;
@@ -14,6 +15,7 @@ const LMFeedRepliesScroller = ({
   replyId,
   postId,
 }: LMFeedRepliesScrollerProps) => {
+  const { post } = useContext(FeedPostContext);
   const {
     replies = [],
     loadMoreReplies = false,
@@ -22,7 +24,7 @@ const LMFeedRepliesScroller = ({
     deleteReply,
     likeReply,
     updateReply,
-  } = useReply(postId, replyId);
+  } = useReply(postId, replyId, post);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderComments = () => {
     return replies.map((reply: Reply) => {

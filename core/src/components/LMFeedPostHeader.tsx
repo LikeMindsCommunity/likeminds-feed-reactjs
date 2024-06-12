@@ -15,6 +15,9 @@ import pinIcon from "../assets/images/Icon-pin_new.svg";
 import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 const LMFeedPostHeader = () => {
+  const { lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
   const { post, users, topics, pinPost } = useContext(FeedPostContext);
   const { LMPostHeaderStyles, LMFeedCustomIcons } = useContext(
@@ -94,6 +97,7 @@ const LMFeedPostHeader = () => {
           entityType={LMFeedEntityType.POST}
           closeReportDialog={closeReportDialog}
           entityId={post?.Id || ""}
+          post={post || undefined}
         />
       </Dialog>
 
@@ -104,6 +108,9 @@ const LMFeedPostHeader = () => {
         <div className="lm-flex-container">
           <div
             className="lm-avatar lm-mr-5"
+            onClick={() => {
+              lmfeedAnalyticsClient?.sendPostProfilePicClickEvent(post!);
+            }}
             style={LMPostHeaderStyles?.avatar}
             lm-feed-component-id={`lm-feed-post-header-fghij-${post?.Id}`}
           >
@@ -111,6 +118,9 @@ const LMFeedPostHeader = () => {
           </div>
           <div lm-feed-component-id={`lm-feed-post-header-klmno-${post?.Id}`}>
             <div
+              onClick={() =>
+                lmfeedAnalyticsClient?.sendPostProfileNameClickEvent(post!)
+              }
               className="lm-feed-wrapper__card__header--title"
               style={LMPostHeaderStyles?.title}
               lm-feed-component-id={`lm-feed-post-header-pqrst-${post?.Id}`}
@@ -182,6 +192,7 @@ const LMFeedPostHeader = () => {
             alt="3-dot-menu"
             onClick={(e) => {
               setAnchor(e.currentTarget);
+              lmfeedAnalyticsClient?.sendPostMenuClickEvent(post!);
             }}
             lm-feed-component-id={`lm-feed-post-header-defgh-${post?.Id}`}
           />

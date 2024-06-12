@@ -19,11 +19,17 @@ import { parseAndReplaceTags } from "../../shared/taggingParser";
 import LMFeedDeleteDialogBox from "../lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../../shared/enums/lmDeleteDialogModes";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
+import { FeedPostContext } from "../../contexts/LMFeedPostContext";
+import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
 
 export interface LMFeedReplyInterface {
   mode: string;
 }
 const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
+  const { post } = useContext(FeedPostContext);
+  const { lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
   const { reply, user, likeReply } = useContext(ReplyContext);
   const { LMFeedCustomIcons = {}, CustomComponents = {} } = useContext(
     CustomAgentProviderContext,
@@ -78,6 +84,9 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   }
 
   function openThreeDotMenu(e: React.MouseEvent<HTMLImageElement>) {
+    if (mode === LMFeedReplyMode.COMMENT) {
+      lmfeedAnalyticsClient?.sendCommentMenuClickEvent(post!, reply!);
+    }
     setThreeDotMenuAnchor(e.currentTarget);
   }
   function closeThreeDotMenu() {
@@ -103,6 +112,13 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
               ? LMFeedEntityType.COMMENT
               : LMFeedEntityType.REPLY
           }
+          post={post || undefined}
+          comment={
+            mode === LMFeedReplyMode.COMMENT
+              ? reply || undefined
+              : reply?.parentComment || undefined
+          }
+          reply={reply || undefined}
           closeReportDialog={closeReportDialog}
           entityId={reply?.Id || ""}
         />
@@ -146,7 +162,23 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
           ) : (
             <>
               <div className="content-area">
-                <div className="lm-social-action-bar__lmReply__userMeta__content--name">
+                <div
+                  className="lm-social-action-bar__lmReply__userMeta__content--name"
+                  onClick={() => {
+                    if (mode === LMFeedReplyMode.COMMENT) {
+                      lmfeedAnalyticsClient?.sendCommentProfileNameClickEvent(
+                        post!,
+                        reply!,
+                      );
+                    } else if (mode === LMFeedReplyMode.REPLY) {
+                      lmfeedAnalyticsClient?.sendReplyProfileNameClickEvent(
+                        post!,
+                        reply!.parentComment!,
+                        reply!,
+                      );
+                    }
+                  }}
+                >
                   {name}
                 </div>
                 <div className="lm-social-action-bar__lmReply__userMeta__content--title">

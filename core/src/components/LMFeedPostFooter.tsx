@@ -18,8 +18,12 @@ import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
 import { Divider, Drawer } from "@mui/material";
 import LMFeedLikedMembers from "./LMFeedLikedMembers";
+import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 
 const LMFeedPostFooter = () => {
+  const { lmfeedAnalyticsClient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
   const { post, likePost, clickNavigator } = useContext(FeedPostContext);
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -95,7 +99,10 @@ const LMFeedPostFooter = () => {
               <span
                 className="lm-feed-wrapper__card__footer_likes-count"
                 lm-feed-component-id={`lm-feed-post-footer-klmno-${post?.Id}`}
-                onClick={toggleDrawer(true)}
+                onClick={() => {
+                  lmfeedAnalyticsClient?.sendPostLikeListClickEvent(post);
+                  toggleDrawer(true);
+                }}
               >
                 {" "}
                 {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
@@ -104,6 +111,7 @@ const LMFeedPostFooter = () => {
             <div
               className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
               onClick={() => {
+                lmfeedAnalyticsClient?.sendPostCommentClickEvent(post!);
                 if (clickNavigator) {
                   clickNavigator(post);
                 }
