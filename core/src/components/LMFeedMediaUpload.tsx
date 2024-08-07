@@ -5,6 +5,7 @@ import imgMedia from "../assets/images/img-media.svg";
 // import vidMedia from "../assets/images/vid-media.svg";
 import docMedia from "../assets/images/doc-media.svg";
 import closeIcon from "../assets/images/close-media-upload-icon.svg";
+import reelIcon from "../assets/images/close-media-upload-icon.svg";
 const LMFeedMediaUpload = () => {
   const { mediaUploadMode, changeMediaUploadMode, addMediaItem } = useContext(
     LMFeedCreatePostContext,
