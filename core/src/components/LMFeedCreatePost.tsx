@@ -10,7 +10,13 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
-import { PDF, PHOTO, POST, VIDEO } from "../shared/constants/lmAppConstant";
+import {
+  PDF,
+  PHOTO,
+  POST,
+  VIDEO,
+  REEL,
+} from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
@@ -148,6 +154,28 @@ const LMFeedCreatePost = ({
                     {VIDEO}
                   </div>
                 </div>
+
+                {/* Create New Reels  */}
+                <div
+                  className="lm-createPost__footer__left__media lm-cursor-pointer"
+                  onClick={() => {
+                    setOpenCreatePostDialog(!openCreatePostDialog);
+                    changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.REEL);
+                  }}
+                >
+                  <div className="lm-createPost__footer__left__media--imgBox">
+                    {LMFeedCustomIcons?.createPostFooterVideoIcon ? (
+                      <LMFeedCustomIcons.createPostFooterVideoIcon />
+                    ) : (
+                      <img src={video} alt="video icon" />
+                    )}
+                  </div>
+                  <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
+                    {REEL}
+                  </div>
+                </div>
+                {/* Create New Reels  */}
+
                 <div
                   className="lm-createPost__footer__left__media lm-cursor-pointer"
                   onClick={() => {

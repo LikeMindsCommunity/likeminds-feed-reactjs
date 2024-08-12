@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import LMFeed from "./components/LMFeed";
+import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import {
-  InitiateUserRequest,
-  LMFeedClient,
-} from "@likeminds.community/feed-js-beta";
-import LMFeedNotificationHeader from "./shared/components/LMFeedNotificationHeader";
-import { LMFeedCustomEvents } from "./shared/customEvents";
-// import { UserDetails } from "./hooks/useLMUserProvider";
-
-import { LMCoreCallbacks } from "./shared/LMSDKCoreCallbacks";
-import { LMFeedAnalytics } from "./shared/analytics";
+  FeedPostContext,
+  LMCoreCallbacks,
+  LMFeedCustomEvents,
+  LMFeedNotificationHeader,
+} from "./main_index";
 
 const customEventClient = new LMFeedCustomEvents();
 
@@ -34,10 +31,10 @@ export function ReactApp() {
   const [userDetails, setUserDetails] = useState({
     accessToken: "",
     refreshToken: "",
-    uuid: "",
-    username: "",
+    uuid: "Hello_user",
+    username: "Hello_user",
     isGuest: false,
-    apiKey: "",
+    apiKey: "6b11d5f6-19fc-48aa-9140-0f59c88b0d0a",
     //   Add api key
   });
 
@@ -55,11 +52,25 @@ export function ReactApp() {
         customEventClient={customEventClient}
         userDetails={userDetails}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
+        PostCreationCustomCallbacks={{
+          postFeedCustomAction: async (store) => {
+            const { defaultActions } = store;
+            defaultActions.postFeed();
+          },
+        }}
         analyticsCallback={(event: string, details: Record<string, string>) => {
           console.log("fired");
           return;
         }}
+        // CustomComponents={{
+        //   CustomPostView: <CustomPostView />,
+        // }}
       ></LMFeed>
     </div>
   );
 }
+
+const CustomPostView = () => {
+  const { post } = useContext(FeedPostContext);
+  return <p>{post?.Id}</p>;
+};

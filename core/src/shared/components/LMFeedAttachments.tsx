@@ -63,7 +63,7 @@ const RenderAttachment: React.FC<{
   // Render attachment based on attachmentType
   const { attachmentMeta, attachmentType } = attachment;
   const { name, url, ogTags } = attachmentMeta;
-
+  console.log(attachmentType);
   switch (attachmentType) {
     case 1: // Image
       return (
@@ -96,12 +96,30 @@ const RenderAttachment: React.FC<{
           </video>
         </div>
       );
+    case 11: // Reel
+      return (
+        <div
+          className="attachment-video"
+          lm-feed-component-id={`lm-feed-post-attachments-opqrs-${postId}`}
+        >
+          <video
+            controls
+            width="100%"
+            height="auto"
+            lm-feed-component-id={`lm-feed-post-attachments-tuvwx-${postId}`}
+          >
+            <source src={url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
     case 3: // PDF
       return (
         <LMFeedDocumentAttachmentView postId={postId} attachment={attachment} />
       );
     case 4: // OG Tags
       return <LMFeedOGTagAttachmentView postId={postId} ogTags={ogTags} />;
+
     default: // Unsupported attachment type
       return (
         <div

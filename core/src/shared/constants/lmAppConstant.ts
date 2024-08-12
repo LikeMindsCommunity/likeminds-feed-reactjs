@@ -23,3 +23,4 @@ export const MEMBER_LIST = "Member List";
 export const PHOTO = "photo";
 export const VIDEO = "video";
 export const PDF = "pdf";
+export const REEL = "reel";
