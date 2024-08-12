@@ -2,7 +2,7 @@ import {
   InitiateUserRequest,
   LMFeedClient,
   LMSDKCallbacks,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomEvents } from "./customEvents";
 import { LMFeedCustomActionEvents } from "./constants/lmFeedCustomEventNames";
 import { ValidateUserResponse } from "./types/api-responses/initiateUserResponse";

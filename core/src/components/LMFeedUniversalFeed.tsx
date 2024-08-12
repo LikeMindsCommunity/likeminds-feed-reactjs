@@ -27,6 +27,7 @@ interface LMFeedUniversalFeedProps {
 const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
   const {
     topics = {},
+    widgets = {},
     selectedTopics,
     setSelectedTopics,
     loadMoreFeeds = true,
@@ -80,6 +81,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             post: post,
             users: feedUsersList,
             topics: topics,
+            widgets,
             deletePost: deletePost,
             pinPost: pinPost,
             likePost: likePost,
@@ -87,14 +89,11 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             clickNavigator: clickNavigator,
           }}
         >
-          {CustomComponents?.CustomPostView || (
-            <Posts post={post} user={filteredUser} />
-          )}
+          <Posts post={post} user={filteredUser} />
         </FeedPostContext.Provider>
       );
     });
   }, [
-    CustomComponents?.CustomPostView,
     clickNavigator,
     deletePost,
     feedList,
@@ -103,6 +102,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     pinPost,
     postComponentClickCustomCallback,
     topics,
+    widgets,
   ]);
 
   return (
