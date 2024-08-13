@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   MutableRefObject,
   useCallback,
@@ -16,7 +17,7 @@ import {
   AttachmentMeta,
   DecodeURLRequest,
   EditPostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -137,7 +138,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
   const postFeed = useCallback(
-    async function () {
+    async function (customWidgetsData?: Record<string, any>[]) {
       try {
         setOpenCreatePostDialog(false);
         const textContent: string = extractTextFromNode(
@@ -222,6 +223,18 @@ export function useCreatePost(): UseCreatePost {
               .build(),
           );
         }
+        if (customWidgetsData) {
+          for (const customWidgetData of customWidgetsData) {
+            attachmentResponseArray.push(
+              Attachment.builder()
+                .setAttachmentType(5)
+                .setAttachmentMeta(
+                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                )
+                .build(),
+            );
+          }
+        }
         const call: AddPostResponse = await lmFeedclient?.addPost(
           AddPostRequest.builder()
             .setAttachments(attachmentResponseArray)
@@ -253,7 +266,7 @@ export function useCreatePost(): UseCreatePost {
   );
 
   const editPost = useCallback(
-    async function () {
+    async function (customWidgetsData?: Record<string, any>[]) {
       try {
         setOpenCreatePostDialog(false);
         const textContent: string = extractTextFromNode(
@@ -290,6 +303,18 @@ export function useCreatePost(): UseCreatePost {
             attachmentResponseArray.pop();
           }
         }
+        if (customWidgetsData) {
+          for (const customWidgetData of customWidgetsData) {
+            attachmentResponseArray.push(
+              Attachment.builder()
+                .setAttachmentType(5)
+                .setAttachmentMeta(
+                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                )
+                .build(),
+            );
+          }
+        }
         const call: EditPostResponse = (await lmFeedclient?.editPost(
           EditPostRequest.builder()
             .setattachments(attachmentResponseArray)
@@ -324,6 +349,7 @@ export function useCreatePost(): UseCreatePost {
     [
       customEventClient,
       lmFeedclient,
+      lmfeedAnalyticsClient,
       ogTag,
       selectedTopicIds,
       temporaryPost?.Id,

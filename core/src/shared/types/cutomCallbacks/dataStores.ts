@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LMFeedCreatePostMediaUploadMode } from "../../enums/lmCreatePostMediaHandlingMode";
 import { ClickNavigator } from "../customProps/routes";
 import { Activity } from "../models/Activity";
+// import { Attachment } from "../models/attachment";
 import { Community } from "../models/community";
 import { User } from "../models/member";
 import { OgTag } from "../models/ogTag";
@@ -14,6 +16,8 @@ export interface FeedListsDataStore {
   setSelectedTopics: React.Dispatch<React.SetStateAction<string[]>>;
   topics: Record<string, Topic>;
   setTopics: React.Dispatch<React.SetStateAction<Record<string, Topic>>>;
+  widgets: Record<string, any>;
+  setWidgets: React.Dispatch<React.SetStateAction<Record<string, any>>>;
   loadMoreFeeds: boolean;
   setLoadMoreFeeds: React.Dispatch<React.SetStateAction<boolean>>;
   currentPageCount: number;
@@ -41,6 +45,8 @@ export interface FeedPostDetailsStore {
   loadNextPage: boolean;
   setLoadNextPage: React.Dispatch<React.SetStateAction<boolean>>;
   topics: Record<string, Topic>;
+  widgets: Record<string, any>;
+  setWidgets: React.Dispatch<React.SetStateAction<Record<string, any>>>;
   setTopics: React.Dispatch<React.SetStateAction<Record<string, Topic>>>;
   pageCount: number;
   setPageCount: React.Dispatch<React.SetStateAction<number>>;
@@ -151,8 +157,8 @@ export interface PostCreationDataStore {
 }
 
 export interface PostCreationDefaultActions {
-  postFeed: () => Promise<void>;
-  editPost: () => Promise<void>;
+  postFeed: (customWidgets?: Record<string, any>[]) => Promise<void>;
+  editPost: (customWidgets?: Record<string, any>[]) => Promise<void>;
 }
 
 export interface ApplicationGeneralsStore {
