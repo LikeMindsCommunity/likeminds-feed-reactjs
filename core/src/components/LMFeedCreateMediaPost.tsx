@@ -48,6 +48,8 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
               return <ImageMediaItem attachment={attachment} />;
             case 2:
               return <VideoMediaItem attachment={attachment} />;
+            case 11:
+              return <ReelMediaItem attachment={attachment} />;
             // case 4:
             //   return (
             //     <OGTagMediaItem ogTags={attachment.attachmentMeta.ogTags} />
@@ -143,35 +145,36 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
   }
   return (
     <div className="postImgSlider">
-      {!temporaryPost && (
-        <div className="postImgSlider__header">
-          <label className="postImgSlider__header--addMore">
-            <img src={addMoreIcon} alt="icon" /> Add More
-            <input
-              lm-feed-component-id={`lm-feed-create-media-vwxyz`}
-              onChange={addMediaItem}
-              type="file"
-              accept={
-                mediaUploadMode === LMFeedCreatePostMediaUploadMode.DOCUMENT
-                  ? "application/pdf"
-                  : "image/png, image/jpeg, image/jpg, video/mp4"
-              }
-            />
-          </label>
-          <div className="postImgSlider__header--cancelBtn">
-            <img
-              src={cancelBtnIcon}
-              alt="video"
-              onClick={() => {
-                if (removeMedia) {
-                  removeMedia(activeSlide || 0);
+      {!temporaryPost &&
+        mediaUploadMode !== LMFeedCreatePostMediaUploadMode.REEL && (
+          <div className="postImgSlider__header">
+            <label className="postImgSlider__header--addMore">
+              <img src={addMoreIcon} alt="icon" /> Add More
+              <input
+                lm-feed-component-id={`lm-feed-create-media-vwxyz`}
+                onChange={addMediaItem}
+                type="file"
+                accept={
+                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.DOCUMENT
+                    ? "application/pdf"
+                    : "image/png, image/jpeg, image/jpg, video/mp4"
                 }
-              }}
-              lm-feed-component-id={`lm-feed-create-media-fghij`}
-            />
+              />
+            </label>
+            <div className="postImgSlider__header--cancelBtn">
+              <img
+                src={cancelBtnIcon}
+                alt="video"
+                onClick={() => {
+                  if (removeMedia) {
+                    removeMedia(activeSlide || 0);
+                  }
+                }}
+                lm-feed-component-id={`lm-feed-create-media-fghij`}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
       {renderMediaItems()}
     </div>
   );
@@ -223,6 +226,29 @@ const VideoMediaItem = ({ file, attachment }: MediaItemProps) => {
     );
   } else return null;
 };
+
+const ReelMediaItem = ({ file, attachment }: MediaItemProps) => {
+  if (file) {
+    return (
+      <video
+        className="lm-feed-create-post-media-item"
+        src={URL.createObjectURL(file)}
+        controls
+        lm-feed-component-id={`lm-feed-create-media-fghij-${file.name}`}
+      />
+    );
+  } else if (attachment) {
+    return (
+      <video
+        className="lm-feed-create-post-media-item"
+        src={attachment.attachmentMeta.url}
+        controls
+        lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.attachmentMeta.url}`}
+      />
+    );
+  } else return null;
+};
+
 const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
   if (attachment) {
     const { attachmentMeta } = attachment;

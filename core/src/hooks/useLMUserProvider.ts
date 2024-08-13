@@ -8,7 +8,7 @@ import { ValidateUserResponse } from "../shared/types/api-responses/initiateUser
 import {
   InitiateUserRequest,
   ValidateUserRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 // import { TokenValues } from "../shared/enums/tokens";
@@ -107,8 +107,6 @@ export default function useUserProvider(
               .setIsGuest(isGuest || false)
               .setUserName(username || "")
               .setApiKey(apiKey)
-              .setTokenExpiryBeta(12)
-              .setRTMTokenExpiryBeta(24)
               .build(),
           )) as never;
         console.log(initiateUserCall);
