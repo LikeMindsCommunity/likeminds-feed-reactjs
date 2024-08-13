@@ -5,13 +5,13 @@ import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { Helmet } from "react-helmet-async";
 import lmBack from "../assets/images/lm-back.svg";
 import LMFeedCreatePost from "./LMFeedCreatePost";
-import { useContext } from "react";
-import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+// import { useContext } from "react";
+// import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
 const LMFeedDetails = () => {
   const { id = "" } = useParams();
-  const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
-  const { CustomPostView } = CustomComponents;
+  // const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
+  // const { CustomPostView } = CustomComponents;
   const {
     post,
     users,
@@ -29,6 +29,7 @@ const LMFeedDetails = () => {
     deletePost,
     clickNavigator,
     postComponentClickCustomCallback,
+    widgets,
   } = useFeedDetails(id.split("-")[0]);
 
   return !post || !users ? null : (
@@ -43,6 +44,7 @@ const LMFeedDetails = () => {
           users,
           topics,
           replies,
+          widgets,
           getNextPage,
           loadNextPage,
           addNewComment,
@@ -69,12 +71,10 @@ const LMFeedDetails = () => {
           <span>Back to feed</span>
         </div>
 
-        {CustomPostView || (
-          <Posts
-            post={post}
-            user={Object.values(users).find((user) => user.uuid === post.uuid)}
-          />
-        )}
+        <Posts
+          post={post}
+          user={Object.values(users).find((user) => user.uuid === post.uuid)}
+        />
       </FeedPostContext.Provider>
     </div>
   );

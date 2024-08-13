@@ -22,6 +22,7 @@ const LMFeedListDataContextProvider = () => {
     likePost,
     postComponentClickCustomCallback,
     clickNavigator,
+    widgets,
   } = useFetchFeeds();
   const { routes } = useContext(GeneralContext);
   function renderCustomRoutes() {
@@ -43,6 +44,7 @@ const LMFeedListDataContextProvider = () => {
     <LMFeedDataContext.Provider
       value={{
         topics,
+        widgets,
         selectedTopics,
         setSelectedTopics,
         loadMoreFeeds,

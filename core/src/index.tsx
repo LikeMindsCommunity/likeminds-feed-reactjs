@@ -55,16 +55,16 @@ export function ReactApp() {
         PostCreationCustomCallbacks={{
           postFeedCustomAction: async (store) => {
             const { defaultActions } = store;
-            defaultActions.postFeed();
+            defaultActions.postFeed([{}]);
           },
         }}
         analyticsCallback={(event: string, details: Record<string, string>) => {
           console.log("fired");
           return;
         }}
-        // CustomComponents={{
-        //   CustomPostView: <CustomPostView />,
-        // }}
+        CustomComponents={{
+          CustomPostView: <CustomPostView />,
+        }}
       ></LMFeed>
     </div>
   );
