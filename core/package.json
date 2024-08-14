@@ -1,5 +1,5 @@
 {
-  "name": "@likemins.community/likeminds-feed-reactjs",
+  "name": "@likeminds.community/likeminds-feed-reactjs",
   "version": "1.2.1",
   "scripts": {
     "start": "react-app-rewired start",
