@@ -5,7 +5,7 @@ import {
   AddCommentRequest,
   EditCommentRequest,
   ReplyCommentRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { extractTextFromNode } from "../shared/utils";
 import {
   EditCommentResponse,

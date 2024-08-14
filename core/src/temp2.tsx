@@ -6,7 +6,7 @@
 // import {
 //   InitiateUserRequest,
 //   LMFeedClient,
-// } from "@likeminds.community/feed-js-beta";
+// } from "@likeminds.community/feed-js";
 // import LMFeedNotificationHeader from "./shared/components/LMFeedNotificationHeader";
 // import { LMFeedCustomEvents } from "./shared/customEvents";
 // // import { UserDetails } from "./hooks/useLMUserProvider";

@@ -8,7 +8,7 @@ import { ValidateUserResponse } from "../shared/types/api-responses/initiateUser
 import {
   InitiateUserRequest,
   ValidateUserRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 // import { TokenValues } from "../shared/enums/tokens";
