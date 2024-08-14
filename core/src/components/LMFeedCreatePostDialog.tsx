@@ -37,7 +37,6 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
   const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
 
-  console.log(temporaryPost);
   return (
     <div
       className="lm-feed-create-post-wrapper"

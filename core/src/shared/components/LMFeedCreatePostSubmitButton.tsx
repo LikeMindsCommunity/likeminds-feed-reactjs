@@ -8,7 +8,13 @@ const LMFeedCreatePostSubmitButton = () => {
   return (
     <div
       className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4"
-      onClick={temporaryPost ? editPost : postFeed}
+      onClick={() => {
+        if (temporaryPost) {
+          editPost!();
+        } else {
+          postFeed!();
+        }
+      }}
     >
       <span>{temporaryPost ? "SAVE" : "POST"}</span>
     </div>

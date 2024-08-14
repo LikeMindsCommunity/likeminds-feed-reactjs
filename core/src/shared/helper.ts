@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { S3, CognitoIdentityCredentials } from "aws-sdk";
@@ -24,7 +25,7 @@ export class HelperFunctionsClass {
 
   logError(err: any) {
     if (process.env.NODE_ENV === "development") {
-      console.log(`%c ${err}`, 'background: #222; color: "white";');
+      console.log(`%c `, 'background: #222; color: "white";');
     }
   }
 

@@ -159,7 +159,6 @@ export function useCreatePost(): UseCreatePost {
         for (let index = 0; index < mediaList.length; index++) {
           const file: File = mediaList[index];
 
-          console.log(file);
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const resp: UploadMediaModel =
             (await HelperFunctionsClass.uploadMedia(
@@ -271,6 +270,7 @@ export function useCreatePost(): UseCreatePost {
             );
           }
         }
+
         const call: AddPostResponse = await lmFeedclient?.addPost(
           AddPostRequest.builder()
             .setAttachments(attachmentResponseArray)

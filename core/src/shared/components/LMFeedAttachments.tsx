@@ -63,7 +63,7 @@ const RenderAttachment: React.FC<{
   // Render attachment based on attachmentType
   const { attachmentMeta, attachmentType } = attachment;
   const { name, url, ogTags } = attachmentMeta;
-  console.log(attachmentType);
+
   switch (attachmentType) {
     case 1: // Image
       return (

@@ -110,11 +110,6 @@ class LMFeedAnalytics {
   };
 
   track(eventName: string, eventProperties: Record<string, string> = {}) {
-    console.log(`
-            eventName: ${eventName}
-            eventProperties: ${JSON.stringify(eventProperties)}
-        `);
-
     this.callback(eventName, eventProperties);
   }
   sendAddMoreAttachmentClickedEvent(postId: string, type: string) {

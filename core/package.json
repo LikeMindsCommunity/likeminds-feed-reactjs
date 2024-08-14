@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/likeminds-feed-reactjs",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -127,4 +127,5 @@
       "require": "./dist/index.umd.cjs"
     }
   }
+ 
 }

@@ -20,7 +20,7 @@ const LMFeedPost: React.FC<LMFeedPostProps> = () => {
   const { post, postComponentClickCustomCallback } =
     useContext(FeedPostContext);
   const showCustomPostViewWidget = useMemo(() => {
-    if (post?.attachments) {
+    if (post?.attachments && post?.attachments.length > 0) {
       const attachments = post.attachments;
       const attachmentLength = attachments.length;
       let noOfCustomViewAttachments = 0;

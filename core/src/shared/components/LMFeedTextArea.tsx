@@ -174,7 +174,6 @@ const LMFeedTextArea = () => {
         data-placeholder="Write something here..."
         className="lm-feed-create-post-text-area"
         onKeyDown={(event) => {
-          // console.log(event);
           if (event.key === "Enter") {
             event.preventDefault();
             //prevent the default behaviour (where the browser would add a new text node)
