@@ -295,6 +295,7 @@ export function useCreatePost(): UseCreatePost {
       lmFeedclient,
       lmfeedAnalyticsClient,
       mediaList,
+      mediaUploadMode,
       ogTag,
       selectedTopicIds,
     ],

@@ -87,43 +87,43 @@
 //   const { post } = useContext(FeedPostContext);
 //   return <div className="lm-feed-wrapper__card lm-mb-2">{post?.Id}</div>;
 // };
-// import { useState } from "react";
+import { useState } from "react";
 
-// import { LMFeed, LMFeedNotificationHeader, LMFeedCustomEvents } from ".";
-// import { LMFeedClient } from "@likeminds.community/feed-js";
-// import ReactDOM from "react-dom/client";
+import { LMFeed, LMFeedNotificationHeader, LMFeedCustomEvents } from ".";
+import { LMFeedClient } from "@likeminds.community/feed-js";
+import ReactDOM from "react-dom/client";
 
-// function ReactApp() {
-//   const [userDetails, setUserDetails] = useState<{
-//     uuid?: string;
-//     username?: string;
-//     isGuest?: boolean;
-//     apiKey?: string;
-//   }>({
-//     uuid: "",
-//     username: "",
-//     isGuest: false, // Turn this flag to true in case you have a guest user
-//     apiKey: "",
-//   });
+function ReactApp() {
+  const [userDetails, setUserDetails] = useState<{
+    uuid?: string;
+    username?: string;
+    isGuest?: boolean;
+    apiKey?: string;
+  }>({
+    uuid: "",
+    username: "",
+    isGuest: false, // Turn this flag to true in case you have a guest user
+    apiKey: "",
+  });
 
-//   // Initiated LMFeedClient
-//   const lmFeedClient = LMFeedClient.Builder()
-//     .setPlatformCode("rt")
-//     .setVersionCode(2)
-//     .build();
+  // Initiated LMFeedClient
+  const lmFeedClient = LMFeedClient.Builder()
+    .setPlatformCode("rt")
+    .setVersionCode(2)
+    .build();
 
-//   // Initiated LMFeedCustomEvents
-//   const customEventClient = new LMFeedCustomEvents();
+  // Initiated LMFeedCustomEvents
+  const customEventClient = new LMFeedCustomEvents();
 
-//   return (
-//     <div className="lm-wrapper">
-//       <LMFeedNotificationHeader customEventClient={customEventClient} />
-//       <LMFeed
-//         client={lmFeedClient}
-//         customEventClient={customEventClient}
-//         userDetails={userDetails}
-//       ></LMFeed>
-//     </div>
-//   );
-// }
-// ReactDOM.createRoot(document.getElementById("root")!).render(<ReactApp />);
+  return (
+    <div className="lm-wrapper">
+      <LMFeedNotificationHeader customEventClient={customEventClient} />
+      <LMFeed
+        client={lmFeedClient}
+        customEventClient={customEventClient}
+        userDetails={userDetails}
+      ></LMFeed>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")!).render(<ReactApp />);
