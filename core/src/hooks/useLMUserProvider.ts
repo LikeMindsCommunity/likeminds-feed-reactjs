@@ -109,7 +109,7 @@ export default function useUserProvider(
               .setApiKey(apiKey)
               .build(),
           )) as never;
-        console.log(initiateUserCall);
+
         if (initiateUserCall.success) {
           // Setting the tokens, API key and User in local storage
           setTokensInLocalStorage(

@@ -1,6 +1,6 @@
 {
-  "name": "@likeminds.community/likeminds-feed-reactjs",
-  "version": "1.2.0",
+  "name": "likeminds-feed-reactjs-beta",
+  "version": "2.0.31",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -26,6 +26,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@likeminds.community/feed-js": "^1.11.0",
+    "@likeminds.community/likeminds-feed-reactjs": "^1.2.0",
     "@mui/material": "^5.15.10",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -127,4 +128,5 @@
       "require": "./dist/index.umd.cjs"
     }
   }
+ 
 }
