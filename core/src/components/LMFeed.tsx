@@ -30,8 +30,8 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   useParentRouter?: boolean;
   userDetails: UserDetails;
   customEventClient: LMFeedCustomEvents;
-  analyticsCallback: AnalyticsCallback;
-  LMFeedCoreCallbacks: LMCoreCallbacks;
+  analyticsCallback?: AnalyticsCallback | undefined;
+  LMFeedCoreCallbacks?: LMCoreCallbacks;
 }
 
 function LMFeed({
@@ -68,13 +68,15 @@ function LMFeed({
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
   }, []);
   useEffect(() => {
-    client.setLMSDKCallbacks(
-      new LMSDKCallbacksImplementations(
-        LMFeedCoreCallbacks,
-        client,
-        customEventClient,
-      ),
-    );
+    if (LMFeedCoreCallbacks) {
+      client.setLMSDKCallbacks(
+        new LMSDKCallbacksImplementations(
+          LMFeedCoreCallbacks,
+          client,
+          customEventClient,
+        ),
+      );
+    }
   }, [LMFeedCoreCallbacks, client, customEventClient]);
 
   if (!lmFeedUser) {

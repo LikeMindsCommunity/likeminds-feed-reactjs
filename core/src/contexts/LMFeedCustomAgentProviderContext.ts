@@ -29,7 +29,6 @@ export interface CustomAgentProviderInterface {
   TopicsCustomCallbacks?: TopicsCustomActions;
   RepliesCustomCallbacks?: RepliesCustomActions;
   PostCreationCustomCallbacks?: PostCreationCustomActions;
-
   postComponentClickCustomCallback?: PostComponentCustomClickEventDelegatorCallback;
   createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
   topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;

@@ -41,7 +41,7 @@ const LMFeedPost: React.FC<LMFeedPostProps> = () => {
   if (showCustomPostViewWidget) {
     // TODO Custom Widget
     // Render the complete custom Post View widget
-    return CustomComponents?.CustomPostView;
+    return CustomComponents?.CustomWidgetPostView;
   }
   return (
     <div

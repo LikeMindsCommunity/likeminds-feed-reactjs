@@ -4,6 +4,7 @@ import { NavigateFunction } from "react-router-dom";
 import { LMFeedAttachmentsProps } from "../../components/LMFeedAttachments";
 import { LMFeedReplyTextAreaProps } from "../../components/LMFeedReplyTextArea";
 import { LMFeedReplyEditTextAreaProps } from "../../components/LMFeedReplyEditTextArea";
+import { LMFeedCreatePostMediaUploadMode } from "../../enums/lmCreatePostMediaHandlingMode";
 
 export interface CustomComponents {
   CustomPostViewHeader?: ReactNode;
@@ -13,15 +14,16 @@ export interface CustomComponents {
   CustomTopicDropDown?: ReactNode;
   CustomReply?: ReactNode;
   CustomPostView?: ReactNode;
+  CustomWidgetPostView?: ReactNode;
   CustomRepliesScroller?: ReactNode;
   CustomCommentsScroller?: ReactNode;
   CustomPostTopicTile?: React.FC<{ key: string; topic: Topic }>;
   CustomPostDetailsView?: ReactNode; //
   CustomPostViewAttachment?: React.FC<LMFeedAttachmentsProps>;
-  // CustomPDFViewer?: ReactNode;
   CustomEditReplyTextArea?: React.FC<LMFeedReplyEditTextAreaProps>;
   CustomPostReplyTextArea?: React.FC<LMFeedReplyTextAreaProps>;
   CustomCreatePostTextArea?: ReactNode;
+  CustomCreatePostInitiateView?: React.FC<LMCreatePostInitiateViewProps>;
   CustomCreatePostDialog?: ReactNode;
 }
 
@@ -47,3 +49,8 @@ export interface CustomCallbacks {
 }
 
 type FN = (navigate: NavigateFunction, ...args: unknown[]) => unknown;
+
+export interface LMCreatePostInitiateViewProps {
+  setOpenCreatePostDialog: (value: boolean) => void;
+  changeMediaUploadMode: (mode: LMFeedCreatePostMediaUploadMode) => void;
+}
