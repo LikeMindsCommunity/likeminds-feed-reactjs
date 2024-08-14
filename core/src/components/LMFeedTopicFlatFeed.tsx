@@ -28,6 +28,7 @@ const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
     feedList,
     feedUsersList,
     getNextPage,
+    widgets,
   } = useFetchFeeds(params.topicId ? params.topicId : undefined);
 
   const renderFeeds = useCallback(() => {
@@ -40,6 +41,7 @@ const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
         <FeedPostContext.Provider
           key={post.Id}
           value={{
+            widgets: widgets,
             post: post,
             users: feedUsersList,
             topics: topics,
@@ -51,7 +53,7 @@ const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
         </FeedPostContext.Provider>
       );
     });
-  }, [feedList, feedUsersList, topics]);
+  }, [feedList, feedUsersList, topics, widgets]);
 
   return (
     <div className="lm-feed-wrapper lm-d-flex">

@@ -107,8 +107,6 @@ export default function useUserProvider(
               .setIsGuest(isGuest || false)
               .setUserName(username || "")
               .setApiKey(apiKey)
-              .setTokenExpiryBeta(12)
-              .setRTMTokenExpiryBeta(24)
               .build(),
           )) as never;
         console.log(initiateUserCall);

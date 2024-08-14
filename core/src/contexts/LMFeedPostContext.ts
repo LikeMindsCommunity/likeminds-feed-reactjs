@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
@@ -10,12 +11,14 @@ export const FeedPostContext = React.createContext<FeedPostContextInterface>({
   post: null,
   topics: null,
   users: null,
+  widgets: null,
 });
 
 interface FeedPostContextInterface {
   post: Post | null;
   topics: Record<string, Topic> | null;
   users: Record<string, User> | null;
+  widgets: Record<string, any> | null;
   getNextPage?: () => Promise<void>;
   loadNextPage?: boolean;
   replies?: Reply[];

@@ -29,6 +29,7 @@ const LMFeedDetails = () => {
     deletePost,
     clickNavigator,
     postComponentClickCustomCallback,
+    widgets,
   } = useFeedDetails(id.split("-")[0]);
 
   return !post || !users ? null : (
@@ -43,6 +44,7 @@ const LMFeedDetails = () => {
           users,
           topics,
           replies,
+          widgets,
           getNextPage,
           loadNextPage,
           addNewComment,

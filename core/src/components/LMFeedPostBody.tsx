@@ -29,7 +29,9 @@ const LMFeedPostBody = () => {
         ) : (
           <LMFeedAttachments
             postId={post?.Id || ""}
-            attachments={attachments}
+            attachments={attachments.filter(
+              (attachment) => attachment.attachmentType !== 5,
+            )}
           />
         )}
       </div>
@@ -37,69 +39,6 @@ const LMFeedPostBody = () => {
   }, [CustomPostViewAttachment, attachments, post?.Id]);
 
   return (
-    // <div className="lm-feed-wrapper__card__body">
-    //   {heading.length > 0 && (
-    //     <h1
-    //       className="lm-feed-wrapper__card__body__heading"
-    //       style={{
-    //         cursor: !window.location.pathname.includes("/post")
-    //           ? "pointer"
-    //           : undefined,
-    //         ...LMPostBodyStyles?.heading,
-    //       }}
-    //       onClick={() => {
-    //         if (postHeadingClickCallback) {
-    //           postHeadingClickCallback(navigate);
-    //         } else {
-    //           if (!window.location.pathname.includes("/post")) {
-    //             navigate(
-    //               `/community/post/${`${post?.Id}-${post?.heading}`.substring(0, 59)}`,
-    //             );
-    //           }
-    //         }
-    //       }}
-    //     >
-    //       {heading}
-    //     </h1>
-    //   )}
-    //   {/* post text */}
-    //   {text ? (
-    //     <div
-    //       className="lm-feed-wrapper__card__body__content"
-    //       style={LMPostBodyStyles?.content}
-    //     >
-    //       {(() => {
-    //         const processedText = textPreprocessor(text);
-    //         if (processedText.showReadMore && !hasReadMoreTapped) {
-    //           return (
-    //             <>
-    //               {parseAndReplaceTags(processedText.text)}
-    //               <span
-    //                 className="lm-feed-wrapper__card__body__content__read-more-tap-icon"
-    //                 style={{
-    //                   color: "gray",
-    //                   fontWeight: "400",
-    //                   cursor: "pointer",
-    //                   fontSize: "14px",
-    //                 }}
-    //                 onClick={() => setHasReadMoreTapped(true)}
-    //               >
-    //                 ...ReadMore
-    //               </span>
-    //             </>
-    //           );
-    //         } else {
-    //           return parseAndReplaceTags(text);
-    //         }
-    //       })()}
-    //     </div>
-    //   ) : null}
-    //   {/* post text */}
-
-    //   <div className="lm-feed-wrapper__card__body__attachment">
-    //     {renderAttachments()}
-    //   </div>
-    // </div>
     <div
       className="lm-feed-wrapper__card__body"
       lm-feed-component-id={`lm-feed-post-body-vwxyz-${post?.Id}`}

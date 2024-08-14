@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { User } from "../shared/types/models/member";
 import { Post } from "../shared/types/models/post";
@@ -35,6 +36,7 @@ interface UseFeedDetailsInterface {
   loadNextPage: boolean;
   replies: Reply[];
   topics: Record<string, Topic>;
+  widgets: Record<string, any>;
   addNewComment: (comment: Reply, userMap: Record<string, User>) => void;
   removeAComment: (id: string) => void;
   updateReplyOnPostReply: (id: string) => void;
@@ -87,6 +89,8 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   //   state to store the topics of post
   const [topics, setTopics] = useState<Record<string, Topic>>({});
 
+  // state to store the widgets
+  const [widgets, setWidgets] = useState<Record<string, any>>({});
   //   state to store page count
   const [pageCount, setPageCount] = useState<number>(1);
 
@@ -106,6 +110,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         setReplies([...(getPostDetailsCall.data.post.replies || [])]);
         setUsers({ ...getPostDetailsCall.data.users });
         setTopics({ ...getPostDetailsCall.data.topics });
+        setWidgets({ ...getPostDetailsCall.data.widgets });
         setPageCount((currentPage) => currentPage + 1);
         if (!getPostDetailsCall.data.post.replies?.length) {
           setLoadNextPage(false);
@@ -143,6 +148,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         ]);
         setUsers({ ...users, ...getPostDetailsCall.data.users });
         setTopics({ ...topics, ...getPostDetailsCall.data.topics });
+        setWidgets({ ...widgets, ...getPostDetailsCall.data.widgets });
         setPageCount((currentPage) => currentPage + 1);
         if (!getPostDetailsCall.data.post.replies?.length) {
           setLoadNextPage(false);
@@ -151,7 +157,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     } catch (error) {
       console.log(error);
     }
-  }, [lmFeedclient, pageCount, postId, replies, topics, users]);
+  }, [lmFeedclient, pageCount, postId, replies, topics, users, widgets]);
 
   const clickNavigator = useCallback(
     (post: Post) => {
@@ -242,7 +248,15 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         console.log(error);
       }
     },
-    [customEventClient, displaySnackbarMessage, lmFeedclient, post, replies],
+    [
+      customEventClient,
+      displaySnackbarMessage,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      post,
+      replies,
+      topics,
+    ],
   );
   const updateReply = useCallback(
     function (comment: Reply, usersMap: Record<string, User>) {
@@ -397,7 +411,15 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         console.log(error);
       }
     },
-    [customEventClient, displaySnackbarMessage, lmFeedclient, post, postId],
+    [
+      customEventClient,
+      displaySnackbarMessage,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      post,
+      postId,
+      topics,
+    ],
   );
 
   useEffect(() => {
@@ -458,6 +480,8 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           setTopics,
           pageCount,
           setPageCount,
+          widgets,
+          setWidgets,
         },
         applicationGeneralStore: {
           userDataStore: {
@@ -511,6 +535,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       updateReply,
       updateReplyOnPostReply,
       users,
+      widgets,
     ]);
 
   useEffect(() => {
@@ -519,6 +544,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   return {
     post,
     users,
+    widgets,
     getNextPage,
     replies,
     loadNextPage,

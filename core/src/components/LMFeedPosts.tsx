@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 
@@ -19,6 +19,30 @@ const LMFeedPost: React.FC<LMFeedPostProps> = () => {
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const { post, postComponentClickCustomCallback } =
     useContext(FeedPostContext);
+  const showCustomPostViewWidget = useMemo(() => {
+    if (post?.attachments) {
+      const attachments = post.attachments;
+      const attachmentLength = attachments.length;
+      let noOfCustomViewAttachments = 0;
+      for (const attachment of attachments) {
+        if (attachment.attachmentType.toString() === "5") {
+          noOfCustomViewAttachments++;
+        }
+      }
+      if (noOfCustomViewAttachments === attachmentLength) {
+        return true;
+      } else {
+        false;
+      }
+    } else {
+      return false;
+    }
+  }, [post]);
+  if (showCustomPostViewWidget) {
+    // TODO Custom Widget
+    // Render the complete custom Post View widget
+    return CustomComponents?.CustomWidgetPostView;
+  }
   return (
     <div
       className="lm-feed-wrapper__card lm-mb-2"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
@@ -31,6 +32,7 @@ import { LMAppRoutesConstant } from "../shared/constants/lmRoutesConstant";
 
 interface useFetchFeedsResponse {
   topics: Record<string, Topic>;
+  widgets: Record<string, any>;
   selectedTopics: string[];
   setSelectedTopics: React.Dispatch<string[]>;
   loadMoreFeeds: boolean;
@@ -69,6 +71,9 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   // to maintain the list of selected topics for rendering posts
   const [topics, setTopics] = useState<Record<string, Topic>>({});
 
+  // to maintain the list of widgets for rendering posts
+  const [widgets, setWidgets] = useState<Record<string, any>>({});
+
   // to detect whether we should load more posts || it will turn false if we reached the end of pagination with the current set of topics.
   const [loadMoreFeeds, setLoadMoreFeeds] = useState<boolean>(true);
 
@@ -98,6 +103,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           setFeedList([...fetchFeedsCall.data.posts]);
           setFeedUsersList({ ...fetchFeedsCall.data.users });
           setTopics({ ...fetchFeedsCall.data.topics });
+          setWidgets({ ...fetchFeedsCall.data.widgets });
         }
         if (!fetchFeedsCall.data.posts.length) {
           setLoadMoreFeeds(false);
@@ -126,6 +132,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           setFeedList([...feedList, ...fetchFeedsCall.data.posts]);
           setFeedUsersList({ ...feedUsersList, ...fetchFeedsCall.data.users });
           setTopics({ ...topics, ...fetchFeedsCall.data.topics });
+          setWidgets({ ...widgets, ...fetchFeedsCall.data.widgets });
         }
         if (!fetchFeedsCall.data.posts.length) {
           setLoadMoreFeeds(false);
@@ -141,6 +148,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       lmFeedclient,
       selectedTopics,
       topics,
+      widgets,
     ],
   );
 
@@ -169,7 +177,14 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         console.log(error);
       }
     },
-    [displaySnackbarMessage, feedList, lmFeedclient],
+    [
+      currentUser?.state,
+      displaySnackbarMessage,
+      feedList,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      topics,
+    ],
   );
   // function to pin a post
   const pinPost = useCallback(
@@ -250,7 +265,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         console.log(error);
       }
     },
-    [feedList, lmFeedclient],
+    [feedList, lmFeedclient, lmfeedAnalyticsClient, topics],
   );
   const clickNavigator = useCallback(
     (post: Post) => {
@@ -421,6 +436,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           setFeedList,
           feedUsersList,
           setFeedUsersList,
+          widgets,
+          setWidgets,
         },
         applicationGeneralsStore: {
           userDataStore: {
@@ -451,6 +468,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       currentPageCount,
       feedList,
       feedUsersList,
+      widgets,
       currentUser,
       currentCommunity,
       logoutUser,
@@ -467,6 +485,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     ]);
   return {
     topics,
+    widgets,
     selectedTopics,
     setSelectedTopics,
     loadMoreFeeds,

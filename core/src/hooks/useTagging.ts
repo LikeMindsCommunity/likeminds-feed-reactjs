@@ -30,13 +30,13 @@ export function useTagging(): UseTagging {
   }
   async function fetchTaggingList(pg?: number) {
     try {
-      const call: GetTaggingListResponse = await lmFeedclient?.getTaggingList(
+      const call: GetTaggingListResponse = (await lmFeedclient?.getTaggingList(
         GetTaggingListRequest.builder()
           .setpage(pg ? pg : pageNo)
           .setpageSize(10)
           .setsearchName(tagString || "")
           .build(),
-      );
+      )) as GetTaggingListResponse;
       if (call.success) {
         setTaggingList((previousState) => {
           return [...previousState, ...call.data.members];

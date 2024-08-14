@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   MutableRefObject,
   useCallback,
@@ -61,6 +62,7 @@ interface UseCreatePost {
   closeOGTagContainer: () => void;
   createPostComponentClickCustomCallback?: ComponentDelegatorListener;
 }
+
 export function useCreatePost(): UseCreatePost {
   // Getting context values
 
@@ -100,6 +102,7 @@ export function useCreatePost(): UseCreatePost {
   function changeMediaUploadMode(mode: LMFeedCreatePostMediaUploadMode) {
     setMediaUploadMode(mode);
   }
+
   function resetStates() {
     setShowOGTagViewContainer(true);
     setText(null);
@@ -110,9 +113,11 @@ export function useCreatePost(): UseCreatePost {
     setMediaUploadMode(LMFeedCreatePostMediaUploadMode.NULL);
     setOgtag(null);
   }
+
   function setPostText(txt: string) {
     setText(txt);
   }
+
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
     const mediaArray = event.target.files;
     const mediaCopy = [...mediaList, ...Array.from(mediaArray!)];
@@ -123,29 +128,38 @@ export function useCreatePost(): UseCreatePost {
         feedAttachmentType || "",
       );
     }
+
     setMediaList(mediaCopy);
   }
+
   function removeMedia(index: number) {
     const mediaCopy = [...mediaList];
     mediaCopy.splice(index, 1);
     setMediaList(mediaCopy);
   }
+
   function clearMedia() {
     setMediaList([]);
   }
+
   function closeOGTagContainer() {
     setShowOGTagViewContainer(false);
   }
+
   const postFeed = useCallback(
-    async function () {
+    async function (customWidgetsData?: Record<string, any>[]) {
       try {
         setOpenCreatePostDialog(false);
+
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
         ).trim();
+
         const attachmentResponseArray: Attachment[] = [];
         for (let index = 0; index < mediaList.length; index++) {
           const file: File = mediaList[index];
+
+          console.log(file);
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const resp: UploadMediaModel =
             (await HelperFunctionsClass.uploadMedia(
@@ -155,11 +169,15 @@ export function useCreatePost(): UseCreatePost {
           const uploadedFileKey = `https://${LMAppAwsKeys.bucketNameProd}.s3.${LMAppAwsKeys.region}.amazonaws.com/${`files/post/${currentUser?.uuid || ""}/${file.name}`}`;
           const attachmentType = file.type.includes("image")
             ? 1
-            : file.type.includes("video")
-              ? 2
-              : file.type.includes("pdf")
-                ? 3
-                : 4;
+            : file.type.includes("video") &&
+                mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+              ? 11 // Setting attachmentType to 11 for reels
+              : file.type.includes("video")
+                ? 2
+                : file.type.includes("pdf")
+                  ? 3
+                  : 4;
+
           switch (attachmentType) {
             case 1: {
               attachmentResponseArray.push(
@@ -210,8 +228,27 @@ export function useCreatePost(): UseCreatePost {
               );
               break;
             }
+            case 11: {
+              // New case for attachmentType 11 (Reels)
+              attachmentResponseArray.push(
+                Attachment.builder()
+                  .setAttachmentType(11)
+                  .setAttachmentMeta(
+                    AttachmentMeta.builder()
+                      .seturl(uploadedFileKey)
+                      .setformat(file?.name?.split(".").slice(-1).toString())
+                      .setsize(file.size)
+                      .setname(file.name)
+                      .setduration(10) // Assuming duration is applicable to reels
+                      .build(),
+                  )
+                  .build(),
+              );
+              break;
+            }
           }
         }
+
         if (!mediaList.length && ogTag) {
           attachmentResponseArray.push(
             Attachment.builder()
@@ -221,6 +258,18 @@ export function useCreatePost(): UseCreatePost {
               )
               .build(),
           );
+        }
+        if (customWidgetsData) {
+          for (const customWidgetData of customWidgetsData) {
+            attachmentResponseArray.push(
+              Attachment.builder()
+                .setAttachmentType(5)
+                .setAttachmentMeta(
+                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                )
+                .build(),
+            );
+          }
         }
         const call: AddPostResponse = await lmFeedclient?.addPost(
           AddPostRequest.builder()
@@ -237,7 +286,6 @@ export function useCreatePost(): UseCreatePost {
           );
         }
       } catch (error) {
-        // lmfeedAnalyticsClient?.sendPostCreationErrorEvent(call.data.post);
         console.log(error);
       }
     },
@@ -247,13 +295,14 @@ export function useCreatePost(): UseCreatePost {
       lmFeedclient,
       lmfeedAnalyticsClient,
       mediaList,
+      mediaUploadMode,
       ogTag,
       selectedTopicIds,
     ],
   );
 
   const editPost = useCallback(
-    async function () {
+    async function (customWidgetsData?: Record<string, any>[]) {
       try {
         setOpenCreatePostDialog(false);
         const textContent: string = extractTextFromNode(
@@ -268,7 +317,8 @@ export function useCreatePost(): UseCreatePost {
               (attachment) =>
                 attachment.attachmentType === 1 ||
                 attachment.attachmentType === 2 ||
-                attachment.attachmentType === 3,
+                attachment.attachmentType === 3 ||
+                attachment.attachmentType === 11,
             )
           ) {
             attachmentResponseArray.pop();
@@ -288,6 +338,18 @@ export function useCreatePost(): UseCreatePost {
             )
           ) {
             attachmentResponseArray.pop();
+          }
+        }
+        if (customWidgetsData) {
+          for (const customWidgetData of customWidgetsData) {
+            attachmentResponseArray.push(
+              Attachment.builder()
+                .setAttachmentType(5)
+                .setAttachmentMeta(
+                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                )
+                .build(),
+            );
           }
         }
         const call: EditPostResponse = (await lmFeedclient?.editPost(
@@ -324,6 +386,7 @@ export function useCreatePost(): UseCreatePost {
     [
       customEventClient,
       lmFeedclient,
+      lmfeedAnalyticsClient,
       ogTag,
       selectedTopicIds,
       temporaryPost?.Id,
