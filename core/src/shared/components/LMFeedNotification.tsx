@@ -127,7 +127,12 @@ const LMFeedNotification = ({
   }
   return (
     <span className="lm-feed-notification-badge">
-      <Badge badgeContent={notificationCount.toString()} color="error">
+      <Badge
+        badgeContent={
+          notificationCount > 0 ? notificationCount.toString() : null
+        }
+        color="error"
+      >
         <span
           onClick={(e) => {
             if (!notificationAnchor) {

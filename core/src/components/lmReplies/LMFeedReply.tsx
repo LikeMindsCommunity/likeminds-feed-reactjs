@@ -262,7 +262,9 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
                       : "replies lm-cursor-pointer commentTitle"
                 }
                 onClick={() => {
-                  setOpenReplies((current) => !current);
+                  setOpenReplies((current) => {
+                    return !current;
+                  });
                 }}
               >
                 {/* {reply?.commentsCount} = */}
@@ -290,13 +292,16 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
         ) : null}
       </div>
       <div className="lm-social-action-bar__lmReply__commentsScroller">
-        {openReplies &&
-          (CustomComponents.CustomRepliesScroller || (
+        {openReplies ? (
+          CustomComponents.CustomRepliesScroller ? (
+            CustomComponents.CustomRepliesScroller
+          ) : (
             <LMFeedRepliesScroller
               postId={id.split("-")[0]}
               replyId={reply?.Id || ""}
             />
-          ))}
+          )
+        ) : null}
       </div>
     </div>
   );

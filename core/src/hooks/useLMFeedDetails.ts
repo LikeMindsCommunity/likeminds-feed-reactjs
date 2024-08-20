@@ -117,7 +117,6 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         }
       } else {
         if (displaySnackbarMessage) {
-          alert(LMDisplayMessages.ERROR_LOADING_POST);
           displaySnackbarMessage(
             getPostDetailsCall?.errorMessage ||
               LMDisplayMessages.ERROR_LOADING_POST,
