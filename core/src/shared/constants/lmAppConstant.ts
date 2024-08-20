@@ -22,5 +22,5 @@ export const EDIT_POST = "Edit Post";
 export const MEMBER_LIST = "Member List";
 export const PHOTO = "photo";
 export const VIDEO = "video";
-export const PDF = "pdf";
+export const PDF = "PDF";
 export const REEL = "reel";

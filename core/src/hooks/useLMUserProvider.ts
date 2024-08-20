@@ -123,13 +123,13 @@ export default function useUserProvider(
         }
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
-        console.log(memberStateCall);
+
         if (initiateUserCall.success && memberStateCall.success) {
           const user = {
             ...initiateUserCall.data?.user,
             ...memberStateCall.data.member,
           };
-          console.log(user);
+
           setLmFeedUser(user || null);
           setLmFeedUserCurrentCommunity(
             initiateUserCall?.data?.community || null,

@@ -81,7 +81,12 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
           setPreSelectedTopics={setPreSelectedTopics}
         />
       )}
-      <Divider className="lm-feed-create-post-topic-text-area-divider" />
+      <Divider
+        sx={{
+          borderColor: "#FFF",
+        }}
+        className="lm-feed-create-post-topic-text-area-divider"
+      />
       <div className="lm-textarea">
         {CustomComponents.CustomCreatePostTextArea || <LMFeedTextArea />}
       </div>

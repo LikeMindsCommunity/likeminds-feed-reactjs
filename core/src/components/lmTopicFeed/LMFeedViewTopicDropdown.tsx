@@ -351,6 +351,9 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
       }
     }
   };
+  if (!topics || topics.length === 0) {
+    return null;
+  }
   return (
     <div
       onClick={(e) => {

@@ -67,6 +67,7 @@ import { LMFeedCreatePostMediaUploadMode } from "./shared/enums/lmCreatePostMedi
 import { LikeActionType } from "./shared/enums/lmLikeActionType";
 import { LMTopicsDropdownMode } from "./shared/enums/lmTopicFeedDropdownMode";
 import { LMFeedCustomEvents } from "./shared/customEvents";
+import { initiateFeedClient } from "./shared/getClient";
 
 export {
   LMFeed,
@@ -123,6 +124,7 @@ export {
   LMFeedReplyEditTextArea,
   LMFeedReplyTextArea,
   LMFeedTextArea,
+  //   interfaces
   LMFeedAnalytics,
   LMCoreCallbacks,
   LMDisplayMessages,
@@ -137,7 +139,8 @@ export {
   LikeActionType,
   LMTopicsDropdownMode,
   LMFeedCustomEvents,
-  //   interfaces
+  // intitate Feed CLient Function
+  initiateFeedClient,
 };
 
 // // "main": "dist/index.js",
