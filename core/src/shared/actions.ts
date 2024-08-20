@@ -1,8 +1,8 @@
 export const LMLikeAction = () => {
-  alert("The post has been liked");
+  // alert("The post has been liked");
 };
 export const LMCommentAction = () => {
-  alert("Comment Action Triggered");
+  // alert("Comment Action Triggered");
 };
 
 // export interface LMLikeActionInterface {

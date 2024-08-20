@@ -27,7 +27,6 @@ const LMFeedRepliesScroller = ({
   } = useReply(postId, replyId, post);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderComments = () => {
-    console.log(replies);
     return replies.map((reply: Reply) => {
       return (
         <ReplyContext.Provider

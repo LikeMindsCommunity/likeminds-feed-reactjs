@@ -92,7 +92,7 @@ export const textPreprocessor = (
 
 // Function to handle route click
 const handleRouteClick = (route: string) => {
-  alert(route); // Replace with your desired action
+  // alert(route); // Replace with your desired action
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
