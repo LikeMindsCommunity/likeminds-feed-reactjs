@@ -127,7 +127,7 @@ const LMFeedTextArea = () => {
                     const anchorNode = document.createElement("a");
                     anchorNode.id = item?.id.toString();
                     anchorNode.href = "#";
-                    anchorNode.textContent = `@${item?.name.trim()} `;
+                    anchorNode.textContent = `@${item?.name.trim()}`;
                     anchorNode.contentEditable = "false";
                     const textNode2 = document.createTextNode(textNode2Text);
                     const dummyNode = document.createElement("span");

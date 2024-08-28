@@ -35,7 +35,9 @@ const LMFeedTopicFlatFeed = (props: LMFeedUniversalFeedProps) => {
     return feedList.map((post: Post) => {
       const postUuid = post.uuid;
       const usersArray = Object.values(feedUsersList);
-      const filteredUser = usersArray.find((user) => user.uuid === postUuid);
+      const filteredUser = usersArray.find(
+        (user) => user.sdkClientInfo.uuid === postUuid,
+      );
 
       return (
         <FeedPostContext.Provider
