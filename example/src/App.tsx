@@ -6,7 +6,8 @@ import {
   LMFeedCustomEvents,
   LMCoreCallbacks,
   initiateFeedClient,
-} from "@likeminds.community/likeminds-feed-reactjs";
+  // } from "@likeminds.community/likeminds-feed-reactjs";
+} from "likeminds-feed-reactjs-beta";
 
 import LoginScreen from "./LoginScreen";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -176,26 +177,22 @@ function App() {
   }
   return (
     <BrowserRouter>
-      <div className="lm-wrapper">
-        <Routes>
-          <Route
-            path="/community"
-            element={
-              <>
-                <LMFeedNotificationHeader
-                  customEventClient={customEventClient}
-                />
-                <LMFeed
-                  client={lmFeedClient}
-                  customEventClient={customEventClient}
-                  LMFeedCoreCallbacks={LMCORECALLBACKS}
-                  userDetails={userDetails}
-                ></LMFeed>
-              </>
-            }
-          />
-        </Routes>
-      </div>
+      <Routes>
+        <Route
+          path="/community"
+          element={
+            <>
+              <LMFeedNotificationHeader customEventClient={customEventClient} />
+              <LMFeed
+                client={lmFeedClient}
+                customEventClient={customEventClient}
+                LMFeedCoreCallbacks={LMCORECALLBACKS}
+                userDetails={userDetails}
+              ></LMFeed>
+            </>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
