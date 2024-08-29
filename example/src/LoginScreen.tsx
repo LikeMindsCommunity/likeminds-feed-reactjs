@@ -1,5 +1,6 @@
 import { Button, Dialog, TextField } from "@mui/material";
 import { Dispatch } from "react";
+import logo from "./assets/logo.png";
 interface LoginScreenProps {
   accessToken: string;
   refreshToken: string;
@@ -35,7 +36,6 @@ const LoginScreen = ({
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-around",
-
             width: "400px",
           }}
         >
@@ -48,11 +48,10 @@ const LoginScreen = ({
           >
             <img
               style={{
-                height: "100px",
-                width: "100px",
-                borderRadius: "50%",
+                height: "auto",
+                width: "200px",
               }}
-              src="https://media.licdn.com/dms/image/C4D0BAQGKA68Slb3fKg/company-logo_200_200/0/1630546700959/likemindscommunity_logo?e=1724284800&v=beta&t=qQbCxiZp6c3LGk2v38CPSqzWAfGRgiY9pShdaUdRzd0"
+              src={logo}
               alt="logo"
             />
           </div>

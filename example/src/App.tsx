@@ -5,9 +5,11 @@ import {
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   LMCoreCallbacks,
-} from "likeminds-feed-reactjs-beta";
-import { LMFeedClient } from "@likeminds.community/feed-js-beta";
+  initiateFeedClient,
+} from "@likeminds.community/likeminds-feed-reactjs";
+
 import LoginScreen from "./LoginScreen";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -51,7 +53,7 @@ function App() {
     isGuest?: boolean;
     apiKey?: string;
   }>({});
-
+  const lmFeedClient = initiateFeedClient();
   const LMCORECALLBACKS = new LMCoreCallbacks(
     (a: string, b: string) => {
       setUserDetails((userDetails) => {
@@ -91,7 +93,7 @@ function App() {
 
       try {
         const response = await fetch(
-          "https://betaauth.likeminds.community/sdk/initiate",
+          "https://auth.likeminds.community/sdk/initiate",
           requestOptions
         );
         const result_1 = await response.json();
@@ -115,22 +117,18 @@ function App() {
     const myHeaders = new Headers();
     myHeaders.append("x-api-key", "");
     myHeaders.append("x-platform-code", "rt");
-    myHeaders.append("x-version-code", "1");
+    myHeaders.append("x-version-code", "9");
     myHeaders.append("x-sdk-source", "feed");
     myHeaders.append("Content-Type", "application/json");
 
     interface RequestBody {
       user_name: string;
       user_unique_id: string;
-      token_expiry_beta: number;
-      rtm_token_expiry_beta: number;
     }
 
     const raw: RequestBody = {
       user_name: "",
       user_unique_id: "",
-      token_expiry_beta: 2,
-      rtm_token_expiry_beta: 4,
     };
 
     const requestOptions: RequestInit = {
@@ -142,7 +140,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "https://betaauth.likeminds.community/sdk/initiate",
+        "https://auth.likeminds.community/sdk/initiate",
         requestOptions
       );
       const result_1 = await response.json();
@@ -177,21 +175,28 @@ function App() {
     );
   }
   return (
-    <div className="lm-wrapper">
-      <LMFeedNotificationHeader customEventClient={customEventClient} />
-      <LMFeed
-        client={LMFeedClient.Builder()
-          .setPlatformCode("rt")
-          .setVersionCode(2)
-          .build()}
-        customEventClient={customEventClient}
-        analyticsCallback={() => {
-          //
-        }}
-        LMFeedCoreCallbacks={LMCORECALLBACKS}
-        userDetails={userDetails}
-      ></LMFeed>
-    </div>
+    <BrowserRouter>
+      <div className="lm-wrapper">
+        <Routes>
+          <Route
+            path="/community"
+            element={
+              <>
+                <LMFeedNotificationHeader
+                  customEventClient={customEventClient}
+                />
+                <LMFeed
+                  client={lmFeedClient}
+                  customEventClient={customEventClient}
+                  LMFeedCoreCallbacks={LMCORECALLBACKS}
+                  userDetails={userDetails}
+                ></LMFeed>
+              </>
+            }
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
