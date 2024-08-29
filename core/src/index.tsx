@@ -23,7 +23,7 @@ function ReactApp() {
     uuid: "HELLO_USER",
     username: "HELLO_USER",
     isGuest: false, // Turn this flag to true in case you have a guest user
-    apiKey: "e7608d57-dcf1-42cd-b320-3d98b1a40cf3",
+    apiKey: "c142bc84-4c40-4412-ad09-c7e59b93a2ca",
   });
 
   const lmFeedClient = initiateFeedClient();

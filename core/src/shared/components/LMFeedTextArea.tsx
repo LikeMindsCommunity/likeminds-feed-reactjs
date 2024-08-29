@@ -116,7 +116,6 @@ const LMFeedTextArea = () => {
                       0,
                       limitLeft - 1,
                     );
-
                     const textNode2Text = textContentFocusNode.substring(
                       limitRight + 1,
                     );
@@ -132,7 +131,6 @@ const LMFeedTextArea = () => {
                     const textNode2 = document.createTextNode(textNode2Text);
                     const dummyNode = document.createElement("span");
                     div!.replaceChild(textNode2, focusNode);
-
                     div!.insertBefore(anchorNode, textNode2);
                     div!.insertBefore(dummyNode, anchorNode);
                     div!.insertBefore(textNode1, dummyNode);
