@@ -84,64 +84,66 @@ function LMFeed({
   }
 
   return (
-    <GlobalClientProviderContext.Provider
-      value={{
-        lmFeedclient: client,
-        customEventClient: customEventClient,
-        lmfeedAnalyticsClient: new LMFeedAnalytics(analyticsCallback),
-      }}
-    >
-      <CustomAgentProviderContext.Provider
+    <div className="lm-wrapper">
+      <GlobalClientProviderContext.Provider
         value={{
-          LMPostHeaderStyles,
-          LMFeedCustomIcons,
-          CustomComponents,
-          FeedListCustomActions,
-          FeedPostDetailsCustomActions,
-          GeneralCustomCallbacks,
-          postComponentClickCustomCallback,
-          topicComponentClickCustomCallback,
-          createPostComponentClickCustomCallback,
-          memberComponentClickCustomCallback,
-          TopicsCustomCallbacks,
-          RepliesCustomCallbacks,
-          PostCreationCustomCallbacks,
+          lmFeedclient: client,
+          customEventClient: customEventClient,
+          lmfeedAnalyticsClient: new LMFeedAnalytics(analyticsCallback),
         }}
       >
-        <GeneralContext.Provider
+        <CustomAgentProviderContext.Provider
           value={{
-            message,
-            showSnackbar,
-            closeSnackbar,
-            displaySnackbarMessage,
-            useParentRouter,
-            routes,
+            LMPostHeaderStyles,
+            LMFeedCustomIcons,
+            CustomComponents,
+            FeedListCustomActions,
+            FeedPostDetailsCustomActions,
+            GeneralCustomCallbacks,
+            postComponentClickCustomCallback,
+            topicComponentClickCustomCallback,
+            createPostComponentClickCustomCallback,
+            memberComponentClickCustomCallback,
+            TopicsCustomCallbacks,
+            RepliesCustomCallbacks,
+            PostCreationCustomCallbacks,
           }}
         >
-          <UserProviderContext.Provider
+          <GeneralContext.Provider
             value={{
-              currentUser: lmFeedUser,
-              currentCommunity: lmFeedUserCurrentCommunity,
-              logoutUser: logoutUser,
+              message,
+              showSnackbar,
+              closeSnackbar,
+              displaySnackbarMessage,
+              useParentRouter,
+              routes,
             }}
           >
-            {!useParentRouter ? (
-              <BrowserRouter>
+            <UserProviderContext.Provider
+              value={{
+                currentUser: lmFeedUser,
+                currentCommunity: lmFeedUserCurrentCommunity,
+                logoutUser: logoutUser,
+              }}
+            >
+              {!useParentRouter ? (
+                <BrowserRouter>
+                  <LMFeedListDataContextProvider />
+                </BrowserRouter>
+              ) : (
                 <LMFeedListDataContextProvider />
-              </BrowserRouter>
-            ) : (
-              <LMFeedListDataContextProvider />
-            )}
-          </UserProviderContext.Provider>
-        </GeneralContext.Provider>
-      </CustomAgentProviderContext.Provider>
-      <Snackbar
-        open={showSnackbar}
-        message={message}
-        onClose={closeSnackbar}
-        autoHideDuration={3000}
-      />
-    </GlobalClientProviderContext.Provider>
+              )}
+            </UserProviderContext.Provider>
+          </GeneralContext.Provider>
+        </CustomAgentProviderContext.Provider>
+        <Snackbar
+          open={showSnackbar}
+          message={message}
+          onClose={closeSnackbar}
+          autoHideDuration={3000}
+        />
+      </GlobalClientProviderContext.Provider>
+    </div>
   );
 }
 
