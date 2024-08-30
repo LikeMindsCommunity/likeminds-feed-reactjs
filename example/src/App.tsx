@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
+
 import {
   LMFeed,
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   LMCoreCallbacks,
   initiateFeedClient,
-  // } from "@likeminds.community/likeminds-feed-reactjs";
-} from "likeminds-feed-reactjs-beta";
+} from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -74,21 +74,17 @@ function App() {
       interface RequestBody {
         user_name: string;
         user_unique_id: string;
-        token_expiry_beta: number;
-        rtm_token_expiry_beta: number;
       }
 
-      const raw: RequestBody = {
+      const requestBody: RequestBody = {
         user_name: "",
         user_unique_id: "",
-        token_expiry_beta: 2,
-        rtm_token_expiry_beta: 4,
       };
 
       const requestOptions: RequestInit = {
         method: "POST",
         headers: myHeaders,
-        body: JSON.stringify(raw),
+        body: JSON.stringify(requestBody),
         redirect: "follow",
       };
 
@@ -127,7 +123,7 @@ function App() {
       user_unique_id: string;
     }
 
-    const raw: RequestBody = {
+    const requestBody: RequestBody = {
       user_name: "",
       user_unique_id: "",
     };
@@ -135,7 +131,7 @@ function App() {
     const requestOptions: RequestInit = {
       method: "POST",
       headers: myHeaders,
-      body: JSON.stringify(raw),
+      body: JSON.stringify(requestBody),
       redirect: "follow",
     };
 
