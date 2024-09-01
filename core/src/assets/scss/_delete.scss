@@ -11,7 +11,7 @@
     font-size: pxToRem(20);
     line-height: pxToRem(24);
     font-weight: 500;
-    color: $dark-color;
+    color: $lm-feed-dark-color;
     text-align: center;
     margin-top: pxToRem(20);
     margin-bottom: pxToRem(36);
@@ -27,8 +27,8 @@
     line-height: pxToRem(20);
     font-weight: 500;
     padding: pxToRem(14) pxToRem(135);
-    background-color: $primary-color;
-    color: $light-color;
+    background-color: $lm-feed-primary-color;
+    color: $lm-feed-light-color;
     border-radius: pxToRem(8);
     outline: none;
     border: none;

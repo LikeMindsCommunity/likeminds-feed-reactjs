@@ -1,13 +1,13 @@
 .lm-member-wrapper {
   width: 100%;
-  background-color: $light-color;
+  background-color: $lm-feed-light-color;
   overflow: auto;
   max-width: pxToRem(360);
   position: fixed;
 
   &__header {
     padding: pxToRem(20) pxToRem(16);
-    color: $dark-color;
+    color: $lm-feed-dark-color;
     font-size: pxToRem(16);
     font-weight: 500;
     line-height: pxToRem(20);
@@ -44,7 +44,7 @@
           font-size: pxToRem(16);
           line-height: pxToRem(20);
           font-weight: 400;
-          color: $dark-color;
+          color: $lm-feed-dark-color;
           text-transform: capitalize;
         }
       }

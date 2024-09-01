@@ -13,7 +13,7 @@
     font-size: pxToRem(20);
     line-height: pxToRem(24);
     font-weight: 500;
-    color: $dark-color;
+    color: $lm-feed-dark-color;
   }
 
   &__activity-item {
@@ -27,8 +27,8 @@
       height: pxToRem(48);
       width: pxToRem(48);
       border-radius: 50%;
-      background-color: $primary-color;
-      color: $light-color;
+      background-color: $lm-feed-primary-color;
+      color: $lm-feed-light-color;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,7 +36,7 @@
     .notification-content {
       width: 72%;
       .notification-text {
-        color: $dark-color;
+        color: $lm-feed-dark-color;
         display: -webkit-box;
         font-size: pxToRem(14);
         font-weight: 400;
@@ -47,7 +47,7 @@
         text-overflow: ellipsis;
       }
       .notification-time-before {
-        color: #484f6780;
+        color: $lm-feed-dark-color;
         font-size: pxToRem(14);
         line-height: pxToRem(20);
       }
@@ -55,7 +55,7 @@
   }
 }
 .non-interacted-activity {
-  background-color: $bg-color;
+  background-color: $lm-feed-bg-color;
 }
 
 .lmNoNotification {

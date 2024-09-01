@@ -21,15 +21,15 @@
   padding: pxToRem(8) pxToRem(16);
   font-size: pxToRem(16);
   line-height: pxToRem(20);
-  border: 1px solid $topic-btn-border-color;
-  background-color: $light-color;
+  border: 1px solid $lm-feed-topic-btn-border-color;
+  background-color: $lm-feed-light-color;
   justify-content: space-between;
   color: #666666;
   gap: pxToRem(4);
 }
 
 .lm-topic-dropdown {
-  background-color: $light-color;
+  background-color: $lm-feed-light-color;
 
   &__search {
     @extend .lm-d-flex;
@@ -37,7 +37,7 @@
     gap: pxToRem(6);
     width: pxToRem(269);
     margin: pxToRem(8) pxToRem(24);
-    background-color: $topic-search-bg-color;
+    background-color: $lm-feed-topic-search-bg-color;
     padding: pxToRem(7) pxToRem(8);
     border-radius: pxToRem(10);
 
@@ -61,7 +61,7 @@
     @extend .lm-align-items-center;
     @extend .lm-ts-16;
     @extend .lm-fw-400;
-    color: $card-content-heading;
+    color: $lm-feed-card-content-heading;
     width: 100%;
     margin: 0 8px;
 
@@ -91,7 +91,7 @@
   }
 
   &--clear {
-    color: $primary-color;
+    color: $lm-feed-primary-color;
     font-size: pxToRem(14);
     cursor: pointer;
   }
@@ -100,7 +100,7 @@
 .lm-feed-topic-tile {
   padding: pxToRem(5) pxToRem(8);
   border-radius: pxToRem(4);
-  color: $primary-color;
+  color: $lm-feed-primary-color;
   background-color: rgba(80, 70, 229, 0.1);
   font-size: pxToRem(14);
   line-height: pxToRem(20);
@@ -123,7 +123,7 @@
   background-color: rgba(80, 70, 229, 0.1);
   line-height: pxToRem(20);
   border-width: 0;
-  color: $primary-color;
+  color: $lm-feed-primary-color;
   display: flex;
   align-items: center;
   gap: pxToRem(4);
@@ -138,10 +138,10 @@
 
 .lm-feed-topic-tile-create {
   align-items: center;
-  background: #5046e51a;
+  background: $lm-feed-primary-color;
   border: none;
   border-radius: pxToRem(4);
-  color: $primary-color;
+  color: $lm-feed-primary-color;
   display: inline-flex;
   font-size: pxToRem(14);
   font-weight: 400;
@@ -157,7 +157,7 @@
   margin-top: pxToRem(4);
   transform: translateY(-5px);
   width: pxToRem(36);
-  background: #5046e51a;
+  background: $lm-feed-primary-color;
   cursor: pointer;
   height: pxToRem(24);
   padding: pxToRem(2) pxToRem(8);

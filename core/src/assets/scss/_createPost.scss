@@ -81,13 +81,13 @@
       font-size: pxToRem(16);
       line-height: pxToRem(20);
       font-weight: 400;
-      color: #484f67;
+      color: $lm-feed-dark-color;
     }
     .upload-reel {
       font-size: pxToRem(16);
       line-height: pxToRem(20);
       font-weight: 400;
-      color: #484f67;
+      color: $lm-feed-dark-color;
     }
     .file-upload-subtext {
       font-size: pxToRem(12);
@@ -133,7 +133,7 @@
   font-size: 13px;
   text-transform: uppercase;
   font-weight: 500;
-  background-color: #5046e5;
+  background-color: $lm-feed-primary-color;
   border: none;
   z-index: 999;
   color: #fff;
@@ -150,7 +150,7 @@
   max-width: pxToRem(576);
   margin: pxToRem(16) auto 0;
   border-radius: pxToRem(8);
-  background-color: $light-color;
+  background-color: $lm-feed-light-color;
   overflow: hidden;
   display: none;
   @include respond-mobile-up {
@@ -180,7 +180,7 @@
       }
     }
     &--mediaText {
-      color: $secondary-color;
+      color: $lm-feed-secondary-color;
       font-size: pxToRem(16);
       line-height: pxToRem(20);
       font-weight: 400;
@@ -223,10 +223,10 @@
 
       &--btn-primary {
         padding: pxToRem(8) pxToRem(16);
-        background: $primary-color;
+        background: $lm-feed-primary-color;
         border-radius: pxToRem(8);
         border: none;
-        color: $light-color;
+        color: $lm-feed-light-color;
         font-weight: 500;
         font-size: pxToRem(14);
         line-height: pxToRem(20);
@@ -239,7 +239,7 @@
 .postImgSlider {
   width: 100%;
   position: relative;
-  background-color: #000000;
+  background-color: $lm-feed-black-color;
 
   &__header {
     position: absolute;
@@ -255,12 +255,12 @@
     &--addMore {
       background: #fff;
       border-radius: 10px;
-      color: $primary-color;
+      color: $lm-feed-primary-color;
       font-size: 14px;
       font-weight: 500;
       line-height: 20px;
       padding: 8px 12px;
-      border: 1px solid $primary-color;
+      border: 1px solid $lm-feed-primary-color;
       cursor: pointer;
       display: flex;
       gap: 10px;
@@ -312,7 +312,7 @@
 
   .attachmentPdf__content {
     padding: 1rem;
-    border: 1px solid #e6ebf5;
+    border: 1px solid $lm-feed-bg-color;
     display: flex;
     gap: 0.625rem;
     background-color: #fff;
@@ -324,14 +324,14 @@
     .attachmentPdf__content--title {
       font-size: 1rem;
       font-weight: 500;
-      color: #484f67;
+      color: $lm-feed-dark-color;
       line-height: 1.25rem;
       cursor: pointer;
     }
     .attachmentPdf__content--url {
       font-size: 0.75rem;
       font-weight: 400;
-      color: #a3a7b3;
+      color: $lm-feed-secondary-color;
       line-height: 1.25rem;
     }
   }
@@ -355,7 +355,7 @@
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
-  color: $secondary-color;
+  color: $lm-feed-secondary-color;
 }
 
 .lm-feed-create-post-topic-text-area-divider {
@@ -371,7 +371,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 8px;
-  border: 1px solid $bg-color;
+  border: 1px solid $lm-feed-bg-color;
   .og-tag-close-icon {
     position: absolute;
     top: pxToRem(16);
@@ -395,7 +395,7 @@
       font-size: pxToRem(12);
       line-height: pxToRem(20);
       font-weight: 400;
-      color: $dark-color;
+      color: $lm-feed-dark-color;
       opacity: 0.7;
     }
   }
@@ -410,7 +410,7 @@
       font-weight: 500;
       line-height: pxToRem(20);
       display: block;
-      color: $dark-color;
+      color: $lm-feed-dark-color;
     }
     &--desc {
       white-space: nowrap;
@@ -419,7 +419,7 @@
       font-size: pxToRem(14);
       font-weight: 400;
       line-height: pxToRem(20);
-      color: $dark-color;
+      color: $lm-feed-dark-color;
       opacity: 0.7;
     }
     &--url {
@@ -429,7 +429,7 @@
       font-size: pxToRem(12);
       font-weight: 400;
       line-height: pxToRem(20);
-      color: $dark-color;
+      color: $lm-feed-dark-color;
       opacity: 0.7;
     }
   }
