@@ -25,9 +25,9 @@ dd {
 /* Typography */
 body {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   line-height: 1.5;
-  background-color: $lm-feed-bg-color;
+  background-color: var(--lm-feed-bg-color);
 }
 
 h1 {
@@ -52,13 +52,13 @@ h2 {
 }
 
 p {
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   line-height: 1.5;
 }
 
 /* Links */
 a {
-  color: $lm-feed-info-color;
+  color: var(--lm-feed-info-color);
   text-decoration: none;
 }
 
@@ -71,13 +71,13 @@ a {
 
 /* Border */
 .lm-border {
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
   border-radius: 0.25rem;
 }
 
 
 .lm-wrapper{ 
-  background-color: $lm-feed-bg-color;
+  background-color: var(--lm-feed-bg-color);
   width: 100%;
   overflow-y: auto;
 }

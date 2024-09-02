@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
-
+import "./App.css";
 import {
   LMFeed,
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   LMCoreCallbacks,
   initiateFeedClient,
-  } from "@likeminds.community/likeminds-feed-reactjs";
+  // } from "@likeminds.community/likeminds-feed-reactjs";
+} from "likeminds-feed-reactjs-beta";
 
 import LoginScreen from "./LoginScreen";
 import { BrowserRouter, Route, Routes } from "react-router-dom";

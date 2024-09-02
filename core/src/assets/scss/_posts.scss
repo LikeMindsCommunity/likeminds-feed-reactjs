@@ -1,5 +1,5 @@
 .lm-feed-wrapper {
-  background-color: $lm-feed-bg-color;
+  background-color: var(--lm-feed-bg-color);
   width: 100%;
   margin: 67px 0 0 0;
   justify-content: space-between;
@@ -15,7 +15,7 @@
     max-width: pxToRem(576);
     width: 100%;
     margin-bottom: pxToRem(12);
-    background: $lm-feed-light-color;
+    background: var(--lm-feed-light-color);
     border-radius: pxToRem(8);
     margin: 0 auto 1rem;
     overflow: hidden;
@@ -34,19 +34,19 @@
       align-items: center;
 
       &--title {
-        font-size: 1rem;
+        font-size: var(--font-size-base);
         font-weight: 500;
-        color: $lm-feed-dark-color;
+        color: var(--lm-feed-dark-color);
         text-transform: capitalize;
         display: flex;
         align-items: center;
 
         span {
-          background-color: $lm-feed-primary-color;
+          background-color: var(--lm-feed-primary-color);
           border-radius: pxToRem(2);
           padding: pxToRem(2) pxToRem(8);
           font-size: pxToRem(11);
-          color: $lm-feed-light-color;
+          color: var(--lm-feed-light-color);
           font-weight: 500;
           line-height: pxToRem(16);
           margin-left: pxToRem(8);
@@ -55,13 +55,13 @@
       &--text {
         font-size: pxToRem(14);
         font-weight: 400;
-        color: $lm-feed-primary-color;
+        color: var(--lm-feed-primary-color);
         line-height: pxToRem(20);
         @extend .lm-text-capitalize;
 
         span {
           font-size: pxToRem(12);
-          color: $lm-feed-secondary-color;
+          color: var(--lm-feed-secondary-color);
           font-weight: 400;
           line-height: pxToRem(16);
           margin: 0 0 0 pxToRem(8);
@@ -79,7 +79,7 @@
         }
         span::before {
           content: "\2022";
-          color: $lm-feed-secondary-color;
+          color: var(--lm-feed-secondary-color);
           font-size: pxToRem(26);
           position: absolute;
           margin: pxToRem(4) 0 0 -12px;
@@ -95,8 +95,8 @@
         padding: 0 pxToRem(8) pxToRem(0) 1rem;
         word-wrap: break-word;
         font-weight: 500;
-        color: $lm-feed-card-content-heading;
-        font-size: 1rem;
+        color: var(--lm-feed-card-content-heading);
+        font-size: var(--font-size-base);
       }
       &__content {
         padding: 0.5rem pxToRem(8) 0.5rem 1rem;
@@ -111,7 +111,7 @@
 
         .attachments {
           width: 100%;
-          background-color: $lm-feed-light-color;
+          background-color: var(--lm-feed-light-color);
           img {
             width: 100%;
             // height: auto;
@@ -121,7 +121,7 @@
         }
         .attachment-image {
           width: 100%;
-          background-color: $lm-feed-black-color;
+          background-color: var(--lm-feed-black-color);
           img {
             width: 100%;
             // height: auto;
@@ -132,7 +132,7 @@
         }
         .attachment-video {
           width: 100%;
-          background-color: $lm-feed-black-color;
+          background-color: var(--lm-feed-black-color);
           video {
             width: 100%;
             aspect-ratio: 16/9;
@@ -142,9 +142,9 @@
           }
         }
         .attachmentPdf {
-          background-color: $lm-feed-light-color;
+          background-color: var(--lm-feed-light-color);
           border-radius: pxToRem(8);
-          border: 1px solid $lm-feed-bg-color;
+          border: 1px solid var(--lm-feed-bg-color);
           max-width: pxToRem(544);
           width: 100%;
           margin: 0 auto;
@@ -164,7 +164,7 @@
 
           &__content {
             padding: 1rem;
-            border-top: 1px solid $lm-feed-bg-color;
+            border-top: 1px solid var(--lm-feed-bg-color);
             display: flex;
             gap: pxToRem(10);
 
@@ -178,7 +178,7 @@
             &--title {
               font-size: pxToRem(16);
               font-weight: 500;
-              color: $lm-feed-dark-color;
+              color: var(--lm-feed-dark-color);
               line-height: pxToRem(20);
               cursor: pointer;
             }
@@ -186,22 +186,22 @@
             &--desc {
               font-size: pxToRem(14);
               font-weight: 400;
-              color: $lm-feed-secondary-color;
+              color: var(--lm-feed-secondary-color);
               line-height: 20px;
             }
 
             &--url {
               font-size: pxToRem(12);
               font-weight: 400;
-              color: $lm-feed-secondary-color;
+              color: var(--lm-feed-secondary-color);
               line-height: pxToRem(20);
             }
           }
         }
         .attachmentOGTag {
-          background-color: $lm-feed-light-color;
+          background-color: var(--lm-feed-light-color);
           border-radius: pxToRem(8);
-          border: 1px solid $lm-feed-bg-color;
+          border: 1px solid var(--lm-feed-bg-color);
           max-width: pxToRem(544);
           width: 100%;
           margin: 0 auto;
@@ -225,12 +225,12 @@
           }
           &__content {
             padding: 1rem;
-            border-top: 1px solid $lm-feed-bg-color;
+            border-top: 1px solid var(--lm-feed-bg-color);
 
             a {
               font-size: pxToRem(16);
               font-weight: 500;
-              color: $lm-feed-dark-color;
+              color: var(--lm-feed-dark-color);
               line-height: pxToRem(20);
               cursor: pointer;
               text-overflow: ellipsis;
@@ -243,7 +243,7 @@
             &--desc {
               font-size: pxToRem(14);
               font-weight: 400;
-              color: $lm-feed-secondary-color;
+              color: var(--lm-feed-secondary-color);
               line-height: pxToRem(20);
               text-overflow: ellipsis;
               overflow: hidden;
@@ -252,7 +252,7 @@
             &--url {
               font-size: pxToRem(12);
               font-weight: 400;
-              color: $lm-feed-secondary-color;
+              color: var(--lm-feed-secondary-color);
               line-height: pxToRem(20);
             }
           }
@@ -262,7 +262,7 @@
         }
       }
       .userTag {
-        color: $lm-feed-info-color;
+        color: var(--lm-feed-info-color);
         cursor: pointer;
       }
     }
@@ -273,10 +273,10 @@
   @extend .lm-d-flex;
   @extend .lm-align-items-center;
   padding: pxToRem(16);
-  background-color: $lm-feed-light-color;
+  background-color: var(--lm-feed-light-color);
   margin-bottom: pxToRem(16);
   gap: 10px;
-  color: $lm-feed-action-bar-color;
+  color: var(--lm-feed-action-bar-color);
   font-size: pxToRem(16);
   font-weight: 400;
 }
@@ -335,7 +335,7 @@
   font-size: 8px !important;
 }
 .slick-dots li.slick-active button:before {
-  color: $lm-feed-primary-color !important;
+  color: var(--lm-feed-primary-color) !important;
 }
 
 .slick-dots li {

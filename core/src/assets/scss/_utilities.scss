@@ -135,19 +135,19 @@
 }
 
 .lm-border {
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
 }
 .lm-border-top {
-  border-top: 1px solid $border-color;
+  border-top: 1px solid var(--border-color);
 }
 .lm-border-bottom {
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid var(--border-color);
 }
 .lm-border-left {
-  border-left: 1px solid $border-color;
+  border-left: 1px solid var(--border-color);
 }
 .lm-border-right {
-  border-right: 1px solid $border-color;
+  border-right: 1px solid var(--border-color);
 }
 
 .lm-text-uppercase {
@@ -211,11 +211,11 @@
 }
 
 .lm-primary-text {
-  color: $lm-feed-primary-color !important;
+  color: var(--lm-feed-primary-color) !important;
 }
 
 .lm-ts-16{
-  font-size: 1rem;
+  font-size: var(--font-size-base);
 }
 
 .lm-fw-400{

@@ -1,6 +1,6 @@
 .lm-social-action-bar {
   @extend .lm-d-flex;
-  background-color: $lm-feed-light-color;
+  background-color: var(--lm-feed-light-color);
   padding: 1.75rem pxToRem(16) pxToRem(10);
   justify-content: space-between;
 
@@ -8,14 +8,14 @@
     @extend .lm-d-flex;
     @extend .lm-align-items-center;
     @extend .lm-text-capitalize;
-    color: $lm-feed-action-bar-color;
+    color: var(--lm-feed-action-bar-color);
     gap: pxToRem(16);
     font-size: pxToRem(16);
     line-height: pxToRem(16);
     font-weight: 400;
 
     .comments {
-      color: $lm-feed-action-bar-color;
+      color: var(--lm-feed-action-bar-color);
     }
   }
 
@@ -37,14 +37,14 @@
           font-size: pxToRem(14);
           font-weight: 500;
           line-height: pxToRem(20);
-          color: $lm-feed-base-grey-1;
+          color: var(--lm-feed-base-grey-1);
           text-transform: capitalize;
         }
 
         &--title {
           font-size: pxToRem(14);
           font-weight: 400;
-          color: $lm-feed-base-grey-1;
+          color: var(--lm-feed-base-grey-1);
           line-height: pxToRem(20);
           word-break: break-word;
           padding-right: pxToRem(12);
@@ -61,7 +61,7 @@
 
         .replies {
           font-size: pxToRem(12);
-          color: $lm-feed-primary-color;
+          color: var(--lm-feed-primary-color);
           font-weight: 400;
           line-height: pxToRem(16);
           margin: 0 0 0 pxToRem(8);
@@ -69,7 +69,7 @@
         }
         // .replies::before {
         //   content: "\2022";
-        //   color: $lm-feed-secondary-color;
+        //   color: var(--lm-feed-secondary-color);
         //   font-size: pxToRem(20);
         //   position: absolute;
         //   margin: pxToRem(1) 0 0 -12px;
@@ -78,7 +78,7 @@
         // }
         .replies.bullet::before {
           content: "\2022";
-          color: $lm-feed-secondary-color;
+          color: var(--lm-feed-secondary-color);
           font-size: pxToRem(20);
           position: absolute;
           margin: pxToRem(1) 0 0 -12px;
@@ -87,7 +87,7 @@
         }
         // .replies.bullet {
         //   content: "\2022";
-        //   color: $lm-feed-secondary-color;
+        //   color: var(--lm-feed-secondary-color);
         //   font-size: pxToRem(20);
         //   position: absolute;
         //   margin: pxToRem(1) 0 0 -12px;
@@ -102,7 +102,7 @@
     font-size: pxToRem(14);
     font-weight: 400;
     line-height: pxToRem(20);
-    color: $lm-feed-base-grey-1;
+    color: var(--lm-feed-base-grey-1);
   }
   &__footer {
     padding-right: pxToRem(16);
@@ -125,7 +125,7 @@
         &__action {
           font-size: pxToRem(16);
           line-height: 1rem;
-          color: $lm-feed-primary-color;
+          color: var(--lm-feed-primary-color);
         }
       }
     }
@@ -157,7 +157,7 @@
     font-weight: 400;
     height: auto;
     margin: 0 pxToRem(16);
-    border: 1px solid $lm-feed-topic-btn-border-color;
+    border: 1px solid var(--lm-feed-topic-btn-border-color);
     border-radius: pxToRem(24);
     padding: pxToRem(10) pxToRem(16);
     min-height: pxToRem(40);
@@ -170,7 +170,7 @@
     font-weight: 400;
     height: auto;
     margin: 0 pxToRem(16) 0 0;
-    border: 1px solid $lm-feed-topic-btn-border-color;
+    border: 1px solid var(--lm-feed-topic-btn-border-color);
     border-radius: pxToRem(24);
     padding: pxToRem(10) pxToRem(16);
     min-height: pxToRem(40);
@@ -181,7 +181,7 @@
     top: 81% !important;
     left: 70px !important;
     border-radius: 8px;
-    box-shadow: 0 1px 16px 0 $lm-feed-black-color;
+    box-shadow: 0 1px 16px 0 var(--lm-feed-black-color);
     max-height: 210px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -194,13 +194,13 @@
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
-  color: $lm-feed-secondary-color;
+  color: var(--lm-feed-secondary-color);
 }
 .edit-reply-text-area[contenteditable="true"]:empty:before {
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
-  color: $lm-feed-secondary-color;
+  color: var(--lm-feed-secondary-color);
 }
 
 .liked-comment {
