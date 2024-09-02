@@ -77,7 +77,7 @@
 }
 
 .lm-navbar-brand {
-  font-size: 1.5rem;
+  font-size: var(--font-size-x-large);
   font-weight: bold;
 }
 
@@ -157,7 +157,7 @@
 }
 .lm-footer-reply-divider {
   border-color: rgba(208, 216, 226, 0.4);
-  border-width: 0.5px;
+  border-width: calc(var(--border-width)/2);
   border-style: solid;
 }
 

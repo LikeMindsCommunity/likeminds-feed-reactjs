@@ -10,9 +10,9 @@
   }
   &__title {
     padding: 5px pxToRem(20) pxToRem(10);
-    font-size: pxToRem(20);
+    font-size: var(--font-size-large);
     line-height: pxToRem(24);
-    font-weight: 500;
+    font-weight: var(--font-weight-bold-heavy);
     color: var(--lm-feed-dark-color);
   }
 
@@ -38,8 +38,8 @@
       .notification-text {
         color: var(--lm-feed-dark-color);
         display: -webkit-box;
-        font-size: pxToRem(14);
-        font-weight: 400;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-bold-light);
         line-height: pxToRem(20);
         margin-bottom: 5px;
         max-width: pxToRem(325);
@@ -48,7 +48,7 @@
       }
       .notification-time-before {
         color: var(--lm-feed-dark-color);
-        font-size: pxToRem(14);
+        font-size: var(--font-size-small);
         line-height: pxToRem(20);
       }
     }

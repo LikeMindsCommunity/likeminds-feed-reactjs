@@ -10,9 +10,9 @@
     @extend .lm-text-capitalize;
     color: var(--lm-feed-action-bar-color);
     gap: pxToRem(16);
-    font-size: pxToRem(16);
+    font-size: var(--font-size-base);
     line-height: pxToRem(16);
-    font-weight: 400;
+    font-weight: var(--font-weight-bold-light);
 
     .comments {
       color: var(--lm-feed-action-bar-color);
@@ -34,16 +34,16 @@
           flex-grow: 1;
         }
         &--name {
-          font-size: pxToRem(14);
-          font-weight: 500;
+          font-size: var(--font-size-small);
+          font-weight: var(--font-weight-bold-heavy);
           line-height: pxToRem(20);
           color: var(--lm-feed-base-grey-1);
           text-transform: capitalize;
         }
 
         &--title {
-          font-size: pxToRem(14);
-          font-weight: 400;
+          font-size: var(--font-size-small);
+          font-weight: var(--font-weight-bold-light);
           color: var(--lm-feed-base-grey-1);
           line-height: pxToRem(20);
           word-break: break-word;
@@ -53,16 +53,16 @@
       }
 
       .like {
-        font-size: pxToRem(12);
-        font-weight: 400;
+        font-size: var(--font-size-x-small);
+        font-weight: var(--font-weight-bold-light);
         line-height: pxToRem(16);
         color: #a3b2bd;
         gap: pxToRem(10);
 
         .replies {
-          font-size: pxToRem(12);
+          font-size: var(--font-size-x-small);
           color: var(--lm-feed-primary-color);
-          font-weight: 400;
+          font-weight: var(--font-weight-bold-light);
           line-height: pxToRem(16);
           margin: 0 0 0 pxToRem(8);
           padding: 0 0 0 pxToRem(8);
@@ -70,7 +70,7 @@
         // .replies::before {
         //   content: "\2022";
         //   color: var(--lm-feed-secondary-color);
-        //   font-size: pxToRem(20);
+        //   font-size: var(--font-size-large);
         //   position: absolute;
         //   margin: pxToRem(1) 0 0 -12px;
         //   height: pxToRem(2);
@@ -79,7 +79,7 @@
         .replies.bullet::before {
           content: "\2022";
           color: var(--lm-feed-secondary-color);
-          font-size: pxToRem(20);
+          font-size: var(--font-size-large);
           position: absolute;
           margin: pxToRem(1) 0 0 -12px;
           height: pxToRem(2);
@@ -88,7 +88,7 @@
         // .replies.bullet {
         //   content: "\2022";
         //   color: var(--lm-feed-secondary-color);
-        //   font-size: pxToRem(20);
+        //   font-size: var(--font-size-large);
         //   position: absolute;
         //   margin: pxToRem(1) 0 0 -12px;
         //   height: pxToRem(2);
@@ -99,8 +99,8 @@
   }
 
   &__answer {
-    font-size: pxToRem(14);
-    font-weight: 400;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold-light);
     line-height: pxToRem(20);
     color: var(--lm-feed-base-grey-1);
   }
@@ -108,22 +108,22 @@
     padding-right: pxToRem(16);
 
     &__duration {
-      font-size: pxToRem(12);
+      font-size: var(--font-size-x-small);
       line-height: 1rem;
       color: rgba(15, 30, 61, 0.4);
     }
     &__post-actions {
       &__likes {
-        font-size: pxToRem(12);
+        font-size: var(--font-size-x-small);
         line-height: 1rem;
         color: rgba(15, 30, 61, 0.4);
       }
       &__comments {
-        font-size: pxToRem(12);
+        font-size: var(--font-size-x-small);
         line-height: 1rem;
         color: rgba(15, 30, 61, 0.4);
         &__action {
-          font-size: pxToRem(16);
+          font-size: var(--font-size-base);
           line-height: 1rem;
           color: var(--lm-feed-primary-color);
         }
@@ -153,8 +153,8 @@
   position: relative;
   .reply-text-area {
     line-height: pxToRem(20);
-    font-size: pxToRem(14);
-    font-weight: 400;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold-light);
     height: auto;
     margin: 0 pxToRem(16);
     border: 1px solid var(--lm-feed-topic-btn-border-color);
@@ -166,8 +166,8 @@
   }
   .edit-reply-text-area {
     line-height: pxToRem(20);
-    font-size: pxToRem(14);
-    font-weight: 400;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold-light);
     height: auto;
     margin: 0 pxToRem(16) 0 0;
     border: 1px solid var(--lm-feed-topic-btn-border-color);

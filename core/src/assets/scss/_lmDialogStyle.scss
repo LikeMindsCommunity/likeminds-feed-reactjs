@@ -7,8 +7,8 @@
     position: relative;
     &__header{
         position: relative;
-        font-size: pxToRem(20);
-        font-weight: 500;
+        font-size: var(--font-size-large);
+        font-weight: var(--font-weight-bold-heavy);
         line-height: pxToRem(24);
         @extend .lm-d-flex;
         justify-content: center;
@@ -32,11 +32,11 @@
                 margin: 0 0 pxToRem(5) 0;
                 padding: 0;
                 font-size: var(--font-size-base);
-                font-weight: 400;
+                font-weight: var(--font-weight-bold-light);
                 color: var(--lm-feed-dark-color);
 
                 span{
-                    font-weight: 500;
+                    font-weight: var(--font-weight-bold-heavy);
                 }
             }
 
@@ -51,7 +51,7 @@
                     padding: pxToRem(10) pxToRem(20);
                     color: rgba(72, 79, 103, 0.5);
                     font-size: var(--font-size-base);
-                    font-weight: 400;
+                    font-weight: var(--font-weight-bold-light);
                     line-height: pxToRem(20);
                     float: left; 
                     cursor: pointer;
@@ -80,8 +80,8 @@
                     border: none;
                     color: var(--lm-feed-light-color);
                     background-color: var(--lm-feed-primary-color);
-                    font-weight: 500;
-                    font-size: pxToRem(20);
+                    font-weight: var(--font-weight-bold-heavy);
+                    font-size: var(--font-size-large);
                     border-radius: pxToRem(8);
                     padding: pxToRem(12) pxToRem(15);
                     cursor: pointer; 
@@ -91,8 +91,8 @@
                     border: none;
                     color: var(--lm-feed-light-color);
                     background-color: var(--lm-feed-bg-color);
-                    font-weight: 500;
-                    font-size: pxToRem(20);
+                    font-weight: var(--font-weight-bold-heavy);
+                    font-size: var(--font-size-large);
                     border-radius: pxToRem(8);
                     padding: pxToRem(12) pxToRem(15);
                     cursor: pointer; 

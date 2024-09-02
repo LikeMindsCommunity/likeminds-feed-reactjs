@@ -8,8 +8,8 @@
   &__header {
     padding: pxToRem(20) pxToRem(16);
     color: var(--lm-feed-dark-color);
-    font-size: pxToRem(16);
-    font-weight: 500;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold-heavy);
     line-height: pxToRem(20);
     border-bottom: 1px solid #dae1ee;
   }
@@ -30,6 +30,7 @@
         overflow: hidden;
         border-radius: 50%;
         margin-right: pxToRem(16);
+        
 
         img {
           object-fit: cover;
@@ -41,9 +42,9 @@
         align-items: center;
 
         &--name {
-          font-size: pxToRem(16);
+          font-size: var(--font-size-base);
           line-height: pxToRem(20);
-          font-weight: 400;
+          font-weight: var(--font-weight-bold-light);
           color: var(--lm-feed-dark-color);
           text-transform: capitalize;
         }
