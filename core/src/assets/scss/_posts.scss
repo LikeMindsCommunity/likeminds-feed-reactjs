@@ -262,7 +262,7 @@
         }
       }
       .userTag {
-        color: var(--lm-feed-info-color);
+        color: var(--lm-feed-tag-text-color);
         cursor: pointer;
       }
     }
@@ -358,4 +358,8 @@
 .lmLikedMemberWrapper {
   width: 360px;
   background-color: #fff;
+}
+
+.lm-feed-text-link{
+  color: var(--lm-feed-link-text-color);
 }

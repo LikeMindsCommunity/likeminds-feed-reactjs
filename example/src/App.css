@@ -1,4 +1,10 @@
 * {
     --lm-feed-primary-color: green;
-    --font-size-base: 34px;
+    /* --font-size-base: 34px; */
+    --lm-feed-tag-text-color: #ff0000;
+    --lm-feed-secondary-color: blue;
+}
+
+.lm-feed-wrapper__card__header--text>span {
+    color: magenta !important;
 }

@@ -113,7 +113,7 @@
   &__submit-button {
     padding: pxToRem(8) pxToRem(16);
     border-radius: pxToRem(8);
-    background-color: rgba(80, 70, 229, 1);
+    background-color: var(--lm-feed-primary-color);
     text-align: center;
     span {
       font-size: var(--font-size-base);
