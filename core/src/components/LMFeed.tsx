@@ -15,7 +15,6 @@ import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContex
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
-import { BrowserRouter } from "react-router-dom";
 import { AnalyticsCallback } from "../shared/types/analyticsCallback";
 import { LMFeedAnalytics } from "../shared/analytics";
 import {
@@ -27,7 +26,6 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
   routes?: LMFeedCustomAppRoutes;
-  useParentRouter?: boolean;
   userDetails: UserDetails;
   customEventClient: LMFeedCustomEvents;
   analyticsCallback?: AnalyticsCallback | undefined;
@@ -35,7 +33,6 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 }
 
 function LMFeed({
-  useParentRouter = false,
   LMFeedCoreCallbacks,
   userDetails,
   client,
@@ -115,7 +112,7 @@ function LMFeed({
               showSnackbar,
               closeSnackbar,
               displaySnackbarMessage,
-              useParentRouter,
+
               routes,
             }}
           >
@@ -126,13 +123,7 @@ function LMFeed({
                 logoutUser: logoutUser,
               }}
             >
-              {!useParentRouter ? (
-                <BrowserRouter>
-                  <LMFeedListDataContextProvider />
-                </BrowserRouter>
-              ) : (
-                <LMFeedListDataContextProvider />
-              )}
+              <LMFeedListDataContextProvider />
             </UserProviderContext.Provider>
           </GeneralContext.Provider>
         </CustomAgentProviderContext.Provider>

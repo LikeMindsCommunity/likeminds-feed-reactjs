@@ -10,7 +10,7 @@ import { useTagging } from "../../hooks/useTagging";
 import { convertTextToHTML, setTagUserImage } from "../taggingParser";
 import { useLMPostReply } from "../../hooks/useLMPostReply";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
-import { useParams } from "react-router-dom";
+
 import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
 import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 export interface LMFeedReplyEditTextAreaProps {
@@ -25,7 +25,6 @@ const LMFeedReplyEditTextArea = ({
   const { post } = useContext(FeedPostContext);
   const { reply } = useContext(ReplyContext);
   //   const { currentUser } = useContext(LMFeedUserProviderContext);
-  const { id } = useParams();
 
   const { taggingList, clearTaggingList, fetchTaggingList, setTaggingString } =
     useTagging();
@@ -35,7 +34,7 @@ const LMFeedReplyEditTextArea = ({
     textFieldRef,
     containerRef,
     editComment,
-  } = useLMPostReply(id?.split("-")[0].toString() || "", reply?.Id || "");
+  } = useLMPostReply(post?.Id?.split("-")[0].toString() || "", reply?.Id || "");
 
   useEffect(() => {
     if (textFieldRef?.current) {
