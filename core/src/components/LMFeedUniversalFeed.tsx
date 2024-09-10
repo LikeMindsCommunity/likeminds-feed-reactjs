@@ -72,7 +72,9 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     return feedList.map((post: Post) => {
       const postUuid = post.uuid;
       const usersArray = Object.values(feedUsersList);
-      const filteredUser = usersArray.find((user) => user.uuid === postUuid);
+      const filteredUser = usersArray.find(
+        (user) => user.sdkClientInfo.uuid === postUuid,
+      );
 
       return (
         <FeedPostContext.Provider
@@ -131,6 +133,13 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
         {/* Topics */}
 
         {/* Posts */}
+        {/* <Scroller
+          dataLength={feedList.length}
+          nextOnBottom={getNextPage}
+          data={feedList}
+        >
+          {renderFeeds()}
+        </Scroller> */}
         <InfiniteScroll
           dataLength={feedList.length}
           hasMore={loadMoreFeeds}

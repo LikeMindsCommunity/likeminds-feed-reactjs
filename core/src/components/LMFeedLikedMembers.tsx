@@ -84,7 +84,7 @@ const LMFeedLikedMembers = (props: any) => {
           {members ? (
             members.map((member: Member) => (
               <div
-                key={member.uuid}
+                key={member.sdkClientInfo.uuid}
                 className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"
               >
                 <div className="lm-member-wrapper__body__media__imgBox lm-avatar">

@@ -7,15 +7,10 @@ import {
   LMFeedCustomEvents,
   LMCoreCallbacks,
   initiateFeedClient,
-  // } from "@likeminds.community/likeminds-feed-reactjs";
-} from "likeminds-feed-reactjs-beta";
+} from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import CustomLMFeedCreatePostDialog, {
-  CustomCreatePostInitiateView,
-} from "./CustomCreatePostComponent";
-import CustomLMFeedPostBody from "./CustomPostBody";
 
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -189,28 +184,6 @@ function App() {
                 customEventClient={customEventClient}
                 LMFeedCoreCallbacks={LMCORECALLBACKS}
                 userDetails={userDetails}
-                CustomComponents={{
-                  CustomCreatePostInitiateView: CustomCreatePostInitiateView,
-                  CustomCreatePostDialog: <CustomLMFeedCreatePostDialog />,
-                  CustomPostViewBody: <CustomLMFeedPostBody />,
-                }}
-                PostCreationCustomCallbacks={{
-                  postFeedCustomAction: async (store) => {
-                    const {
-                      defaultActions: { postFeed },
-                    } = store;
-                    const ctaInputField: HTMLInputElement =
-                      document.getElementById(
-                        "cta-link-input"
-                      ) as HTMLInputElement;
-                    console.log(ctaInputField.value);
-                    postFeed([
-                      {
-                        cta: ctaInputField.value,
-                      },
-                    ]);
-                  },
-                }}
               ></LMFeed>
             </>
           }

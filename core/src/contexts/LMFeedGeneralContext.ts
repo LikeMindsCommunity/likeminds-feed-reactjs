@@ -9,5 +9,4 @@ interface GeneralContextInterface {
   showSnackbar?: boolean;
   message?: string;
   routes?: LMFeedCustomAppRoutes;
-  useParentRouter?: boolean;
 }

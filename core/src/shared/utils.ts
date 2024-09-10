@@ -266,3 +266,14 @@ export function extractTextFromNode(node: any): string {
     return "";
   }
 }
+export function returnPostId() {
+  const location = window.location;
+  const search = location.search;
+  const searchParams = new URLSearchParams(search);
+  const postId = searchParams.get("id");
+  if (postId) {
+    return postId;
+  } else {
+    return "";
+  }
+}

@@ -15,7 +15,7 @@ import { RepliesActionsAndDataStore } from "../shared/types/cutomCallbacks/dataP
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { useNavigate } from "react-router-dom";
+
 import { Post } from "../shared/types/models/post";
 
 interface UseReplyInterface {
@@ -52,7 +52,7 @@ export const useReply: (
   const { currentUser, currentCommunity, logoutUser } = useContext(
     LMFeedUserProviderContext,
   );
-  const navigate = useNavigate();
+
   // to store the reply
   const [reply, setReply] = useState<Reply | null>(null);
 
@@ -155,7 +155,16 @@ export const useReply: (
         console.log(error);
       }
     },
-    [customEventClient, lmFeedclient, postId, replies, reply, replyId],
+    [
+      customEventClient,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      post,
+      postId,
+      replies,
+      reply,
+      replyId,
+    ],
   );
   const likeReply = useCallback(
     async function (id: string) {
@@ -248,10 +257,8 @@ export const useReply: (
         likeReply,
         deleteReply,
       },
-      navigate: navigate,
     };
   }, [
-    navigate,
     closeSnackbar,
     currentCommunity,
     currentUser,
