@@ -71,7 +71,9 @@ const LMFeedDetails = ({ postId }: LMFeedDetailsProps) => {
         {CustomPostView || (
           <Posts
             post={post}
-            user={Object.values(users).find((user) => user.uuid === post.uuid)}
+            user={Object.values(users).find(
+              (user) => user.sdkClientInfo.uuid === post.uuid,
+            )}
           />
         )}
       </FeedPostContext.Provider>

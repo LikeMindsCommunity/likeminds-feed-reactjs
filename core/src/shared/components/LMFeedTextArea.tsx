@@ -116,7 +116,6 @@ const LMFeedTextArea = () => {
                       0,
                       limitLeft - 1,
                     );
-
                     const textNode2Text = textContentFocusNode.substring(
                       limitRight + 1,
                     );
@@ -127,12 +126,11 @@ const LMFeedTextArea = () => {
                     const anchorNode = document.createElement("a");
                     anchorNode.id = item?.id.toString();
                     anchorNode.href = "#";
-                    anchorNode.textContent = `@${item?.name.trim()} `;
+                    anchorNode.textContent = `@${item?.name.trim()}`;
                     anchorNode.contentEditable = "false";
                     const textNode2 = document.createTextNode(textNode2Text);
                     const dummyNode = document.createElement("span");
                     div!.replaceChild(textNode2, focusNode);
-
                     div!.insertBefore(anchorNode, textNode2);
                     div!.insertBefore(dummyNode, anchorNode);
                     div!.insertBefore(textNode1, dummyNode);

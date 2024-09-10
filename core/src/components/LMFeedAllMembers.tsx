@@ -77,9 +77,9 @@ const LMFeedAllMembers = () => {
           {members ? (
             members.map((member: Member) => (
               <div
-                key={member.uuid}
+                key={member?.sdkClientInfo.uuid}
                 className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"
-                lm-feed-component-id={`lm-feed-member-wrapper-klmno-${member?.uuid}`}
+                lm-feed-component-id={`lm-feed-member-wrapper-klmno-${member?.sdkClientInfo.uuid}`}
                 onClick={(e) => {
                   if (memberComponentClickCustomCallback) {
                     memberComponentClickCustomCallback(e);
