@@ -2,7 +2,7 @@ import {
   CustomAgentProviderContext,
   FeedPostContext,
   LMFeedAttachments,
-} from "likeminds-feed-reactjs-beta";
+} from "@likeminds.community/likeminds-feed-reactjs";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { useCallback, useContext, useMemo } from "react";
 

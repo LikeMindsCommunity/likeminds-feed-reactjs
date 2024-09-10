@@ -7,7 +7,6 @@ import {
   LMFeedCustomEvents,
   LMCoreCallbacks,
   initiateFeedClient,
-  // } from "@likeminds.community/likeminds-feed-reactjs";
 } from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";

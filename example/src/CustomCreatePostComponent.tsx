@@ -106,7 +106,7 @@ import {
   LMFeedUserProviderContext,
   LMFeedViewTopicDropdown,
   LMTopicsDropdownMode,
-} from "likeminds-feed-reactjs-beta";
+} from "@likeminds.community/likeminds-feed-reactjs";
 
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
