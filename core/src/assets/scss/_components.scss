@@ -3,17 +3,17 @@
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
-  background-color: $primary-color;
-  color: $light-color;
+  background-color: var(--lm-feed-primary-color);
+  color: var(--lm-feed-light-color);
   cursor: pointer;
 }
 
 .lm-button:hover {
-  background-color: $primary-color;
+  background-color: var(--lm-feed-primary-color);
 }
 
 .lm-card {
-  background-color: $light-color;
+  background-color: var(--lm-feed-light-color);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   padding: 1rem;
@@ -25,7 +25,7 @@
 }
 
 .lm-card-content {
-  color: $dark-color;
+  color: var(--lm-feed-dark-color);
 }
 
 .lm-card-action {
@@ -45,7 +45,7 @@
 }
 
 .lm-modal-content {
-  background-color: $light-color;
+  background-color: var(--lm-feed-light-color);
   border-radius: 4px;
   padding: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -71,13 +71,13 @@
 }
 
 .lm-navbar {
-  background-color: $dark-color;
-  color: $light-color;
+  background-color: var(--lm-feed-dark-color);
+  color: var(--lm-feed-light-color);
   padding: 1rem;
 }
 
 .lm-navbar-brand {
-  font-size: 1.5rem;
+  font-size: var(--font-size-x-large);
   font-weight: bold;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .lm-nav-link {
-  color: $light-color;
+  color: var(--lm-feed-light-color);
   text-decoration: none;
 }
 
@@ -111,8 +111,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: $primary-color;
-  color: $light-color;
+  background-color: var(--lm-feed-primary-color);
+  color: var(--lm-feed-light-color);
 }
 
 .lm-reply-avatar {
@@ -128,7 +128,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: $bg-color;
+  background-color: var(--lm-feed-bg-color);
 }
 
 .lm-alert {
@@ -138,26 +138,26 @@
 
 .lm-alert-primary {
   background-color: #007bff;
-  color: $light-color;
+  color: var(--lm-feed-light-color);
 }
 
 .lm-alert-secondary {
   background-color: #6c757d;
-  color: $light-color;
+  color: var(--lm-feed-light-color);
 }
 
 .lm-alert-success {
-  background-color: #28a745;
-  color: $light-color;
+  background-color: var(--lm-feed-success-color);
+  color: var(--lm-feed-light-color);
 }
 
 .lm-alert-danger {
-  background-color: #dc3545;
-  color: $light-color;
+  background-color: var(--lm-feed-danger-color);
+  color: var(--lm-feed-light-color);
 }
 .lm-footer-reply-divider {
   border-color: rgba(208, 216, 226, 0.4);
-  border-width: 0.5px;
+  border-width: calc(var(--border-width)/2);
   border-style: solid;
 }
 

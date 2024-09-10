@@ -59,7 +59,13 @@ export const parseAndReplaceTags = (text: string): ReactNode => {
             } else {
               const url = part.startsWith("http") ? part : `http://${part}`;
               return (
-                <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                <a
+                  key={i}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lm-feed-text-link"
+                >
                   {part}
                 </a>
               );

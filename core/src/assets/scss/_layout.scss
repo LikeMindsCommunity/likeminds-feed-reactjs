@@ -5,13 +5,13 @@
 
 .lm-header {
   background-color: #007bff;
-  color: $light-color;
+  color: var(--lm-feed-light-color);
   padding: 20px;
 }
 
 .lm-footer {
-  background-color: $dark-color;
-  color: $light-color;
+  background-color: var(--lm-feed-dark-color);
+  color: var(--lm-feed-light-color);
   padding: 20px;
 }
 
@@ -24,7 +24,7 @@
 .lm-main-content {
   padding: 20px;
   margin: 0 0 20px; /* Example margin for spacing */
-  background-color: $light-color;
+  background-color: var(--lm-feed-light-color);
 }
 
 /* Example grid system using CSS Grid */

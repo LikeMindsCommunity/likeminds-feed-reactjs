@@ -10,9 +10,9 @@
   &__dialog-heading {
     margin-bottom: pxToRem(36);
     text-align: center;
-    font-size: pxToRem(20);
+    font-size: var(--font-size-large);
     line-height: pxToRem(24);
-    font-weight: 500;
+    font-weight: var(--font-weight-bold-heavy);
     position: relative;
 
     .cancelIcon {
@@ -30,9 +30,9 @@
     margin-bottom: pxToRem(24);
     span {
       margin-left: pxToRem(16);
-      font-size: pxToRem(16);
+      font-size: var(--font-size-base);
       line-height: pxToRem(20);
-      font-weight: 500;
+      font-weight: var(--font-weight-bold-heavy);
     }
   }
 
@@ -54,9 +54,9 @@
   }
 
   &__post-text-content {
-    font-size: pxToRem(16);
+    font-size: var(--font-size-base);
     line-height: pxToRem(20);
-    font-weight: 400;
+    font-weight: var(--font-weight-bold-light);
     color: rgba(72, 79, 103, 0.5);
     margin-bottom: pxToRem(24);
   }
@@ -78,21 +78,21 @@
       display: none;
     }
     .file-upload-text {
-      font-size: pxToRem(16);
+      font-size: var(--font-size-base);
       line-height: pxToRem(20);
-      font-weight: 400;
-      color: #484f67;
+      font-weight: var(--font-weight-bold-light);
+      color: var(--lm-feed-dark-color);
     }
     .upload-reel {
-      font-size: pxToRem(16);
+      font-size: var(--font-size-base);
       line-height: pxToRem(20);
-      font-weight: 400;
-      color: #484f67;
+      font-weight: var(--font-weight-bold-light);
+      color: var(--lm-feed-dark-color);
     }
     .file-upload-subtext {
-      font-size: pxToRem(12);
+      font-size: var(--font-size-x-small);
       line-height: pxToRem(16);
-      font-weight: 400;
+      font-weight: var(--font-weight-bold-light);
       color: rgba(72, 79, 103, 0.5);
     }
     .close-icon {
@@ -113,11 +113,11 @@
   &__submit-button {
     padding: pxToRem(8) pxToRem(16);
     border-radius: pxToRem(8);
-    background-color: rgba(80, 70, 229, 1);
+    background-color: var(--lm-feed-primary-color);
     text-align: center;
     span {
-      font-size: pxToRem(16);
-      font-weight: 500;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold-heavy);
       line-height: pxToRem(20);
       color: white;
     }
@@ -132,8 +132,8 @@
   padding: 10px 20px;
   font-size: 13px;
   text-transform: uppercase;
-  font-weight: 500;
-  background-color: #5046e5;
+  font-weight: var(--font-weight-bold-heavy);
+  background-color: var(--lm-feed-primary-color);
   border: none;
   z-index: 999;
   color: #fff;
@@ -150,7 +150,7 @@
   max-width: pxToRem(576);
   margin: pxToRem(16) auto 0;
   border-radius: pxToRem(8);
-  background-color: $light-color;
+  background-color: var(--lm-feed-light-color);
   overflow: hidden;
   display: none;
   @include respond-mobile-up {
@@ -180,10 +180,10 @@
       }
     }
     &--mediaText {
-      color: $secondary-color;
-      font-size: pxToRem(16);
+      color: var(--lm-feed-secondary-color);
+      font-size: var(--font-size-base);
       line-height: pxToRem(20);
-      font-weight: 400;
+      font-weight: var(--font-weight-bold-light);
       width: 85%;
       cursor: text;
       float: left;
@@ -212,8 +212,8 @@
           display: flex;
         }
         &--texted {
-          font-size: pxToRem(14);
-          font-weight: 400;
+          font-size: var(--font-size-small);
+          font-weight: var(--font-weight-bold-light);
           color: #7c8193;
         }
       }
@@ -223,12 +223,12 @@
 
       &--btn-primary {
         padding: pxToRem(8) pxToRem(16);
-        background: $primary-color;
+        background: var(--lm-feed-primary-color);
         border-radius: pxToRem(8);
         border: none;
-        color: $light-color;
-        font-weight: 500;
-        font-size: pxToRem(14);
+        color: var(--lm-feed-light-color);
+        font-weight: var(--font-weight-bold-heavy);
+        font-size: var(--font-size-small);
         line-height: pxToRem(20);
         cursor: pointer;
       }
@@ -239,7 +239,7 @@
 .postImgSlider {
   width: 100%;
   position: relative;
-  background-color: #000000;
+  background-color: var(--lm-feed-black-color);
 
   &__header {
     position: absolute;
@@ -255,12 +255,12 @@
     &--addMore {
       background: #fff;
       border-radius: 10px;
-      color: $primary-color;
-      font-size: 14px;
-      font-weight: 500;
+      color: var(--lm-feed-primary-color);
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-bold-heavy);
       line-height: 20px;
       padding: 8px 12px;
-      border: 1px solid $primary-color;
+      border: 1px solid var(--lm-feed-primary-color);
       cursor: pointer;
       display: flex;
       gap: 10px;
@@ -312,7 +312,7 @@
 
   .attachmentPdf__content {
     padding: 1rem;
-    border: 1px solid #e6ebf5;
+    border: 1px solid var(--lm-feed-bg-color);
     display: flex;
     gap: 0.625rem;
     background-color: #fff;
@@ -322,16 +322,16 @@
     }
 
     .attachmentPdf__content--title {
-      font-size: 1rem;
-      font-weight: 500;
-      color: #484f67;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold-heavy);
+      color: var(--lm-feed-dark-color);
       line-height: 1.25rem;
       cursor: pointer;
     }
     .attachmentPdf__content--url {
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: #a3a7b3;
+      font-size: var(--font-size-x-small);
+      font-weight: var(--font-weight-bold-light);
+      color: var(--lm-feed-secondary-color);
       line-height: 1.25rem;
     }
   }
@@ -345,8 +345,8 @@
   outline: none;
   width: 100%;
   border: none;
-  font-weight: 400;
-  font-size: 1rem;
+  font-weight: var(--font-weight-bold-light);
+  font-size: var(--font-size-base);
   overflow-y: auto;
   min-height: 50px;
   max-height: 90px;
@@ -355,11 +355,11 @@
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
-  color: $secondary-color;
+  color: var(--lm-feed-secondary-color);
 }
 
 .lm-feed-create-post-topic-text-area-divider {
-  border-width: 0.5px;
+  border-width: calc(var(--border-width)/2);
   border-style: solid;
   border-color: rgba(208, 216, 226, 0.4);
   margin: pxToRem(16) pxToRem(0) !important;
@@ -371,7 +371,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 8px;
-  border: 1px solid $bg-color;
+  border: 1px solid var(--lm-feed-bg-color);
   .og-tag-close-icon {
     position: absolute;
     top: pxToRem(16);
@@ -392,10 +392,10 @@
     justify-content: center;
     align-items: center;
     span {
-      font-size: pxToRem(12);
+      font-size: var(--font-size-x-small);
       line-height: pxToRem(20);
-      font-weight: 400;
-      color: $dark-color;
+      font-weight: var(--font-weight-bold-light);
+      color: var(--lm-feed-dark-color);
       opacity: 0.7;
     }
   }
@@ -406,30 +406,30 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: pxToRem(16);
-      font-weight: 500;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold-heavy);
       line-height: pxToRem(20);
       display: block;
-      color: $dark-color;
+      color: var(--lm-feed-dark-color);
     }
     &--desc {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: pxToRem(14);
-      font-weight: 400;
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-bold-light);
       line-height: pxToRem(20);
-      color: $dark-color;
+      color: var(--lm-feed-dark-color);
       opacity: 0.7;
     }
     &--url {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: pxToRem(12);
-      font-weight: 400;
+      font-size: var(--font-size-x-small);
+      font-weight: var(--font-weight-bold-light);
       line-height: pxToRem(20);
-      color: $dark-color;
+      color: var(--lm-feed-dark-color);
       opacity: 0.7;
     }
   }

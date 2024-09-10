@@ -1,5 +1,5 @@
 .lm-feed-wrapper {
-  background-color: $bg-color;
+  background-color: var(--lm-feed-bg-color);
   width: 100%;
   margin: 67px 0 0 0;
   justify-content: space-between;
@@ -15,7 +15,7 @@
     max-width: pxToRem(576);
     width: 100%;
     margin-bottom: pxToRem(12);
-    background: $light-color;
+    background: var(--lm-feed-light-color);
     border-radius: pxToRem(8);
     margin: 0 auto 1rem;
     overflow: hidden;
@@ -34,35 +34,35 @@
       align-items: center;
 
       &--title {
-        font-size: 1rem;
-        font-weight: 500;
-        color: $dark-color;
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-bold-heavy);
+        color: var(--lm-feed-dark-color);
         text-transform: capitalize;
         display: flex;
         align-items: center;
 
         span {
-          background-color: $primary-color;
+          background-color: var(--lm-feed-primary-color);
           border-radius: pxToRem(2);
           padding: pxToRem(2) pxToRem(8);
           font-size: pxToRem(11);
-          color: $light-color;
-          font-weight: 500;
+          color: var(--lm-feed-light-color);
+          font-weight: var(--font-weight-bold-heavy);
           line-height: pxToRem(16);
           margin-left: pxToRem(8);
         }
       }
       &--text {
-        font-size: pxToRem(14);
-        font-weight: 400;
-        color: $primary-color;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-bold-light);
+        color: var(--lm-feed-primary-color);
         line-height: pxToRem(20);
         @extend .lm-text-capitalize;
 
         span {
-          font-size: pxToRem(12);
-          color: $secondary-color;
-          font-weight: 400;
+          font-size: var(--font-size-x-small);
+          color: var(--lm-feed-secondary-color);
+          font-weight: var(--font-weight-bold-light);
           line-height: pxToRem(16);
           margin: 0 0 0 pxToRem(8);
           padding: 0 0 0 pxToRem(8);
@@ -79,7 +79,7 @@
         }
         span::before {
           content: "\2022";
-          color: $secondary-color;
+          color: var(--lm-feed-secondary-color);
           font-size: pxToRem(26);
           position: absolute;
           margin: pxToRem(4) 0 0 -12px;
@@ -94,9 +94,9 @@
       &__heading {
         padding: 0 pxToRem(8) pxToRem(0) 1rem;
         word-wrap: break-word;
-        font-weight: 500;
-        color: $card-content-heading;
-        font-size: 1rem;
+        font-weight: var(--font-weight-bold-heavy);
+        color: var(--lm-feed-card-content-heading);
+        font-size: var(--font-size-base);
       }
       &__content {
         padding: 0.5rem pxToRem(8) 0.5rem 1rem;
@@ -111,7 +111,7 @@
 
         .attachments {
           width: 100%;
-          background-color: $light-color;
+          background-color: var(--lm-feed-light-color);
           img {
             width: 100%;
             // height: auto;
@@ -121,7 +121,7 @@
         }
         .attachment-image {
           width: 100%;
-          background-color: $black-color;
+          background-color: var(--lm-feed-black-color);
           img {
             width: 100%;
             // height: auto;
@@ -132,7 +132,7 @@
         }
         .attachment-video {
           width: 100%;
-          background-color: $black-color;
+          background-color: var(--lm-feed-black-color);
           video {
             width: 100%;
             aspect-ratio: 16/9;
@@ -142,9 +142,9 @@
           }
         }
         .attachmentPdf {
-          background-color: $light-color;
+          background-color: var(--lm-feed-light-color);
           border-radius: pxToRem(8);
-          border: 1px solid $bg-color;
+          border: 1px solid var(--lm-feed-bg-color);
           max-width: pxToRem(544);
           width: 100%;
           margin: 0 auto;
@@ -164,7 +164,7 @@
 
           &__content {
             padding: 1rem;
-            border-top: 1px solid $bg-color;
+            border-top: 1px solid var(--lm-feed-bg-color);
             display: flex;
             gap: pxToRem(10);
 
@@ -176,32 +176,32 @@
               width: pxToRem(40);
             }
             &--title {
-              font-size: pxToRem(16);
-              font-weight: 500;
-              color: $dark-color;
+              font-size: var(--font-size-base);
+              font-weight: var(--font-weight-bold-heavy);
+              color: var(--lm-feed-dark-color);
               line-height: pxToRem(20);
               cursor: pointer;
             }
 
             &--desc {
-              font-size: pxToRem(14);
-              font-weight: 400;
-              color: $secondary-color;
+              font-size: var(--font-size-small);
+              font-weight: var(--font-weight-bold-light);
+              color: var(--lm-feed-secondary-color);
               line-height: 20px;
             }
 
             &--url {
-              font-size: pxToRem(12);
-              font-weight: 400;
-              color: $secondary-color;
+              font-size: var(--font-size-x-small);
+              font-weight: var(--font-weight-bold-light);
+              color: var(--lm-feed-secondary-color);
               line-height: pxToRem(20);
             }
           }
         }
         .attachmentOGTag {
-          background-color: $light-color;
+          background-color: var(--lm-feed-light-color);
           border-radius: pxToRem(8);
-          border: 1px solid $bg-color;
+          border: 1px solid var(--lm-feed-bg-color);
           max-width: pxToRem(544);
           width: 100%;
           margin: 0 auto;
@@ -225,12 +225,12 @@
           }
           &__content {
             padding: 1rem;
-            border-top: 1px solid $bg-color;
+            border-top: 1px solid var(--lm-feed-bg-color);
 
             a {
-              font-size: pxToRem(16);
-              font-weight: 500;
-              color: $dark-color;
+              font-size: var(--font-size-base);
+              font-weight: var(--font-weight-bold-heavy);
+              color: var(--lm-feed-dark-color);
               line-height: pxToRem(20);
               cursor: pointer;
               text-overflow: ellipsis;
@@ -241,18 +241,18 @@
             }
 
             &--desc {
-              font-size: pxToRem(14);
-              font-weight: 400;
-              color: $secondary-color;
+              font-size: var(--font-size-small);
+              font-weight: var(--font-weight-bold-light);
+              color: var(--lm-feed-secondary-color);
               line-height: pxToRem(20);
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
             }
             &--url {
-              font-size: pxToRem(12);
-              font-weight: 400;
-              color: $secondary-color;
+              font-size: var(--font-size-x-small);
+              font-weight: var(--font-weight-bold-light);
+              color: var(--lm-feed-secondary-color);
               line-height: pxToRem(20);
             }
           }
@@ -262,7 +262,7 @@
         }
       }
       .userTag {
-        color: $info-color;
+        color: var(--lm-feed-tag-text-color);
         cursor: pointer;
       }
     }
@@ -273,12 +273,12 @@
   @extend .lm-d-flex;
   @extend .lm-align-items-center;
   padding: pxToRem(16);
-  background-color: $light-color;
+  background-color: var(--lm-feed-light-color);
   margin-bottom: pxToRem(16);
   gap: 10px;
-  color: #7f8495;
-  font-size: pxToRem(16);
-  font-weight: 400;
+  color: var(--lm-feed-action-bar-color);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold-light);
 }
 
 // Member list
@@ -335,7 +335,7 @@
   font-size: 8px !important;
 }
 .slick-dots li.slick-active button:before {
-  color: $primary-color !important;
+  color: var(--lm-feed-primary-color) !important;
 }
 
 .slick-dots li {
@@ -358,4 +358,8 @@
 .lmLikedMemberWrapper {
   width: 360px;
   background-color: #fff;
+}
+
+.lm-feed-text-link{
+  color: var(--lm-feed-link-text-color);
 }
