@@ -19,12 +19,13 @@ import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
 import { Divider, Drawer } from "@mui/material";
 import LMFeedLikedMembers from "./LMFeedLikedMembers";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import { returnPostId } from "../shared/utils";
 
 const LMFeedPostFooter = () => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
-  const { post, likePost, clickNavigator } = useContext(FeedPostContext);
+  const { post, likePost } = useContext(FeedPostContext);
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -38,7 +39,8 @@ const LMFeedPostFooter = () => {
     return null;
   }
   function renderCommentBox() {
-    return window.location.pathname.includes("post") ? (
+    const postId = returnPostId();
+    return postId.length ? (
       <>
         <Divider className="lm-footer-reply-divider" />
         <div
@@ -112,8 +114,12 @@ const LMFeedPostFooter = () => {
               className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
               onClick={() => {
                 lmfeedAnalyticsClient?.sendPostCommentClickEvent(post!);
-                if (clickNavigator) {
-                  clickNavigator(post);
+                const location = window.location;
+                const url = new URL(location.href);
+                const search = url.searchParams.get("id");
+                if (!search) {
+                  url.searchParams.append("id", post.Id);
+                  window.open(url, "_self");
                 }
               }}
             >

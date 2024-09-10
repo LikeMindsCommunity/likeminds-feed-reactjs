@@ -1,15 +1,16 @@
-import { useParams } from "react-router-dom";
 import { useFeedDetails } from "../hooks/useLMFeedDetails";
 import Posts from "./LMFeedPosts";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { Helmet } from "react-helmet-async";
 import lmBack from "../assets/images/lm-back.svg";
 import LMFeedCreatePost from "./LMFeedCreatePost";
 import { useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
-const LMFeedDetails = () => {
-  const { id = "" } = useParams();
+interface LMFeedDetailsProps {
+  postId: string;
+}
+
+const LMFeedDetails = ({ postId }: LMFeedDetailsProps) => {
   const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
   const { CustomPostView } = CustomComponents;
   const {
@@ -27,17 +28,13 @@ const LMFeedDetails = () => {
     likePost,
     pinPost,
     deletePost,
-    clickNavigator,
+
     postComponentClickCustomCallback,
     widgets,
-  } = useFeedDetails(id.split("-")[0]);
+  } = useFeedDetails(postId);
 
   return !post || !users ? null : (
     <div className="lm-feed-wrapper">
-      <Helmet>
-        <title>{post.heading}</title>
-        <meta name="description" content={post?.text} />
-      </Helmet>
       <FeedPostContext.Provider
         value={{
           post,
@@ -55,7 +52,7 @@ const LMFeedDetails = () => {
           likePost,
           pinPost,
           deletePost,
-          clickNavigator,
+
           postComponentClickCustomCallback,
         }}
       >

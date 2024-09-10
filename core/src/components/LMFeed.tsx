@@ -15,7 +15,6 @@ import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContex
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
-import { BrowserRouter } from "react-router-dom";
 import { AnalyticsCallback } from "../shared/types/analyticsCallback";
 import { LMFeedAnalytics } from "../shared/analytics";
 import {
@@ -27,7 +26,6 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
   showMember?: boolean;
   routes?: LMFeedCustomAppRoutes;
-  useParentRouter?: boolean;
   userDetails: UserDetails;
   customEventClient: LMFeedCustomEvents;
   analyticsCallback?: AnalyticsCallback | undefined;
@@ -35,7 +33,6 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 }
 
 function LMFeed({
-  useParentRouter = false,
   LMFeedCoreCallbacks,
   userDetails,
   client,
@@ -84,64 +81,60 @@ function LMFeed({
   }
 
   return (
-    <GlobalClientProviderContext.Provider
-      value={{
-        lmFeedclient: client,
-        customEventClient: customEventClient,
-        lmfeedAnalyticsClient: new LMFeedAnalytics(analyticsCallback),
-      }}
-    >
-      <CustomAgentProviderContext.Provider
+    <div className="lm-wrapper">
+      <GlobalClientProviderContext.Provider
         value={{
-          LMPostHeaderStyles,
-          LMFeedCustomIcons,
-          CustomComponents,
-          FeedListCustomActions,
-          FeedPostDetailsCustomActions,
-          GeneralCustomCallbacks,
-          postComponentClickCustomCallback,
-          topicComponentClickCustomCallback,
-          createPostComponentClickCustomCallback,
-          memberComponentClickCustomCallback,
-          TopicsCustomCallbacks,
-          RepliesCustomCallbacks,
-          PostCreationCustomCallbacks,
+          lmFeedclient: client,
+          customEventClient: customEventClient,
+          lmfeedAnalyticsClient: new LMFeedAnalytics(analyticsCallback),
         }}
       >
-        <GeneralContext.Provider
+        <CustomAgentProviderContext.Provider
           value={{
-            message,
-            showSnackbar,
-            closeSnackbar,
-            displaySnackbarMessage,
-            useParentRouter,
-            routes,
+            LMPostHeaderStyles,
+            LMFeedCustomIcons,
+            CustomComponents,
+            FeedListCustomActions,
+            FeedPostDetailsCustomActions,
+            GeneralCustomCallbacks,
+            postComponentClickCustomCallback,
+            topicComponentClickCustomCallback,
+            createPostComponentClickCustomCallback,
+            memberComponentClickCustomCallback,
+            TopicsCustomCallbacks,
+            RepliesCustomCallbacks,
+            PostCreationCustomCallbacks,
           }}
         >
-          <UserProviderContext.Provider
+          <GeneralContext.Provider
             value={{
-              currentUser: lmFeedUser,
-              currentCommunity: lmFeedUserCurrentCommunity,
-              logoutUser: logoutUser,
+              message,
+              showSnackbar,
+              closeSnackbar,
+              displaySnackbarMessage,
+
+              routes,
             }}
           >
-            {!useParentRouter ? (
-              <BrowserRouter>
-                <LMFeedListDataContextProvider />
-              </BrowserRouter>
-            ) : (
+            <UserProviderContext.Provider
+              value={{
+                currentUser: lmFeedUser,
+                currentCommunity: lmFeedUserCurrentCommunity,
+                logoutUser: logoutUser,
+              }}
+            >
               <LMFeedListDataContextProvider />
-            )}
-          </UserProviderContext.Provider>
-        </GeneralContext.Provider>
-      </CustomAgentProviderContext.Provider>
-      <Snackbar
-        open={showSnackbar}
-        message={message}
-        onClose={closeSnackbar}
-        autoHideDuration={3000}
-      />
-    </GlobalClientProviderContext.Provider>
+            </UserProviderContext.Provider>
+          </GeneralContext.Provider>
+        </CustomAgentProviderContext.Provider>
+        <Snackbar
+          open={showSnackbar}
+          message={message}
+          onClose={closeSnackbar}
+          autoHideDuration={3000}
+        />
+      </GlobalClientProviderContext.Provider>
+    </div>
   );
 }
 

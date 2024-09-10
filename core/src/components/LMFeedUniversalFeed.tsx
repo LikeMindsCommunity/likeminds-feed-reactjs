@@ -133,6 +133,13 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
         {/* Topics */}
 
         {/* Posts */}
+        {/* <Scroller
+          dataLength={feedList.length}
+          nextOnBottom={getNextPage}
+          data={feedList}
+        >
+          {renderFeeds()}
+        </Scroller> */}
         <InfiniteScroll
           dataLength={feedList.length}
           hasMore={loadMoreFeeds}

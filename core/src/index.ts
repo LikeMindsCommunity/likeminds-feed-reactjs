@@ -142,17 +142,3 @@ export {
   // intitate Feed CLient Function
   initiateFeedClient,
 };
-
-// // "main": "dist/index.js",
-// // "module": "dist/index.js",
-// // "files": [
-// //   "dist"
-// // ],
-// // "types": "dist/index.d.ts",
-// // "type": "module",
-// // "exports": {
-// //   ".": {
-// //     "import": "./dist/index.js",
-// //     "require": "./dist/index.umd.cjs"
-// //   }
-// // }
