@@ -33,7 +33,7 @@ import {
 import { PostCreationActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { useNavigate } from "react-router-dom";
+
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 
@@ -80,7 +80,7 @@ export function useCreatePost(): UseCreatePost {
   } = useContext(CustomAgentProviderContext);
   const { postFeedCustomAction, editPostCustomAction } =
     PostCreationCustomCallbacks;
-  const navigate = useNavigate();
+
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
@@ -497,10 +497,8 @@ export function useCreatePost(): UseCreatePost {
           postFeed,
           editPost,
         },
-        navigate: navigate,
       };
     }, [
-      navigate,
       closeSnackbar,
       currentCommunity,
       currentUser,

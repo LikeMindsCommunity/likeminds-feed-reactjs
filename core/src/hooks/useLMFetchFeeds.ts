@@ -23,10 +23,8 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
-import { useNavigate } from "react-router-dom";
-import { ClickNavigator } from "../shared/types/customProps/routes";
+
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
-import { LMAppRoutesConstant } from "../shared/constants/lmRoutesConstant";
 
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
@@ -43,14 +41,13 @@ interface useFetchFeedsResponse {
   pinPost: (id: string) => Promise<void>;
   likePost: (id: string) => Promise<void>;
   postComponentClickCustomCallback?: ComponentDelegatorListener;
-  clickNavigator: ClickNavigator;
 }
 
 export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const { lmFeedclient, customEventClient, lmfeedAnalyticsClient } = useContext(
     GlobalClientProviderContext,
   );
-  const { routes } = useContext(GeneralContext);
+
   const { currentCommunity, currentUser, logoutUser } = useContext(
     LMFeedUserProviderContext,
   );
@@ -58,13 +55,9 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     useContext(GeneralContext);
   const { FeedListCustomActions = {}, postComponentClickCustomCallback } =
     useContext(CustomAgentProviderContext);
-  const {
-    deletePostCustomAction,
-    pinPostCustomAction,
-    likePostCustomAction,
-    clickNavigationCustomAction,
-  } = FeedListCustomActions;
-  const navigation = useNavigate();
+  const { deletePostCustomAction, pinPostCustomAction, likePostCustomAction } =
+    FeedListCustomActions;
+
   // to maintain the list of selected topics for rendering posts
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -267,21 +260,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     },
     [feedList, lmFeedclient, lmfeedAnalyticsClient, topics],
   );
-  const clickNavigator = useCallback(
-    (post: Post) => {
-      sessionStorage.setItem("scroll-pos", post.Id || "");
-      let detailsRoute = "";
-      if (routes) {
-        detailsRoute = routes?.feedDetailsRoute.pathname;
-      } else {
-        detailsRoute = LMAppRoutesConstant.POST_DETAILS_PATHNAME;
-      }
-      navigation(
-        `/${detailsRoute}/${`${post.Id}-${post?.heading}`.substring(0, 59)}`,
-      );
-    },
-    [navigation, routes],
-  );
+
   useEffect(() => {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
       loadFeed();
@@ -457,9 +436,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           pinPost,
           likePost,
           getNextPage,
-          clickNavigator,
         },
-        navigate: navigation,
       };
     }, [
       selectedTopics,
@@ -480,8 +457,6 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       pinPost,
       likePost,
       getNextPage,
-      clickNavigator,
-      navigation,
     ]);
   return {
     topics,
@@ -504,8 +479,5 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     postComponentClickCustomCallback: postComponentClickCustomCallback
       ? postComponentClickCustomCallback.bind(null, feedListActionsAndDataStore)
       : undefined,
-    clickNavigator: clickNavigationCustomAction
-      ? clickNavigationCustomAction.bind(null, feedListActionsAndDataStore)
-      : clickNavigator,
   };
 }

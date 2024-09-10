@@ -1,17 +1,11 @@
-import { useRouteError } from "react-router-dom";
-
 const LMFeedError = () => {
-  const error: unknown = useRouteError();
   return (
     <div id="error-page" className="lmError">
       <div className="lmErrorBox">
         <h1>404</h1>
         <p className="lmErrorTitle">Sorry, an unexpected error has occurred.</p>
         <p className="lmErrorMsg">
-          <i>
-            {(error as Error)?.message ||
-              (error as { statusText?: string })?.statusText}
-          </i>
+          <i>""</i>
         </p>
       </div>
     </div>
