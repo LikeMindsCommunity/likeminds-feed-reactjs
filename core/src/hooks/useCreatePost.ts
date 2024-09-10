@@ -33,7 +33,7 @@ import {
 import { PostCreationActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { useNavigate } from "react-router-dom";
+
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 
@@ -80,7 +80,7 @@ export function useCreatePost(): UseCreatePost {
   } = useContext(CustomAgentProviderContext);
   const { postFeedCustomAction, editPostCustomAction } =
     PostCreationCustomCallbacks;
-  const navigate = useNavigate();
+
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
@@ -163,9 +163,9 @@ export function useCreatePost(): UseCreatePost {
           const resp: UploadMediaModel =
             (await HelperFunctionsClass.uploadMedia(
               file,
-              currentUser?.uuid || "",
+              currentUser?.sdkClientInfo.uuid || "",
             )) as never;
-          const uploadedFileKey = `https://${LMAppAwsKeys.bucketNameProd}.s3.${LMAppAwsKeys.region}.amazonaws.com/${`files/post/${currentUser?.uuid || ""}/${file.name}`}`;
+          const uploadedFileKey = `https://${LMAppAwsKeys.bucketNameProd}.s3.${LMAppAwsKeys.region}.amazonaws.com/${`files/post/${currentUser?.sdkClientInfo.uuid || ""}/${file.name}`}`;
           const attachmentType = file.type.includes("image")
             ? 1
             : file.type.includes("video") &&
@@ -290,7 +290,7 @@ export function useCreatePost(): UseCreatePost {
       }
     },
     [
-      currentUser?.uuid,
+      currentUser?.sdkClientInfo.uuid,
       customEventClient,
       lmFeedclient,
       lmfeedAnalyticsClient,
@@ -497,10 +497,8 @@ export function useCreatePost(): UseCreatePost {
           postFeed,
           editPost,
         },
-        navigate: navigate,
       };
     }, [
-      navigate,
       closeSnackbar,
       currentCommunity,
       currentUser,

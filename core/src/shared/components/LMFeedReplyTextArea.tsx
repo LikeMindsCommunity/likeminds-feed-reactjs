@@ -10,8 +10,8 @@ import { useTagging } from "../../hooks/useTagging";
 import { setTagUserImage } from "../taggingParser";
 import { useLMPostReply } from "../../hooks/useLMPostReply";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
-import { useParams } from "react-router-dom";
 import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
+import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 export interface LMFeedReplyTextAreaProps {
   setReplyViewVisibility?: React.Dispatch<boolean>;
 }
@@ -23,7 +23,7 @@ const LMFeedReplyTextArea = ({
   );
   const { reply } = useContext(ReplyContext);
   const { currentUser } = useContext(LMFeedUserProviderContext);
-  const { id } = useParams();
+  const { post } = useContext(FeedPostContext);
   const { name, imageUrl } = currentUser!;
   const avatar = getAvatar({
     imageUrl,
@@ -38,7 +38,7 @@ const LMFeedReplyTextArea = ({
     containerRef,
     postReply,
     postComment,
-  } = useLMPostReply(id?.split("-")[0].toString() || "", reply?.Id || "");
+  } = useLMPostReply(post?.Id?.split("-")[0].toString() || "", reply?.Id || "");
 
   function postReplyAndCloseReplyText() {
     if (setReplyViewVisibility) {

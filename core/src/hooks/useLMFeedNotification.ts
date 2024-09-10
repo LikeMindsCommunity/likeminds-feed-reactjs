@@ -92,7 +92,13 @@ export function useLMFeedNotification(
       }
       markReadNotification(id);
 
-      window.location.href = `/community/post/${clickedNotification.activityEntityData.Id}`;
+      const location = window.location;
+      const url = new URL(location.href);
+      const search = url.searchParams.get("id");
+      if (!search) {
+        url.searchParams.append("id", id);
+        window.open(url, "_self");
+      }
 
       setNotifications(notificationsCopy);
     },

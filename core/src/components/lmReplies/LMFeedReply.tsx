@@ -4,7 +4,6 @@ import { formatTimeAgo } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
 import commentLiked from "../../assets/images/liked-sm.png";
 import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
-import { useParams } from "react-router-dom";
 
 import { LIKE, LIKES } from "../../shared/constants/lmAppConstant";
 import LMFeedReplyTextArea from "../../shared/components/LMFeedReplyTextArea";
@@ -34,8 +33,6 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
   const { LMFeedCustomIcons = {}, CustomComponents = {} } = useContext(
     CustomAgentProviderContext,
   );
-
-  const { id = "" } = useParams();
 
   const { name } = user || {};
   const [openReplies, setOpenReplies] = useState<boolean>(false);
@@ -297,7 +294,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
             CustomComponents.CustomRepliesScroller
           ) : (
             <LMFeedRepliesScroller
-              postId={id.split("-")[0]}
+              postId={post?.Id || ""}
               replyId={reply?.Id || ""}
             />
           )

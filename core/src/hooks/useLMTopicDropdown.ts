@@ -13,7 +13,7 @@ import {
   CustomAgentProviderContext,
   TopicComponentCustomClickEventDelegatorCallback,
 } from "../contexts/LMFeedCustomAgentProviderContext";
-import { useNavigate } from "react-router-dom";
+
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
@@ -42,7 +42,7 @@ export function useTopicDropdown(
   );
   // const {} = useContext(LMFeedCon)
   // to store the ids of topics that should be checked.
-  const navigate = useNavigate();
+
   const [checkedTopics, setCheckedTopics] = useState<Topic[]>([]);
 
   // to detect whether a new topic page should be loaded or not
@@ -172,7 +172,6 @@ export function useTopicDropdown(
         clearAllCheckedTopics,
         getNextPage,
       },
-      navigate: navigate,
     };
   }, [
     checkedTopics,
@@ -185,7 +184,7 @@ export function useTopicDropdown(
     loadNewTopics,
     logoutUser,
     message,
-    navigate,
+
     searchKey,
     showSnackbar,
     topics,

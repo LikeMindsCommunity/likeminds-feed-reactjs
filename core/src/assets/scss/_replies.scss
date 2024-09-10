@@ -1,6 +1,6 @@
 .lm-social-action-bar {
   @extend .lm-d-flex;
-  background-color: $light-color;
+  background-color: var(--lm-feed-light-color);
   padding: 1.75rem pxToRem(16) pxToRem(10);
   justify-content: space-between;
 
@@ -8,14 +8,14 @@
     @extend .lm-d-flex;
     @extend .lm-align-items-center;
     @extend .lm-text-capitalize;
-    color: $action-bar-color;
+    color: var(--lm-feed-action-bar-color);
     gap: pxToRem(16);
-    font-size: pxToRem(16);
+    font-size: var(--font-size-base);
     line-height: pxToRem(16);
-    font-weight: 400;
+    font-weight: var(--font-weight-bold-light);
 
     .comments {
-      color: $action-bar-color;
+      color: var(--lm-feed-action-bar-color);
     }
   }
 
@@ -34,17 +34,17 @@
           flex-grow: 1;
         }
         &--name {
-          font-size: pxToRem(14);
-          font-weight: 500;
+          font-size: var(--font-size-small);
+          font-weight: var(--font-weight-bold-heavy);
           line-height: pxToRem(20);
-          color: #222020;
+          color: var(--lm-feed-base-grey-1);
           text-transform: capitalize;
         }
 
         &--title {
-          font-size: pxToRem(14);
-          font-weight: 400;
-          color: #222020;
+          font-size: var(--font-size-small);
+          font-weight: var(--font-weight-bold-light);
+          color: var(--lm-feed-base-grey-1);
           line-height: pxToRem(20);
           word-break: break-word;
           padding-right: pxToRem(12);
@@ -53,24 +53,24 @@
       }
 
       .like {
-        font-size: pxToRem(12);
-        font-weight: 400;
+        font-size: var(--font-size-x-small);
+        font-weight: var(--font-weight-bold-light);
         line-height: pxToRem(16);
         color: #a3b2bd;
         gap: pxToRem(10);
 
         .replies {
-          font-size: pxToRem(12);
-          color: $primary-color;
-          font-weight: 400;
+          font-size: var(--font-size-x-small);
+          color: var(--lm-feed-primary-color);
+          font-weight: var(--font-weight-bold-light);
           line-height: pxToRem(16);
           margin: 0 0 0 pxToRem(8);
           padding: 0 0 0 pxToRem(8);
         }
         // .replies::before {
         //   content: "\2022";
-        //   color: $secondary-color;
-        //   font-size: pxToRem(20);
+        //   color: var(--lm-feed-secondary-color);
+        //   font-size: var(--font-size-large);
         //   position: absolute;
         //   margin: pxToRem(1) 0 0 -12px;
         //   height: pxToRem(2);
@@ -78,8 +78,8 @@
         // }
         .replies.bullet::before {
           content: "\2022";
-          color: $secondary-color;
-          font-size: pxToRem(20);
+          color: var(--lm-feed-secondary-color);
+          font-size: var(--font-size-large);
           position: absolute;
           margin: pxToRem(1) 0 0 -12px;
           height: pxToRem(2);
@@ -87,8 +87,8 @@
         }
         // .replies.bullet {
         //   content: "\2022";
-        //   color: $secondary-color;
-        //   font-size: pxToRem(20);
+        //   color: var(--lm-feed-secondary-color);
+        //   font-size: var(--font-size-large);
         //   position: absolute;
         //   margin: pxToRem(1) 0 0 -12px;
         //   height: pxToRem(2);
@@ -99,48 +99,40 @@
   }
 
   &__answer {
-    font-size: pxToRem(14);
-    font-weight: 400;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold-light);
     line-height: pxToRem(20);
-    color: $base-grey-1;
+    color: var(--lm-feed-base-grey-1);
   }
   &__footer {
     padding-right: pxToRem(16);
 
     &__duration {
-      font-size: pxToRem(12);
+      font-size: var(--font-size-x-small);
       line-height: 1rem;
       color: rgba(15, 30, 61, 0.4);
     }
     &__post-actions {
       &__likes {
-        font-size: pxToRem(12);
+        font-size: var(--font-size-x-small);
         line-height: 1rem;
         color: rgba(15, 30, 61, 0.4);
       }
       &__comments {
-        font-size: pxToRem(12);
+        font-size: var(--font-size-x-small);
         line-height: 1rem;
         color: rgba(15, 30, 61, 0.4);
         &__action {
-          font-size: pxToRem(16);
+          font-size: var(--font-size-base);
           line-height: 1rem;
-          color: $primary-color;
+          color: var(--lm-feed-primary-color);
         }
       }
     }
   }
 }
 
-// .lm-feed-topic-tile {
-//   padding: pxToRem(2) pxToRem(8) pxToRem(2) pxToRem(8);
-//   border-radius: pxToRem(4);
-//   color: $primary-color;
-//   background-color: rgba(80, 70, 229, 0.1);
-//   font-size: pxToRem(14);
-//   line-height: pxToRem(20);
-//   font-weight: 400;
-// }
+
 
 .lm-social-action-bar__lmReply
   .lm-social-action-bar__lmReply
@@ -161,11 +153,11 @@
   position: relative;
   .reply-text-area {
     line-height: pxToRem(20);
-    font-size: pxToRem(14);
-    font-weight: 400;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold-light);
     height: auto;
     margin: 0 pxToRem(16);
-    border: 1px solid #d0d8e2;
+    border: 1px solid var(--lm-feed-topic-btn-border-color);
     border-radius: pxToRem(24);
     padding: pxToRem(10) pxToRem(16);
     min-height: pxToRem(40);
@@ -174,11 +166,11 @@
   }
   .edit-reply-text-area {
     line-height: pxToRem(20);
-    font-size: pxToRem(14);
-    font-weight: 400;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold-light);
     height: auto;
     margin: 0 pxToRem(16) 0 0;
-    border: 1px solid #d0d8e2;
+    border: 1px solid var(--lm-feed-topic-btn-border-color);
     border-radius: pxToRem(24);
     padding: pxToRem(10) pxToRem(16);
     min-height: pxToRem(40);
@@ -189,7 +181,7 @@
     top: 81% !important;
     left: 70px !important;
     border-radius: 8px;
-    box-shadow: 0 1px 16px 0 #0000003d;
+    box-shadow: 0 1px 16px 0 var(--lm-feed-black-color);
     max-height: 210px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -202,13 +194,13 @@
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
-  color: $secondary-color;
+  color: var(--lm-feed-secondary-color);
 }
 .edit-reply-text-area[contenteditable="true"]:empty:before {
   content: attr(data-placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
-  color: $secondary-color;
+  color: var(--lm-feed-secondary-color);
 }
 
 .liked-comment {

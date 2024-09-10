@@ -205,7 +205,7 @@ const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
     );
   } else return null;
 };
-const VideoMediaItem = ({ file, attachment }: MediaItemProps) => {
+const VideoMediaItem = memo(({ file, attachment }: MediaItemProps) => {
   if (file) {
     return (
       <video
@@ -225,7 +225,7 @@ const VideoMediaItem = ({ file, attachment }: MediaItemProps) => {
       />
     );
   } else return null;
-};
+});
 
 const ReelMediaItem = ({ file, attachment }: MediaItemProps) => {
   if (file) {

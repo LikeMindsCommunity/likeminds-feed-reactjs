@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
-
+import "./App.css";
 import {
   LMFeed,
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   LMCoreCallbacks,
   initiateFeedClient,
-  } from "@likeminds.community/likeminds-feed-reactjs";
+} from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -172,24 +171,15 @@ function App() {
     );
   }
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/community"
-          element={
-            <>
-              <LMFeedNotificationHeader customEventClient={customEventClient} />
-              <LMFeed
-                client={lmFeedClient}
-                customEventClient={customEventClient}
-                LMFeedCoreCallbacks={LMCORECALLBACKS}
-                userDetails={userDetails}
-              ></LMFeed>
-            </>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <LMFeedNotificationHeader customEventClient={customEventClient} />
+      <LMFeed
+        client={lmFeedClient}
+        customEventClient={customEventClient}
+        LMFeedCoreCallbacks={LMCORECALLBACKS}
+        userDetails={userDetails}
+      ></LMFeed>
+    </>
   );
 }
 

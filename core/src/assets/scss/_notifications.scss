@@ -10,10 +10,10 @@
   }
   &__title {
     padding: 5px pxToRem(20) pxToRem(10);
-    font-size: pxToRem(20);
+    font-size: var(--font-size-large);
     line-height: pxToRem(24);
-    font-weight: 500;
-    color: $dark-color;
+    font-weight: var(--font-weight-bold-heavy);
+    color: var(--lm-feed-dark-color);
   }
 
   &__activity-item {
@@ -27,8 +27,8 @@
       height: pxToRem(48);
       width: pxToRem(48);
       border-radius: 50%;
-      background-color: $primary-color;
-      color: $light-color;
+      background-color: var(--lm-feed-primary-color);
+      color: var(--lm-feed-light-color);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,10 +36,10 @@
     .notification-content {
       width: 72%;
       .notification-text {
-        color: $dark-color;
+        color: var(--lm-feed-dark-color);
         display: -webkit-box;
-        font-size: pxToRem(14);
-        font-weight: 400;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-bold-light);
         line-height: pxToRem(20);
         margin-bottom: 5px;
         max-width: pxToRem(325);
@@ -47,15 +47,15 @@
         text-overflow: ellipsis;
       }
       .notification-time-before {
-        color: #484f6780;
-        font-size: pxToRem(14);
+        color: var(--lm-feed-dark-color);
+        font-size: var(--font-size-small);
         line-height: pxToRem(20);
       }
     }
   }
 }
 .non-interacted-activity {
-  background-color: $bg-color;
+  background-color: var(--lm-feed-bg-color);
 }
 
 .lmNoNotification {

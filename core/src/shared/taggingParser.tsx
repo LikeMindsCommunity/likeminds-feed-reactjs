@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { ReactNode } from "react";
 
 export const parseAndReplaceTags = (text: string): ReactNode => {
@@ -58,7 +59,13 @@ export const parseAndReplaceTags = (text: string): ReactNode => {
             } else {
               const url = part.startsWith("http") ? part : `http://${part}`;
               return (
-                <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                <a
+                  key={i}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lm-feed-text-link"
+                >
                   {part}
                 </a>
               );
@@ -91,7 +98,7 @@ export const textPreprocessor = (
 };
 
 // Function to handle route click
-const handleRouteClick = (route: string) => {
+const handleRouteClick = (route?: string) => {
   // alert(route); // Replace with your desired action
 };
 
