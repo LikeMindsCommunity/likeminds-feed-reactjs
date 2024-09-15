@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetPostLikesRequest } from "@likeminds.community/feed-js";
+import { GetPostLikesRequest } from "@likeminds.community/feed-js-beta";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { Member, User } from "../shared/types/models/member";
