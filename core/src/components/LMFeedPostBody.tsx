@@ -29,7 +29,9 @@ const LMFeedPostBody = () => {
         ) : (
           <LMFeedAttachments
             postId={post?.Id || ""}
-            attachments={attachments}
+            attachments={attachments.filter(
+              (attachment) => attachment.attachmentType !== 5,
+            )}
           />
         )}
       </div>

@@ -89,11 +89,14 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             clickNavigator: clickNavigator,
           }}
         >
-          <Posts post={post} user={filteredUser} />
+          {CustomComponents?.CustomPostView || (
+            <Posts post={post} user={filteredUser} />
+          )}
         </FeedPostContext.Provider>
       );
     });
   }, [
+    CustomComponents?.CustomPostView,
     clickNavigator,
     deletePost,
     feedList,
