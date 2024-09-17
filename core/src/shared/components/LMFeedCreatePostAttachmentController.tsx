@@ -33,6 +33,7 @@ const LMFeedCreatePostAttachmentController = () => {
             alt="img-media"
             className="img-media lm-cursor-pointer"
             lm-feed-component-id={`lm-feed-create-post-attachments-controller-jklmn`}
+            title="Image"
           />
         )}
       </span>
@@ -51,6 +52,26 @@ const LMFeedCreatePostAttachmentController = () => {
             alt="vid-media"
             className="vid-media lm-cursor-pointer"
             lm-feed-component-id={`lm-feed-create-post-attachments-controller-opqrs`}
+            title="Video"
+          />
+        )}
+      </span>
+      <span
+        className="lm-create-dialog-video-icon-container"
+        onClick={() => {
+          if (changeMediaUploadMode)
+            changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.REEL);
+        }}
+      >
+        {LMFeedCustomIcons?.createPostDialogBoxVideoIcon ? (
+          <LMFeedCustomIcons.createPostDialogBoxVideoIcon />
+        ) : (
+          <img
+            src={vidMedia}
+            alt="vid-media"
+            className="vid-media lm-cursor-pointer"
+            lm-feed-component-id={`lm-feed-create-post-attachments-controller-opqrs`}
+            title="Reel"
           />
         )}
       </span>
@@ -69,6 +90,7 @@ const LMFeedCreatePostAttachmentController = () => {
             alt="doc-media"
             className="doc-media lm-cursor-pointer"
             lm-feed-component-id={`lm-feed-create-post-attachments-controller-tuvwx`}
+            title="Document"
           />
         )}
       </span>
