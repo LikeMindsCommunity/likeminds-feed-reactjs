@@ -61,6 +61,10 @@ interface UseCreatePost {
   showOGTagViewContainer: boolean;
   closeOGTagContainer: () => void;
   createPostComponentClickCustomCallback?: ComponentDelegatorListener;
+  addThumbnailReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  tempReel: File[];
+  tempReelThumbnail: File[];
 }
 
 export function useCreatePost(): UseCreatePost {
@@ -87,6 +91,10 @@ export function useCreatePost(): UseCreatePost {
   const [showOGTagViewContainer, setShowOGTagViewContainer] =
     useState<boolean>(true);
   const [text, setText] = useState<string | null>("");
+
+  const [tempReel, setTempReel] = useState<File[]>([]);
+  const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
+
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -130,6 +138,32 @@ export function useCreatePost(): UseCreatePost {
     }
 
     setMediaList(mediaCopy);
+  }
+
+  function addReel(event: React.ChangeEvent<HTMLInputElement>) {
+    const mediaArray = event.target.files;
+    if (tempReelThumbnail.length) {
+      const mediaCopy = [
+        ...Array.from(tempReelThumbnail),
+        ...Array.from(mediaArray!),
+      ];
+      setMediaList(mediaCopy);
+    } else {
+      setTempReel(Array.from(mediaArray!));
+    }
+  }
+
+  function addThumbnailReel(event: React.ChangeEvent<HTMLInputElement>) {
+    const mediaArray = event.target.files;
+    if (tempReel.length) {
+      const mediaCopy = [
+        ...Array.from(tempReelThumbnail),
+        ...Array.from(mediaArray!),
+      ];
+      setMediaList(mediaCopy);
+    } else {
+      setTempReelThumbnail(Array.from(mediaArray!));
+    }
   }
 
   function removeMedia(index: number) {
@@ -571,6 +605,10 @@ export function useCreatePost(): UseCreatePost {
     preSelectedTopics,
     setPreSelectedTopics,
     showOGTagViewContainer,
+    addReel,
+    tempReel,
+    tempReelThumbnail,
+    addThumbnailReel,
     closeOGTagContainer,
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback

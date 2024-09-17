@@ -23,6 +23,12 @@
     }
   }
 
+  .uploadThumbnail{
+    margin-top: 20px;
+    position: relative;
+    z-index: 9999;
+  }
+
   &__user-meta {
     display: flex;
     justify-content: flex-start;

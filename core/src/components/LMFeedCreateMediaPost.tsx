@@ -97,13 +97,14 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
             case "application/pdf": {
               return <DocumentMediaItem file={file} />;
             }
+            case "video/mp4": {
+              return <VideoMediaItem file={file} />;
+            }
             case "image/jpeg":
             case "image/png":
             case "image/jpg":
               return <ImageMediaItem file={file} />;
-            case "video/mp4": {
-              return <VideoMediaItem file={file} />;
-            }
+
             default:
               return null;
           }
