@@ -61,6 +61,7 @@ interface UseCreatePost {
   showOGTagViewContainer: boolean;
   closeOGTagContainer: () => void;
   removeThumbnailReel: () => void;
+  removeAddReel: () => void;
   createPostComponentClickCustomCallback?: ComponentDelegatorListener;
   addThumbnailReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -178,6 +179,10 @@ export function useCreatePost(): UseCreatePost {
 
   function removeThumbnailReel() {
     setTempReelThumbnail([]);
+  }
+
+  function removeAddReel() {
+    setTempReel([]);
   }
 
   function removeMedia(index: number) {
@@ -564,6 +569,7 @@ export function useCreatePost(): UseCreatePost {
           preSelectedTopics,
           setPreSelectedTopics,
           removeThumbnailReel,
+          removeAddReel,
           mediaUploadMode,
           setMediaUploadMode,
           ogTag,
@@ -667,6 +673,7 @@ export function useCreatePost(): UseCreatePost {
     tempReelThumbnail,
     addThumbnailReel,
     removeThumbnailReel,
+    removeAddReel,
     closeOGTagContainer,
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback

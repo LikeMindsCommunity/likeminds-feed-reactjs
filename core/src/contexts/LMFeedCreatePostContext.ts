@@ -33,6 +33,7 @@ interface LMFeedCreatePostContextInterface {
   tempReel: File[];
   tempReelThumbnail: File[];
   removeThumbnailReel: () => void;
+  removeAddReel: () => void;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>(

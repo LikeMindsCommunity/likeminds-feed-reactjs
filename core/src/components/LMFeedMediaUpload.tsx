@@ -19,6 +19,7 @@ const LMFeedMediaUpload = () => {
     addReel,
     tempReel,
     tempReelThumbnail,
+    removeAddReel,
     removeThumbnailReel,
   } = useContext(LMFeedCreatePostContext);
 
@@ -39,6 +40,15 @@ const LMFeedMediaUpload = () => {
       <div>
         {tempReel.length ? (
           <div className="tempReel">
+            <img
+              src={closeIcon}
+              className="close-icon removeIcon"
+              alt="close-icon"
+              onClick={(e) => {
+                e.preventDefault();
+                removeAddReel();
+              }}
+            />
             <VideoMediaItem file={tempReel[0]} />
           </div>
         ) : (
@@ -58,7 +68,7 @@ const LMFeedMediaUpload = () => {
                 />
                 <span className="file-upload-icon">{renderUpoloadIcon()}</span>
                 <span className="file-upload-text">Upload Reel</span>
-                <span className="file-upload-subtext">or drag and drop</span>
+                {/* <span className="file-upload-subtext">or drag and drop</span> */}
                 <input
                   id="file-upload"
                   type="file"
@@ -102,9 +112,9 @@ const LMFeedMediaUpload = () => {
                     <span className="file-upload-text">
                       Upload reel thumbnail
                     </span>
-                    <span className="file-upload-subtext">
+                    {/* <span className="file-upload-subtext">
                       or drag and drop
-                    </span>
+                    </span> */}
                     <input
                       id="file-upload-thumbnail"
                       type="file"
@@ -139,7 +149,7 @@ const LMFeedMediaUpload = () => {
             ? "Add Files/Documents"
             : "Add Photos/Videos"}
         </span>
-        <span className="file-upload-subtext">or drag and drop</span>
+        {/* <span className="file-upload-subtext">or drag and drop</span> */}
         <input
           id="file-upload"
           type="file"

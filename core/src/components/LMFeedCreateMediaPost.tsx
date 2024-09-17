@@ -212,6 +212,8 @@ export const VideoMediaItem = memo(({ file, attachment }: MediaItemProps) => {
       <video
         className="lm-feed-create-post-media-item"
         src={URL.createObjectURL(file)}
+        // poster={attachment?.attachmentMeta.url}
+        // poster="https://rukminim2.flixcart.com/image/850/1000/xif0q/poster/i/z/e/medium-poster-for-room-and-office-motivational-poster-for-walls-original-imagy55xzyag8sp3.jpeg?q=90&crop=false"
         controls
         lm-feed-component-id={`lm-feed-create-media-fghij-${file.name}`}
       />
