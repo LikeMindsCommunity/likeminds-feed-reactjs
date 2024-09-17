@@ -57,6 +57,12 @@ const LMFeedCreatePost = ({
     showOGTagViewContainer,
     closeOGTagContainer,
     createPostComponentClickCustomCallback,
+    addThumbnailReel,
+    addReel,
+    tempReel,
+    tempReelThumbnail,
+    removeThumbnailReel,
+    removeAddReel,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -69,6 +75,8 @@ const LMFeedCreatePost = ({
         removeMedia,
         clearMedia,
         mediaUploadMode,
+        tempReel,
+        tempReelThumbnail,
         changeMediaUploadMode,
         textFieldRef,
         containerRef,
@@ -81,9 +89,13 @@ const LMFeedCreatePost = ({
         selectedTopicIds,
         setSelectedTopicIds,
         preSelectedTopics,
+        addThumbnailReel,
+        addReel,
         setPreSelectedTopics,
         showOGTagViewContainer,
         closeOGTagContainer,
+        removeThumbnailReel,
+        removeAddReel,
       }}
     >
       {showStarterComponent ? (

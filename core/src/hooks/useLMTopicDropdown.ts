@@ -2,7 +2,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Topic } from "../shared/types/models/topic";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetTopicsRequest } from "@likeminds.community/feed-js";
+import { GetTopicsRequest } from "@likeminds.community/feed-js-beta";
 import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { TopicsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
