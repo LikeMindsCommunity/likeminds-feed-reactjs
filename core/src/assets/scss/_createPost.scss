@@ -23,6 +23,12 @@
     }
   }
 
+  .uploadThumbnail{
+    margin-top: 20px;
+    position: relative;
+    z-index: 9999;
+  }
+
   &__user-meta {
     display: flex;
     justify-content: flex-start;
@@ -105,10 +111,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: pxToRem(16);
+    padding: pxToRem(8);
     border: pxToRem(1) solid rgba(208, 216, 226, 0.4);
     border-radius: pxToRem(8);
-    margin: pxToRem(24) 0;
+    margin: pxToRem(16) 0;
   }
   &__submit-button {
     padding: pxToRem(8) pxToRem(16);

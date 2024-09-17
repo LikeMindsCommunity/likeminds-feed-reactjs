@@ -33,6 +33,7 @@ const LMFeedCreatePostAttachmentController = () => {
             alt="img-media"
             className="img-media lm-cursor-pointer"
             lm-feed-component-id={`lm-feed-create-post-attachments-controller-jklmn`}
+            title="Image"
           />
         )}
       </span>
@@ -51,6 +52,26 @@ const LMFeedCreatePostAttachmentController = () => {
             alt="vid-media"
             className="vid-media lm-cursor-pointer"
             lm-feed-component-id={`lm-feed-create-post-attachments-controller-opqrs`}
+            title="Video"
+          />
+        )}
+      </span>
+      <span
+        className="lm-create-dialog-video-icon-container"
+        onClick={() => {
+          if (changeMediaUploadMode)
+            changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.REEL);
+        }}
+      >
+        {LMFeedCustomIcons?.createPostDialogBoxVideoIcon ? (
+          <LMFeedCustomIcons.createPostDialogBoxVideoIcon />
+        ) : (
+          <img
+            src={vidMedia}
+            alt="vid-media"
+            className="vid-media lm-cursor-pointer"
+            lm-feed-component-id={`lm-feed-create-post-attachments-controller-opqrs`}
+            title="Reel"
           />
         )}
       </span>
@@ -69,6 +90,7 @@ const LMFeedCreatePostAttachmentController = () => {
             alt="doc-media"
             className="doc-media lm-cursor-pointer"
             lm-feed-component-id={`lm-feed-create-post-attachments-controller-tuvwx`}
+            title="Document"
           />
         )}
       </span>
@@ -77,34 +99,3 @@ const LMFeedCreatePostAttachmentController = () => {
 };
 
 export default LMFeedCreatePostAttachmentController;
-
-// <div className="lm-feed-create-post-wrapper__attachments-controller">
-//   <span>Add to your post</span>
-//   <img
-//     src={imgMedia}
-//     onClick={() => {
-//       if (changeMediaUploadMode)
-//         changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.IMAGE);
-//     }}
-//     alt="img-media"
-//     className="img-media lm-cursor-pointer"
-//   />
-//   <img
-//     onClick={() => {
-//       if (changeMediaUploadMode)
-//         changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.VIDEO);
-//     }}
-//     src={vidMedia}
-//     alt="vid-media"
-//     className="vid-media lm-cursor-pointer"
-//   />
-//   <img
-//     onClick={() => {
-//       if (changeMediaUploadMode)
-//         changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.DOCUMENT);
-//     }}
-//     src={docMedia}
-//     alt="doc-media"
-//     className="doc-media lm-cursor-pointer"
-//   />
-// </div>
