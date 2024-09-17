@@ -111,6 +111,39 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
         }
 
         default: {
+          let isReelAttachmentsWithThumbnail = false;
+          if (mediaList?.length === 2) {
+            const hasReelInIt = mediaList.some(
+              (attachment) => attachment.type === "video/mp4",
+            );
+            const hasThumbnail = mediaList.some((attachment) =>
+              ["image/jpeg", "image/png", "image/jpg"].includes(
+                attachment.type,
+              ),
+            );
+            if (
+              mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL &&
+              hasReelInIt &&
+              hasThumbnail
+            ) {
+              isReelAttachmentsWithThumbnail = true;
+            }
+          }
+          if (isReelAttachmentsWithThumbnail) {
+            const videoFile = mediaList?.find(
+              (file) => file.type === "video/mp4",
+            );
+            const thumbnailFile = mediaList?.find((file) =>
+              ["image/jpeg", "image/png", "image/jpg"].includes(file.type),
+            );
+            return (
+              <VideoMediaItem
+                file={videoFile}
+                showVideoPoster={true}
+                posterImageFile={thumbnailFile}
+              />
+            );
+          }
           return (
             <Slider
               {...settings}
@@ -184,6 +217,8 @@ interface MediaItemProps {
   file?: File;
   attachment?: Attachment;
   ogTags?: OgTag;
+  showVideoPoster?: boolean;
+  posterImageFile?: File;
 }
 const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
   if (file) {
@@ -206,29 +241,36 @@ const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
     );
   } else return null;
 };
-export const VideoMediaItem = memo(({ file, attachment }: MediaItemProps) => {
-  if (file) {
-    return (
-      <video
-        className="lm-feed-create-post-media-item"
-        src={URL.createObjectURL(file)}
-        // poster={attachment?.attachmentMeta.url}
-        // poster="https://rukminim2.flixcart.com/image/850/1000/xif0q/poster/i/z/e/medium-poster-for-room-and-office-motivational-poster-for-walls-original-imagy55xzyag8sp3.jpeg?q=90&crop=false"
-        controls
-        lm-feed-component-id={`lm-feed-create-media-fghij-${file.name}`}
-      />
-    );
-  } else if (attachment) {
-    return (
-      <video
-        className="lm-feed-create-post-media-item"
-        src={attachment.attachmentMeta.url}
-        controls
-        lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.attachmentMeta.url}`}
-      />
-    );
-  } else return null;
-});
+export const VideoMediaItem = memo(
+  ({ file, attachment, showVideoPoster, posterImageFile }: MediaItemProps) => {
+    if (file) {
+      return (
+        <video
+          className="lm-feed-create-post-media-item"
+          src={URL.createObjectURL(file)}
+          // poster={attachment?.attachmentMeta.url}
+          // poster="https://rukminim2.flixcart.com/image/850/1000/xif0q/poster/i/z/e/medium-poster-for-room-and-office-motivational-poster-for-walls-original-imagy55xzyag8sp3.jpeg?q=90&crop=false"
+          controls
+          lm-feed-component-id={`lm-feed-create-media-fghij-${file.name}`}
+          poster={
+            showVideoPoster && posterImageFile
+              ? URL.createObjectURL(posterImageFile)
+              : undefined
+          }
+        />
+      );
+    } else if (attachment) {
+      return (
+        <video
+          className="lm-feed-create-post-media-item"
+          src={attachment.attachmentMeta.url}
+          controls
+          lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.attachmentMeta.url}`}
+        />
+      );
+    } else return null;
+  },
+);
 
 const ReelMediaItem = ({ file, attachment }: MediaItemProps) => {
   if (file) {
