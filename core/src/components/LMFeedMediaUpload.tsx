@@ -6,7 +6,7 @@ import docMedia from "../assets/images/doc-media.svg";
 import closeIcon from "../assets/images/close-media-upload-icon.svg";
 import reelIcon from "../assets/images/vid-media.svg";
 import { VideoMediaItem } from "./LMFeedCreateMediaPost";
-import { GeneralContext } from "../old_index";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 
 const LMFeedMediaUpload = () => {
   const { allowThumbnail } = useContext(GeneralContext);
