@@ -1,12 +1,12 @@
 import {
+  AddPostRequest,
   LMResponseType,
-  AddPostResponse as CM,
 } from "@likeminds.community/feed-js-beta";
 import { User } from "../models/member";
 import { Post } from "../models/post";
 import { Topic } from "../models/topic";
 
-export interface AddPostResponse extends LMResponseType<CM> {}
+export interface AddPostResponse extends LMResponseType<AddPostRequest> {}
 
 // export interface AddPostResponse {
 //   success: boolean;
