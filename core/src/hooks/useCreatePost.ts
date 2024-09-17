@@ -156,10 +156,7 @@ export function useCreatePost(): UseCreatePost {
   function addThumbnailReel(event: React.ChangeEvent<HTMLInputElement>) {
     const mediaArray = event.target.files;
     if (tempReel.length) {
-      const mediaCopy = [
-        ...Array.from(tempReelThumbnail),
-        ...Array.from(mediaArray!),
-      ];
+      const mediaCopy = [...Array.from(tempReel), ...Array.from(mediaArray!)];
       setMediaList(mediaCopy);
     } else {
       setTempReelThumbnail(Array.from(mediaArray!));

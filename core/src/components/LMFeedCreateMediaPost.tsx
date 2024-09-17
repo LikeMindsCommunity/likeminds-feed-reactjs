@@ -206,7 +206,7 @@ const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
     );
   } else return null;
 };
-const VideoMediaItem = memo(({ file, attachment }: MediaItemProps) => {
+export const VideoMediaItem = memo(({ file, attachment }: MediaItemProps) => {
   if (file) {
     return (
       <video

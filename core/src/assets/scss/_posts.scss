@@ -363,3 +363,17 @@
 .lm-feed-text-link{
   color: var(--lm-feed-link-text-color);
 }
+
+.tempReel{
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  margin: 20px 0;
+  background: #282828;
+
+  video, img{
+    width: 100%;
+    max-width: 100px;
+    margin: 0 auto;
+  }
+}
