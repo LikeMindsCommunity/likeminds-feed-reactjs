@@ -19,6 +19,7 @@ const LMFeedMediaUpload = () => {
     addReel,
     tempReel,
     tempReelThumbnail,
+    removeThumbnailReel,
   } = useContext(LMFeedCreatePostContext);
 
   function renderUpoloadIcon() {
@@ -72,32 +73,51 @@ const LMFeedMediaUpload = () => {
             </label>
           </>
         )}
-
         {/* Thumbnails Image */}
-        {tempReelThumbnail.length && allowThumbnail ? (
-          <div className="tempReel">
-            <img src={URL.createObjectURL(tempReelThumbnail[0])} alt="image" />
-          </div>
-        ) : (
+        {allowThumbnail ? (
           <>
-            <label>
-              <div className="lm-feed-create-post-wrapper__media-upload uploadThumbnail">
-                <span className="file-upload-icon">
-                  <img src={imgMedia} alt="attachment" />
-                </span>
-                <span className="file-upload-text">Upload reel thumbnail</span>
-                <span className="file-upload-subtext">or drag and drop</span>
-                <input
-                  id="file-upload-thumbnail"
-                  type="file"
-                  className="file-upload-input"
-                  accept="image/png,image/jpg,image/jpeg"
-                  onChange={addThumbnailReel}
+            {tempReelThumbnail.length ? (
+              <div className="tempReel">
+                <img
+                  src={closeIcon}
+                  className="close-icon removeIcon"
+                  alt="close-icon"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeThumbnailReel();
+                  }}
+                />
+                <img
+                  src={URL.createObjectURL(tempReelThumbnail[0])}
+                  alt="image"
                 />
               </div>
-            </label>
+            ) : (
+              <>
+                <label>
+                  <div className="lm-feed-create-post-wrapper__media-upload uploadThumbnail">
+                    <span className="file-upload-icon">
+                      <img src={imgMedia} alt="attachment" />
+                    </span>
+                    <span className="file-upload-text">
+                      Upload reel thumbnail
+                    </span>
+                    <span className="file-upload-subtext">
+                      or drag and drop
+                    </span>
+                    <input
+                      id="file-upload-thumbnail"
+                      type="file"
+                      className="file-upload-input"
+                      accept="image/png,image/jpg,image/jpeg"
+                      onChange={addThumbnailReel}
+                    />
+                  </div>
+                </label>
+              </>
+            )}
           </>
-        )}
+        ) : null}
       </div>
     );
   }

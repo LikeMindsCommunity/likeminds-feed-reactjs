@@ -61,6 +61,7 @@ const LMFeedCreatePost = ({
     addReel,
     tempReel,
     tempReelThumbnail,
+    removeThumbnailReel,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -92,6 +93,7 @@ const LMFeedCreatePost = ({
         setPreSelectedTopics,
         showOGTagViewContainer,
         closeOGTagContainer,
+        removeThumbnailReel,
       }}
     >
       {showStarterComponent ? (

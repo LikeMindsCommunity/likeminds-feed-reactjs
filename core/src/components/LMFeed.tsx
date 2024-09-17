@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PropsWithChildren, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
@@ -51,7 +52,7 @@ function LMFeed({
   TopicsCustomCallbacks,
   RepliesCustomCallbacks,
   PostCreationCustomCallbacks,
-  allowThumbnail = false,
+  allowThumbnail = true,
   postComponentClickCustomCallback,
   createPostComponentClickCustomCallback,
   topicComponentClickCustomCallback,

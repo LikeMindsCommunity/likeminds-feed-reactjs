@@ -60,6 +60,7 @@ interface UseCreatePost {
   setPreSelectedTopics: React.Dispatch<Topic[]>;
   showOGTagViewContainer: boolean;
   closeOGTagContainer: () => void;
+  removeThumbnailReel: () => void;
   createPostComponentClickCustomCallback?: ComponentDelegatorListener;
   addThumbnailReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -76,8 +77,13 @@ export function useCreatePost(): UseCreatePost {
   const { currentCommunity, currentUser, logoutUser } = useContext(
     LMFeedUserProviderContext,
   );
-  const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
-    useContext(GeneralContext);
+  const {
+    displaySnackbarMessage,
+    closeSnackbar,
+    allowThumbnail,
+    showSnackbar,
+    message,
+  } = useContext(GeneralContext);
   const {
     PostCreationCustomCallbacks = {},
     createPostComponentClickCustomCallback,
@@ -144,6 +150,11 @@ export function useCreatePost(): UseCreatePost {
 
   function addReel(event: React.ChangeEvent<HTMLInputElement>) {
     const mediaArray = event.target.files;
+    if (!allowThumbnail) {
+      setMediaList(Array.from(mediaArray!));
+      return;
+    }
+
     if (tempReelThumbnail.length) {
       const mediaCopy = [
         ...Array.from(tempReelThumbnail),
@@ -163,6 +174,10 @@ export function useCreatePost(): UseCreatePost {
     } else {
       setTempReelThumbnail(Array.from(mediaArray!));
     }
+  }
+
+  function removeThumbnailReel() {
+    setTempReelThumbnail([]);
   }
 
   function removeMedia(index: number) {
@@ -548,6 +563,7 @@ export function useCreatePost(): UseCreatePost {
           setSelectedTopicIds,
           preSelectedTopics,
           setPreSelectedTopics,
+          removeThumbnailReel,
           mediaUploadMode,
           setMediaUploadMode,
           ogTag,
@@ -650,6 +666,7 @@ export function useCreatePost(): UseCreatePost {
     tempReel,
     tempReelThumbnail,
     addThumbnailReel,
+    removeThumbnailReel,
     closeOGTagContainer,
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback

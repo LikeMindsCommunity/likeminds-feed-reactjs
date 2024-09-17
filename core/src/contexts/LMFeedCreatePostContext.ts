@@ -32,6 +32,7 @@ interface LMFeedCreatePostContextInterface {
   addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   tempReel: File[];
   tempReelThumbnail: File[];
+  removeThumbnailReel: () => void;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>(
