@@ -52,7 +52,7 @@ function LMFeed({
   TopicsCustomCallbacks,
   RepliesCustomCallbacks,
   PostCreationCustomCallbacks,
-  allowThumbnail = true,
+  allowThumbnail = false,
   postComponentClickCustomCallback,
   createPostComponentClickCustomCallback,
   topicComponentClickCustomCallback,

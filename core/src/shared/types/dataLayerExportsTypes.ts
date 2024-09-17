@@ -1,3 +1,3 @@
-import { LMFeedClient } from "@likeminds.community/feed-js-beta";
+import { LMFeedClient } from "@likeminds.community/feed-js";
 
 export { LMFeedClient as LMClient };
