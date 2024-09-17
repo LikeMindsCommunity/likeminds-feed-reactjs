@@ -17,7 +17,7 @@ import {
   AttachmentMeta,
   DecodeURLRequest,
   EditPostRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -301,45 +301,47 @@ export function useCreatePost(): UseCreatePost {
           }
         }
 
-        if (
-          attachmentResponseArray.some(
-            (attachment) => attachment.attachmentType === 11,
-          )
-        ) {
+        if (allowThumbnail) {
           if (
             attachmentResponseArray.some(
-              (attachment) => attachment.attachmentType === 1,
+              (attachment) => attachment.attachmentType === 11,
             )
           ) {
-            const imageAttachment = attachmentResponseArray.find(
-              (attachment) => attachment.attachmentType === 1,
-            );
-            const reelAttachment = attachmentResponseArray.find(
-              (attachment) => attachment.attachmentType === 11,
-            );
-            const thumbnailUrl = imageAttachment?.attachmentMeta.url;
-            const newAttachmentObject = Attachment.builder()
-              .setAttachmentType(11)
-              .setAttachmentMeta(
-                AttachmentMeta.builder()
-                  .seturl(reelAttachment?.attachmentMeta.url || "")
-                  .setformat(
-                    reelAttachment?.attachmentMeta?.name
-                      ?.split(".")
-                      .slice(-1)
-                      .toString() || "",
-                  )
-                  .setsize(reelAttachment?.attachmentMeta?.size || 0)
-                  .setname(reelAttachment?.attachmentMeta?.name || "")
-                  .setThumbnailUrl(thumbnailUrl || "")
-                  // .setduration(10) // Assuming duration is applicable to reels
-                  .build(),
+            if (
+              attachmentResponseArray.some(
+                (attachment) => attachment.attachmentType === 1,
               )
-              .build();
-            while (attachmentResponseArray.length) {
-              attachmentResponseArray.pop();
+            ) {
+              const imageAttachment = attachmentResponseArray.find(
+                (attachment) => attachment.attachmentType === 1,
+              );
+              const reelAttachment = attachmentResponseArray.find(
+                (attachment) => attachment.attachmentType === 11,
+              );
+              const thumbnailUrl = imageAttachment?.attachmentMeta.url;
+              const newAttachmentObject = Attachment.builder()
+                .setAttachmentType(11)
+                .setAttachmentMeta(
+                  AttachmentMeta.builder()
+                    .seturl(reelAttachment?.attachmentMeta.url || "")
+                    .setformat(
+                      reelAttachment?.attachmentMeta?.name
+                        ?.split(".")
+                        .slice(-1)
+                        .toString() || "",
+                    )
+                    .setsize(reelAttachment?.attachmentMeta?.size || 0)
+                    .setname(reelAttachment?.attachmentMeta?.name || "")
+                    .setThumbnailUrl(thumbnailUrl || "")
+                    // .setduration(10) // Assuming duration is applicable to reels
+                    .build(),
+                )
+                .build();
+              while (attachmentResponseArray.length) {
+                attachmentResponseArray.pop();
+              }
+              attachmentResponseArray.push(newAttachmentObject);
             }
-            attachmentResponseArray.push(newAttachmentObject);
           }
         }
 
