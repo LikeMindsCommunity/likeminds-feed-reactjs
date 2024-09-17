@@ -120,6 +120,8 @@ export function useCreatePost(): UseCreatePost {
     setSelectedTopicIds([]);
     setMediaUploadMode(LMFeedCreatePostMediaUploadMode.NULL);
     setOgtag(null);
+    setTempReel([]);
+    setTempReelThumbnail([]);
   }
 
   function setPostText(txt: string) {
@@ -276,6 +278,48 @@ export function useCreatePost(): UseCreatePost {
               );
               break;
             }
+          }
+        }
+
+        if (
+          attachmentResponseArray.some(
+            (attachment) => attachment.attachmentType === 11,
+          )
+        ) {
+          if (
+            attachmentResponseArray.some(
+              (attachment) => attachment.attachmentType === 1,
+            )
+          ) {
+            const imageAttachment = attachmentResponseArray.find(
+              (attachment) => attachment.attachmentType === 1,
+            );
+            const reelAttachment = attachmentResponseArray.find(
+              (attachment) => attachment.attachmentType === 11,
+            );
+            const thumbnailUrl = imageAttachment?.attachmentMeta.url;
+            const newAttachmentObject = Attachment.builder()
+              .setAttachmentType(11)
+              .setAttachmentMeta(
+                AttachmentMeta.builder()
+                  .seturl(reelAttachment?.attachmentMeta.url || "")
+                  .setformat(
+                    reelAttachment?.attachmentMeta?.name
+                      ?.split(".")
+                      .slice(-1)
+                      .toString() || "",
+                  )
+                  .setsize(reelAttachment?.attachmentMeta?.size || 0)
+                  .setname(reelAttachment?.attachmentMeta?.name || "")
+                  .setThumbnailUrl(thumbnailUrl || "")
+                  // .setduration(10) // Assuming duration is applicable to reels
+                  .build(),
+              )
+              .build();
+            while (attachmentResponseArray.length) {
+              attachmentResponseArray.pop();
+            }
+            attachmentResponseArray.push(newAttachmentObject);
           }
         }
 

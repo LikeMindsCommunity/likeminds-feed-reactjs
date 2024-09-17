@@ -30,6 +30,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   customEventClient: LMFeedCustomEvents;
   analyticsCallback?: AnalyticsCallback | undefined;
   LMFeedCoreCallbacks?: LMCoreCallbacks;
+  allowThumbnail?: boolean;
 }
 
 function LMFeed({
@@ -38,7 +39,6 @@ function LMFeed({
   client,
   routes,
   customEventClient,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyticsCallback = (_event: string, _details: Record<string, string>) => {
     return;
   },
@@ -51,6 +51,7 @@ function LMFeed({
   TopicsCustomCallbacks,
   RepliesCustomCallbacks,
   PostCreationCustomCallbacks,
+  allowThumbnail = false,
   postComponentClickCustomCallback,
   createPostComponentClickCustomCallback,
   topicComponentClickCustomCallback,
@@ -112,8 +113,8 @@ function LMFeed({
               showSnackbar,
               closeSnackbar,
               displaySnackbarMessage,
-
               routes,
+              allowThumbnail,
             }}
           >
             <UserProviderContext.Provider

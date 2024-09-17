@@ -15,8 +15,6 @@ import { LMCoreCallbacks } from "./shared/LMSDKCoreCallbacks";
 
 const customEventClient = new LMFeedCustomEvents();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<ReactApp />);
-
 export function ReactApp() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userDetails, setUserDetails] = useState({
@@ -81,3 +79,5 @@ export function ReactApp() {
     </div>
   );
 }
+
+ReactDOM.createRoot(document.getElementById("root")!).render(<ReactApp />);
