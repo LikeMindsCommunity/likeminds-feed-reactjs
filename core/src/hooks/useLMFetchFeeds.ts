@@ -278,7 +278,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const detail = (e as CustomEvent).detail;
         const { post, usersMap, topicsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
-          if (feed.Id === post.Id) {
+          if (feed.Id === post?.id) {
             return post;
           } else {
             return feed;
@@ -303,7 +303,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             if (post.isLiked) {
               post.isLiked = false;
               post.likesCount--;
@@ -326,7 +326,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.commentsCount++;
           }
           return post;
@@ -343,7 +343,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.commentsCount--;
           }
           return post;
@@ -360,7 +360,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.id;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.menuItems = post.menuItems.map((menuItem) => {
               if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
                 menuItem.id = parseInt(LMFeedPostMenuItems.UNPIN_POST);

@@ -14,7 +14,7 @@ const LMFeedTopicSelectionTile: React.FC<LMFeedTopicSelectionTileProps> = memo(
       clickHandler(topic);
     };
 
-    const isChecked = checkedList.some((el) => el.Id === topic.Id);
+    const isChecked = checkedList.some((el) => el?.id === topic?.id);
 
     return (
       <div className="lm-topic-dropdown__topic" onClick={handleTileClick}>

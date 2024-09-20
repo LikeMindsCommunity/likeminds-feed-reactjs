@@ -84,7 +84,7 @@ export function useLMFeedNotification(
     (id: string) => {
       const notificationsCopy = [...notifications];
       const index = notificationsCopy.findIndex(
-        (notification) => notification.Id === id,
+        (notification) => notification?.id === id,
       );
       const clickedNotification = notificationsCopy[index];
       if (!clickedNotification.isRead) {

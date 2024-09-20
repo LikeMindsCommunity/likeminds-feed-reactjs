@@ -34,7 +34,7 @@ const LMFeedReplyEditTextArea = ({
     textFieldRef,
     containerRef,
     editComment,
-  } = useLMPostReply(post?.Id?.split("-")[0].toString() || "", reply?.Id || "");
+  } = useLMPostReply(post?.id?.split("-")[0].toString() || "", reply?.id || "");
 
   useEffect(() => {
     if (textFieldRef?.current) {

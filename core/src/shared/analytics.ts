@@ -158,7 +158,7 @@ class LMFeedAnalytics {
 
   sendPostLikeListClickEvent(post: Post) {
     const details = {
-      post_id: post.Id,
+      post_id: post?.id,
       post_topics: JSON.stringify(post.topics),
       post_created_by_uuid: post.uuid,
     };
@@ -176,9 +176,9 @@ class LMFeedAnalytics {
 
   sendReplyEditedEvent(post: Post, comment: Reply, reply: Reply) {
     const details = {
-      post_id: post.Id,
-      comment_id: comment.Id,
-      comment_reply_id: reply.Id,
+      post_id: post?.id,
+      comment_id: comment.id,
+      comment_reply_id: reply?.id,
       post_topics: JSON.stringify(post.topics),
       post_created_by_uuid: post.uuid,
       comment_created_by_uuid: comment.uuid,
@@ -190,7 +190,7 @@ class LMFeedAnalytics {
   sendPostProfilePicClickEvent(post: Post) {
     const details = {
       // "post_type": post.att,
-      post_id: post.Id,
+      post_id: post?.id,
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
     };
@@ -200,7 +200,7 @@ class LMFeedAnalytics {
   sendPostProfileNameClickEvent(post: Post) {
     const details = {
       // "post_type": post.att,
-      post_id: post.Id,
+      post_id: post?.id,
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
     };
@@ -219,11 +219,11 @@ class LMFeedAnalytics {
   sendPostTopicClickEvent(post: Post, topic: Topic) {
     const details = {
       // "post_type": "general",
-      post_id: post.Id,
+      post_id: post?.id,
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
       topic_clicked: "true",
-      topic_id: topic.Id,
+      topic_id: topic?.id,
     };
     this.track(this.Events.POST_TOPIC_CLICK, details);
   }
@@ -233,7 +233,7 @@ class LMFeedAnalytics {
       // "post_type": "general",
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
-      post_id: post.Id,
+      post_id: post?.id,
     };
     this.track(this.Events.POST_COMMENT_CLICK, details);
   }
@@ -241,21 +241,21 @@ class LMFeedAnalytics {
   sendCommentProfilePictureClickEvent(post: Post, comment: Reply) {
     const details = {
       // "post_type": "general",
-      post_id: post.Id,
+      post_id: post?.id,
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
-      comment_id: comment.Id,
+      comment_id: comment.id,
     };
     this.track(this.Events.COMMENT_PROFILE_PICTURE_CLICK, details);
   }
 
   sendCommentProfileNameClickEvent(post: Post, comment: Reply) {
     const details = {
-      // "post_type": post.Id,
-      post_id: post.Id,
+      // "post_type": post?.id,
+      post_id: post?.id,
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
-      comment_id: comment.Id,
+      comment_id: comment.id,
     };
 
     this.track(this.Events.COMMENT_PROFILE_NAME_CLICK, details);
@@ -263,8 +263,8 @@ class LMFeedAnalytics {
 
   sendCommentMenuClickEvent(post: Post, comment: Reply) {
     const details = {
-      post_id: post.Id,
-      comment_id: comment.Id,
+      post_id: post?.id,
+      comment_id: comment.id,
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
       // "post_type": ""
@@ -279,9 +279,9 @@ class LMFeedAnalytics {
 
   sendReplyProfileNameClickEvent(post: Post, comment: Reply, reply: Reply) {
     const details = {
-      post_id: post.Id,
-      reply_id: reply.Id,
-      comment_id: comment.Id || "",
+      post_id: post?.id,
+      reply_id: reply?.id,
+      comment_id: comment.id || "",
       // "post_type": "",
       post_topics: JSON.stringify(post.topics),
       created_by_uuid: post.uuid,
@@ -313,10 +313,10 @@ class LMFeedAnalytics {
 
   sendPostLikedEvent(post: Post, topics: Record<string, Topic>) {
     const details: Record<string, string> = {};
-    details["post_id"] = post.Id;
+    details["post_id"] = post?.id;
     details["created_by_uuid"] = post.uuid;
     details["topics"] = JSON.stringify(
-      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+      Object.values(topics).filter((topic) => post.topics.includes(topic?.id)),
     );
 
     this.track(this.Events.POST_LIKED, details);
@@ -324,10 +324,10 @@ class LMFeedAnalytics {
 
   sendPostUnLikedEvent(post: Post, topics: Record<string, Topic>) {
     const details: Record<string, string> = {};
-    details["post_id"] = post.Id;
+    details["post_id"] = post?.id;
     details["created_by_uuid"] = post.uuid;
     details["topics"] = JSON.stringify(
-      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+      Object.values(topics).filter((topic) => post.topics.includes(topic?.id)),
     );
 
     this.track(this.Events.POST_UNLIKED, details);
@@ -344,7 +344,7 @@ class LMFeedAnalytics {
 
   sendPostPinnedEvent(post: Post, topics: Record<string, Topic>) {
     const details: Record<string, string> = {};
-    details["post_id"] = post.Id;
+    details["post_id"] = post?.id;
     details["post_created_by_uuid"] = post.uuid;
     // details['post_type'] =
     // Ask what should be the post type
@@ -354,7 +354,7 @@ class LMFeedAnalytics {
 
   sendPostUnPinnedEvent(post: Post, topics: Record<string, Topic>) {
     const details: Record<string, string> = {};
-    details["post_id"] = post.Id;
+    details["post_id"] = post?.id;
     details["post_created_by_uuid"] = post.uuid;
     // details['post_type'] =
     // Ask what should be the post type
@@ -380,7 +380,7 @@ class LMFeedAnalytics {
   sendPostCreatedEvent(post: Post) {
     const details: Record<string, string> = {
       created_by_uuid: post.uuid,
-      [this.Keys.POST_ID]: post.Id,
+      [this.Keys.POST_ID]: post?.id,
     };
     if (
       post.attachments.some((attachment) => attachment.attachmentType === 4)
@@ -420,7 +420,7 @@ class LMFeedAnalytics {
   sendPostCreationErrorEvent(post: Post) {
     const details: Record<string, string> = {
       created_by_uuid: post.uuid,
-      [this.Keys.POST_ID]: post.Id,
+      [this.Keys.POST_ID]: post?.id,
     };
     if (
       post.attachments.some((attachment) => attachment.attachmentType === 4)
@@ -460,7 +460,7 @@ class LMFeedAnalytics {
   sendPostEditedEvent(post: Post) {
     const details: Record<string, string> = {
       created_by_uuid: post.uuid,
-      [this.Keys.POST_ID]: post.Id,
+      [this.Keys.POST_ID]: post?.id,
     };
     if (
       post.attachments.some((attachment) => attachment.attachmentType === 4)
@@ -518,10 +518,10 @@ class LMFeedAnalytics {
     const details: Record<string, string> = {};
     details["user_state"] = userState;
     (details["post_topics"] = JSON.stringify(
-      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+      Object.values(topics).filter((topic) => post.topics.includes(topic?.id)),
     )),
       (details["post_created_by_uuid"] = post.uuid);
-    details["post_id"] = post.Id;
+    details["post_id"] = post?.id;
     // Ask what is post_type
     this.track(this.Events.POST_DELETED, details);
   }
@@ -532,10 +532,10 @@ class LMFeedAnalytics {
     topics: Record<string, Topic>,
   ) {
     const details: Record<string, string> = {};
-    details["post_id"] = post.Id;
-    details["comment_id"] = comment.Id;
+    details["post_id"] = post?.id;
+    details["comment_id"] = comment.id;
     details["post_topics"] = JSON.stringify(
-      Object.values(topics).filter((topic) => post.topics.includes(topic.Id)),
+      Object.values(topics).filter((topic) => post.topics.includes(topic?.id)),
     );
     details["post_created_by_uuid"] = post.uuid;
     details["comment_created_by_uuid"] = comment.uuid;
@@ -547,11 +547,11 @@ class LMFeedAnalytics {
     deletedReplyId: string,
   ) {
     const details = {
-      post_id: post.Id,
-      comment_id: parentReply.Id,
+      post_id: post?.id,
+      comment_id: parentReply?.id,
       comment_reply_id: deletedReplyId,
       post_created_by_uuid: post.uuid,
-      comment_created_by_uuid: parentReply.Id,
+      comment_created_by_uuid: parentReply?.id,
     };
     this.track(this.Events.REPLY_DELETED, details);
   }
@@ -592,7 +592,7 @@ class LMFeedAnalytics {
   sendCommentPostedEvent(comment: Reply) {
     const details = {
       post_id: comment.postId,
-      comment_id: comment.Id,
+      comment_id: comment.id,
       comment_created_by_uuid: comment.uuid,
     };
     this.track(this.Events.COMMENT_POSTED, details);
@@ -617,8 +617,8 @@ class LMFeedAnalytics {
 
   sendCommentEditedEvent(post: Post, comment: Reply) {
     const details = {
-      post_id: post.Id,
-      comment_id: comment.Id,
+      post_id: post?.id,
+      comment_id: comment.id,
       post_topics: JSON.stringify(post.topics),
       post_created_by_uuid: post.uuid,
       comment_created_by_uuid: comment.uuid,
@@ -631,7 +631,7 @@ class LMFeedAnalytics {
     const details = {
       post_topics: JSON.stringify(post.topics),
       post_created_by_uuid: post.uuid,
-      post_id: post.Id,
+      post_id: post?.id,
       report_reason: reason,
     };
     this.track(this.Events.POST_REPORTED, details);
@@ -639,11 +639,11 @@ class LMFeedAnalytics {
 
   sendCommentReportedEvent(post: Post, comment: Reply, reason: string) {
     const details = {
-      post_id: post.Id,
+      post_id: post?.id,
       post_topics: JSON.stringify(post.topics),
       post_created_by_uuid: post.uuid,
       comment_created_by_uuid: comment.uuid,
-      comment_id: comment.Id,
+      comment_id: comment.id,
       reason: reason,
     };
     this.track(this.Events.COMMENT_REPORTED, details);
@@ -656,9 +656,9 @@ class LMFeedAnalytics {
     reason: string,
   ) {
     const details = {
-      post_id: post.Id,
-      comment_id: comment.Id,
-      comment_reply_id: reply.Id,
+      post_id: post?.id,
+      comment_id: comment.id,
+      comment_reply_id: reply?.id,
       post_topics: JSON.stringify(post.topics),
       post_created_by_uuid: post.uuid,
       comment_created_by_uuid: comment.uuid,

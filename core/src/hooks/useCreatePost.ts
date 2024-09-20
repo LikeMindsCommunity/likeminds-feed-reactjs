@@ -124,7 +124,7 @@ export function useCreatePost(): UseCreatePost {
     if (temporaryPost) {
       const feedAttachmentType = mediaArray?.item(0)?.type;
       lmfeedAnalyticsClient?.sendAddMoreAttachmentClickedEvent(
-        temporaryPost.Id,
+        temporaryPost.id,
         feedAttachmentType || "",
       );
     }
@@ -271,7 +271,7 @@ export function useCreatePost(): UseCreatePost {
           }
         }
 
-        const call: AddPostResponse = await lmFeedclient?.addPost(
+        const call: AddPostResponse = await lmFeedclient!.addPost(
           AddPostRequest.builder()
             .setAttachments(attachmentResponseArray)
             .setText(textContent)
@@ -357,7 +357,7 @@ export function useCreatePost(): UseCreatePost {
             .setattachments(attachmentResponseArray)
             .settext(textContent)
             .setTopicIds(selectedTopicIds)
-            .setpostId(temporaryPost?.Id || "")
+            .setpostId(temporaryPost?.id || "")
             .build(),
         )) as never;
         if (call.success) {
@@ -389,7 +389,7 @@ export function useCreatePost(): UseCreatePost {
       lmfeedAnalyticsClient,
       ogTag,
       selectedTopicIds,
-      temporaryPost?.Id,
+      temporaryPost?.id,
       temporaryPost?.attachments,
     ],
   );
@@ -533,14 +533,14 @@ export function useCreatePost(): UseCreatePost {
       );
     } else {
       lmfeedAnalyticsClient?.sendClickedOnAttachmentEvent(
-        temporaryPost.Id,
+        temporaryPost.id,
         mediaUploadMode,
       );
     }
   }, [lmfeedAnalyticsClient, mediaUploadMode, temporaryPost]);
   useEffect(() => {
     if (ogTag && temporaryPost) {
-      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url, temporaryPost.Id);
+      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url, temporaryPost.id);
     } else if (ogTag) {
       lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url);
     }

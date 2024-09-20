@@ -47,10 +47,10 @@ export function useLMPostReply(
           reply.uuid,
           postId,
           commentId?.toString() || "",
-          call.data.comment.Id,
+          call.data.comment.id,
         );
         if (updateReplyOnPostReply) {
-          updateReplyOnPostReply(call.data.comment.parentComment?.Id || "");
+          updateReplyOnPostReply(call.data.comment.parentComment??.id || "");
         }
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.REPLY_POSTED,
