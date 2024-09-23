@@ -387,6 +387,7 @@ export function useCreatePost(): UseCreatePost {
       }
     },
     [
+      allowThumbnail,
       currentUser?.sdkClientInfo.uuid,
       customEventClient,
       lmFeedclient,
@@ -405,7 +406,7 @@ export function useCreatePost(): UseCreatePost {
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
         ).trim();
-        const attachmentResponseArray: Attachment[] = temporaryPost?.attachments
+        let attachmentResponseArray: Attachment[] = temporaryPost?.attachments
           ? temporaryPost.attachments
           : [];
         if (ogTag) {
@@ -438,6 +439,10 @@ export function useCreatePost(): UseCreatePost {
           }
         }
         if (customWidgetsData) {
+          attachmentResponseArray = attachmentResponseArray.filter(
+            (attachment) => attachment.attachmentType !== 5,
+          );
+
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
               Attachment.builder()
