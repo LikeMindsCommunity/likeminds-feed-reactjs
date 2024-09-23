@@ -34,7 +34,13 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
 
   function renderMediaItems() {
     if (temporaryPost) {
-      const attachmentsArray = temporaryPost.attachments;
+      const attachmentsArray = temporaryPost.attachments.filter(
+        (attachment) => {
+          if (attachment.attachmentType !== 5) {
+            return attachment;
+          }
+        },
+      );
 
       switch (attachmentsArray.length) {
         case 0:
