@@ -46,12 +46,18 @@ function App() {
             const {
               defaultActions: { postFeed },
             } = store;
-            // postFeed([
-            //   {
-            //     customData: "hello this is a custom data",
-            //   },
-            // ]);
-            postFeed();
+            postFeed([
+              {
+                customData: "hello this is a custom data",
+              },
+            ]);
+          },
+          editPostCustomAction: async (store) => {
+            const {
+              defaultActions: { editPost },
+            } = store;
+
+            editPost([]);
           },
         }}
       ></LMFeed>
