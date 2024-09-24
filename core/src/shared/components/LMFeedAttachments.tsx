@@ -118,7 +118,7 @@ const RenderAttachment: React.FC<{
         <LMFeedDocumentAttachmentView postId={postId} attachment={attachment} />
       );
     case 4: // OG Tags
-      return <LMFeedOGTagAttachmentView postId={postId} ogTags={ogTags} />;
+      return <LMFeedOGTagAttachmentView postId={postId} ogTags={ogTags!} />;
 
     default: // Unsupported attachment type
       return (
@@ -284,7 +284,7 @@ export const LMFeedDocumentAttachmentView = ({
             className="attachmentPdf__content--url"
             lm-feed-component-id={`lm-feed-post-attachments-uvwxy-${postId}`}
           >
-            {formatFileSize(size)}
+            {formatFileSize(size || 0)}
           </div>
         </div>
       </div>

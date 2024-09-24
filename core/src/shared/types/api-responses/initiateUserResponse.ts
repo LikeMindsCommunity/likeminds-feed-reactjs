@@ -1,15 +1,9 @@
-import { Community } from "../models/community";
-import { User } from "../models/member";
+import {
+  InitiateUser,
+  LMResponseType,
+  ValidateUser,
+} from "@likeminds.community/feed-js-beta";
 
-export interface ValidateUserData {
-  accessToken: string;
-  appAccess: boolean;
-  community: Community;
-  hasAnswers: boolean;
-  refreshToken: string;
-  user: User;
-}
-export interface ValidateUserResponse {
-  success: boolean;
-  data?: ValidateUserData;
-}
+export interface ValidateUserResponse extends LMResponseType<ValidateUser> {}
+
+export interface InitiateUserResponse extends LMResponseType<InitiateUser> {}

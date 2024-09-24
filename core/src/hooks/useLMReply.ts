@@ -214,7 +214,7 @@ export const useReply: (
       (e: Event) => {
         const comment: Reply = (e as CustomEvent).detail.comment;
         const userMap: Record<string, User> = (e as CustomEvent).detail.users;
-        if (comment.parentComment??.id === replyId) {
+        if (comment.parentComment?.id === replyId) {
           const repliesCopy = [comment, ...replies];
           const usersCopy = { ...users, ...userMap };
           setReplies(repliesCopy);

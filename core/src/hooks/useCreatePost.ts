@@ -14,9 +14,10 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import {
   AddPostRequest,
   Attachment,
-  AttachmentMeta,
   DecodeURLRequest,
   EditPostRequest,
+  LMFeedPostAttachment,
+  LMFeedPostAttachmentMeta,
 } from "@likeminds.community/feed-js-beta";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
@@ -180,10 +181,10 @@ export function useCreatePost(): UseCreatePost {
           switch (attachmentType) {
             case 1: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(1)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -196,10 +197,10 @@ export function useCreatePost(): UseCreatePost {
             }
             case 2: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(2)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -213,10 +214,10 @@ export function useCreatePost(): UseCreatePost {
             }
             case 3: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(3)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -230,10 +231,10 @@ export function useCreatePost(): UseCreatePost {
             case 11: {
               // New case for attachmentType 11 (Reels)
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(11)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -250,10 +251,10 @@ export function useCreatePost(): UseCreatePost {
 
         if (!mediaList.length && ogTag) {
           attachmentResponseArray.push(
-            Attachment.builder()
+            LMFeedPostAttachment.builder()
               .setAttachmentType(4)
               .setAttachmentMeta(
-                AttachmentMeta.builder().setogTags(ogTag).build(),
+                LMFeedPostAttachmentMeta.builder().setogTags(ogTag).build(),
               )
               .build(),
           );
@@ -261,10 +262,12 @@ export function useCreatePost(): UseCreatePost {
         if (customWidgetsData) {
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(5)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                  LMFeedPostAttachmentMeta.builder()
+                    .setMeta(customWidgetData)
+                    .build(),
                 )
                 .build(),
             );
@@ -323,10 +326,10 @@ export function useCreatePost(): UseCreatePost {
           ) {
             attachmentResponseArray.pop();
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(4)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setogTags(ogTag).build(),
+                  LMFeedPostAttachmentMeta.builder().setogTags(ogTag).build(),
                 )
                 .build(),
             );
@@ -343,10 +346,12 @@ export function useCreatePost(): UseCreatePost {
         if (customWidgetsData) {
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(5)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                  LMFeedPostAttachmentMeta.builder()
+                    .setMeta(customWidgetData)
+                    .build(),
                 )
                 .build(),
             );
@@ -402,11 +407,11 @@ export function useCreatePost(): UseCreatePost {
           const firstLinkDetected = linksDetected[0];
           if (firstLinkDetected.toString() !== ogTag?.url.toString()) {
             const getOgTagData: GetOgTagResponse =
-              await lmFeedclient?.decodeURL(
+              await lmFeedclient!.decodeURL(
                 DecodeURLRequest.builder().setURL(firstLinkDetected).build(),
               );
             if (getOgTagData?.success) {
-              setOgtag(getOgTagData.data.og_tags);
+              setOgtag(getOgTagData.data.ogTags);
             }
           }
         } else {
@@ -441,7 +446,7 @@ export function useCreatePost(): UseCreatePost {
           },
         );
         if (ogTagAttchmentObject.length) {
-          setOgtag(ogTagAttchmentObject[0].attachmentMeta.ogTags);
+          setOgtag(ogTagAttchmentObject[0].LMFeedPostAttachmentMeta.ogTags);
         }
         setPreSelectedTopics(preSelectedTopicsArr);
       },

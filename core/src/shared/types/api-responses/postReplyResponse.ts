@@ -1,15 +1,3 @@
-import { User } from "../models/member";
-import { Reply } from "../models/replies";
+import { LMResponseType, PostReply } from "@likeminds.community/feed-js-beta";
 
-interface Users {
-  [key: string]: User;
-}
-
-export interface PostResponse {
-  success: boolean;
-  data: {
-    comment: Reply;
-
-    users: Users;
-  };
-}
+export interface PostReplyResponse extends LMResponseType<PostReply> {}

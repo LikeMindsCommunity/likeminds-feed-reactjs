@@ -1,8 +1,7 @@
-import { TaggingMember } from "../models/taggingMember";
+import {
+  GetTaggingList,
+  LMResponseType,
+} from "@likeminds.community/feed-js-beta";
 
-export interface GetTaggingListResponse {
-  success: boolean;
-  data: {
-    members: TaggingMember[];
-  };
-}
+export interface GetTaggingListResponse
+  extends LMResponseType<GetTaggingList> {}

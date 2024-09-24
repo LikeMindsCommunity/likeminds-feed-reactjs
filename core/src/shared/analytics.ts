@@ -390,7 +390,7 @@ class LMFeedAnalytics {
       );
 
       if (targetAttachment) {
-        details["link_attached"] = targetAttachment?.attachmentMeta.ogTags.url;
+        details["link_attached"] = targetAttachment?.attachmentMeta?.ogTags?.url || "";
       }
     }
     const imageCount = post.attachments.filter((attachment) =>
@@ -430,7 +430,7 @@ class LMFeedAnalytics {
       );
 
       if (targetAttachment) {
-        details["link_attached"] = targetAttachment?.attachmentMeta.ogTags.url;
+        details["link_attached"] = targetAttachment?.attachmentMeta?.ogTags?.url || "";
       }
     }
     const imageCount = post.attachments.filter((attachment) =>
@@ -470,7 +470,7 @@ class LMFeedAnalytics {
       );
 
       if (targetAttachment) {
-        details["link_attached"] = targetAttachment?.attachmentMeta.ogTags.url;
+        details["link_attached"] = targetAttachment?.attachmentMeta?.ogTags?.url || "";
       }
     }
     const imageCount = post.attachments.filter((attachment) =>

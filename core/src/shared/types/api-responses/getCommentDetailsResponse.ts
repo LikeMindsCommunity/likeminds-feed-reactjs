@@ -1,10 +1,7 @@
-import { User } from "../models/member";
-import { Reply } from "../models/replies";
+import {
+  GetCommentDetails,
+  LMResponseType,
+} from "@likeminds.community/feed-js-beta";
 
-export interface GetCommentDetailsResponse {
-  success: boolean;
-  data: {
-    comment: Reply;
-    users: Record<string, User>;
-  };
-}
+export interface GetCommentDetailsResponse
+  extends LMResponseType<GetCommentDetails> {}

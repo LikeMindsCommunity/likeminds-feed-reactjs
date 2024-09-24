@@ -64,7 +64,7 @@ const LMFeedNotification = ({
                     const avatar = getAvatar({ imageUrl, name });
                     return (
                       <div
-                        key={activity??.id}
+                        key={activity?.id}
                         className={`lm-feed-activity-wrapper__activity-item lm-cursor-pointer ${!activity.isRead ? "non-interacted-activity" : ""} lm-hover-effect`}
                         onClick={() => handleNotification(activity?.id)}
                         lm-feed-component-id={`lm-feed-notifications-wrapper-nopqr-${activity?.id}`}

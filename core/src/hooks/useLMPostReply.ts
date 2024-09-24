@@ -50,7 +50,7 @@ export function useLMPostReply(
           call.data.comment.id,
         );
         if (updateReplyOnPostReply) {
-          updateReplyOnPostReply(call.data.comment.parentComment??.id || "");
+          updateReplyOnPostReply(call.data.comment.parentComment?.id || "");
         }
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.REPLY_POSTED,

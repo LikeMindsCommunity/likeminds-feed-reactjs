@@ -154,7 +154,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const post = feedListCopy[index];
           lmfeedAnalyticsClient?.sendPostDeletedEvent(
             post,
@@ -188,7 +188,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const tempPost = feedListCopy[index];
           if (tempPost.isPinned) {
             tempPost.isPinned = false;
@@ -242,7 +242,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const post = feedListCopy[index];
           feedListCopy[index].isLiked = !feedListCopy[index].isLiked;
           if (feedListCopy[index].isLiked) {
@@ -278,7 +278,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const detail = (e as CustomEvent).detail;
         const { post, usersMap, topicsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
-          if (feed.Id === post?.id) {
+          if (feed.id === post?.id) {
             return post;
           } else {
             return feed;

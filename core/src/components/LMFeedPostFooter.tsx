@@ -30,7 +30,7 @@ const LMFeedPostFooter = () => {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-  const { likesCount, commentsCount, Id } = post!;
+  const { likesCount, commentsCount, id } = post!;
   const { LMFeedCustomIcons, CustomComponents = {} } = useContext(
     CustomAgentProviderContext,
   );
@@ -76,7 +76,7 @@ const LMFeedPostFooter = () => {
                 ) : (
                   <img
                     onClick={() => {
-                      likePost!(Id);
+                      likePost!(id);
                     }}
                     src={postLiked}
                     className="lm-cursor-pointer"
@@ -89,7 +89,7 @@ const LMFeedPostFooter = () => {
               ) : (
                 <img
                   onClick={() => {
-                    likePost!(Id);
+                    likePost!(id);
                   }}
                   src={like}
                   className="lm-cursor-pointer"
