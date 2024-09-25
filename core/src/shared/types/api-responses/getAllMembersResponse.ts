@@ -1,15 +1,6 @@
-import { Member } from "../models/member";
+import {
+  LMResponseType,
+  GetAllMembers,
+} from "@likeminds.community/feed-js-beta";
 
-export interface GetAllMembersResponse {
-  success: boolean;
-  data: {
-    // admins_count: number;
-    members: Member[];
-    membersCount: number;
-    // pending_members_count: number;
-    // total_filtered_members: number;
-    // total_members?: number;
-    totalMembers: number;
-    // total_only_members: number;
-  };
-}
+export interface GetAllMembersResponse extends LMResponseType<GetAllMembers> {}

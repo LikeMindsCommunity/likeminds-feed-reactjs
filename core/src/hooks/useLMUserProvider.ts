@@ -8,7 +8,7 @@ import { ValidateUserResponse } from "../shared/types/api-responses/initiateUser
 import {
   InitiateUserRequest,
   ValidateUserRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 // import { TokenValues } from "../shared/enums/tokens";
@@ -109,7 +109,7 @@ export default function useUserProvider(
               .setApiKey(apiKey)
               .build(),
           )) as never;
-
+        console.log(initiateUserCall);
         if (initiateUserCall.success) {
           // Setting the tokens, API key and User in local storage
           setTokensInLocalStorage(

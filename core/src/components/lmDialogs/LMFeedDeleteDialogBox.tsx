@@ -14,19 +14,19 @@ const LMFeedDeleteDialogBox = ({ mode, onClose }: LMDeletePostDialogProps) => {
     switch (mode) {
       case LMFeedDeletePostModes.POST: {
         if (deletePost) {
-          deletePost(post?.Id || "");
+          deletePost(post?.id || "");
         }
         return;
       }
       case LMFeedDeletePostModes.COMMENT: {
         if (removeAComment) {
-          removeAComment(reply?.Id || "");
+          removeAComment(reply?.id || "");
         }
         return;
       }
       case LMFeedDeletePostModes.REPLY: {
         if (deleteReply) {
-          deleteReply(reply?.Id || "");
+          deleteReply(reply?.id || "");
         }
       }
     }

@@ -334,7 +334,7 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
               {name}
             </a>
             <div className="attachmentPdf__content--url">
-              {formatFileSize(size)}
+              {formatFileSize(size || 0)}
             </div>
           </div>
         </div>

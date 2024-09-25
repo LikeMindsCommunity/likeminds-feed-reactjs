@@ -38,7 +38,7 @@ const LMFeedReplyTextArea = ({
     containerRef,
     postReply,
     postComment,
-  } = useLMPostReply(post?.Id?.split("-")[0].toString() || "", reply?.Id || "");
+  } = useLMPostReply(post?.id?.split("-")[0].toString() || "", reply?.id || "");
 
   function postReplyAndCloseReplyText() {
     if (setReplyViewVisibility) {

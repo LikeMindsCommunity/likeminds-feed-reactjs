@@ -14,10 +14,11 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import {
   AddPostRequest,
   Attachment,
-  AttachmentMeta,
   DecodeURLRequest,
   EditPostRequest,
-} from "@likeminds.community/feed-js";
+  LMFeedPostAttachment,
+  LMFeedPostAttachmentMeta,
+} from "@likeminds.community/feed-js-beta";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -141,7 +142,7 @@ export function useCreatePost(): UseCreatePost {
     if (temporaryPost) {
       const feedAttachmentType = mediaArray?.item(0)?.type;
       lmfeedAnalyticsClient?.sendAddMoreAttachmentClickedEvent(
-        temporaryPost.Id,
+        temporaryPost.id,
         feedAttachmentType || "",
       );
     }
@@ -233,10 +234,10 @@ export function useCreatePost(): UseCreatePost {
           switch (attachmentType) {
             case 1: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(1)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -249,10 +250,10 @@ export function useCreatePost(): UseCreatePost {
             }
             case 2: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(2)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -266,10 +267,10 @@ export function useCreatePost(): UseCreatePost {
             }
             case 3: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(3)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -283,10 +284,10 @@ export function useCreatePost(): UseCreatePost {
             case 11: {
               // New case for attachmentType 11 (Reels)
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(11)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
+                    LMFeedPostAttachmentMeta.builder()
                       .seturl(uploadedFileKey)
                       .setformat(file?.name?.split(".").slice(-1).toString())
                       .setsize(file.size)
@@ -319,10 +320,10 @@ export function useCreatePost(): UseCreatePost {
                 (attachment) => attachment.attachmentType === 11,
               );
               const thumbnailUrl = imageAttachment?.attachmentMeta.url;
-              const newAttachmentObject = Attachment.builder()
+              const newAttachmentObject = LMFeedPostAttachment.builder()
                 .setAttachmentType(11)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder()
+                  LMFeedPostAttachmentMeta.builder()
                     .seturl(reelAttachment?.attachmentMeta.url || "")
                     .setformat(
                       reelAttachment?.attachmentMeta?.name
@@ -347,10 +348,10 @@ export function useCreatePost(): UseCreatePost {
 
         if (!mediaList.length && ogTag) {
           attachmentResponseArray.push(
-            Attachment.builder()
+            LMFeedPostAttachment.builder()
               .setAttachmentType(4)
               .setAttachmentMeta(
-                AttachmentMeta.builder().setogTags(ogTag).build(),
+                LMFeedPostAttachmentMeta.builder().setogTags(ogTag).build(),
               )
               .build(),
           );
@@ -358,17 +359,19 @@ export function useCreatePost(): UseCreatePost {
         if (customWidgetsData) {
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(5)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                  LMFeedPostAttachmentMeta.builder()
+                    .setMeta(customWidgetData)
+                    .build(),
                 )
                 .build(),
             );
           }
         }
 
-        const call: AddPostResponse = await lmFeedclient?.addPost(
+        const call: AddPostResponse = await lmFeedclient!.addPost(
           AddPostRequest.builder()
             .setAttachments(attachmentResponseArray)
             .setText(textContent)
@@ -421,10 +424,10 @@ export function useCreatePost(): UseCreatePost {
           ) {
             attachmentResponseArray.pop();
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(4)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setogTags(ogTag).build(),
+                  LMFeedPostAttachmentMeta.builder().setogTags(ogTag).build(),
                 )
                 .build(),
             );
@@ -445,10 +448,12 @@ export function useCreatePost(): UseCreatePost {
 
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(5)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                  LMFeedPostAttachmentMeta.builder()
+                    .setMeta(customWidgetData)
+                    .build(),
                 )
                 .build(),
             );
@@ -459,7 +464,7 @@ export function useCreatePost(): UseCreatePost {
             .setattachments(attachmentResponseArray)
             .settext(textContent)
             .setTopicIds(selectedTopicIds)
-            .setpostId(temporaryPost?.Id || "")
+            .setpostId(temporaryPost?.id || "")
             .build(),
         )) as never;
         if (call.success) {
@@ -491,7 +496,7 @@ export function useCreatePost(): UseCreatePost {
       lmfeedAnalyticsClient,
       ogTag,
       selectedTopicIds,
-      temporaryPost?.Id,
+      temporaryPost?.id,
       temporaryPost?.attachments,
     ],
   );
@@ -504,11 +509,11 @@ export function useCreatePost(): UseCreatePost {
           const firstLinkDetected = linksDetected[0];
           if (firstLinkDetected.toString() !== ogTag?.url.toString()) {
             const getOgTagData: GetOgTagResponse =
-              await lmFeedclient?.decodeURL(
+              await lmFeedclient!.decodeURL(
                 DecodeURLRequest.builder().setURL(firstLinkDetected).build(),
               );
             if (getOgTagData?.success) {
-              setOgtag(getOgTagData.data.og_tags);
+              setOgtag(getOgTagData.data.ogTags);
             }
           }
         } else {
@@ -543,7 +548,7 @@ export function useCreatePost(): UseCreatePost {
           },
         );
         if (ogTagAttchmentObject.length) {
-          setOgtag(ogTagAttchmentObject[0].attachmentMeta.ogTags);
+          setOgtag(ogTagAttchmentObject[0].LMFeedPostAttachmentMeta.ogTags);
         }
         setPreSelectedTopics(preSelectedTopicsArr);
       },
@@ -637,14 +642,14 @@ export function useCreatePost(): UseCreatePost {
       );
     } else {
       lmfeedAnalyticsClient?.sendClickedOnAttachmentEvent(
-        temporaryPost.Id,
+        temporaryPost.id,
         mediaUploadMode,
       );
     }
   }, [lmfeedAnalyticsClient, mediaUploadMode, temporaryPost]);
   useEffect(() => {
     if (ogTag && temporaryPost) {
-      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url, temporaryPost.Id);
+      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url, temporaryPost.id);
     } else if (ogTag) {
       lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url);
     }

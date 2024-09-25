@@ -3,12 +3,12 @@ import { User } from "../shared/types/models/member";
 import { Reply } from "../shared/types/models/replies";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
-import { GetCommentRequest } from "@likeminds.community/feed-js";
+import { GetCommentRequest } from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import {
   DeleteCommentRequest,
   LikeCommentRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
 import { RepliesActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
@@ -137,7 +137,7 @@ export const useReply: (
           if (post) {
             lmfeedAnalyticsClient?.sendReplyDeletedEvent(post, reply!, id);
           }
-          const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+          const repliesCopy = [...replies].filter((reply) => reply?.id !== id);
           const replyCopy = { ...reply };
           if (replyCopy && replyCopy.commentsCount) {
             replyCopy.commentsCount--;
@@ -177,7 +177,7 @@ export const useReply: (
         )) as never;
         if (call.success) {
           const repliesCopy = [...replies].map((reply) => {
-            if (reply.Id === id) {
+            if (reply?.id === id) {
               if (reply.isLiked) {
                 reply.isLiked = false;
                 reply.likesCount--;
@@ -199,7 +199,7 @@ export const useReply: (
   const updateReply = useCallback(
     function (comment: Reply, usersMap: Record<string, User>) {
       const repliesCopy = [...replies].map((reply) =>
-        reply.Id === comment.Id ? comment : reply,
+        reply?.id === comment.id ? comment : reply,
       );
       const usersCopy = { ...users, ...usersMap };
       setReplies(repliesCopy);
@@ -214,7 +214,7 @@ export const useReply: (
       (e: Event) => {
         const comment: Reply = (e as CustomEvent).detail.comment;
         const userMap: Record<string, User> = (e as CustomEvent).detail.users;
-        if (comment.parentComment?.Id === replyId) {
+        if (comment.parentComment?.id === replyId) {
           const repliesCopy = [comment, ...replies];
           const usersCopy = { ...users, ...userMap };
           setReplies(repliesCopy);

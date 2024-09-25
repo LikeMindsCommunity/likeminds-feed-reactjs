@@ -4,7 +4,7 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetFeedRequest } from "@likeminds.community/feed-js";
+import { GetFeedRequest } from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
@@ -12,7 +12,7 @@ import {
   // GetReportTagsRequest,
   PinPostRequest,
   // PostReportRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -154,7 +154,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const post = feedListCopy[index];
           lmfeedAnalyticsClient?.sendPostDeletedEvent(
             post,
@@ -188,7 +188,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const tempPost = feedListCopy[index];
           if (tempPost.isPinned) {
             tempPost.isPinned = false;
@@ -242,7 +242,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const post = feedListCopy[index];
           feedListCopy[index].isLiked = !feedListCopy[index].isLiked;
           if (feedListCopy[index].isLiked) {
@@ -278,7 +278,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const detail = (e as CustomEvent).detail;
         const { post, usersMap, topicsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
-          if (feed.Id === post.Id) {
+          if (feed.id === post?.id) {
             return post;
           } else {
             return feed;
@@ -303,7 +303,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             if (post.isLiked) {
               post.isLiked = false;
               post.likesCount--;
@@ -326,7 +326,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.commentsCount++;
           }
           return post;
@@ -343,7 +343,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.commentsCount--;
           }
           return post;
@@ -360,7 +360,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.id;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.menuItems = post.menuItems.map((menuItem) => {
               if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
                 menuItem.id = parseInt(LMFeedPostMenuItems.UNPIN_POST);

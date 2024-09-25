@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetAllMembersRequest } from "@likeminds.community/feed-js";
+import { GetAllMembersRequest } from "@likeminds.community/feed-js-beta";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getAvatar } from "../shared/components/LMUserMedia";
-import { Member } from "../shared/types/models/member";
+import { User } from "../shared/types/models/member";
 import { GetAllMembersResponse } from "../shared/types/api-responses/getAllMembersResponse";
 import { MEMBER_LIST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
@@ -17,7 +17,7 @@ const LMFeedAllMembers = () => {
   const { memberComponentClickCustomCallback } = useContext(
     CustomAgentProviderContext,
   );
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<User[]>([]);
   const [loadMoreFeeds, setLoadMoreFeeds] = useState<boolean>(true);
   const [pageCount, setPageCount] = useState<number>(1);
   const [totalMemberCounts, setTotalMemberCounts] = useState<number>(0);
@@ -75,7 +75,7 @@ const LMFeedAllMembers = () => {
           scrollableTarget="member-scroll-container"
         >
           {members ? (
-            members.map((member: Member) => (
+            members.map((member: User) => (
               <div
                 key={member?.sdkClientInfo.uuid}
                 className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"

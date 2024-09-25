@@ -5,7 +5,7 @@ import { Post } from "../shared/types/models/post";
 import { Reply } from "../shared/types/models/replies";
 import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDetailsResponse";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetPostRequest } from "@likeminds.community/feed-js";
+import { GetPostRequest } from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import {
@@ -13,7 +13,7 @@ import {
   LikeCommentRequest,
   LikePostRequest,
   PinPostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
@@ -158,7 +158,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const updateReplyOnPostReply = useCallback(
     function (replyId: string) {
       const repliesCopy = [...replies];
-      const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
+      const targetReply = repliesCopy.find((reply) => reply?.id === replyId);
       if (targetReply) {
         targetReply.commentsCount++;
       }
@@ -182,7 +182,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         customEventClient.dispatchEvent(
           LMFeedCustomActionEvents.COMMENT_ADDED,
           {
-            postId: post?.Id,
+            postId: post?.id,
           },
         );
       }
@@ -194,13 +194,13 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       try {
         const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
           DeleteCommentRequest.builder()
-            .setpostId(post?.Id || "")
+            .setpostId(post?.id || "")
             .setcommentId(id)
             .build(),
         )) as never;
         if (call.success) {
-          const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
-          const targetReply = [...replies].find((reply) => reply.Id === id);
+          const repliesCopy = [...replies].filter((reply) => reply?.id !== id);
+          const targetReply = [...replies].find((reply) => reply?.id === id);
           lmfeedAnalyticsClient?.sendCommentDeletedEvent(
             post!,
             targetReply!,
@@ -219,7 +219,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             customEventClient.dispatchEvent(
               LMFeedCustomActionEvents.COMMENT_REMOVED,
               {
-                postId: post?.Id,
+                postId: post?.id,
               },
             );
           }
@@ -241,7 +241,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const updateReply = useCallback(
     function (comment: Reply, usersMap: Record<string, User>) {
       const repliesCopy = [...replies].map((reply) =>
-        reply.Id === comment.Id ? comment : reply,
+        reply?.id === comment.id ? comment : reply,
       );
       const usersCopy = { ...users, ...usersMap };
       const postCopy = { ...post };
@@ -265,7 +265,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         )) as never;
         if (call.success) {
           const repliesCopy = [...replies].map((reply) => {
-            if (reply.Id === id) {
+            if (reply?.id === id) {
               if (reply.isLiked) {
                 reply.isLiked = false;
                 reply.likesCount--;
@@ -409,7 +409,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         const replyId = (e as CustomEvent).detail.replyId;
         const repliesCopy = [...replies];
 
-        const tempReply = repliesCopy.find((reply) => reply.Id === replyId);
+        const tempReply = repliesCopy.find((reply) => reply?.id === replyId);
         if (tempReply) {
           tempReply.commentsCount--;
         }

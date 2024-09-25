@@ -117,7 +117,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
           }
           reply={reply || undefined}
           closeReportDialog={closeReportDialog}
-          entityId={reply?.Id || ""}
+          entityId={reply?.id || ""}
         />
       </Dialog>
       <Menu
@@ -197,7 +197,7 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
               className="lm-feed-post-like-container"
               onClick={() => {
                 if (likeReply) {
-                  likeReply(reply?.Id || "");
+                  likeReply(reply?.id || "");
                 }
               }}
             >
@@ -294,8 +294,8 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
             CustomComponents.CustomRepliesScroller
           ) : (
             <LMFeedRepliesScroller
-              postId={post?.Id || ""}
-              replyId={reply?.Id || ""}
+              postId={post?.id || ""}
+              replyId={reply?.id || ""}
             />
           )
         ) : null}
