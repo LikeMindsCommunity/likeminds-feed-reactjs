@@ -345,8 +345,7 @@
 }
 
 .react-pdf__Page__canvas {
-  width: 100% !important;
-  // aspect-ratio: 16/9;
+  width: 100% !important; 
 }
 
 .three-dot-menu-options {
@@ -362,4 +361,27 @@
 
 .lm-feed-text-link{
   color: var(--lm-feed-link-text-color);
+}
+
+.tempReel{
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  margin: pxToRem(20) 0;
+  padding: 5px 0;
+  background: #f5f5f5;
+  position: relative;
+
+  .removeIcon{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    cursor: pointer;
+  }
+  video, img{
+    width: 100%;
+    max-width: 125px;
+    margin: 0 auto;
+  }
 }

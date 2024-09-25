@@ -61,7 +61,13 @@ interface UseCreatePost {
   setPreSelectedTopics: React.Dispatch<Topic[]>;
   showOGTagViewContainer: boolean;
   closeOGTagContainer: () => void;
+  removeThumbnailReel: () => void;
+  removeAddReel: () => void;
   createPostComponentClickCustomCallback?: ComponentDelegatorListener;
+  addThumbnailReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  tempReel: File[];
+  tempReelThumbnail: File[];
 }
 
 export function useCreatePost(): UseCreatePost {
@@ -73,8 +79,13 @@ export function useCreatePost(): UseCreatePost {
   const { currentCommunity, currentUser, logoutUser } = useContext(
     LMFeedUserProviderContext,
   );
-  const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
-    useContext(GeneralContext);
+  const {
+    displaySnackbarMessage,
+    closeSnackbar,
+    allowThumbnail,
+    showSnackbar,
+    message,
+  } = useContext(GeneralContext);
   const {
     PostCreationCustomCallbacks = {},
     createPostComponentClickCustomCallback,
@@ -88,6 +99,10 @@ export function useCreatePost(): UseCreatePost {
   const [showOGTagViewContainer, setShowOGTagViewContainer] =
     useState<boolean>(true);
   const [text, setText] = useState<string | null>("");
+
+  const [tempReel, setTempReel] = useState<File[]>([]);
+  const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
+
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -113,6 +128,8 @@ export function useCreatePost(): UseCreatePost {
     setSelectedTopicIds([]);
     setMediaUploadMode(LMFeedCreatePostMediaUploadMode.NULL);
     setOgtag(null);
+    setTempReel([]);
+    setTempReelThumbnail([]);
   }
 
   function setPostText(txt: string) {
@@ -131,6 +148,42 @@ export function useCreatePost(): UseCreatePost {
     }
 
     setMediaList(mediaCopy);
+  }
+
+  function addReel(event: React.ChangeEvent<HTMLInputElement>) {
+    const mediaArray = event.target.files;
+    if (!allowThumbnail) {
+      setMediaList(Array.from(mediaArray!));
+      return;
+    }
+
+    if (tempReelThumbnail.length) {
+      const mediaCopy = [
+        ...Array.from(tempReelThumbnail),
+        ...Array.from(mediaArray!),
+      ];
+      setMediaList(mediaCopy);
+    } else {
+      setTempReel(Array.from(mediaArray!));
+    }
+  }
+
+  function addThumbnailReel(event: React.ChangeEvent<HTMLInputElement>) {
+    const mediaArray = event.target.files;
+    if (tempReel.length) {
+      const mediaCopy = [...Array.from(tempReel), ...Array.from(mediaArray!)];
+      setMediaList(mediaCopy);
+    } else {
+      setTempReelThumbnail(Array.from(mediaArray!));
+    }
+  }
+
+  function removeThumbnailReel() {
+    setTempReelThumbnail([]);
+  }
+
+  function removeAddReel() {
+    setTempReel([]);
   }
 
   function removeMedia(index: number) {
@@ -249,6 +302,50 @@ export function useCreatePost(): UseCreatePost {
           }
         }
 
+        if (allowThumbnail) {
+          if (
+            attachmentResponseArray.some(
+              (attachment) => attachment.attachmentType === 11,
+            )
+          ) {
+            if (
+              attachmentResponseArray.some(
+                (attachment) => attachment.attachmentType === 1,
+              )
+            ) {
+              const imageAttachment = attachmentResponseArray.find(
+                (attachment) => attachment.attachmentType === 1,
+              );
+              const reelAttachment = attachmentResponseArray.find(
+                (attachment) => attachment.attachmentType === 11,
+              );
+              const thumbnailUrl = imageAttachment?.attachmentMeta.url;
+              const newAttachmentObject = LMFeedPostAttachment.builder()
+                .setAttachmentType(11)
+                .setAttachmentMeta(
+                  LMFeedPostAttachmentMeta.builder()
+                    .seturl(reelAttachment?.attachmentMeta.url || "")
+                    .setformat(
+                      reelAttachment?.attachmentMeta?.name
+                        ?.split(".")
+                        .slice(-1)
+                        .toString() || "",
+                    )
+                    .setsize(reelAttachment?.attachmentMeta?.size || 0)
+                    .setname(reelAttachment?.attachmentMeta?.name || "")
+                    .setThumbnailUrl(thumbnailUrl || "")
+                    // .setduration(10) // Assuming duration is applicable to reels
+                    .build(),
+                )
+                .build();
+              while (attachmentResponseArray.length) {
+                attachmentResponseArray.pop();
+              }
+              attachmentResponseArray.push(newAttachmentObject);
+            }
+          }
+        }
+
         if (!mediaList.length && ogTag) {
           attachmentResponseArray.push(
             LMFeedPostAttachment.builder()
@@ -293,6 +390,7 @@ export function useCreatePost(): UseCreatePost {
       }
     },
     [
+      allowThumbnail,
       currentUser?.sdkClientInfo.uuid,
       customEventClient,
       lmFeedclient,
@@ -311,7 +409,7 @@ export function useCreatePost(): UseCreatePost {
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
         ).trim();
-        const attachmentResponseArray: Attachment[] = temporaryPost?.attachments
+        let attachmentResponseArray: Attachment[] = temporaryPost?.attachments
           ? temporaryPost.attachments
           : [];
         if (ogTag) {
@@ -344,6 +442,10 @@ export function useCreatePost(): UseCreatePost {
           }
         }
         if (customWidgetsData) {
+          attachmentResponseArray = attachmentResponseArray.filter(
+            (attachment) => attachment.attachmentType !== 5,
+          );
+
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -478,6 +580,8 @@ export function useCreatePost(): UseCreatePost {
           setSelectedTopicIds,
           preSelectedTopics,
           setPreSelectedTopics,
+          removeThumbnailReel,
+          removeAddReel,
           mediaUploadMode,
           setMediaUploadMode,
           ogTag,
@@ -576,6 +680,12 @@ export function useCreatePost(): UseCreatePost {
     preSelectedTopics,
     setPreSelectedTopics,
     showOGTagViewContainer,
+    addReel,
+    tempReel,
+    tempReelThumbnail,
+    addThumbnailReel,
+    removeThumbnailReel,
+    removeAddReel,
     closeOGTagContainer,
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback

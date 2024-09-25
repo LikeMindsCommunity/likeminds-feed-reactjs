@@ -28,6 +28,14 @@ interface LMFeedCreatePostContextInterface {
   showOGTagViewContainer?: boolean;
   closeOGTagContainer?: () => void;
   createPostComponentClickCustomCallback?: ComponentDelegatorListener;
+  addThumbnailReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  tempReel: File[];
+  tempReelThumbnail: File[];
+  removeThumbnailReel: () => void;
+  removeAddReel: () => void;
 }
 export const LMFeedCreatePostContext =
-  createContext<LMFeedCreatePostContextInterface>({});
+  createContext<LMFeedCreatePostContextInterface>(
+    {} as LMFeedCreatePostContextInterface,
+  );
