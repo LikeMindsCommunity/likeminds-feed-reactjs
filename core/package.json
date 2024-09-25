@@ -116,4 +116,5 @@
     "vite-plugin-dts": "^3.7.3",
     "vite-plugin-lib-inject-css": "^2.0.0"
   }
+ 
 }

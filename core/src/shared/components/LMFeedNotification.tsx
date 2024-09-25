@@ -11,8 +11,7 @@ import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
 import { NotificationsCustomActions } from "../types/cutomCallbacks/callbacks";
 import { LMFeedNotificationAnalytics } from "../enums/lmNotificationAnalytics";
-// import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
-// import threeDotMenuIcon from "../../";
+
 const LMFeedNotification = ({
   customEventClient,
   NotificationBellCustomIcon,
