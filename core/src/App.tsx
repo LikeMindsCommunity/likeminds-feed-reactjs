@@ -36,24 +36,22 @@ function App() {
       <LMFeed
         client={lmFeedClient}
         customEventClient={customEventClient}
-        userDetails={{}}
+        userDetails={{
+          uuid: "James Joy",
+          apiKey: "c142bc84-4c40-4412-ad09-c7e59b93a2ca",
+          username: "James Joy",
+        }}
         PostCreationCustomCallbacks={{
           postFeedCustomAction: async (store) => {
             const {
               defaultActions: { postFeed },
             } = store;
-            postFeed([
-              {
-                customData: "hello this is a custom data",
-              },
-            ]);
-          },
-          editPostCustomAction: async (store) => {
-            const {
-              defaultActions: { editPost },
-            } = store;
-
-            editPost([]);
+            // postFeed([
+            //   {
+            //     customData: "hello this is a custom data",
+            //   },
+            // ]);
+            postFeed();
           },
         }}
       ></LMFeed>
