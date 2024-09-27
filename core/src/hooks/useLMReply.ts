@@ -3,12 +3,12 @@ import { User } from "../shared/types/models/member";
 import { Reply } from "../shared/types/models/replies";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { GetCommentDetailsResponse } from "../shared/types/api-responses/getCommentDetailsResponse";
-import { GetCommentRequest } from "@likeminds.community/feed-js-beta";
+import { GetCommentRequest } from "@likeminds.community/feed-js";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import {
   DeleteCommentRequest,
   LikeCommentRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import { LikeCommentResponse } from "../shared/types/api-responses/likeCommentResponse";
 import { RepliesActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
@@ -75,10 +75,10 @@ export const useReply: (
         (await lmFeedclient?.getComments(
           postId,
           GetCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(replyId)
-            .setpage(1)
-            .setpageSize(10)
+            .setPostId(postId)
+            .setCommentId(replyId)
+            .setPage(1)
+            .setPageSize(10)
             .build(),
           replyId,
           1,
@@ -104,10 +104,10 @@ export const useReply: (
         (await lmFeedclient?.getComments(
           postId,
           GetCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(replyId)
-            .setpage(pageCount)
-            .setpageSize(10)
+            .setPostId(postId)
+            .setCommentId(replyId)
+            .setPage(pageCount)
+            .setPageSize(10)
             .build(),
           replyId,
           pageCount,
@@ -129,8 +129,8 @@ export const useReply: (
       try {
         const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
           DeleteCommentRequest.builder()
-            .setcommentId(id)
-            .setpostId(postId)
+            .setCommentId(id)
+            .setPostId(postId)
             .build(),
         )) as never;
         if (call.success) {
@@ -171,8 +171,8 @@ export const useReply: (
       try {
         const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
           LikeCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(id)
+            .setPostId(postId)
+            .setCommentId(id)
             .build(),
         )) as never;
         if (call.success) {

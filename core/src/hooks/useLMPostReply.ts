@@ -5,7 +5,7 @@ import {
   AddCommentRequest,
   EditCommentRequest,
   ReplyCommentRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { extractTextFromNode } from "../shared/utils";
 import {
   EditCommentResponse,
@@ -69,12 +69,13 @@ export function useLMPostReply(
       const commentText = extractTextFromNode(textFieldRef.current).trim();
       const call: PostCommentResponse = (await lmFeedclient?.addComment(
         AddCommentRequest.builder()
-          .settext(commentText)
-          .setpostId(postId)
+          .setText(commentText)
+          .setPostId(postId)
           .build(),
       )) as never;
       if (call.success && addNewComment) {
         lmfeedAnalyticsClient?.sendCommentPostedEvent(call.data.comment);
+        console.log(call.data.comment);
         addNewComment(call.data.comment, call.data.users);
       }
     } catch (error) {
@@ -86,9 +87,9 @@ export function useLMPostReply(
       const commentText = extractTextFromNode(textFieldRef.current).trim();
       const call: EditCommentResponse = (await lmFeedclient?.editComment(
         EditCommentRequest.builder()
-          .setcommentId(commentId || "")
-          .setpostId(postId)
-          .settext(commentText)
+          .setCommentId(commentId || "")
+          .setPostId(postId)
+          .setText(commentText)
           .build(),
       )) as never;
 

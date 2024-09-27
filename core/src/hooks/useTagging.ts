@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetTaggingListRequest } from "@likeminds.community/feed-js-beta";
+import { GetTaggingListRequest } from "@likeminds.community/feed-js";
 import { GetTaggingListResponse } from "../shared/types/api-responses/getTaggingListResponse";
 import { TaggingMember } from "../shared/types/models/taggingMember";
 
@@ -32,9 +32,9 @@ export function useTagging(): UseTagging {
     try {
       const call: GetTaggingListResponse = (await lmFeedclient?.getTaggingList(
         GetTaggingListRequest.builder()
-          .setpage(pg ? pg : pageNo)
-          .setpageSize(10)
-          .setsearchName(tagString || "")
+          .setPage(pg ? pg : pageNo)
+          .setPageSize(10)
+          .setSearchName(tagString || "")
           .build(),
       )) as GetTaggingListResponse;
       if (call.success) {

@@ -8,7 +8,7 @@ import { ValidateUserResponse } from "../shared/types/api-responses/initiateUser
 import {
   InitiateUserRequest,
   ValidateUserRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 // import { TokenValues } from "../shared/enums/tokens";
@@ -58,8 +58,8 @@ export default function useUserProvider(
         const validateUserCall: ValidateUserResponse =
           (await lmFeedclient?.validateUser(
             ValidateUserRequest.builder()
-              .setaccessToken(localAccessToken)
-              .setrefreshToken(localRefreshToken)
+              .setAccessToken(localAccessToken)
+              .setRefreshToken(localRefreshToken)
               .build(),
           )) as never;
 

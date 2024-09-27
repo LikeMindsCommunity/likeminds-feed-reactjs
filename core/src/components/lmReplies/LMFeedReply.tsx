@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
-import { formatTimeAgo } from "../../shared/utils";
+import { timeFromNow } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
 import commentLiked from "../../assets/images/liked-sm.png";
 import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
@@ -274,7 +274,9 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
               </span>
             </span>
           </div>
-          <div className="like">{formatTimeAgo(reply?.createdAt || 0)}</div>
+          <div className="like">
+            {timeFromNow(new Date(reply?.createdAt || 0).toString() || "")}
+          </div>
         </div>
         {openReplyText ? (
           <div className="lm-d-flex lm-flex-grow lm-align-items-center lm-mb-5 lm-feed-reply">

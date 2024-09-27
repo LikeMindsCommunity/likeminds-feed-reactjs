@@ -4,7 +4,7 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetFeedRequest } from "@likeminds.community/feed-js-beta";
+import { GetFeedRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
@@ -12,7 +12,7 @@ import {
   // GetReportTagsRequest,
   PinPostRequest,
   // PostReportRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -87,8 +87,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
               .setTopicIds(topicId ? [topicId] : selectedTopics)
-              .setpage(1)
-              .setpageSize(10)
+              .setPage(1)
+              .setPageSize(10)
               .build(),
           )) as never;
         if (fetchFeedsCall.success) {
@@ -116,8 +116,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
               .setTopicIds(selectedTopics)
-              .setpage(currentPageCount)
-              .setpageSize(10)
+              .setPage(currentPageCount)
+              .setPageSize(10)
               .build(),
           )) as never;
         if (fetchFeedsCall.success) {
@@ -150,7 +150,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: DeletePostResponse = (await lmFeedclient?.deletePost(
-          DeletePostRequest.builder().setpostId(id).build(),
+          DeletePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
@@ -184,7 +184,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-          PinPostRequest.builder().setpostId(id).build(),
+          PinPostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
@@ -238,7 +238,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: LikePostResponse = (await lmFeedclient?.likePost(
-          LikePostRequest.builder().setpostId(id).build(),
+          LikePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];

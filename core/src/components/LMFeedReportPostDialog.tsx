@@ -3,7 +3,7 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import {
   GetReportTagsRequest,
   PostReportRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTagsResponse";
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";
@@ -77,7 +77,7 @@ const LMFeedReportPostDialog = ({
     async function getReportTags() {
       try {
         const call: GetReportTagsResponse = (await lmFeedclient?.getReportTags(
-          GetReportTagsRequest.builder().settype(0).build(),
+          GetReportTagsRequest.builder().setType(0).build(),
         )) as never;
         if (call.success) {
           setReportTags(call.data.reportTags);
