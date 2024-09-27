@@ -2,7 +2,7 @@ import {
   InitiateUser,
   LMResponseType,
   ValidateUser,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 
 export interface ValidateUserResponse extends LMResponseType<ValidateUser> {}
 
