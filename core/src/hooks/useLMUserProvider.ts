@@ -58,8 +58,8 @@ export default function useUserProvider(
         const validateUserCall: ValidateUserResponse =
           (await lmFeedclient?.validateUser(
             ValidateUserRequest.builder()
-              .setaccessToken(localAccessToken)
-              .setrefreshToken(localRefreshToken)
+              .setAccessToken(localAccessToken)
+              .setRefreshToken(localRefreshToken)
               .build(),
           )) as never;
 

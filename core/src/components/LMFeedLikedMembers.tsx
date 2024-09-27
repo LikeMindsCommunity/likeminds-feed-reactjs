@@ -25,9 +25,9 @@ const LMFeedLikedMembers = (props: any) => {
     try {
       const response: GetPostLikesResponse = (await lmFeedclient?.getPostLikes(
         GetPostLikesRequest.builder()
-          .setpage(page)
-          .setpageSize(20)
-          .setpostId(postId)
+          .setPage(page)
+          .setPageSize(20)
+          .setPostId(postId)
           .build(),
       )) as never;
 

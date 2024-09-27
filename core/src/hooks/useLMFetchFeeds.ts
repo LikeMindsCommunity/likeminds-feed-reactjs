@@ -87,8 +87,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
               .setTopicIds(topicId ? [topicId] : selectedTopics)
-              .setpage(1)
-              .setpageSize(10)
+              .setPage(1)
+              .setPageSize(10)
               .build(),
           )) as never;
         if (fetchFeedsCall.success) {
@@ -116,8 +116,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
               .setTopicIds(selectedTopics)
-              .setpage(currentPageCount)
-              .setpageSize(10)
+              .setPage(currentPageCount)
+              .setPageSize(10)
               .build(),
           )) as never;
         if (fetchFeedsCall.success) {
@@ -150,7 +150,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: DeletePostResponse = (await lmFeedclient?.deletePost(
-          DeletePostRequest.builder().setpostId(id).build(),
+          DeletePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
@@ -184,7 +184,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-          PinPostRequest.builder().setpostId(id).build(),
+          PinPostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
@@ -238,7 +238,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: LikePostResponse = (await lmFeedclient?.likePost(
-          LikePostRequest.builder().setpostId(id).build(),
+          LikePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];

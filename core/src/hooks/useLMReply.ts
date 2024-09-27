@@ -75,10 +75,10 @@ export const useReply: (
         (await lmFeedclient?.getComments(
           postId,
           GetCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(replyId)
-            .setpage(1)
-            .setpageSize(10)
+            .setPostId(postId)
+            .setCommentId(replyId)
+            .setPage(1)
+            .setPageSize(10)
             .build(),
           replyId,
           1,
@@ -104,10 +104,10 @@ export const useReply: (
         (await lmFeedclient?.getComments(
           postId,
           GetCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(replyId)
-            .setpage(pageCount)
-            .setpageSize(10)
+            .setPostId(postId)
+            .setCommentId(replyId)
+            .setPage(pageCount)
+            .setPageSize(10)
             .build(),
           replyId,
           pageCount,
@@ -129,8 +129,8 @@ export const useReply: (
       try {
         const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
           DeleteCommentRequest.builder()
-            .setcommentId(id)
-            .setpostId(postId)
+            .setCommentId(id)
+            .setPostId(postId)
             .build(),
         )) as never;
         if (call.success) {
@@ -171,8 +171,8 @@ export const useReply: (
       try {
         const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
           LikeCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(id)
+            .setPostId(postId)
+            .setCommentId(id)
             .build(),
         )) as never;
         if (call.success) {

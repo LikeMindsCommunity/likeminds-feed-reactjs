@@ -96,9 +96,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       const getPostDetailsCall: GetPostDetailsResponse =
         (await lmFeedclient?.getPost(
           GetPostRequest.builder()
-            .setpage(1)
-            .setpageSize(20)
-            .setpostId(postId)
+            .setPage(1)
+            .setPageSize(20)
+            .setPostId(postId)
             .build(),
         )) as never;
 
@@ -132,9 +132,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       const getPostDetailsCall: GetPostDetailsResponse =
         (await lmFeedclient?.getPost(
           GetPostRequest.builder()
-            .setpage(pageCount)
-            .setpageSize(20)
-            .setpostId(postId)
+            .setPage(pageCount)
+            .setPageSize(20)
+            .setPostId(postId)
             .build(),
         )) as never;
       if (getPostDetailsCall.success) {
@@ -194,8 +194,8 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       try {
         const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
           DeleteCommentRequest.builder()
-            .setpostId(post?.id || "")
-            .setcommentId(id)
+            .setPostId(post?.id || "")
+            .setCommentId(id)
             .build(),
         )) as never;
         if (call.success) {
@@ -259,8 +259,8 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       try {
         const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
           LikeCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(id)
+            .setPostId(postId)
+            .setCommentId(id)
             .build(),
         )) as never;
         if (call.success) {
@@ -288,7 +288,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     async function (id: string) {
       try {
         const call: LikePostResponse = (await lmFeedclient?.likePost(
-          LikePostRequest.builder().setpostId(id).build(),
+          LikePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const postCopy = { ...post };
@@ -332,7 +332,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     async function (id: string) {
       try {
         const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-          PinPostRequest.builder().setpostId(id).build(),
+          PinPostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const tempPost = { ...post };

@@ -69,8 +69,8 @@ export function useLMPostReply(
       const commentText = extractTextFromNode(textFieldRef.current).trim();
       const call: PostCommentResponse = (await lmFeedclient?.addComment(
         AddCommentRequest.builder()
-          .settext(commentText)
-          .setpostId(postId)
+          .setText(commentText)
+          .setPostId(postId)
           .build(),
       )) as never;
       if (call.success && addNewComment) {
@@ -87,9 +87,9 @@ export function useLMPostReply(
       const commentText = extractTextFromNode(textFieldRef.current).trim();
       const call: EditCommentResponse = (await lmFeedclient?.editComment(
         EditCommentRequest.builder()
-          .setcommentId(commentId || "")
-          .setpostId(postId)
-          .settext(commentText)
+          .setCommentId(commentId || "")
+          .setPostId(postId)
+          .setText(commentText)
           .build(),
       )) as never;
 

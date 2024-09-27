@@ -32,9 +32,9 @@ export function useTagging(): UseTagging {
     try {
       const call: GetTaggingListResponse = (await lmFeedclient?.getTaggingList(
         GetTaggingListRequest.builder()
-          .setpage(pg ? pg : pageNo)
-          .setpageSize(10)
-          .setsearchName(tagString || "")
+          .setPage(pg ? pg : pageNo)
+          .setPageSize(10)
+          .setSearchName(tagString || "")
           .build(),
       )) as GetTaggingListResponse;
       if (call.success) {

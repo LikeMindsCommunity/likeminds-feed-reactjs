@@ -238,10 +238,10 @@ export function useCreatePost(): UseCreatePost {
                   .setAttachmentType(1)
                   .setAttachmentMeta(
                     LMFeedPostAttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
                       .build(),
                   )
                   .build(),
@@ -254,11 +254,11 @@ export function useCreatePost(): UseCreatePost {
                   .setAttachmentType(2)
                   .setAttachmentMeta(
                     LMFeedPostAttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
-                      .setduration(10)
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
+                      .setDuration(10)
                       .build(),
                   )
                   .build(),
@@ -271,10 +271,10 @@ export function useCreatePost(): UseCreatePost {
                   .setAttachmentType(3)
                   .setAttachmentMeta(
                     LMFeedPostAttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
                       .build(),
                   )
                   .build(),
@@ -288,11 +288,11 @@ export function useCreatePost(): UseCreatePost {
                   .setAttachmentType(11)
                   .setAttachmentMeta(
                     LMFeedPostAttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
-                      .setduration(10) // Assuming duration is applicable to reels
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
+                      .setDuration(10) // Assuming duration is applicable to reels
                       .build(),
                   )
                   .build(),
@@ -324,17 +324,17 @@ export function useCreatePost(): UseCreatePost {
                 .setAttachmentType(11)
                 .setAttachmentMeta(
                   LMFeedPostAttachmentMeta.builder()
-                    .seturl(reelAttachment?.attachmentMeta.url || "")
-                    .setformat(
+                    .setUrl(reelAttachment?.attachmentMeta.url || "")
+                    .setFormat(
                       reelAttachment?.attachmentMeta?.name
                         ?.split(".")
                         .slice(-1)
                         .toString() || "",
                     )
-                    .setsize(reelAttachment?.attachmentMeta?.size || 0)
-                    .setname(reelAttachment?.attachmentMeta?.name || "")
+                    .setSize(reelAttachment?.attachmentMeta?.size || 0)
+                    .setName(reelAttachment?.attachmentMeta?.name || "")
                     .setThumbnailUrl(thumbnailUrl || "")
-                    // .setduration(10) // Assuming duration is applicable to reels
+                    // .setDuration(10) // Assuming duration is applicable to reels
                     .build(),
                 )
                 .build();
@@ -351,7 +351,7 @@ export function useCreatePost(): UseCreatePost {
             LMFeedPostAttachment.builder()
               .setAttachmentType(4)
               .setAttachmentMeta(
-                LMFeedPostAttachmentMeta.builder().setogTags(ogTag).build(),
+                LMFeedPostAttachmentMeta.builder().setOgTags(ogTag).build(),
               )
               .build(),
           );
@@ -427,7 +427,7 @@ export function useCreatePost(): UseCreatePost {
               LMFeedPostAttachment.builder()
                 .setAttachmentType(4)
                 .setAttachmentMeta(
-                  LMFeedPostAttachmentMeta.builder().setogTags(ogTag).build(),
+                  LMFeedPostAttachmentMeta.builder().setOgTags(ogTag).build(),
                 )
                 .build(),
             );
@@ -461,10 +461,10 @@ export function useCreatePost(): UseCreatePost {
         }
         const call: EditPostResponse = (await lmFeedclient?.editPost(
           EditPostRequest.builder()
-            .setattachments(attachmentResponseArray)
-            .settext(textContent)
+            .setAttachments(attachmentResponseArray)
+            .setText(textContent)
             .setTopicIds(selectedTopicIds)
-            .setpostId(temporaryPost?.id || "")
+            .setPostId(temporaryPost?.id || "")
             .build(),
         )) as never;
         if (call.success) {

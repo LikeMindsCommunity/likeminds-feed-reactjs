@@ -26,7 +26,7 @@ const LMFeedAllMembers = () => {
     try {
       const response: GetAllMembersResponse =
         (await lmFeedclient?.getAllMembers(
-          GetAllMembersRequest.builder().setpage(page).build(),
+          GetAllMembersRequest.builder().setPage(page).build(),
         )) as never;
 
       if (response && response.data && response.data.members) {

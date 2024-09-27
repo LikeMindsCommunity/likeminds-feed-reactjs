@@ -77,7 +77,7 @@ const LMFeedReportPostDialog = ({
     async function getReportTags() {
       try {
         const call: GetReportTagsResponse = (await lmFeedclient?.getReportTags(
-          GetReportTagsRequest.builder().settype(0).build(),
+          GetReportTagsRequest.builder().setType(0).build(),
         )) as never;
         if (call.success) {
           setReportTags(call.data.reportTags);

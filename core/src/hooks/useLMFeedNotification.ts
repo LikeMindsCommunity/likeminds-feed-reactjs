@@ -44,7 +44,7 @@ export function useLMFeedNotification(
   async function markReadNotification(id: string) {
     try {
       await lmFeedClient?.markReadNotification(
-        MarkReadNotificationRequest.builder().setactivityId(id).build(),
+        MarkReadNotificationRequest.builder().setActivityId(id).build(),
       );
     } catch (error) {
       console.log(error);
@@ -56,8 +56,8 @@ export function useLMFeedNotification(
         const call: GetNotificationResponse =
           (await lmFeedClient?.getNotificationFeed(
             GetNotificationFeedRequest.builder()
-              .setpage(notificationPage)
-              .setpageSize(DEFAULT_PAGE_SIZE)
+              .setPage(notificationPage)
+              .setPageSize(DEFAULT_PAGE_SIZE)
               .build(),
           )) as never;
         if (call.success) {
