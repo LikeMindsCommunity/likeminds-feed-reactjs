@@ -11,8 +11,7 @@ import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
 import { NotificationsCustomActions } from "../types/cutomCallbacks/callbacks";
 import { LMFeedNotificationAnalytics } from "../enums/lmNotificationAnalytics";
-// import threeDotMenuIcon from "../../assets/images/3-dot-menu-post-header.svg";
-// import threeDotMenuIcon from "../../";
+
 const LMFeedNotification = ({
   customEventClient,
   NotificationBellCustomIcon,
@@ -64,20 +63,20 @@ const LMFeedNotification = ({
                     const avatar = getAvatar({ imageUrl, name });
                     return (
                       <div
-                        key={activity?.Id}
+                        key={activity?.id}
                         className={`lm-feed-activity-wrapper__activity-item lm-cursor-pointer ${!activity.isRead ? "non-interacted-activity" : ""} lm-hover-effect`}
-                        onClick={() => handleNotification(activity.Id)}
-                        lm-feed-component-id={`lm-feed-notifications-wrapper-nopqr-${activity.Id}`}
+                        onClick={() => handleNotification(activity?.id)}
+                        lm-feed-component-id={`lm-feed-notifications-wrapper-nopqr-${activity?.id}`}
                       >
                         <div
                           className="user-image"
-                          lm-feed-component-id={`lm-feed-notifications-wrapper-stuvw-${activity.Id}`}
+                          lm-feed-component-id={`lm-feed-notifications-wrapper-stuvw-${activity?.id}`}
                         >
                           {avatar}
                         </div>
                         <div
                           className="notification-content"
-                          lm-feed-component-id={`lm-feed-notifications-wrapper-xyzab-${activity.Id}`}
+                          lm-feed-component-id={`lm-feed-notifications-wrapper-xyzab-${activity?.id}`}
                         >
                           <div
                             className="notification-text"
@@ -85,17 +84,17 @@ const LMFeedNotification = ({
                               __html: convertTextToHTML(activity?.activityText)
                                 ?.innerHTML,
                             }}
-                            lm-feed-component-id={`lm-feed-notifications-wrapper-cdefg-${activity.Id}`}
+                            lm-feed-component-id={`lm-feed-notifications-wrapper-cdefg-${activity?.id}`}
                           ></div>
                           <div
                             className="notification-time-before"
-                            lm-feed-component-id={`lm-feed-notifications-wrapper-hijkl-${activity.Id}`}
+                            lm-feed-component-id={`lm-feed-notifications-wrapper-hijkl-${activity?.id}`}
                           >
                             {dayjs(activity?.updatedAt).fromNow()}
                           </div>
                         </div>
                         <div
-                          lm-feed-component-id={`lm-feed-notifications-wrapper-mnopq-${activity.Id}`}
+                          lm-feed-component-id={`lm-feed-notifications-wrapper-mnopq-${activity?.id}`}
                         ></div>
                       </div>
                     );

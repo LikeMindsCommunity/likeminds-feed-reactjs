@@ -87,8 +87,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
               .setTopicIds(topicId ? [topicId] : selectedTopics)
-              .setpage(1)
-              .setpageSize(10)
+              .setPage(1)
+              .setPageSize(10)
               .build(),
           )) as never;
         if (fetchFeedsCall.success) {
@@ -116,8 +116,8 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           (await lmFeedclient?.getFeed(
             GetFeedRequest.builder()
               .setTopicIds(selectedTopics)
-              .setpage(currentPageCount)
-              .setpageSize(10)
+              .setPage(currentPageCount)
+              .setPageSize(10)
               .build(),
           )) as never;
         if (fetchFeedsCall.success) {
@@ -150,11 +150,11 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: DeletePostResponse = (await lmFeedclient?.deletePost(
-          DeletePostRequest.builder().setpostId(id).build(),
+          DeletePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const post = feedListCopy[index];
           lmfeedAnalyticsClient?.sendPostDeletedEvent(
             post,
@@ -184,11 +184,11 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-          PinPostRequest.builder().setpostId(id).build(),
+          PinPostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const tempPost = feedListCopy[index];
           if (tempPost.isPinned) {
             tempPost.isPinned = false;
@@ -238,11 +238,11 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     async function (id: string) {
       try {
         const call: LikePostResponse = (await lmFeedclient?.likePost(
-          LikePostRequest.builder().setpostId(id).build(),
+          LikePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const feedListCopy = [...feedList];
-          const index = feedListCopy.findIndex((feed) => feed.Id === id);
+          const index = feedListCopy.findIndex((feed) => feed.id === id);
           const post = feedListCopy[index];
           feedListCopy[index].isLiked = !feedListCopy[index].isLiked;
           if (feedListCopy[index].isLiked) {
@@ -278,7 +278,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         const detail = (e as CustomEvent).detail;
         const { post, usersMap, topicsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
-          if (feed.Id === post.Id) {
+          if (feed.id === post?.id) {
             return post;
           } else {
             return feed;
@@ -303,7 +303,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             if (post.isLiked) {
               post.isLiked = false;
               post.likesCount--;
@@ -326,7 +326,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.commentsCount++;
           }
           return post;
@@ -343,7 +343,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.commentsCount--;
           }
           return post;
@@ -360,7 +360,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       (e: Event) => {
         const id = (e as CustomEvent).detail.id;
         const feedListCopy = [...feedList].map((post) => {
-          if (post.Id === id) {
+          if (post?.id === id) {
             post.menuItems = post.menuItems.map((menuItem) => {
               if (menuItem.id.toString() === LMFeedPostMenuItems.PIN_POST) {
                 menuItem.id = parseInt(LMFeedPostMenuItems.UNPIN_POST);

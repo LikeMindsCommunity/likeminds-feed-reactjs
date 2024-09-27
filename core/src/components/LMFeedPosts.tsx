@@ -46,8 +46,8 @@ const LMFeedPost: React.FC<LMFeedPostProps> = () => {
   return (
     <div
       className="lm-feed-wrapper__card lm-mb-2"
-      lm-feed-data-id={post?.Id}
-      lm-feed-component-id={`lm-feed-post-wrapper-${post?.Id}`}
+      lm-feed-data-id={post?.id}
+      lm-feed-component-id={`lm-feed-post-wrapper-${post?.id}`}
       onClick={(e) => {
         if (postComponentClickCustomCallback) {
           postComponentClickCustomCallback(e);

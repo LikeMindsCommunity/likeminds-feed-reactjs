@@ -1,6 +1,3 @@
-export interface OgTag {
-  description: string;
-  image: string;
-  title: string;
-  url: string;
-}
+import { OgTag as LMFeedOGTag } from "@likeminds.community/feed-js";
+
+export interface OgTag extends LMFeedOGTag {}

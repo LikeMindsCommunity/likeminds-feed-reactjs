@@ -1,12 +1,4 @@
-import { Activity } from "../models/Activity";
-import { User } from "../models/member";
-import { Topic } from "../models/topic";
+import { GetNotification, LMResponseType } from "@likeminds.community/feed-js";
 
-export interface GetNotificationResponse {
-  success: boolean;
-  data: {
-    activities: Activity[];
-    topics: { [key: string]: Topic };
-    users: { [key: string]: User };
-  };
-}
+export interface GetNotificationResponse
+  extends LMResponseType<GetNotification> {}

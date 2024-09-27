@@ -41,15 +41,6 @@ const LMFeedTextArea = () => {
       }
     }
   }
-  // useEffect(() => {
-  //   if (textFieldRef?.current && customEventClient) {
-  //     const eventL = customEventClient.createEventListener(() => {});
-  //     textFieldRef.current.addEventListener(
-  //       "click",
-  //       (() => console.log(this)).bind(eventL),
-  //     );
-  //   }
-  // }, [customEventClient, textFieldRef]);
 
   useEffect(() => {
     if (temporaryPost && textFieldRef?.current) {
@@ -174,9 +165,6 @@ const LMFeedTextArea = () => {
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             event.preventDefault();
-            //prevent the default behaviour (where the browser would add a new text node)
-            // document.execCommand("insertLineBreak");
-            // event.preventDefault();
             const selection = window.getSelection()!;
             const range = selection.getRangeAt(0).cloneRange();
             const p = document.createElement("p");

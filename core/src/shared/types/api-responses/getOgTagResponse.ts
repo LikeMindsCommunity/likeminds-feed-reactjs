@@ -1,8 +1,3 @@
-import { OgTag } from "../models/ogTag";
+import { DecodeURL, LMResponseType } from "@likeminds.community/feed-js";
 
-export interface GetOgTagResponse {
-  success: boolean;
-  data: {
-    og_tags: OgTag;
-  };
-}
+export interface GetOgTagResponse extends LMResponseType<DecodeURL> {}

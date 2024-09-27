@@ -6,7 +6,7 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import { GetPostLikesRequest } from "@likeminds.community/feed-js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getAvatar } from "../shared/components/LMUserMedia";
-import { Member, User } from "../shared/types/models/member";
+import { User } from "../shared/types/models/member";
 import { GetPostLikesResponse } from "../shared/types/api-responses/getPostLikesResponse";
 
 const LMFeedLikedMembers = (props: any) => {
@@ -15,7 +15,7 @@ const LMFeedLikedMembers = (props: any) => {
   const { lmFeedclient, customEventClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<User[]>([]);
   const [loadMoreFeeds, setLoadMoreFeeds] = useState<boolean>(true);
   const [pageCount, setPageCount] = useState<number>(1);
   const [totalMemberCounts, setTotalMemberCounts] = useState<number>(0);
@@ -25,9 +25,9 @@ const LMFeedLikedMembers = (props: any) => {
     try {
       const response: GetPostLikesResponse = (await lmFeedclient?.getPostLikes(
         GetPostLikesRequest.builder()
-          .setpage(page)
-          .setpageSize(20)
-          .setpostId(postId)
+          .setPage(page)
+          .setPageSize(20)
+          .setPostId(postId)
           .build(),
       )) as never;
 
@@ -82,7 +82,7 @@ const LMFeedLikedMembers = (props: any) => {
           scrollableTarget="member-scroll-container"
         >
           {members ? (
-            members.map((member: Member) => (
+            members.map((member: User) => (
               <div
                 key={member.sdkClientInfo.uuid}
                 className="lm-member-wrapper__body__media lm-hover-effect lm-cursor-pointer"

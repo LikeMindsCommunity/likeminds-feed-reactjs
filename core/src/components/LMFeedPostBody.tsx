@@ -19,16 +19,16 @@ const LMFeedPostBody = () => {
     return (
       <div
         className="attachments"
-        lm-feed-component-id={`lm-feed-post-body-dn2pl-${post?.Id}`}
+        lm-feed-component-id={`lm-feed-post-body-dn2pl-${post?.id}`}
       >
         {CustomPostViewAttachment ? (
           <CustomPostViewAttachment
-            postId={post?.Id || ""}
+            postId={post?.id || ""}
             attachments={attachments}
           />
         ) : (
           <LMFeedAttachments
-            postId={post?.Id || ""}
+            postId={post?.id || ""}
             attachments={attachments.filter(
               (attachment) => attachment.attachmentType !== 5,
             )}
@@ -36,12 +36,12 @@ const LMFeedPostBody = () => {
         )}
       </div>
     );
-  }, [CustomPostViewAttachment, attachments, post?.Id]);
+  }, [CustomPostViewAttachment, attachments, post?.id]);
 
   return (
     <div
       className="lm-feed-wrapper__card__body"
-      lm-feed-component-id={`lm-feed-post-body-vwxyz-${post?.Id}`}
+      lm-feed-component-id={`lm-feed-post-body-vwxyz-${post?.id}`}
     >
       {heading.length > 0 && (
         <h1
@@ -51,7 +51,7 @@ const LMFeedPostBody = () => {
               ? "pointer"
               : undefined,
           }}
-          lm-feed-component-id={`lm-feed-post-body-abcde-${post?.Id}`}
+          lm-feed-component-id={`lm-feed-post-body-abcde-${post?.id}`}
         >
           {heading}
         </h1>
@@ -60,7 +60,7 @@ const LMFeedPostBody = () => {
       {text ? (
         <div
           className="lm-feed-wrapper__card__body__content"
-          lm-feed-component-id={`lm-feed-post-body-fghij-${post?.Id}`}
+          lm-feed-component-id={`lm-feed-post-body-fghij-${post?.id}`}
         >
           {(() => {
             const processedText = textPreprocessor(text);
@@ -77,7 +77,7 @@ const LMFeedPostBody = () => {
                       fontSize: "14px",
                     }}
                     onClick={() => setHasReadMoreTapped(true)}
-                    lm-feed-component-id={`lm-feed-post-body-klmno-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-body-klmno-${post?.id}`}
                   >
                     ...ReadMore
                   </span>
@@ -92,7 +92,7 @@ const LMFeedPostBody = () => {
       {/* post text */}
       <div
         className="lm-feed-wrapper__card__body__attachment"
-        lm-feed-component-id={`lm-feed-post-body-pqrst-${post?.Id}`}
+        lm-feed-component-id={`lm-feed-post-body-pqrst-${post?.id}`}
       >
         {renderAttachments()}
       </div>

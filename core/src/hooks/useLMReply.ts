@@ -75,10 +75,10 @@ export const useReply: (
         (await lmFeedclient?.getComments(
           postId,
           GetCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(replyId)
-            .setpage(1)
-            .setpageSize(10)
+            .setPostId(postId)
+            .setCommentId(replyId)
+            .setPage(1)
+            .setPageSize(10)
             .build(),
           replyId,
           1,
@@ -104,10 +104,10 @@ export const useReply: (
         (await lmFeedclient?.getComments(
           postId,
           GetCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(replyId)
-            .setpage(pageCount)
-            .setpageSize(10)
+            .setPostId(postId)
+            .setCommentId(replyId)
+            .setPage(pageCount)
+            .setPageSize(10)
             .build(),
           replyId,
           pageCount,
@@ -129,15 +129,15 @@ export const useReply: (
       try {
         const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
           DeleteCommentRequest.builder()
-            .setcommentId(id)
-            .setpostId(postId)
+            .setCommentId(id)
+            .setPostId(postId)
             .build(),
         )) as never;
         if (call.success) {
           if (post) {
             lmfeedAnalyticsClient?.sendReplyDeletedEvent(post, reply!, id);
           }
-          const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
+          const repliesCopy = [...replies].filter((reply) => reply?.id !== id);
           const replyCopy = { ...reply };
           if (replyCopy && replyCopy.commentsCount) {
             replyCopy.commentsCount--;
@@ -171,13 +171,13 @@ export const useReply: (
       try {
         const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
           LikeCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(id)
+            .setPostId(postId)
+            .setCommentId(id)
             .build(),
         )) as never;
         if (call.success) {
           const repliesCopy = [...replies].map((reply) => {
-            if (reply.Id === id) {
+            if (reply?.id === id) {
               if (reply.isLiked) {
                 reply.isLiked = false;
                 reply.likesCount--;
@@ -199,7 +199,7 @@ export const useReply: (
   const updateReply = useCallback(
     function (comment: Reply, usersMap: Record<string, User>) {
       const repliesCopy = [...replies].map((reply) =>
-        reply.Id === comment.Id ? comment : reply,
+        reply?.id === comment.id ? comment : reply,
       );
       const usersCopy = { ...users, ...usersMap };
       setReplies(repliesCopy);
@@ -214,7 +214,7 @@ export const useReply: (
       (e: Event) => {
         const comment: Reply = (e as CustomEvent).detail.comment;
         const userMap: Record<string, User> = (e as CustomEvent).detail.users;
-        if (comment.parentComment?.Id === replyId) {
+        if (comment.parentComment?.id === replyId) {
           const repliesCopy = [comment, ...replies];
           const usersCopy = { ...users, ...userMap };
           setReplies(repliesCopy);
