@@ -159,7 +159,21 @@ export function convertTextToHTML(text: string) {
 
   for (let i = 0; i < splits?.length; i++) {
     const splitNode = document.createTextNode(splits[i]);
-    container.appendChild(splitNode);
+    // const pNode = document.createElement('p')
+
+    splits[i].split("\n").forEach((textString, index, loopingArr) => {
+      if (textString.length) {
+        const pNode = document.createElement("p");
+        pNode.appendChild(document.createTextNode(textString));
+        container.appendChild(pNode);
+      }
+      if (index != loopingArr.length - 1 && textString.length == 0) {
+        const brPNode = document.createElement("p");
+        brPNode.appendChild(document.createElement("br"));
+        container.appendChild(brPNode);
+      }
+    });
+    // container.appendChild(splitNode);
 
     if (matches[i]) {
       const text = matches[i];
