@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-// import { AvatarProps } from "./types/models/avatarProps";
+
+import pluralize from "pluralize";
 dayjs.extend(relativeTime);
 
 const formatTimeAgo = (timestamp: number): string => {
@@ -275,5 +276,49 @@ export function returnPostId() {
     return postId;
   } else {
     return "";
+  }
+}
+
+// Define the WordAction enum
+enum WordAction {
+  FIRST_LETTER_CAPITAL_SINGULAR = "FIRST_LETTER_CAPITAL_SINGULAR",
+  ALL_CAPITAL_SINGULAR = "ALL_CAPITAL_SINGULAR",
+  ALL_SMALL_SINGULAR = "ALL_SMALL_SINGULAR",
+  FIRST_LETTER_CAPITAL_PLURAL = "FIRST_LETTER_CAPITAL_PLURAL",
+  ALL_CAPITAL_PLURAL = "ALL_CAPITAL_PLURAL",
+  ALL_SMALL_PLURAL = "ALL_SMALL_PLURAL",
+}
+
+export function pluralizeOrCapitalize(
+  word: string,
+  action: WordAction,
+): string {
+  switch (action) {
+    case WordAction.FIRST_LETTER_CAPITAL_SINGULAR:
+      return (
+        pluralize.singular(word).charAt(0).toUpperCase() +
+        pluralize.singular(word).slice(1).toLowerCase()
+      );
+
+    case WordAction.ALL_CAPITAL_SINGULAR:
+      return pluralize.singular(word).toUpperCase();
+
+    case WordAction.ALL_SMALL_SINGULAR:
+      return pluralize.singular(word).toLowerCase();
+
+    case WordAction.FIRST_LETTER_CAPITAL_PLURAL:
+      return (
+        pluralize.plural(word).charAt(0).toUpperCase() +
+        pluralize.plural(word).slice(1).toLowerCase()
+      );
+
+    case WordAction.ALL_CAPITAL_PLURAL:
+      return pluralize.plural(word).toUpperCase();
+
+    case WordAction.ALL_SMALL_PLURAL:
+      return pluralize.plural(word).toLowerCase();
+
+    default:
+      throw new Error("Invalid action type");
   }
 }
