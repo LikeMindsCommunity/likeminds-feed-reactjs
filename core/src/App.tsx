@@ -158,7 +158,11 @@ function App() {
         client={lmFeedClient}
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
-        userDetails={{}}
+        userDetails={{
+          uuid: "James Joy",
+          username: "James Joy",
+          apiKey: "c142bc84-4c40-4412-ad09-c7e59b93a2ca",
+        }}
       ></LMFeed>
     </>
   );
