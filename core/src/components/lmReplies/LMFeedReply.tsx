@@ -1,11 +1,10 @@
 import { useContext, useState } from "react";
 import { ReplyContext } from "../../contexts/LMFeedReplyContext";
-import { timeFromNow } from "../../shared/utils";
+import { changeLikeCase, timeFromNow } from "../../shared/utils";
 import likeIcon from "../../assets/images/like-sm.svg";
 import commentLiked from "../../assets/images/liked-sm.png";
 import LMFeedRepliesScroller from "./LMFeedRepliesScroller";
 
-import { LIKE, LIKES } from "../../shared/constants/lmAppConstant";
 import LMFeedReplyTextArea from "../../shared/components/LMFeedReplyTextArea";
 import repliesThreeDotMenu from "../../assets/images/three-dot-menu-replies.svg";
 import { Dialog, Menu } from "@mui/material";
@@ -20,6 +19,7 @@ import { LMFeedDeletePostModes } from "../../shared/enums/lmDeleteDialogModes";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
 import { FeedPostContext } from "../../contexts/LMFeedPostContext";
 import LMFeedGlobalClientProviderContext from "../../contexts/LMFeedGlobalClientProviderContext";
+import { WordAction } from "../../shared/enums/wordAction";
 
 export interface LMFeedReplyInterface {
   mode: string;
@@ -227,9 +227,9 @@ const LMFeedReply = ({ mode }: LMFeedReplyInterface) => {
             {reply?.likesCount ? (
               <span>
                 {(reply?.likesCount || 0) > 1
-                  ? `${reply?.likesCount} ${LIKES}`
+                  ? `${reply?.likesCount} ${changeLikeCase(WordAction.FIRST_LETTER_CAPITAL_PLURAL)}`
                   : (reply?.likesCount || 0) === 1
-                    ? `${reply?.likesCount} ${LIKE}`
+                    ? `${reply?.likesCount} ${changeLikeCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`
                     : ""}
               </span>
             ) : (

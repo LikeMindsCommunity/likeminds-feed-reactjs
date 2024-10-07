@@ -3,6 +3,12 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 
 import pluralize from "pluralize";
+
+import { TokenValues } from "./enums/tokens";
+import { WordAction } from "./enums/wordAction";
+import { LMDisplayMessages } from "../old_index";
+// import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
+import { GetCommunityConfigurationsResponse } from "./types/api-responses/getComunityConfigurations";
 dayjs.extend(relativeTime);
 
 const formatTimeAgo = (timestamp: number): string => {
@@ -279,14 +285,10 @@ export function returnPostId() {
   }
 }
 
-// Define the WordAction enum
-enum WordAction {
-  FIRST_LETTER_CAPITAL_SINGULAR = "FIRST_LETTER_CAPITAL_SINGULAR",
-  ALL_CAPITAL_SINGULAR = "ALL_CAPITAL_SINGULAR",
-  ALL_SMALL_SINGULAR = "ALL_SMALL_SINGULAR",
-  FIRST_LETTER_CAPITAL_PLURAL = "FIRST_LETTER_CAPITAL_PLURAL",
-  ALL_CAPITAL_PLURAL = "ALL_CAPITAL_PLURAL",
-  ALL_SMALL_PLURAL = "ALL_SMALL_PLURAL",
+export function getCommunityConfigurationFromLocalStorage(): GetCommunityConfigurationsResponse {
+  return JSON.parse(
+    localStorage.getItem(TokenValues.COMMUNITY_CONFIGURATIONS)!,
+  ) as GetCommunityConfigurationsResponse;
 }
 
 export function pluralizeOrCapitalize(
@@ -320,5 +322,55 @@ export function pluralizeOrCapitalize(
 
     default:
       throw new Error("Invalid action type");
+  }
+}
+
+export function changePostCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const postVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.post || "post";
+  return pluralizeOrCapitalize(word || postVariable, action);
+}
+
+export function changeCommentCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const commentVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.comment || "comment";
+  return pluralizeOrCapitalize(word || commentVariable, action);
+}
+
+export function changeLikeCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const likeVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.likeEntityVariable.entityName || "like";
+  return pluralizeOrCapitalize(word || likeVariable, action);
+}
+
+export function getDisplayMessage(message: LMDisplayMessages) {
+  switch (message) {
+    case LMDisplayMessages.POST_DELETED_SUCCESSFULLY:
+      return `The ${changePostCase(WordAction.ALL_SMALL_SINGULAR)} was deleted successfully`;
+    case LMDisplayMessages.POST_PINNED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} pinned`;
+    case LMDisplayMessages.PIN_REMOVED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} unpinned`;
+    case LMDisplayMessages.POST_CREATED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} created`;
+    case LMDisplayMessages.POST_EDIT_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} edited`;
+    case LMDisplayMessages.POST_LIKE_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} liked`;
+    case LMDisplayMessages.REPLY_DELETED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} deleted`;
+    case LMDisplayMessages.COMMENT_DELETED_SUCCESS:
+      return "Comment deleted";
+    case LMDisplayMessages.ERROR_LOADING_POST:
+      return `error loading ${changePostCase(WordAction.ALL_SMALL_SINGULAR)}`;
   }
 }

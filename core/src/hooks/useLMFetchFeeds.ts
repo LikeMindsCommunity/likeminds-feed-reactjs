@@ -25,6 +25,7 @@ import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/data
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { getDisplayMessage } from "../shared/utils";
 
 // import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 
@@ -164,7 +165,9 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           feedListCopy.splice(index, 1);
           setFeedList(feedListCopy);
           if (displaySnackbarMessage)
-            displaySnackbarMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY);
+            displaySnackbarMessage(
+              getDisplayMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY),
+            );
         }
       } catch (error) {
         console.log(error);
@@ -221,9 +224,13 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           setFeedList(feedListCopy);
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
-              displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS),
+              );
             } else {
-              displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS),
+              );
             }
           }
         }
@@ -265,7 +272,9 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
       loadFeed();
       if (displaySnackbarMessage) {
-        displaySnackbarMessage(LMDisplayMessages.POST_CREATED_SUCCESS);
+        displaySnackbarMessage(
+          getDisplayMessage(LMDisplayMessages.POST_CREATED_SUCCESS),
+        );
       }
     });
     return () =>
@@ -290,7 +299,9 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         setTopics(topicsCopy);
         setFeedUsersList(feedUsersCopy);
         if (displaySnackbarMessage) {
-          displaySnackbarMessage(LMDisplayMessages.POST_EDIT_SUCCESS);
+          displaySnackbarMessage(
+            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS),
+          );
         }
       },
     );
