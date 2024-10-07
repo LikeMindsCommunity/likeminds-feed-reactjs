@@ -85,6 +85,7 @@ export function useCreatePost(): UseCreatePost {
     allowThumbnail,
     showSnackbar,
     message,
+    setOpenPostCreationProgressBar,
   } = useContext(GeneralContext);
   const {
     PostCreationCustomCallbacks = {},
@@ -210,6 +211,9 @@ export function useCreatePost(): UseCreatePost {
         ).trim();
 
         const attachmentResponseArray: Attachment[] = [];
+        if (mediaList.length) {
+          setOpenPostCreationProgressBar!(true);
+        }
         for (let index = 0; index < mediaList.length; index++) {
           const file: File = mediaList[index];
 
@@ -387,6 +391,8 @@ export function useCreatePost(): UseCreatePost {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setOpenPostCreationProgressBar!(false);
       }
     },
     [

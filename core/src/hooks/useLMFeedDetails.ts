@@ -26,6 +26,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 
 import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { getDisplayMessage } from "../shared/utils";
 
 interface UseFeedDetailsInterface {
   post: Post | null;
@@ -116,7 +117,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getPostDetailsCall?.errorMessage ||
-              LMDisplayMessages.ERROR_LOADING_POST,
+              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST),
           );
         }
         window.history.back();
@@ -381,9 +382,13 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           }
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
-              displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS),
+              );
             } else {
-              displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS),
+              );
             }
           }
         }
@@ -435,7 +440,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         setTopics(topicsCopy);
         setUsers(feedUsersCopy);
         if (displaySnackbarMessage) {
-          displaySnackbarMessage(LMDisplayMessages.POST_EDIT_SUCCESS);
+          displaySnackbarMessage(
+            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS),
+          );
         }
       },
     );

@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useState } from "react";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { formatTimeAgo } from "../shared/utils";
-import { EDITED, POST } from "../shared/constants/lmAppConstant";
+import { changePostCase, formatTimeAgo } from "../shared/utils";
+import { EDITED } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { Dialog, Menu } from "@mui/material";
@@ -14,6 +14,7 @@ import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import pinIcon from "../assets/images/Icon-pin_new.svg";
 import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
+import { WordAction } from "../shared/enums/wordAction";
 const LMFeedPostHeader = () => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
@@ -159,7 +160,10 @@ const LMFeedPostHeader = () => {
                 </>
               ) : (
                 <>
-                  {LMPostHeaderStyles?.postBadgeText || POST}
+                  {changePostCase(
+                    WordAction.FIRST_LETTER_CAPITAL_SINGULAR,
+                    LMPostHeaderStyles?.postBadgeText,
+                  )}
                   <span
                     lm-feed-component-id={`lm-feed-post-header-opqrs-${post?.id}`}
                   >

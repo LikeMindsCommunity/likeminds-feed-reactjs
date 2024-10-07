@@ -3,6 +3,8 @@ import { useState } from "react";
 export function useLMFeedGeneralContextProvider(): UseLMFeedGeneralContextProvider {
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [openPostCreationProgressBar, setOpenPostCreationProgressBar] =
+    useState<boolean>(false);
   function displaySnackbarMessage(msg: string) {
     setShowSnackbar(true);
     setMessage(msg);
@@ -16,6 +18,8 @@ export function useLMFeedGeneralContextProvider(): UseLMFeedGeneralContextProvid
     closeSnackbar,
     message,
     showSnackbar,
+    openPostCreationProgressBar,
+    setOpenPostCreationProgressBar,
   };
 }
 interface UseLMFeedGeneralContextProvider {
@@ -23,4 +27,6 @@ interface UseLMFeedGeneralContextProvider {
   closeSnackbar: () => void;
   showSnackbar: boolean;
   message: string;
+  openPostCreationProgressBar: boolean;
+  setOpenPostCreationProgressBar: (open: boolean) => void;
 }

@@ -7,10 +7,13 @@ import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import { ValidateUserResponse } from "../shared/types/api-responses/initiateUserResponse";
 import {
   InitiateUserRequest,
+  LMResponseType,
   ValidateUserRequest,
 } from "@likeminds.community/feed-js";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
+import { TokenValues } from "../shared/enums/tokens";
 // import { TokenValues } from "../shared/enums/tokens";
 export interface UserDetails {
   accessToken?: string;
@@ -124,6 +127,15 @@ export default function useUserProvider(
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
 
+        // Fetching Community Configurations
+        const getCommunityConfigurations =
+          (await lmFeedclient?.getCommunityConfigurations()) as LMResponseType<GetCommunityConfigurationsResponse>;
+        if (getCommunityConfigurations.success) {
+          localStorage.setItem(
+            TokenValues.COMMUNITY_CONFIGURATIONS,
+            JSON.stringify(getCommunityConfigurations.data),
+          );
+        }
         if (initiateUserCall.success && memberStateCall.success) {
           const user = {
             ...initiateUserCall.data?.user,

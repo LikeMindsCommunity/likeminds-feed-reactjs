@@ -6,20 +6,19 @@ import postLiked from "../assets/images/liked-post.svg";
 import commnent from "../assets/images/comment.svg";
 // import bookmark from "../assets/images/bookmark.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import {
-  COMMNENT,
-  COMMNENTS,
-  // GUEST_USER_ACTION_MESSAGE,
-  LIKE,
-  LIKES,
-} from "../shared/constants/lmAppConstant";
+
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
 import { Divider, Drawer } from "@mui/material";
 import LMFeedLikedMembers from "./LMFeedLikedMembers";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { returnPostId } from "../shared/utils";
+import {
+  changeCommentCase,
+  changeLikeCase,
+  returnPostId,
+} from "../shared/utils";
+import { WordAction } from "../shared/enums/wordAction";
 
 const LMFeedPostFooter = () => {
   const { lmfeedAnalyticsClient } = useContext(
@@ -107,7 +106,7 @@ const LMFeedPostFooter = () => {
                 }}
               >
                 {" "}
-                {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
+                {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? changeLikeCase(WordAction.FIRST_LETTER_CAPITAL_PLURAL) : changeLikeCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`}
               </span>
             </div>
             <div
@@ -137,7 +136,7 @@ const LMFeedPostFooter = () => {
                 className="comments lm-feed-wrapper__card__footer_comments-count"
                 lm-feed-component-id={`lm-feed-post-footer-uvwxy-${post?.id}`}
               >
-                {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
+                {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? changeCommentCase(WordAction.FIRST_LETTER_CAPITAL_PLURAL) : changeCommentCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`}
               </span>
             </div>
           </div>

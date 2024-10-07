@@ -10,14 +10,10 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
-import {
-  PDF,
-  PHOTO,
-  POST,
-  VIDEO,
-  REEL,
-} from "../shared/constants/lmAppConstant";
+import { PDF, PHOTO, VIDEO, REEL } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { changePostCase } from "../shared/utils";
+import { WordAction } from "../shared/enums/wordAction";
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
 }
@@ -224,7 +220,7 @@ const LMFeedCreatePost = ({
                       setOpenCreatePostDialog(!openCreatePostDialog);
                     }}
                   >
-                    {POST}
+                    {changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}
                   </button>
                 </div>
               </div>
