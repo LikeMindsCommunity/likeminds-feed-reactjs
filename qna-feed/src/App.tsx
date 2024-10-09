@@ -2,7 +2,7 @@
 import { useState } from "react";
 import "./App.css";
 import {
-  LMFeed,
+  LMQNAFeed,
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   LMCoreCallbacks,
@@ -173,12 +173,12 @@ function App() {
   return (
     <>
       <LMFeedNotificationHeader customEventClient={customEventClient} />
-      <LMFeed
+      <LMQNAFeed
         client={lmFeedClient}
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
         userDetails={userDetails}
-      ></LMFeed>
+      ></LMQNAFeed>
     </>
   );
 }
