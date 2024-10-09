@@ -14,7 +14,7 @@ import { LMFeedCustomEvents } from "../shared/customEvents";
 import { pdfjs } from "react-pdf";
 import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContextProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
+import LMQNAFeedListDataContextProvider from "./LMQNAFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
 import { AnalyticsCallback } from "../shared/types/analyticsCallback";
 import { LMFeedAnalytics } from "../shared/analytics";
@@ -125,7 +125,7 @@ function LMQNAFeed({
                 logoutUser: logoutUser,
               }}
             >
-              <LMFeedListDataContextProvider />
+              <LMQNAFeedListDataContextProvider />
             </UserProviderContext.Provider>
           </GeneralContext.Provider>
         </CustomAgentProviderContext.Provider>
