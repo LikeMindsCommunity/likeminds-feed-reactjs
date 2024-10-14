@@ -24,6 +24,8 @@ export interface CustomComponents {
   CustomCreatePostTextArea?: ReactNode;
   CustomCreatePostInitiateView?: React.FC<LMCreatePostInitiateViewProps>;
   CustomCreatePostDialog?: ReactNode;
+  CustomUniversalFeed?: ReactNode;
+  CustomFeedDetails?: React.FC<{ postId: string }>;
 }
 
 export interface CustomCallbacks {

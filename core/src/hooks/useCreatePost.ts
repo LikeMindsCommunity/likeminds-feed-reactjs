@@ -18,7 +18,7 @@ import {
   EditPostRequest,
   LMFeedPostAttachment,
   LMFeedPostAttachmentMeta,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";

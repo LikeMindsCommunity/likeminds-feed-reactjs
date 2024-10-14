@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetTaggingListRequest } from "@likeminds.community/feed-js";
+import { GetTaggingListRequest } from "@likeminds.community/feed-js-beta";
 import { GetTaggingListResponse } from "../shared/types/api-responses/getTaggingListResponse";
 import { TaggingMember } from "../shared/types/models/taggingMember";
 
