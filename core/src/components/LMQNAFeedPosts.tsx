@@ -3,11 +3,11 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 
 import LMFeedPostHeader from "./LMFeedPostHeader";
-import LMFeedPostFooter from "./LMFeedPostFooter";
 import LMFeedPostTopicsWrapper from "./LMFeedPostTopicsWrapper";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMQNAFeedPostBody from "./LMQNAFeedPostBody";
+import LMQNAFeedPostFooter from "./LMQNAFeedPostFooter";
 // import LMFeedPostBody from "./LMFeedPostBody";
 // import { FeedPostContext } from "../contexts/LMFeedPostContext";
 
@@ -73,7 +73,7 @@ const LMQNAFeedPosts: React.FC<LMFeedPostProps> = () => {
       {CustomComponents?.CustomPostViewFooter ? (
         CustomComponents.CustomPostViewFooter
       ) : (
-        <LMFeedPostFooter />
+        <LMQNAFeedPostFooter />
       )}
     </div>
   );

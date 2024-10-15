@@ -5,7 +5,6 @@ import pdf from "../assets/images/lm-attach.svg";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { useCreatePost } from "../hooks/useCreatePost";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
-import LMFeedCreatePostDialog from "./LMFeedCreatePostDialog";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
@@ -18,6 +17,7 @@ import {
   REEL,
 } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import LMQNAFeedCreatePostDialog from "./LMQNAFeedCreatePostDialog";
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
 }
@@ -63,6 +63,8 @@ const LMQNAFeedCreatePost = ({
     tempReelThumbnail,
     removeThumbnailReel,
     removeAddReel,
+    question,
+    setQuestionText,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -70,6 +72,8 @@ const LMQNAFeedCreatePost = ({
         createPostComponentClickCustomCallback,
         postText,
         setPostText,
+        question,
+        setQuestionText,
         mediaList,
         addMediaItem,
         removeMedia,
@@ -118,9 +122,9 @@ const LMQNAFeedCreatePost = ({
             <div className="lm-createPost">
               <div className="lm-createPost__media">
                 <div className="lm-createPost__media__imgBox lm-avatar">
-                  {/* <img src={user} alt="user photo" /> */}
                   {avatar}
                 </div>
+
                 <div
                   onClick={() => {
                     setOpenCreatePostDialog(!openCreatePostDialog);
@@ -239,7 +243,9 @@ const LMQNAFeedCreatePost = ({
           setOpenCreatePostDialog(false);
         }}
       >
-        {CustomComponents.CustomCreatePostDialog || <LMFeedCreatePostDialog />}
+        {CustomComponents.CustomCreatePostDialog || (
+          <LMQNAFeedCreatePostDialog />
+        )}
       </Dialog>
     </LMFeedCreatePostContext.Provider>
   );

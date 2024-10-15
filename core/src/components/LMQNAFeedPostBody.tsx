@@ -60,7 +60,7 @@ const LMQNAFeedPostBody = () => {
 
       {text ? (
         <div
-          className="lm-feed-wrapper__card__body__content"
+          className="lm-feed-wrapper__card__body__content title"
           lm-feed-component-id={`lm-feed-post-body-fghij-${post?.Id}`}
         >
           {(() => {

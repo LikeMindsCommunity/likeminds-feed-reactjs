@@ -5,6 +5,7 @@ import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 import { returnPostId } from "../shared/utils";
 import LMQNAFeedDetails from "./LMQNAFeedDetails";
+import LMQNAFeedUniversalFeed from "./LMQNAFeedUniversalFeed";
 
 const LMQNAFeedDataContextProvider = () => {
   const {
@@ -28,7 +29,7 @@ const LMQNAFeedDataContextProvider = () => {
     if (postId.length) {
       return <LMQNAFeedDetails postId={postId} />;
     } else {
-      return <LMFeedUniversalFeed />;
+      return <LMQNAFeedUniversalFeed />;
     }
   };
   return (

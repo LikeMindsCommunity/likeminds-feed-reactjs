@@ -2,9 +2,9 @@ import { useFeedDetails } from "../hooks/useLMFeedDetails";
 import LMQNAFeedPosts from "./LMQNAFeedPosts";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import lmBack from "../assets/images/lm-back.svg";
-import LMFeedCreatePost from "./LMFeedCreatePost";
 import { useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import LMQNAFeedCreatePost from "./LMQNAFeedCreatePost";
 
 interface LMFeedDetailsProps {
   postId: string;
@@ -56,11 +56,10 @@ const LMQNAFeedDetails = ({ postId }: LMFeedDetailsProps) => {
           postComponentClickCustomCallback,
         }}
       >
-        <LMFeedCreatePost />
+        <LMQNAFeedCreatePost />
         <div className="lm-post-header">
           <img
             onClick={() => window.history.back()}
-            // onClick={() => window.history.back()}
             src={lmBack}
             alt="Back Icon"
             className="lm-cursor-pointer"

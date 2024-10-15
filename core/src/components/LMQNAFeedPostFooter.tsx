@@ -1,18 +1,11 @@
 import React, { useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
-import like from "../assets/images/like.svg";
-import postLiked from "../assets/images/liked-post.svg";
+import upvote from "../assets/images/upvote.svg";
+import upvoted from "../assets/images/upvoted.svg";
 import commnent from "../assets/images/comment.svg";
-// import bookmark from "../assets/images/bookmark.svg";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import {
-  COMMNENT,
-  COMMNENTS,
-  // GUEST_USER_ACTION_MESSAGE,
-  LIKE,
-  LIKES,
-} from "../shared/constants/lmAppConstant";
+import { UPVOTE } from "../shared/constants/lmAppConstant";
 import LMCommentsScroller from "./lmReplies/LMFeedCommentsScroller";
 
 import LMFeedReplyTextArea from "../shared/components/LMFeedReplyTextArea";
@@ -67,9 +60,9 @@ const LMQNAFeedPostFooter = () => {
         className="lm-feed-wrapper__card__footer"
         lm-feed-component-id={`lm-feed-post-footer-vwxyz-${post?.Id}`}
       >
-        <div className="lm-social-action-bar">
+        <div className="lm-social-action-bar qna-feed-action-bar">
           <div className="lm-social-action-bar__actions">
-            <div className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer">
+            <div className="lm-d-flex lm-align-items-center lm-flex-gap float-left upvote-block">
               {post?.isLiked ? (
                 LMFeedCustomIcons?.postLikesLikedCustomIcon ? (
                   <LMFeedCustomIcons.postLikesLikedCustomIcon />
@@ -78,9 +71,9 @@ const LMQNAFeedPostFooter = () => {
                     onClick={() => {
                       likePost!(Id);
                     }}
-                    src={postLiked}
+                    src={upvoted}
                     className="lm-cursor-pointer"
-                    alt="Like"
+                    alt="upvote"
                     lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.Id}`}
                   />
                 )
@@ -91,9 +84,9 @@ const LMQNAFeedPostFooter = () => {
                   onClick={() => {
                     likePost!(Id);
                   }}
-                  src={like}
+                  src={upvote}
                   className="lm-cursor-pointer"
-                  alt="Like"
+                  alt="upvote"
                   lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.Id}`}
                 />
               )}
@@ -107,11 +100,12 @@ const LMQNAFeedPostFooter = () => {
                 }}
               >
                 {" "}
-                {`${likesCount ? likesCount.toString().concat(" ") : ""}${likesCount > 1 ? LIKES : LIKE}`}
+                {`${likesCount > 1 ? UPVOTE : UPVOTE} ${likesCount ? likesCount.toString().concat(" ") : ""}`}
               </span>
             </div>
+
             <div
-              className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer"
+              className="lm-d-flex lm-align-items-center lm-flex-gap lm-cursor-pointer float-right mt-1"
               onClick={() => {
                 lmfeedAnalyticsClient?.sendPostCommentClickEvent(post!);
                 const location = window.location;
@@ -137,11 +131,11 @@ const LMQNAFeedPostFooter = () => {
                 className="comments lm-feed-wrapper__card__footer_comments-count"
                 lm-feed-component-id={`lm-feed-post-footer-uvwxy-${post?.Id}`}
               >
-                {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
+                {`${commentsCount ? commentsCount.toString().concat(" ") : ""}`}
+                {/* {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`} */}
               </span>
             </div>
           </div>
-          <div className="lm-social-action-bar__actions"></div>
         </div>
         {renderCommentBox()}
         {CustomComponents?.CustomRepliesScroller || <LMCommentsScroller />}

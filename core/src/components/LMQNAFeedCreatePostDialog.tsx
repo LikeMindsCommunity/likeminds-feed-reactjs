@@ -13,7 +13,7 @@ import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
-import { CREATE_POST, EDIT_POST } from "../shared/constants/lmAppConstant";
+import { ASK_QUESTION, EDIT_POST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
@@ -33,6 +33,8 @@ const LMQNAFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     setOpenCreatePostDialog,
     createPostComponentClickCustomCallback,
     ogTag,
+    question,
+    setQuestionText,
   } = useContext(LMFeedCreatePostContext);
   const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
@@ -47,7 +49,7 @@ const LMQNAFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       }}
     >
       <div className="lm-feed-create-post-wrapper__dialog-heading">
-        {temporaryPost ? EDIT_POST : CREATE_POST}
+        {temporaryPost ? EDIT_POST : ASK_QUESTION}
         <img
           src={cancelModelMcon}
           alt="cancelModelMcon"
@@ -87,6 +89,19 @@ const LMQNAFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         }}
         className="lm-feed-create-post-topic-text-area-divider"
       />
+      <div className="lm-textarea">
+        <input
+          type="text"
+          className="lm-feed-create-post-text-box"
+          placeholder="Add your question here..."
+          onChange={(e) => {
+            if (setQuestionText) {
+              setQuestionText(e.target.value);
+            }
+          }}
+          value={question!}
+        />
+      </div>
       <div className="lm-textarea">
         {CustomComponents.CustomCreatePostTextArea || <LMFeedTextArea />}
       </div>
