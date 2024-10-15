@@ -2,7 +2,6 @@ import React from "react";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 
-import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 import { returnPostId } from "../shared/utils";
 import LMQNAFeedDetails from "./LMQNAFeedDetails";
 import LMQNAFeedUniversalFeed from "./LMQNAFeedUniversalFeed";
