@@ -124,6 +124,7 @@ export function useCreatePost(): UseCreatePost {
 
   function resetStates() {
     setShowOGTagViewContainer(true);
+    setQuestion("");
     setText(null);
     setTemporaryPost(null);
     setMediaList([]);
@@ -140,7 +141,6 @@ export function useCreatePost(): UseCreatePost {
   }
 
   function setQuestionText(txt: string) {
-    console.log("tex =>", txt);
     setQuestion(txt);
   }
 
@@ -211,6 +211,10 @@ export function useCreatePost(): UseCreatePost {
   const postFeed = useCallback(
     async function (customWidgetsData?: Record<string, any>[]) {
       try {
+        if (!question || question.length == 0) {
+          return;
+        }
+
         setOpenCreatePostDialog(false);
 
         const textContent: string = extractTextFromNode(
