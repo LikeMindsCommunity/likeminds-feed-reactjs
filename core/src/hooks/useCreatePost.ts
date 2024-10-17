@@ -124,6 +124,7 @@ export function useCreatePost(): UseCreatePost {
 
   function resetStates() {
     setShowOGTagViewContainer(true);
+    setQuestion("");
     setText(null);
     setTemporaryPost(null);
     setMediaList([]);
@@ -140,7 +141,6 @@ export function useCreatePost(): UseCreatePost {
   }
 
   function setQuestionText(txt: string) {
-    console.log("tex =>", txt);
     setQuestion(txt);
   }
 
@@ -382,8 +382,6 @@ export function useCreatePost(): UseCreatePost {
           .setTopicIds(selectedTopicIds)
           .setTempId(Date.now().toString());
 
-        // let questionText;
-        console.log("question =>", question);
         if (question && question?.length > 0) {
           addPostRequestBuilder.setHeading(question);
         }

@@ -69,10 +69,28 @@ import { LMTopicsDropdownMode } from "./shared/enums/lmTopicFeedDropdownMode";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 import { initiateFeedClient } from "./shared/getClient";
 import LMQNAFeed from "./components/LMQNAFeed";
+import LMQNAFeedCreateMediaPost from "./components/LMQNAFeedCreateMediaPost";
+import LMQNAFeedCreatePost from "./components/LMQNAFeedCreatePost";
+import LMQNAFeedCreatePostDialog from "./components/LMQNAFeedCreatePostDialog";
+import LMQNAFeedDataContextProvider from "./components/LMQNAFeedDataContextProvider";
+import LMQNAFeedDetails from "./components/LMQNAFeedDetails";
+import LMQNAFeedPostBody from "./components/LMQNAFeedPostBody";
+import LMQNAFeedPostFooter from "./components/LMQNAFeedPostFooter";
+import LMQNAFeedPosts from "./components/LMQNAFeedPosts";
+import LMQNAFeedUniversalFeed from "./components/LMQNAFeedUniversalFeed";
 
 export {
   LMSocialFeed,
   LMQNAFeed,
+  LMQNAFeedCreateMediaPost,
+  LMQNAFeedCreatePost,
+  LMQNAFeedCreatePostDialog,
+  LMQNAFeedDataContextProvider,
+  LMQNAFeedDetails,
+  LMQNAFeedPostBody,
+  LMQNAFeedPostFooter,
+  LMQNAFeedPosts,
+  LMQNAFeedUniversalFeed,
   LMFeedError,
   LMFeedLoader,
   LMFeedPost,
