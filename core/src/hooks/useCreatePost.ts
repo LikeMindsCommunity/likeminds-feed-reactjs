@@ -211,12 +211,6 @@ export function useCreatePost(): UseCreatePost {
   const postFeed = useCallback(
     async function (customWidgetsData?: Record<string, any>[]) {
       try {
-        // console.log("question => return", question);
-
-        // if (!question || question.length == 0) {
-        //   return;
-        // }
-
         setOpenCreatePostDialog(false);
 
         const textContent: string = extractTextFromNode(
