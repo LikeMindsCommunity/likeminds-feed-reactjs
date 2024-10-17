@@ -1,4 +1,4 @@
-import { Member } from "../models/member";
+import { User } from "../models/member";
 
 export interface GetPostLikesResponse {
   success: boolean;
@@ -7,7 +7,7 @@ export interface GetPostLikesResponse {
     topics: Record<string, unknown>;
     totalCount: number;
     userTopics: Record<string, unknown>;
-    users: Member[];
+    users: User[];
   };
 }
 

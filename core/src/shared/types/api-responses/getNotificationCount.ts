@@ -1,6 +1,7 @@
-export interface GetNotificationCountResponse {
-  success: boolean;
-  data: {
-    count: number;
-  };
-}
+import {
+  GetNotificationCount,
+  LMResponseType,
+} from "@likeminds.community/feed-js";
+
+export interface GetNotificationCountResponse
+  extends LMResponseType<GetNotificationCount> {}

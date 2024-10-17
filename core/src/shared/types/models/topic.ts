@@ -1,5 +1,2 @@
-export interface Topic {
-  Id: string;
-  isEnabled: boolean;
-  name: string;
-}
+import { Topic as LMFeedTopic } from "@likeminds.community/feed-js";
+export interface Topic extends LMFeedTopic {}

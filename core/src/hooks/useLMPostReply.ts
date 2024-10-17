@@ -47,10 +47,10 @@ export function useLMPostReply(
           reply.uuid,
           postId,
           commentId?.toString() || "",
-          call.data.comment.Id,
+          call.data.comment.id,
         );
         if (updateReplyOnPostReply) {
-          updateReplyOnPostReply(call.data.comment.parentComment?.Id || "");
+          updateReplyOnPostReply(call.data.comment.parentComment?.id || "");
         }
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.REPLY_POSTED,
@@ -69,12 +69,13 @@ export function useLMPostReply(
       const commentText = extractTextFromNode(textFieldRef.current).trim();
       const call: PostCommentResponse = (await lmFeedclient?.addComment(
         AddCommentRequest.builder()
-          .settext(commentText)
-          .setpostId(postId)
+          .setText(commentText)
+          .setPostId(postId)
           .build(),
       )) as never;
       if (call.success && addNewComment) {
         lmfeedAnalyticsClient?.sendCommentPostedEvent(call.data.comment);
+        console.log(call.data.comment);
         addNewComment(call.data.comment, call.data.users);
       }
     } catch (error) {
@@ -86,9 +87,9 @@ export function useLMPostReply(
       const commentText = extractTextFromNode(textFieldRef.current).trim();
       const call: EditCommentResponse = (await lmFeedclient?.editComment(
         EditCommentRequest.builder()
-          .setcommentId(commentId || "")
-          .setpostId(postId)
-          .settext(commentText)
+          .setCommentId(commentId || "")
+          .setPostId(postId)
+          .setText(commentText)
           .build(),
       )) as never;
 

@@ -1,7 +1,3 @@
-import { Topic } from "../models/topic";
-export interface GetTopicsResponse {
-  success: boolean;
-  data: {
-    topics: Topic[];
-  };
-}
+import { GetTopics, LMResponseType } from "@likeminds.community/feed-js";
+
+export interface GetTopicsResponse extends LMResponseType<GetTopics> {}

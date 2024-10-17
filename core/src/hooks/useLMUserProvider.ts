@@ -58,8 +58,8 @@ export default function useUserProvider(
         const validateUserCall: ValidateUserResponse =
           (await lmFeedclient?.validateUser(
             ValidateUserRequest.builder()
-              .setaccessToken(localAccessToken)
-              .setrefreshToken(localRefreshToken)
+              .setAccessToken(localAccessToken)
+              .setRefreshToken(localRefreshToken)
               .build(),
           )) as never;
 
@@ -109,7 +109,7 @@ export default function useUserProvider(
               .setApiKey(apiKey)
               .build(),
           )) as never;
-
+        console.log(initiateUserCall);
         if (initiateUserCall.success) {
           // Setting the tokens, API key and User in local storage
           setTokensInLocalStorage(

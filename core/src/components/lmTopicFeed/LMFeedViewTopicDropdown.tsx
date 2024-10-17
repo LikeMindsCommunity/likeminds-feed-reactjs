@@ -68,7 +68,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
       setIsTopicSelectionMode(false);
     }
     setSelectedTopicsIds
-      ? setSelectedTopicsIds(checkedTopics.map((topic) => topic.Id))
+      ? setSelectedTopicsIds(checkedTopics.map((topic) => topic?.id))
       : null;
     setTopicMenuAnchor(null);
   };
@@ -94,9 +94,9 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
       return (
         <MenuItem
           disableRipple={true}
-          value={topic.Id}
+          value={topic?.id}
           role="option"
-          key={topic.Id}
+          key={topic?.id}
         >
           <LMFeedTopicSelectionTile
             clickHandler={updateCheckedTopics}
@@ -204,7 +204,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                         setIsTopicSelectionMode(true);
                       }
                     }}
-                    key={topic.Id}
+                    key={topic?.id}
                     topic={topic}
                   />
                 );
@@ -323,7 +323,7 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                   <LMFeedTopicSelectedBlock
                     isCreateMode={true}
                     onDeleteClick={updateCheckedTopics}
-                    key={topic.Id}
+                    key={topic?.id}
                     topic={topic}
                   />
                 );

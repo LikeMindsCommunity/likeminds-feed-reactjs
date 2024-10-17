@@ -97,6 +97,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       !mediaList?.length ? (
         <LMFeedOGTagMediaItem />
       ) : null}
+
       <LMFeedCreateMediaPost />
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
       !temporaryPost &&

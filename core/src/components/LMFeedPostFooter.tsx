@@ -30,7 +30,7 @@ const LMFeedPostFooter = () => {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-  const { likesCount, commentsCount, Id } = post!;
+  const { likesCount, commentsCount, id } = post!;
   const { LMFeedCustomIcons, CustomComponents = {} } = useContext(
     CustomAgentProviderContext,
   );
@@ -44,7 +44,7 @@ const LMFeedPostFooter = () => {
       <>
         <Divider className="lm-footer-reply-divider" />
         <div
-          lm-feed-component-id={`lm-feed-post-footer-zabcd-${post?.Id}`}
+          lm-feed-component-id={`lm-feed-post-footer-zabcd-${post?.id}`}
           className="lm-d-flex lm-flex-grow lm-position-relative lm-align-items-center lm-mb-5 lm-feed-reply lm-pl-4 lm-pr-4 lm-pt-4 lm-pb-4"
         >
           {CustomComponents.CustomPostReplyTextArea ? (
@@ -60,12 +60,12 @@ const LMFeedPostFooter = () => {
     <>
       <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
         <div className="lmLikedMemberWrapper">
-          <LMFeedLikedMembers postId={post?.Id} />
+          <LMFeedLikedMembers postId={post?.id} />
         </div>
       </Drawer>
       <div
         className="lm-feed-wrapper__card__footer"
-        lm-feed-component-id={`lm-feed-post-footer-vwxyz-${post?.Id}`}
+        lm-feed-component-id={`lm-feed-post-footer-vwxyz-${post?.id}`}
       >
         <div className="lm-social-action-bar">
           <div className="lm-social-action-bar__actions">
@@ -76,12 +76,12 @@ const LMFeedPostFooter = () => {
                 ) : (
                   <img
                     onClick={() => {
-                      likePost!(Id);
+                      likePost!(id);
                     }}
                     src={postLiked}
                     className="lm-cursor-pointer"
                     alt="Like"
-                    lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.id}`}
                   />
                 )
               ) : LMFeedCustomIcons?.postLikesNormalCustomIcon ? (
@@ -89,18 +89,18 @@ const LMFeedPostFooter = () => {
               ) : (
                 <img
                   onClick={() => {
-                    likePost!(Id);
+                    likePost!(id);
                   }}
                   src={like}
                   className="lm-cursor-pointer"
                   alt="Like"
-                  lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.Id}`}
+                  lm-feed-component-id={`lm-feed-post-footer-fghij-${post?.id}`}
                 />
               )}
 
               <span
                 className="lm-feed-wrapper__card__footer_likes-count"
-                lm-feed-component-id={`lm-feed-post-footer-klmno-${post?.Id}`}
+                lm-feed-component-id={`lm-feed-post-footer-klmno-${post?.id}`}
                 onClick={() => {
                   lmfeedAnalyticsClient?.sendPostLikeListClickEvent(post);
                   toggleDrawer(true);
@@ -118,7 +118,7 @@ const LMFeedPostFooter = () => {
                 const url = new URL(location.href);
                 const search = url.searchParams.get("id");
                 if (!search) {
-                  url.searchParams.append("id", post.Id);
+                  url.searchParams.append("id", post?.id);
                   window.open(url, "_self");
                 }
               }}
@@ -130,12 +130,12 @@ const LMFeedPostFooter = () => {
                   className="lm-cursor-pointer"
                   src={commnent}
                   alt="commnent"
-                  lm-feed-component-id={`lm-feed-post-footer-pqrst-${post?.Id}`}
+                  lm-feed-component-id={`lm-feed-post-footer-pqrst-${post?.id}`}
                 />
               )}
               <span
                 className="comments lm-feed-wrapper__card__footer_comments-count"
-                lm-feed-component-id={`lm-feed-post-footer-uvwxy-${post?.Id}`}
+                lm-feed-component-id={`lm-feed-post-footer-uvwxy-${post?.id}`}
               >
                 {`${commentsCount ? commentsCount.toString().concat(" ") : ""}${commentsCount > 1 ? COMMNENTS : COMMNENT}`}
               </span>

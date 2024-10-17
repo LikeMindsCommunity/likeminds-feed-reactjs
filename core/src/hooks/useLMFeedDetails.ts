@@ -96,9 +96,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       const getPostDetailsCall: GetPostDetailsResponse =
         (await lmFeedclient?.getPost(
           GetPostRequest.builder()
-            .setpage(1)
-            .setpageSize(20)
-            .setpostId(postId)
+            .setPage(1)
+            .setPageSize(20)
+            .setPostId(postId)
             .build(),
         )) as never;
 
@@ -132,9 +132,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       const getPostDetailsCall: GetPostDetailsResponse =
         (await lmFeedclient?.getPost(
           GetPostRequest.builder()
-            .setpage(pageCount)
-            .setpageSize(20)
-            .setpostId(postId)
+            .setPage(pageCount)
+            .setPageSize(20)
+            .setPostId(postId)
             .build(),
         )) as never;
       if (getPostDetailsCall.success) {
@@ -158,7 +158,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const updateReplyOnPostReply = useCallback(
     function (replyId: string) {
       const repliesCopy = [...replies];
-      const targetReply = repliesCopy.find((reply) => reply.Id === replyId);
+      const targetReply = repliesCopy.find((reply) => reply?.id === replyId);
       if (targetReply) {
         targetReply.commentsCount++;
       }
@@ -182,7 +182,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         customEventClient.dispatchEvent(
           LMFeedCustomActionEvents.COMMENT_ADDED,
           {
-            postId: post?.Id,
+            postId: post?.id,
           },
         );
       }
@@ -194,13 +194,13 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       try {
         const call: DeleteCommentResponse = (await lmFeedclient?.deleteComment(
           DeleteCommentRequest.builder()
-            .setpostId(post?.Id || "")
-            .setcommentId(id)
+            .setPostId(post?.id || "")
+            .setCommentId(id)
             .build(),
         )) as never;
         if (call.success) {
-          const repliesCopy = [...replies].filter((reply) => reply.Id !== id);
-          const targetReply = [...replies].find((reply) => reply.Id === id);
+          const repliesCopy = [...replies].filter((reply) => reply?.id !== id);
+          const targetReply = [...replies].find((reply) => reply?.id === id);
           lmfeedAnalyticsClient?.sendCommentDeletedEvent(
             post!,
             targetReply!,
@@ -219,7 +219,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             customEventClient.dispatchEvent(
               LMFeedCustomActionEvents.COMMENT_REMOVED,
               {
-                postId: post?.Id,
+                postId: post?.id,
               },
             );
           }
@@ -241,7 +241,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const updateReply = useCallback(
     function (comment: Reply, usersMap: Record<string, User>) {
       const repliesCopy = [...replies].map((reply) =>
-        reply.Id === comment.Id ? comment : reply,
+        reply?.id === comment.id ? comment : reply,
       );
       const usersCopy = { ...users, ...usersMap };
       const postCopy = { ...post };
@@ -259,13 +259,13 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       try {
         const call: LikeCommentResponse = (await lmFeedclient?.likeComment(
           LikeCommentRequest.builder()
-            .setpostId(postId)
-            .setcommentId(id)
+            .setPostId(postId)
+            .setCommentId(id)
             .build(),
         )) as never;
         if (call.success) {
           const repliesCopy = [...replies].map((reply) => {
-            if (reply.Id === id) {
+            if (reply?.id === id) {
               if (reply.isLiked) {
                 reply.isLiked = false;
                 reply.likesCount--;
@@ -288,7 +288,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     async function (id: string) {
       try {
         const call: LikePostResponse = (await lmFeedclient?.likePost(
-          LikePostRequest.builder().setpostId(id).build(),
+          LikePostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const postCopy = { ...post };
@@ -332,7 +332,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     async function (id: string) {
       try {
         const call: GetPinPostResponse = (await lmFeedclient?.pinPost(
-          PinPostRequest.builder().setpostId(id).build(),
+          PinPostRequest.builder().setPostId(id).build(),
         )) as never;
         if (call.success) {
           const tempPost = { ...post };
@@ -409,7 +409,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         const replyId = (e as CustomEvent).detail.replyId;
         const repliesCopy = [...replies];
 
-        const tempReply = repliesCopy.find((reply) => reply.Id === replyId);
+        const tempReply = repliesCopy.find((reply) => reply?.id === replyId);
         if (tempReply) {
           tempReply.commentsCount--;
         }

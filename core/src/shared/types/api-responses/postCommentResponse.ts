@@ -1,25 +1,11 @@
-import { User } from "../models/member";
-import { Reply } from "../models/replies";
+import {
+  EditComment,
+  LMResponseType,
+  PostComment,
+  PostReply,
+} from "@likeminds.community/feed-js";
 
-export interface PostCommentResponse {
-  success: boolean;
-  data: {
-    comment: Reply;
-    users: Record<string, User>;
-  };
-}
-export interface EditCommentResponse {
-  success: boolean;
-  data: {
-    comment: Reply;
-    users: Record<string, User>;
-  };
-}
+export interface PostCommentResponse extends LMResponseType<PostComment> {}
+export interface EditCommentResponse extends LMResponseType<EditComment> {}
 
-export interface PostReplyResponse {
-  success: boolean;
-  data: {
-    comment: Reply;
-    users: Record<string, User>;
-  };
-}
+export interface PostReplyResponse extends LMResponseType<PostReply> {}

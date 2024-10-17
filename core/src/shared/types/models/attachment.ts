@@ -1,13 +1,2 @@
-import { OgTag } from "./ogTag";
-
-export interface Attachment {
-  attachmentMeta: {
-    entityId?: string;
-    format: string;
-    name: string;
-    ogTags: OgTag;
-    size: number;
-    url: string;
-  };
-  attachmentType: number;
-}
+import { Attachment as LMFeedAttachment } from "@likeminds.community/feed-js";
+export interface Attachment extends LMFeedAttachment {}

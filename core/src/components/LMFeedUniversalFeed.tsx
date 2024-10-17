@@ -78,7 +78,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
 
       return (
         <FeedPostContext.Provider
-          key={post.Id}
+          key={post?.id}
           value={{
             post: post,
             users: feedUsersList,

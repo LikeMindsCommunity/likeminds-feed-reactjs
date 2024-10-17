@@ -14,9 +14,10 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import {
   AddPostRequest,
   Attachment,
-  AttachmentMeta,
   DecodeURLRequest,
   EditPostRequest,
+  LMFeedPostAttachment,
+  LMFeedPostAttachmentMeta,
 } from "@likeminds.community/feed-js";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
@@ -150,7 +151,7 @@ export function useCreatePost(): UseCreatePost {
     if (temporaryPost) {
       const feedAttachmentType = mediaArray?.item(0)?.type;
       lmfeedAnalyticsClient?.sendAddMoreAttachmentClickedEvent(
-        temporaryPost.Id,
+        temporaryPost.id,
         feedAttachmentType || "",
       );
     }
@@ -242,14 +243,14 @@ export function useCreatePost(): UseCreatePost {
           switch (attachmentType) {
             case 1: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(1)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
+                    LMFeedPostAttachmentMeta.builder()
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
                       .build(),
                   )
                   .build(),
@@ -258,15 +259,15 @@ export function useCreatePost(): UseCreatePost {
             }
             case 2: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(2)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
-                      .setduration(10)
+                    LMFeedPostAttachmentMeta.builder()
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
+                      .setDuration(10)
                       .build(),
                   )
                   .build(),
@@ -275,14 +276,14 @@ export function useCreatePost(): UseCreatePost {
             }
             case 3: {
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(3)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
+                    LMFeedPostAttachmentMeta.builder()
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
                       .build(),
                   )
                   .build(),
@@ -292,15 +293,15 @@ export function useCreatePost(): UseCreatePost {
             case 11: {
               // New case for attachmentType 11 (Reels)
               attachmentResponseArray.push(
-                Attachment.builder()
+                LMFeedPostAttachment.builder()
                   .setAttachmentType(11)
                   .setAttachmentMeta(
-                    AttachmentMeta.builder()
-                      .seturl(uploadedFileKey)
-                      .setformat(file?.name?.split(".").slice(-1).toString())
-                      .setsize(file.size)
-                      .setname(file.name)
-                      .setduration(10) // Assuming duration is applicable to reels
+                    LMFeedPostAttachmentMeta.builder()
+                      .setUrl(uploadedFileKey)
+                      .setFormat(file?.name?.split(".").slice(-1).toString())
+                      .setSize(file.size)
+                      .setName(file.name)
+                      .setDuration(10) // Assuming duration is applicable to reels
                       .build(),
                   )
                   .build(),
@@ -328,21 +329,21 @@ export function useCreatePost(): UseCreatePost {
                 (attachment) => attachment.attachmentType === 11,
               );
               const thumbnailUrl = imageAttachment?.attachmentMeta.url;
-              const newAttachmentObject = Attachment.builder()
+              const newAttachmentObject = LMFeedPostAttachment.builder()
                 .setAttachmentType(11)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder()
-                    .seturl(reelAttachment?.attachmentMeta.url || "")
-                    .setformat(
+                  LMFeedPostAttachmentMeta.builder()
+                    .setUrl(reelAttachment?.attachmentMeta.url || "")
+                    .setFormat(
                       reelAttachment?.attachmentMeta?.name
                         ?.split(".")
                         .slice(-1)
                         .toString() || "",
                     )
-                    .setsize(reelAttachment?.attachmentMeta?.size || 0)
-                    .setname(reelAttachment?.attachmentMeta?.name || "")
+                    .setSize(reelAttachment?.attachmentMeta?.size || 0)
+                    .setName(reelAttachment?.attachmentMeta?.name || "")
                     .setThumbnailUrl(thumbnailUrl || "")
-                    // .setduration(10) // Assuming duration is applicable to reels
+                    // .setDuration(10) // Assuming duration is applicable to reels
                     .build(),
                 )
                 .build();
@@ -356,10 +357,10 @@ export function useCreatePost(): UseCreatePost {
 
         if (!mediaList.length && ogTag) {
           attachmentResponseArray.push(
-            Attachment.builder()
+            LMFeedPostAttachment.builder()
               .setAttachmentType(4)
               .setAttachmentMeta(
-                AttachmentMeta.builder().setogTags(ogTag).build(),
+                LMFeedPostAttachmentMeta.builder().setOgTags(ogTag).build(),
               )
               .build(),
           );
@@ -367,10 +368,12 @@ export function useCreatePost(): UseCreatePost {
         if (customWidgetsData) {
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(5)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                  LMFeedPostAttachmentMeta.builder()
+                    .setMeta(customWidgetData)
+                    .build(),
                 )
                 .build(),
             );
@@ -388,9 +391,8 @@ export function useCreatePost(): UseCreatePost {
 
         const addPostRequest = addPostRequestBuilder.build();
 
-        const call: AddPostResponse =
-          await lmFeedclient?.addPost(addPostRequest);
-        if (call.success) {
+        const call = await lmFeedclient?.addPost(addPostRequest);
+        if (call?.success) {
           lmfeedAnalyticsClient?.sendPostCreatedEvent(call.data.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
@@ -401,6 +403,7 @@ export function useCreatePost(): UseCreatePost {
       }
     },
     [
+      allowThumbnail,
       currentUser?.sdkClientInfo.uuid,
       customEventClient,
       lmFeedclient,
@@ -420,7 +423,7 @@ export function useCreatePost(): UseCreatePost {
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
         ).trim();
-        const attachmentResponseArray: Attachment[] = temporaryPost?.attachments
+        let attachmentResponseArray: Attachment[] = temporaryPost?.attachments
           ? temporaryPost.attachments
           : [];
         if (ogTag) {
@@ -435,10 +438,10 @@ export function useCreatePost(): UseCreatePost {
           ) {
             attachmentResponseArray.pop();
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(4)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setogTags(ogTag).build(),
+                  LMFeedPostAttachmentMeta.builder().setOgTags(ogTag).build(),
                 )
                 .build(),
             );
@@ -453,12 +456,18 @@ export function useCreatePost(): UseCreatePost {
           }
         }
         if (customWidgetsData) {
+          attachmentResponseArray = attachmentResponseArray.filter(
+            (attachment) => attachment.attachmentType !== 5,
+          );
+
           for (const customWidgetData of customWidgetsData) {
             attachmentResponseArray.push(
-              Attachment.builder()
+              LMFeedPostAttachment.builder()
                 .setAttachmentType(5)
                 .setAttachmentMeta(
-                  AttachmentMeta.builder().setMeta(customWidgetData).build(),
+                  LMFeedPostAttachmentMeta.builder()
+                    .setMeta(customWidgetData)
+                    .build(),
                 )
                 .build(),
             );
@@ -466,10 +475,10 @@ export function useCreatePost(): UseCreatePost {
         }
 
         const editPostRequestBuilder = EditPostRequest.builder()
-          .setattachments(attachmentResponseArray)
-          .settext(textContent)
+          .setAttachments(attachmentResponseArray)
+          .setText(textContent)
           .setTopicIds(selectedTopicIds)
-          .setpostId(temporaryPost?.Id || "");
+          .setPostId(temporaryPost?.id || "");
 
         // let questionText;
         if (question && question?.length > 0) {
@@ -510,7 +519,7 @@ export function useCreatePost(): UseCreatePost {
       lmfeedAnalyticsClient,
       ogTag,
       selectedTopicIds,
-      temporaryPost?.Id,
+      temporaryPost?.id,
       temporaryPost?.attachments,
       question,
     ],
@@ -524,11 +533,11 @@ export function useCreatePost(): UseCreatePost {
           const firstLinkDetected = linksDetected[0];
           if (firstLinkDetected.toString() !== ogTag?.url.toString()) {
             const getOgTagData: GetOgTagResponse =
-              await lmFeedclient?.decodeURL(
+              await lmFeedclient!.decodeURL(
                 DecodeURLRequest.builder().setURL(firstLinkDetected).build(),
               );
             if (getOgTagData?.success) {
-              setOgtag(getOgTagData.data.og_tags);
+              setOgtag(getOgTagData.data.ogTags);
             }
           }
         } else {
@@ -563,7 +572,7 @@ export function useCreatePost(): UseCreatePost {
           },
         );
         if (ogTagAttchmentObject.length) {
-          setOgtag(ogTagAttchmentObject[0].attachmentMeta.ogTags);
+          setOgtag(ogTagAttchmentObject[0].LMFeedPostAttachmentMeta.ogTags);
         }
         setPreSelectedTopics(preSelectedTopicsArr);
       },
@@ -657,14 +666,14 @@ export function useCreatePost(): UseCreatePost {
       );
     } else {
       lmfeedAnalyticsClient?.sendClickedOnAttachmentEvent(
-        temporaryPost.Id,
+        temporaryPost.id,
         mediaUploadMode,
       );
     }
   }, [lmfeedAnalyticsClient, mediaUploadMode, temporaryPost]);
   useEffect(() => {
     if (ogTag && temporaryPost) {
-      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url, temporaryPost.Id);
+      lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url, temporaryPost.id);
     } else if (ogTag) {
       lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url);
     }

@@ -71,13 +71,13 @@ const LMFeedPostHeader = () => {
       }
       case LMFeedPostMenuItems.PIN_POST: {
         if (pinPost) {
-          pinPost(post.Id);
+          pinPost(post?.id);
         }
         break;
       }
       case LMFeedPostMenuItems.UNPIN_POST: {
         if (pinPost) {
-          pinPost(post?.Id);
+          pinPost(post?.id);
         }
         break;
       }
@@ -96,14 +96,14 @@ const LMFeedPostHeader = () => {
         <LMFeedReportPostDialog
           entityType={LMFeedEntityType.POST}
           closeReportDialog={closeReportDialog}
-          entityId={post?.Id || ""}
+          entityId={post?.id || ""}
           post={post || undefined}
         />
       </Dialog>
 
       <div
         className="lm-feed-wrapper__card__header"
-        lm-feed-component-id={`lm-feed-post-header-abcde-${post?.Id}`}
+        lm-feed-component-id={`lm-feed-post-header-abcde-${post?.id}`}
       >
         <div className="lm-flex-container">
           <div
@@ -112,24 +112,24 @@ const LMFeedPostHeader = () => {
               lmfeedAnalyticsClient?.sendPostProfilePicClickEvent(post!);
             }}
             style={LMPostHeaderStyles?.avatar}
-            lm-feed-component-id={`lm-feed-post-header-fghij-${post?.Id}`}
+            lm-feed-component-id={`lm-feed-post-header-fghij-${post?.id}`}
           >
             {avatarContent}
           </div>
-          <div lm-feed-component-id={`lm-feed-post-header-klmno-${post?.Id}`}>
+          <div lm-feed-component-id={`lm-feed-post-header-klmno-${post?.id}`}>
             <div
               onClick={() =>
                 lmfeedAnalyticsClient?.sendPostProfileNameClickEvent(post!)
               }
               className="lm-feed-wrapper__card__header--title"
               style={LMPostHeaderStyles?.title}
-              lm-feed-component-id={`lm-feed-post-header-pqrst-${post?.Id}`}
+              lm-feed-component-id={`lm-feed-post-header-pqrst-${post?.id}`}
             >
               {name}{" "}
               {customTitle ? (
                 <span
                   style={LMPostHeaderStyles?.customTitle}
-                  lm-feed-component-id={`lm-feed-post-header-uvwxy-${post?.Id}`}
+                  lm-feed-component-id={`lm-feed-post-header-uvwxy-${post?.id}`}
                 >
                   {customTitle}
                 </span>
@@ -137,20 +137,20 @@ const LMFeedPostHeader = () => {
             </div>
             <div
               className="lm-feed-wrapper__card__header--text"
-              lm-feed-component-id={`lm-feed-post-header-zabcd-${post?.Id}`}
+              lm-feed-component-id={`lm-feed-post-header-zabcd-${post?.id}`}
             >
               {isEdited ? (
                 <>
                   <span
                     className="edited"
-                    lm-feed-component-id={`lm-feed-post-header-efghi-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-header-efghi-${post?.id}`}
                   >
                     {formatTimeAgo(createdAt)}
                   </span>
                   <span
                     className="lm-primary-text lm-post-badge"
                     style={LMPostHeaderStyles?.editBadge}
-                    lm-feed-component-id={`lm-feed-post-header-jklmn-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-header-jklmn-${post?.id}`}
                   >
                     {LMPostHeaderStyles?.editBadgeCustomText
                       ? LMPostHeaderStyles.editBadgeCustomText
@@ -161,7 +161,7 @@ const LMFeedPostHeader = () => {
                 <>
                   {LMPostHeaderStyles?.postBadgeText || POST}
                   <span
-                    lm-feed-component-id={`lm-feed-post-header-opqrs-${post?.Id}`}
+                    lm-feed-component-id={`lm-feed-post-header-opqrs-${post?.id}`}
                   >
                     {formatTimeAgo(createdAt)}
                   </span>
@@ -172,7 +172,7 @@ const LMFeedPostHeader = () => {
         </div>
         <div
           className="lm-feed-wrapper__card__header__menu-items-container"
-          lm-feed-component-id={`lm-feed-post-header-tuvwx-${post?.Id}`}
+          lm-feed-component-id={`lm-feed-post-header-tuvwx-${post?.id}`}
         >
           {isPinned ? (
             LMFeedCustomIcons?.postPinCustomIcon ? (
@@ -182,7 +182,7 @@ const LMFeedPostHeader = () => {
                 className="three-dot-menu-image lm-cursor-pointer lm-mr-4"
                 src={pinIcon}
                 alt="pinned post"
-                lm-feed-component-id={`lm-feed-post-header-yzabc-${post?.Id}`}
+                lm-feed-component-id={`lm-feed-post-header-yzabc-${post?.id}`}
               />
             )
           ) : null}
@@ -194,7 +194,7 @@ const LMFeedPostHeader = () => {
               setAnchor(e.currentTarget);
               lmfeedAnalyticsClient?.sendPostMenuClickEvent(post!);
             }}
-            lm-feed-component-id={`lm-feed-post-header-defgh-${post?.Id}`}
+            lm-feed-component-id={`lm-feed-post-header-defgh-${post?.id}`}
           />
           <Menu
             anchorEl={anchor}
@@ -202,7 +202,7 @@ const LMFeedPostHeader = () => {
             anchorOrigin={{ horizontal: "right", vertical: "top" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
             onClose={() => setAnchor(null)}
-            lm-feed-component-id={`lm-feed-post-header-ijklm-${post?.Id}`}
+            lm-feed-component-id={`lm-feed-post-header-ijklm-${post?.id}`}
           >
             {menuItems?.map((menuItem) => {
               return (
@@ -211,7 +211,7 @@ const LMFeedPostHeader = () => {
                   onClick={onMenuItemClick}
                   id={menuItem?.id?.toString()}
                   key={menuItem?.id}
-                  lm-feed-component-id={`lm-feed-post-header-nopqr-${post?.Id}`}
+                  lm-feed-component-id={`lm-feed-post-header-nopqr-${post?.id}`}
                 >
                   {menuItem?.title}
                 </div>
