@@ -58,6 +58,8 @@ function LMFeed({
   createPostComponentClickCustomCallback,
   topicComponentClickCustomCallback,
   memberComponentClickCustomCallback,
+  hintTextForAnonymous,
+  isAnonymousPostAllowed,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(client, customEventClient, userDetails);
@@ -113,6 +115,8 @@ function LMFeed({
             TopicsCustomCallbacks,
             RepliesCustomCallbacks,
             PostCreationCustomCallbacks,
+            isAnonymousPostAllowed,
+            hintTextForAnonymous,
           }}
         >
           <GeneralContext.Provider

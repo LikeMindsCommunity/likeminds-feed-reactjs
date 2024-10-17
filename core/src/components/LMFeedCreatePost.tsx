@@ -59,6 +59,8 @@ const LMFeedCreatePost = ({
     tempReelThumbnail,
     removeThumbnailReel,
     removeAddReel,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -92,6 +94,8 @@ const LMFeedCreatePost = ({
         closeOGTagContainer,
         removeThumbnailReel,
         removeAddReel,
+        isAnonymousPost,
+        changeAnonymousPostStatus,
       }}
     >
       {showStarterComponent ? (

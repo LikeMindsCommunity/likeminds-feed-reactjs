@@ -4,4 +4,6 @@ export enum LMFeedPostMenuItems {
   UNPIN_POST = "3",
   REPORT_POST = "4",
   EDIT_POST = "5",
+  HIDE_POST = "12",
+  UNHIDE_POST = "13",
 }

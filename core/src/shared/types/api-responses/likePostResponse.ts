@@ -1,3 +1,3 @@
-import { LikePost, LMResponseType } from "@likeminds.community/feed-js";
+import { LikePost, LMResponseType } from "@likeminds.community/feed-js-beta";
 
 export interface LikePostResponse extends LMResponseType<LikePost> {}

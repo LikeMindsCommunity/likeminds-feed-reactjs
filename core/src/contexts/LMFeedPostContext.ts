@@ -34,4 +34,5 @@ interface FeedPostContextInterface {
     event: React.MouseEvent<HTMLDivElement>,
   ) => void;
   clickNavigator?: ClickNavigator;
+  hidePost?: (postId: string) => Promise<void>;
 }

@@ -10,7 +10,7 @@ import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMed
 import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
-import { Divider } from "@mui/material";
+import { Checkbox, Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 import { CREATE_POST, EDIT_POST } from "../shared/constants/lmAppConstant";
@@ -33,9 +33,34 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     setOpenCreatePostDialog,
     createPostComponentClickCustomCallback,
     ogTag,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
   } = useContext(LMFeedCreatePostContext);
-  const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
+  const {
+    CustomComponents = {},
+    isAnonymousPostAllowed,
+    hintTextForAnonymous,
+  } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
+
+  const renderAnonymousOption = () => {
+    if (isAnonymousPostAllowed) {
+      return (
+        <>
+          <div className="lm-feed-create-post-anonymous-post">
+            <Checkbox
+              checked={isAnonymousPost}
+              className="anonymous-post-checkbox"
+              onChange={changeAnonymousPostStatus}
+            />
+            <span className="anonymous-post-text">
+              {hintTextForAnonymous || "Post this anonymously"}
+            </span>
+          </div>
+        </>
+      );
+    }
+  };
 
   return (
     <div
@@ -68,6 +93,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         </div>
         <div>{currentUser?.name}</div>
       </div>
+      {renderAnonymousOption()}
       {CustomTopicDropDown || (
         <LMFeedViewTopicDropdown
           mode={
@@ -81,6 +107,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
           setPreSelectedTopics={setPreSelectedTopics}
         />
       )}
+
       <Divider
         sx={{
           borderColor: "#FFF",

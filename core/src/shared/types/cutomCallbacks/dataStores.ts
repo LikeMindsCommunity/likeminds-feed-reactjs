@@ -152,6 +152,8 @@ export interface PostCreationDataStore {
   setOgtag: React.Dispatch<React.SetStateAction<OgTag | null>>;
   textFieldRef: React.MutableRefObject<HTMLDivElement | null>;
   containerRef: React.MutableRefObject<HTMLDivElement | null>;
+  isAnonymousPost: boolean;
+  changeAnonymousPostStatus: (value: boolean) => void;
 }
 
 export interface PostCreationDefaultActions {

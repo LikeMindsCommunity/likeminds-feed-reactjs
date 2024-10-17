@@ -7,7 +7,7 @@ import pluralize from "pluralize";
 import { TokenValues } from "./enums/tokens";
 import { WordAction } from "./enums/wordAction";
 import { LMDisplayMessages } from "../old_index";
-// import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
+// import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js-beta/dist/initiateUser/model/GetCommunityConfigurationsResponse";
 import { GetCommunityConfigurationsResponse } from "./types/api-responses/getComunityConfigurations";
 dayjs.extend(relativeTime);
 
@@ -348,7 +348,7 @@ export function changeLikeCase(action: WordAction, word?: string) {
     getCommunityConfigurationFromLocalStorage().communityConfigurations;
   const likeVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
-      ?.value?.likeEntityVariable.entityName || "like";
+      ?.value?.likeEntityVariable?.entityName || "like";
   return pluralizeOrCapitalize(word || likeVariable, action);
 }
 
