@@ -163,15 +163,6 @@ const LMFeedViewTopicDropdown: React.FC<LMFeedTopicDropdownProps> = ({
                   role="option"
                   key={Math.random()}
                 >
-                  {/* <LMFeedTopicSelectionTile
-                    clickHandler={updateCheckedTopics}
-                    topic={{
-                      Id: Math.random().toString(),
-                      name: "All Topics",
-                      isEnabled: true,
-                    }}
-                    checkedList={checkedTopics}
-                  /> */}
                   <div
                     className="lm-topic-dropdown__topic lm-all-topic"
                     onClick={clearAllCheckedTopics}

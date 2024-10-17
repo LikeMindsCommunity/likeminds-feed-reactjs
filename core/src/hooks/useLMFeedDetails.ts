@@ -5,7 +5,10 @@ import { Post } from "../shared/types/models/post";
 import { Reply } from "../shared/types/models/replies";
 import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDetailsResponse";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetPostRequest } from "@likeminds.community/feed-js";
+import {
+  GetPostRequest,
+  HidePostRequest,
+} from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import {
@@ -13,7 +16,7 @@ import {
   LikeCommentRequest,
   LikePostRequest,
   PinPostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
@@ -44,7 +47,7 @@ interface UseFeedDetailsInterface {
   likePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
-
+  hidePost: (postId: string) => Promise<void>;
   postComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 
@@ -166,6 +169,19 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       setReplies(repliesCopy);
     },
     [replies],
+  );
+
+  const hidePost = useCallback(
+    async (postId: string) => {
+      try {
+        await lmFeedclient?.hidePost(
+          HidePostRequest.builder().setPostId(postId).build(),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [lmFeedclient],
   );
 
   const addNewComment = useCallback(
@@ -364,12 +380,6 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
               }
             });
           }
-          // if (tempPost.isPinned) {
-          //   tempPost.isPinned = false;
-          // } else {
-          //   tempPost.isPinned = true;
-          // }
-          // feedListCopy.splice(index, 1);
 
           setPost(tempPost as Post);
           if (customEventClient) {
@@ -551,7 +561,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     deletePost:
       deletePostCustomAction?.bind(null, feedPostDetailsActionsAndDataStore) ||
       deletePost,
-
+    hidePost,
     postComponentClickCustomCallback: postComponentClickCustomCallback
       ? postComponentClickCustomCallback?.bind(
           null,

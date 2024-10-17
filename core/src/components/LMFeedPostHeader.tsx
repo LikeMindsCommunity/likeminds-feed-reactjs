@@ -20,7 +20,8 @@ const LMFeedPostHeader = () => {
     LMFeedGlobalClientProviderContext,
   );
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  const { post, users, topics, pinPost } = useContext(FeedPostContext);
+  const { post, users, topics, pinPost, hidePost } =
+    useContext(FeedPostContext);
   const { LMPostHeaderStyles, LMFeedCustomIcons } = useContext(
     CustomAgentProviderContext,
   );
@@ -79,6 +80,18 @@ const LMFeedPostHeader = () => {
       case LMFeedPostMenuItems.UNPIN_POST: {
         if (pinPost) {
           pinPost(post?.id);
+        }
+        break;
+      }
+      case LMFeedPostMenuItems.HIDE_POST: {
+        if (hidePost) {
+          hidePost(post?.id);
+        }
+        break;
+      }
+      case LMFeedPostMenuItems.UNHIDE_POST: {
+        if (hidePost) {
+          hidePost(post?.id);
         }
         break;
       }

@@ -39,6 +39,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     likePost,
     clickNavigator,
     postComponentClickCustomCallback,
+    hidePost,
   } = useContext(LMFeedDataContext);
   const { lmfeedAnalyticsClient, customEventClient } = useContext(
     LMFeedGlobalClientProviderContext,
@@ -89,6 +90,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
             likePost: likePost,
             postComponentClickCustomCallback,
             clickNavigator: clickNavigator,
+            hidePost,
           }}
         >
           {CustomComponents?.CustomPostView || (
@@ -103,6 +105,7 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     deletePost,
     feedList,
     feedUsersList,
+    hidePost,
     likePost,
     pinPost,
     postComponentClickCustomCallback,

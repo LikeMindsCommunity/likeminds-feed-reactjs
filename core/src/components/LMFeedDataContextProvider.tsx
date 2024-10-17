@@ -20,7 +20,7 @@ const LMFeedListDataContextProvider = () => {
     pinPost,
     likePost,
     postComponentClickCustomCallback,
-
+    hidePost,
     widgets,
   } = useFetchFeeds();
 
@@ -47,6 +47,7 @@ const LMFeedListDataContextProvider = () => {
         pinPost,
         likePost,
         postComponentClickCustomCallback,
+        hidePost,
       }}
     >
       {renderComponents()}
