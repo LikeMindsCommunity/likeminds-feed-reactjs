@@ -7,7 +7,6 @@ import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { Post } from "../shared/types/models/post";
-import Posts from "./LMFeedPosts";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import LMFeedAllMembers from "./LMFeedAllMembers";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
@@ -78,7 +77,7 @@ const LMQNAFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
 
       return (
         <FeedPostContext.Provider
-          key={post.Id}
+          key={post.id}
           value={{
             post: post,
             users: feedUsersList,

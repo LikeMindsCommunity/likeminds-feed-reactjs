@@ -5,7 +5,6 @@ import addMoreIcon from "../assets/images/add-more.svg";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import { Attachment } from "../shared/types/models/attachment";
-// import { LMFeedOGTagAttachmentView } from "../shared/components/LMFeedAttachments";
 import { Document, Page } from "react-pdf";
 import pdfIcon from "../assets/images/pdf-icon.svg";
 import { formatFileSize } from "../shared/utils";
@@ -328,7 +327,7 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
               {name}
             </a>
             <div className="attachmentPdf__content--url">
-              {formatFileSize(size)}
+              {formatFileSize(size || 0)}
             </div>
           </div>
         </div>
