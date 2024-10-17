@@ -61,7 +61,7 @@ const LMQNAFeedPostFooter = () => {
         lm-feed-component-id={`lm-feed-post-footer-vwxyz-${post?.Id}`}
       >
         <div className="lm-social-action-bar qna-feed-action-bar">
-          <div className="lm-social-action-bar__actions">
+          <div className="lm-social-action-bar__actions__QNA">
             <div className="lm-d-flex lm-align-items-center lm-flex-gap float-left upvote-block">
               {post?.isLiked ? (
                 LMFeedCustomIcons?.postLikesLikedCustomIcon ? (

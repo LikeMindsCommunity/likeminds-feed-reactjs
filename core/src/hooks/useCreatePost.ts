@@ -211,9 +211,11 @@ export function useCreatePost(): UseCreatePost {
   const postFeed = useCallback(
     async function (customWidgetsData?: Record<string, any>[]) {
       try {
-        if (!question || question.length == 0) {
-          return;
-        }
+        // console.log("question => return", question);
+
+        // if (!question || question.length == 0) {
+        //   return;
+        // }
 
         setOpenCreatePostDialog(false);
 
@@ -386,8 +388,6 @@ export function useCreatePost(): UseCreatePost {
           .setTopicIds(selectedTopicIds)
           .setTempId(Date.now().toString());
 
-        // let questionText;
-        console.log("question =>", question);
         if (question && question?.length > 0) {
           addPostRequestBuilder.setHeading(question);
         }
