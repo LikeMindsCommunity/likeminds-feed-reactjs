@@ -1,3 +1,5 @@
+ 
+
 .lm-social-action-bar {
   @extend .lm-d-flex;
   background-color: var(--lm-feed-light-color);
@@ -206,4 +208,35 @@
 .liked-comment {
   width: 16px;
   height: 16px;
+}
+
+
+.qna-feed-action-bar{
+  border-top: 1px solid #eceff3;
+  padding: 10px;
+}
+
+.lm-social-action-bar__actions__QNA{
+  width: 100%;
+  float: left;
+  display: block; 
+}
+
+.float-left{
+  float: left;
+}
+.float-right{
+  float: right;
+}
+
+.upvote-block{
+  background: #e6ebf5;
+  padding: 8px 10px;
+  border-radius: 20px;
+  border: 1px solid #d0d8e2;
+  color: #666;
+}
+
+.mt-1{
+  margin: 5px 0 0 0;
 }
