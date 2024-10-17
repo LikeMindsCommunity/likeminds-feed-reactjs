@@ -1,4 +1,4 @@
-import LMFeed from "./components/LMFeed";
+import LMSocialFeed from "./components/LMSocialFeed";
 import LMFeedAllMembers from "./components/LMFeedAllMembers";
 import LMFeedCreateMediaPost from "./components/LMFeedCreateMediaPost";
 import LMFeedCreatePost from "./components/LMFeedCreatePost";
@@ -68,9 +68,11 @@ import { LikeActionType } from "./shared/enums/lmLikeActionType";
 import { LMTopicsDropdownMode } from "./shared/enums/lmTopicFeedDropdownMode";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 import { initiateFeedClient } from "./shared/getClient";
+import LMQNAFeed from "./components/LMQNAFeed";
 
 export {
-  LMFeed,
+  LMSocialFeed,
+  LMQNAFeed,
   LMFeedError,
   LMFeedLoader,
   LMFeedPost,

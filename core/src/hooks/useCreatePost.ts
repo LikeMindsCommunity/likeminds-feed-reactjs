@@ -40,6 +40,8 @@ import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 interface UseCreatePost {
   postText: string | null;
   setPostText: (text: string) => void;
+  question: string | null;
+  setQuestionText: (text: string) => void;
   mediaList: File[];
   addMediaItem: (event: React.ChangeEvent<HTMLInputElement>) => void;
   removeMedia: (index: number) => void;
@@ -99,6 +101,8 @@ export function useCreatePost(): UseCreatePost {
     useState<boolean>(true);
   const [text, setText] = useState<string | null>("");
 
+  const [question, setQuestion] = useState<string | null>("");
+
   const [tempReel, setTempReel] = useState<File[]>([]);
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
 
@@ -133,6 +137,11 @@ export function useCreatePost(): UseCreatePost {
 
   function setPostText(txt: string) {
     setText(txt);
+  }
+
+  function setQuestionText(txt: string) {
+    console.log("tex =>", txt);
+    setQuestion(txt);
   }
 
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
@@ -367,15 +376,22 @@ export function useCreatePost(): UseCreatePost {
             );
           }
         }
+        const addPostRequestBuilder = AddPostRequest.builder()
+          .setAttachments(attachmentResponseArray)
+          .setText(textContent)
+          .setTopicIds(selectedTopicIds)
+          .setTempId(Date.now().toString());
 
-        const call: AddPostResponse = await lmFeedclient?.addPost(
-          AddPostRequest.builder()
-            .setAttachments(attachmentResponseArray)
-            .setText(textContent)
-            .setTopicIds(selectedTopicIds)
-            .setTempId(Date.now().toString())
-            .build(),
-        );
+        // let questionText;
+        console.log("question =>", question);
+        if (question && question?.length > 0) {
+          addPostRequestBuilder.setHeading(question);
+        }
+
+        const addPostRequest = addPostRequestBuilder.build();
+
+        const call: AddPostResponse =
+          await lmFeedclient?.addPost(addPostRequest);
         if (call.success) {
           lmfeedAnalyticsClient?.sendPostCreatedEvent(call.data.post);
           customEventClient?.dispatchEvent(
@@ -395,6 +411,7 @@ export function useCreatePost(): UseCreatePost {
       mediaUploadMode,
       ogTag,
       selectedTopicIds,
+      question,
     ],
   );
 
@@ -449,13 +466,22 @@ export function useCreatePost(): UseCreatePost {
             );
           }
         }
+
+        const editPostRequestBuilder = EditPostRequest.builder()
+          .setattachments(attachmentResponseArray)
+          .settext(textContent)
+          .setTopicIds(selectedTopicIds)
+          .setpostId(temporaryPost?.Id || "");
+
+        // let questionText;
+        if (question && question?.length > 0) {
+          editPostRequestBuilder.setHeading(question);
+        }
+
+        const editPostRequest = editPostRequestBuilder.build();
+
         const call: EditPostResponse = (await lmFeedclient?.editPost(
-          EditPostRequest.builder()
-            .setattachments(attachmentResponseArray)
-            .settext(textContent)
-            .setTopicIds(selectedTopicIds)
-            .setpostId(temporaryPost?.Id || "")
-            .build(),
+          editPostRequest,
         )) as never;
         if (call.success) {
           lmfeedAnalyticsClient?.sendPostEditedEvent(call.data.post);
@@ -488,6 +514,7 @@ export function useCreatePost(): UseCreatePost {
       selectedTopicIds,
       temporaryPost?.Id,
       temporaryPost?.attachments,
+      question,
     ],
   );
 
@@ -646,8 +673,10 @@ export function useCreatePost(): UseCreatePost {
   }, [lmfeedAnalyticsClient, ogTag, temporaryPost]);
   return {
     postText: text,
-    mediaList,
     setPostText,
+    question: question,
+    setQuestionText,
+    mediaList,
     addMediaItem,
     removeMedia,
     clearMedia,
