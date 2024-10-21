@@ -17,14 +17,10 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
 
 interface LMFeedUniversalFeedProps {
-  PostView?: React.FC;
-  Shimmer?: React.FC;
-  FooterView?: React.FC;
-  HeaderView?: React.FC;
-  likeActionCall?: () => void;
+  followedTopics?: string[];
 }
 
-const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
+const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
   const {
     topics = {},
     widgets = {},
@@ -69,6 +65,11 @@ const LMFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
       );
     };
   }, [customEventClient, lmfeedAnalyticsClient]);
+  useEffect(() => {
+    if (followedTopics && setSelectedTopics) {
+      setSelectedTopics(followedTopics);
+    }
+  }, [followedTopics, setSelectedTopics]);
   const renderFeeds = useCallback(() => {
     return feedList.map((post: Post) => {
       const postUuid = post.uuid;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   LMFeed,
@@ -7,8 +7,9 @@ import {
   LMFeedCustomEvents,
   LMCoreCallbacks,
   initiateFeedClient,
+  LMFeedUniversalFeed,
 } from "./old_index";
-
+import { GetUserTopicsRequest } from "@likeminds.community/feed-js-beta";
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
   const [refreshToken, setRefreshToken] = useState<string>("");
@@ -52,104 +53,21 @@ function App() {
     apiKey?: string;
   }>({});
   const lmFeedClient = initiateFeedClient();
+
   const LMCORECALLBACKS = new LMCoreCallbacks(
     (a: string, b: string) => {
-      setUserDetails((userDetails) => {
-        userDetails.accessToken = a;
-        userDetails.refreshToken = b;
-        return userDetails;
-      });
+      console.log(
+        "hello buddy how do u do from accessTokenRefreshedAndExpired",
+      );
     },
     async () => {
-      const myHeaders = new Headers();
-      myHeaders.append("x-api-key", "");
-      myHeaders.append("x-platform-code", "rt");
-      myHeaders.append("x-version-code", "1");
-      myHeaders.append("x-sdk-source", "feed");
-      myHeaders.append("Content-Type", "application/json");
-
-      interface RequestBody {
-        user_name: string;
-        user_unique_id: string;
-      }
-
-      const requestBody: RequestBody = {
-        user_name: "",
-        user_unique_id: "",
-      };
-
-      const requestOptions: RequestInit = {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify(requestBody),
-        redirect: "follow",
-      };
-
-      try {
-        const response = await fetch(
-          "https://auth.likeminds.community/sdk/initiate",
-          requestOptions,
-        );
-        const result_1 = await response.json();
-
-        return {
-          accessToken: result_1.data.access_token,
-          refreshToken: result_1.data.refresh_token,
-        };
-      } catch (error) {
-        console.log(error);
-        alert(`Error occoured: ${error}`);
-        return {
-          accessToken: "",
-          refreshToken: "",
-        };
-      }
-    },
-  );
-
-  async function proceedWithout() {
-    const myHeaders = new Headers();
-    myHeaders.append("x-api-key", "");
-    myHeaders.append("x-platform-code", "rt");
-    myHeaders.append("x-version-code", "9");
-    myHeaders.append("x-sdk-source", "feed");
-    myHeaders.append("Content-Type", "application/json");
-
-    interface RequestBody {
-      user_name: string;
-      user_unique_id: string;
-    }
-
-    const requestBody: RequestBody = {
-      user_name: "",
-      user_unique_id: "",
-    };
-
-    const requestOptions: RequestInit = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(requestBody),
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(
-        "https://auth.likeminds.community/sdk/initiate",
-        requestOptions,
-      );
-      const result_1 = await response.json();
-
-      return {
-        accessToken: result_1.data.access_token,
-        refreshToken: result_1.data.refresh_token,
-      };
-    } catch (error) {
+      console.log("hello buddy how do u do from onRefreshToken expired");
       return {
         accessToken: "",
         refreshToken: "",
       };
-    }
-  }
+    },
+  );
 
   return (
     <>
@@ -161,7 +79,19 @@ function App() {
         userDetails={{
           uuid: "James Joy",
           username: "James Joy",
-          apiKey: "b1f10c5c-778c-4a07-b4ae-bd57d3d54da9",
+          apiKey: "7d6374e0-9d07-4d85-9a8d-773ae8bbdd4e",
+        }}
+        CustomComponents={{
+          CustomUniversalFeed: <CustomUniversalFeed />,
+        }}
+        PostCreationCustomCallbacks={{
+          postFeedCustomAction: async (store) => {
+            store.postCreationDataStore.setSelectedTopicIds([
+              "asdfgb",
+              "dsafg",
+            ]);
+            store.defaultActions.postFeed();
+          },
         }}
       ></LMFeed>
     </>
@@ -169,3 +99,14 @@ function App() {
 }
 
 export default App;
+
+function CustomUniversalFeed() {
+  useEffect(() => {
+    alert("Custom Alert");
+  });
+  return (
+    <div>
+      <LMFeedUniversalFeed />
+    </div>
+  );
+}
