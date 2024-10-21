@@ -489,6 +489,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgets: call.data.widgets,
             },
           );
           customEventClient?.dispatchEvent(
@@ -497,6 +498,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgetsMap: call.data.widgets,
             },
           );
         }
