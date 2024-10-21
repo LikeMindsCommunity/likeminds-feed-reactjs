@@ -15,7 +15,7 @@ function App() {
   const [apiKey, setApiKey] = useState<string>("");
   const [uuid, setUUID] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-
+  const [counter, setCounter] = useState<number>(1);
   const [showFeed, setShowFeed] = useState<boolean>(false);
   function login() {
     if (accessToken.length && refreshToken.length) {
@@ -158,7 +158,17 @@ function App() {
         client={lmFeedClient}
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
-        userDetails={{}}
+        userDetails={{
+          apiKey: "b1f10c5c-778c-4a07-b4ae-bd57d3d54da9",
+          username: "James Joy",
+          uuid: "James Joy",
+        }}
+        PostCreationCustomCallbacks={{
+          editPostCustomAction: async (store) => {
+            const { defaultActions } = store;
+            defaultActions.editPost([{ key: counter }]);
+          },
+        }}
       ></LMFeed>
     </>
   );
