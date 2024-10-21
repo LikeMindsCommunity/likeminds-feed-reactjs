@@ -28,7 +28,7 @@ const LMFeedDetails = ({ postId }: LMFeedDetailsProps) => {
     likePost,
     pinPost,
     deletePost,
-
+    hidePost,
     postComponentClickCustomCallback,
     widgets,
   } = useFeedDetails(postId);
@@ -52,7 +52,7 @@ const LMFeedDetails = ({ postId }: LMFeedDetailsProps) => {
           likePost,
           pinPost,
           deletePost,
-
+          hidePost,
           postComponentClickCustomCallback,
         }}
       >

@@ -34,6 +34,8 @@ interface LMFeedCreatePostContextInterface {
   tempReelThumbnail: File[];
   removeThumbnailReel: () => void;
   removeAddReel: () => void;
+  isAnonymousPost: boolean;
+  changeAnonymousPostStatus: () => void;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>(

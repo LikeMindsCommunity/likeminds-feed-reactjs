@@ -33,6 +33,8 @@ export interface CustomAgentProviderInterface {
   createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
   topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;
   memberComponentClickCustomCallback?: MemberComponentCustomClickEventDelegatorCallback;
+  isAnonymousPostAllowed?: boolean;
+  hintTextForAnonymous?: string;
 }
 export const CustomAgentProviderContext =
   createContext<CustomAgentProviderInterface>({});

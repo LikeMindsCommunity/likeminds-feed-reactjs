@@ -4,7 +4,10 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetFeedRequest } from "@likeminds.community/feed-js-beta";
+import {
+  GetFeedRequest,
+  HidePostRequest,
+} from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
@@ -41,6 +44,7 @@ interface useFetchFeedsResponse {
   deletePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   likePost: (id: string) => Promise<void>;
+  hidePost: (postId: string) => Promise<void>;
   postComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 
@@ -240,7 +244,18 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     },
     [displaySnackbarMessage, feedList, lmFeedclient],
   );
-
+  const hidePost = useCallback(
+    async (postId: string) => {
+      try {
+        await lmFeedclient?.hidePost(
+          HidePostRequest.builder().setPostId(postId).build(),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [lmFeedclient],
+  );
   const likePost = useCallback(
     async function (id: string) {
       try {
@@ -478,6 +493,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     feedList,
     feedUsersList,
     getNextPage,
+    hidePost,
     deletePost: deletePostCustomAction
       ? deletePostCustomAction.bind(null, feedListActionsAndDataStore)
       : deletePost,

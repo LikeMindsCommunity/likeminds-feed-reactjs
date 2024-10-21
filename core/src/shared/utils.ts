@@ -348,7 +348,7 @@ export function changeLikeCase(action: WordAction, word?: string) {
     getCommunityConfigurationFromLocalStorage().communityConfigurations;
   const likeVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
-      ?.value?.likeEntityVariable.entityName || "like";
+      ?.value?.likeEntityVariable?.entityName || "like";
   return pluralizeOrCapitalize(word || likeVariable, action);
 }
 

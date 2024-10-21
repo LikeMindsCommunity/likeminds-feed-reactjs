@@ -20,6 +20,7 @@ interface LMFeedDataContextInterface {
   pinPost?: (id: string) => Promise<void>;
   likePost?: (id: string) => Promise<void>;
   clickNavigator?: ClickNavigator;
+  hidePost?: (postId: string) => Promise<void>;
   postComponentClickCustomCallback?: (
     // feedListStore: FeedListActionsAndDataStore,
     event: React.MouseEvent<HTMLDivElement>,

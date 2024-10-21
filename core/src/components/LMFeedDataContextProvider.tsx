@@ -21,7 +21,7 @@ const LMFeedListDataContextProvider = () => {
     pinPost,
     likePost,
     postComponentClickCustomCallback,
-
+    hidePost,
     widgets,
   } = useFetchFeeds();
   const { CustomComponents } = useContext(CustomAgentProviderContext);
@@ -57,6 +57,7 @@ const LMFeedListDataContextProvider = () => {
         pinPost,
         likePost,
         postComponentClickCustomCallback,
+        hidePost,
       }}
     >
       {renderComponents()}
