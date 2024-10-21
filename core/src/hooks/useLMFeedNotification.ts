@@ -5,7 +5,7 @@ import { LMClient } from "../shared/types/dataLayerExportsTypes";
 import {
   GetNotificationFeedRequest,
   MarkReadNotificationRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { DEFAULT_PAGE_SIZE } from "../shared/constants/lmAppConstant";
 import { GetNotificationResponse } from "../shared/types/api-responses/getNotificationResponse";
 import { LMFeedCustomEvents } from "../shared/customEvents";

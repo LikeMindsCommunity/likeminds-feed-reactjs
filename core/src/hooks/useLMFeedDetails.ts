@@ -5,7 +5,7 @@ import { Post } from "../shared/types/models/post";
 import { Reply } from "../shared/types/models/replies";
 import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDetailsResponse";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetPostRequest } from "@likeminds.community/feed-js";
+import { GetPostRequest } from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import {
@@ -13,7 +13,7 @@ import {
   LikeCommentRequest,
   LikePostRequest,
   PinPostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
@@ -432,13 +432,15 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       LMFeedCustomActionEvents.POST_EDITED_TARGET_DETAILS,
       (e: Event) => {
         const detail = (e as CustomEvent).detail;
-        const { post, usersMap, topicsMap } = detail;
+        const { post, usersMap, topicsMap, widgetsMap } = detail;
         const postCopy = { ...post };
+        const widgetsCopy = { ...widgets, ...widgetsMap };
         const feedUsersCopy = { ...users, ...usersMap };
         const topicsCopy = { ...topics, ...topicsMap };
         setPost(postCopy);
         setTopics(topicsCopy);
         setUsers(feedUsersCopy);
+        setWidgets(widgetsCopy);
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS),

@@ -18,7 +18,7 @@ import {
   EditPostRequest,
   LMFeedPostAttachment,
   LMFeedPostAttachmentMeta,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -405,6 +405,7 @@ export function useCreatePost(): UseCreatePost {
       mediaUploadMode,
       ogTag,
       selectedTopicIds,
+      setOpenPostCreationProgressBar,
     ],
   );
 
@@ -481,6 +482,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgets: call.data.widgets,
             },
           );
           customEventClient?.dispatchEvent(
@@ -489,6 +491,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgetsMap: call.data.widgets,
             },
           );
         }

@@ -4,7 +4,7 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetFeedRequest } from "@likeminds.community/feed-js";
+import { GetFeedRequest } from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
@@ -12,7 +12,7 @@ import {
   // GetReportTagsRequest,
   PinPostRequest,
   // PostReportRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -285,7 +285,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       LMFeedCustomActionEvents.POST_EDITED,
       (e: Event) => {
         const detail = (e as CustomEvent).detail;
-        const { post, usersMap, topicsMap } = detail;
+        const { post, usersMap, topicsMap, widgetsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
           if (feed.id === post?.id) {
             return post;
@@ -295,9 +295,11 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         });
         const feedUsersCopy = { ...feedUsersList, ...usersMap };
         const topicsCopy = { ...topics, ...topicsMap };
+        const widgetsCopy = { ...widgets, ...widgetsMap };
         setFeedList(feedListCopy);
         setTopics(topicsCopy);
         setFeedUsersList(feedUsersCopy);
+        setWidgets(widgetsCopy);
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS),
