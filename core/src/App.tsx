@@ -9,7 +9,7 @@ import {
   initiateFeedClient,
   LMFeedUniversalFeed,
 } from "./old_index";
-import { GetUserTopicsRequest } from "@likeminds.community/feed-js-beta";
+// import { GetUserTopicsRequest } from "@likeminds.community/feed-js-beta";
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
   const [refreshToken, setRefreshToken] = useState<string>("");
@@ -77,13 +77,11 @@ function App() {
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
         userDetails={{
-          uuid: "James Joy",
-          username: "James Joy",
-          apiKey: "7d6374e0-9d07-4d85-9a8d-773ae8bbdd4e",
+          apiKey: "f2dbe40c-6c8a-489a-aa9c-13315bd3c162",
+          username: "User_One_Admin",
+          uuid: "User_One_Admin",
         }}
-        CustomComponents={{
-          CustomUniversalFeed: <CustomUniversalFeed />,
-        }}
+        isAnonymousPostAllowed
         PostCreationCustomCallbacks={{
           postFeedCustomAction: async (store) => {
             store.postCreationDataStore.setSelectedTopicIds([

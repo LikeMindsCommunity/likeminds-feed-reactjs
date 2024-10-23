@@ -11,7 +11,7 @@ const LMFeedPostCreationProgressBar = ({
       <CircularProgress />
     </React.Fragment>
   );
-  return <Snackbar open={open} message="Note archived" action={action} />;
+  return <Snackbar open={open} message="Creating Post" action={action} />;
 };
 
 export default LMFeedPostCreationProgressBar;

@@ -170,7 +170,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           setFeedList(feedListCopy);
           if (displaySnackbarMessage)
             displaySnackbarMessage(
-              getDisplayMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY),
+              getDisplayMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY)!,
             );
         }
       } catch (error) {
@@ -229,11 +229,11 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS),
+                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS)!,
               );
             } else {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS),
+                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS)!,
               );
             }
           }
@@ -247,14 +247,74 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   const hidePost = useCallback(
     async (postId: string) => {
       try {
-        await lmFeedclient?.hidePost(
+        const call = await lmFeedclient?.hidePost(
           HidePostRequest.builder().setPostId(postId).build(),
         );
+        if (call?.success) {
+          const post = feedList.find((post) => post.id === postId);
+
+          const tempPost = { ...post };
+          if (tempPost.isHidden) {
+            tempPost.isHidden = false;
+            // TODO
+            lmfeedAnalyticsClient?.sendPostUnPinnedEvent(post!, topics);
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.UNHIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.HIDE_POST),
+                  title: "Hide Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          } else {
+            tempPost.isHidden = true;
+            lmfeedAnalyticsClient?.sendPostPinnedEvent(post!, topics);
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.HIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.UNHIDE_POST),
+                  title: "Unhide this Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          }
+
+          setFeedList((currentFeedList) => {
+            return currentFeedList.map((post) => {
+              if (post.id === postId) {
+                return tempPost as Post;
+              }
+              return post;
+            });
+          });
+
+          if (displaySnackbarMessage) {
+            if (tempPost.isHidden) {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
+              );
+            } else {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
+              );
+            }
+          }
+        }
       } catch (error) {
         console.log(error);
       }
     },
-    [lmFeedclient],
+    [
+      displaySnackbarMessage,
+      feedList,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      topics,
+    ],
   );
   const likePost = useCallback(
     async function (id: string) {
@@ -288,7 +348,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       loadFeed();
       if (displaySnackbarMessage) {
         displaySnackbarMessage(
-          getDisplayMessage(LMDisplayMessages.POST_CREATED_SUCCESS),
+          getDisplayMessage(LMDisplayMessages.POST_CREATED_SUCCESS)!,
         );
       }
     });
@@ -315,7 +375,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         setFeedUsersList(feedUsersCopy);
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
-            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS),
+            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS)!,
           );
         }
       },
@@ -404,6 +464,36 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     );
     return () =>
       customEventClient?.remove(LMFeedCustomActionEvents.PINNED_ON_DETAIL);
+  });
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.HIDDEN_ON_DETAIL,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.id;
+        const feedListCopy = [...feedList].map((post) => {
+          if (post?.id === id) {
+            post.menuItems = post.menuItems.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.HIDE_POST) {
+                menuItem.id = parseInt(LMFeedPostMenuItems.UNHIDE_POST);
+                menuItem.title = "Unhine This Post";
+              } else if (
+                menuItem.id.toString() === LMFeedPostMenuItems.UNHIDE_POST
+              ) {
+                menuItem.id = parseInt(LMFeedPostMenuItems.HIDE_POST);
+                menuItem.title = "Hide Post";
+              }
+              return menuItem;
+            });
+            post.isHidden = !post.isHidden;
+          }
+
+          return post;
+        });
+        setFeedList(feedListCopy);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.HIDDEN_ON_DETAIL);
   });
   useEffect(() => {
     customEventClient?.listen(

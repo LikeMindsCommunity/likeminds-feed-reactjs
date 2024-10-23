@@ -120,7 +120,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getPostDetailsCall?.errorMessage ||
-              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST),
+              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
         window.history.back();
@@ -174,14 +174,73 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const hidePost = useCallback(
     async (postId: string) => {
       try {
-        await lmFeedclient?.hidePost(
+        const call = await lmFeedclient?.hidePost(
           HidePostRequest.builder().setPostId(postId).build(),
         );
+        if (call?.success) {
+          const tempPost = { ...post };
+          if (tempPost.isHidden) {
+            tempPost.isHidden = false;
+            // TODO
+            lmfeedAnalyticsClient?.sendPostUnPinnedEvent(post!, topics);
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.UNHIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.HIDE_POST),
+                  title: "Hide Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          } else {
+            tempPost.isHidden = true;
+            lmfeedAnalyticsClient?.sendPostPinnedEvent(post!, topics);
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.HIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.UNHIDE_POST),
+                  title: "Unhide this Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          }
+
+          setPost(tempPost as Post);
+          if (customEventClient) {
+            customEventClient.dispatchEvent(
+              LMFeedCustomActionEvents.HIDDEN_ON_DETAIL,
+              {
+                id: postId,
+              },
+            );
+          }
+          if (displaySnackbarMessage) {
+            if (tempPost.isPinned) {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
+              );
+            } else {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
+              );
+            }
+          }
+        }
       } catch (error) {
         console.log(error);
       }
     },
-    [lmFeedclient],
+    [
+      customEventClient,
+      displaySnackbarMessage,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      post,
+      topics,
+    ],
   );
 
   const addNewComment = useCallback(
@@ -393,11 +452,11 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS),
+                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS)!,
               );
             } else {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS),
+                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS)!,
               );
             }
           }
@@ -451,7 +510,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         setUsers(feedUsersCopy);
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
-            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS),
+            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS)!,
           );
         }
       },
