@@ -44,7 +44,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
   const { CustomTopicDropDown } = CustomComponents;
 
   const renderAnonymousOption = () => {
-    if (isAnonymousPostAllowed) {
+    if (isAnonymousPostAllowed && !temporaryPost) {
       return (
         <>
           <div className="lm-feed-create-post-anonymous-post">
