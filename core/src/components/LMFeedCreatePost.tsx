@@ -12,8 +12,7 @@ import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
 import { PDF, PHOTO, VIDEO, REEL } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { changePostCase } from "../shared/utils";
-import { WordAction } from "../shared/enums/wordAction";
+
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
 }
@@ -59,6 +58,8 @@ const LMFeedCreatePost = ({
     tempReelThumbnail,
     removeThumbnailReel,
     removeAddReel,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -92,6 +93,8 @@ const LMFeedCreatePost = ({
         closeOGTagContainer,
         removeThumbnailReel,
         removeAddReel,
+        isAnonymousPost,
+        changeAnonymousPostStatus,
       }}
     >
       {showStarterComponent ? (
@@ -220,7 +223,8 @@ const LMFeedCreatePost = ({
                       setOpenCreatePostDialog(!openCreatePostDialog);
                     }}
                   >
-                    {changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}
+                    {/* {changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)} */}
+                    POST
                   </button>
                 </div>
               </div>

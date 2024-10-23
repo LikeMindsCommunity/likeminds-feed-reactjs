@@ -2,7 +2,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Topic } from "../shared/types/models/topic";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetTopicsRequest } from "@likeminds.community/feed-js";
+import { GetTopicsRequest } from "@likeminds.community/feed-js-beta";
 import { GetTopicsResponse } from "../shared/types/api-responses/getTopicsResponse";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { TopicsActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
@@ -17,7 +17,10 @@ import {
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
-  // setCurrentSelectedTopicIds?: React.Dispatch<string[]>,
+  // setCurrentSelectedTopicIds?: React.Dispatch<
+  //   React.SetStateAction<string[]> | string[]
+  // >,
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setCurrentSelectedTopicIds?: any,
   preSelectedTopics?: Topic[],
@@ -40,7 +43,7 @@ export function useTopicDropdown(
   const { logoutUser, currentUser, currentCommunity } = useContext(
     LMFeedUserProviderContext,
   );
-  // const {} = useContext(LMFeedCon)
+
   // to store the ids of topics that should be checked.
 
   const [checkedTopics, setCheckedTopics] = useState<Topic[]>([]);
@@ -194,7 +197,6 @@ export function useTopicDropdown(
   // update the checkedTopics on useFeed hooks
   useEffect(() => {
     if (setCurrentSelectedTopicIds) {
-      const checkedTopicIdsArr = checkedTopics.map((topic) => topic?.id);
       setCurrentSelectedTopicIds((prevstate: string[]) => {
         const t = checkedTopics.map((topic) => topic?.id);
         if (checkedTopics.length !== prevstate.length) {

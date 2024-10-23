@@ -18,7 +18,7 @@ import {
   EditPostRequest,
   LMFeedPostAttachment,
   LMFeedPostAttachmentMeta,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -68,6 +68,8 @@ interface UseCreatePost {
   addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   tempReel: File[];
   tempReelThumbnail: File[];
+  isAnonymousPost: boolean;
+  changeAnonymousPostStatus: () => void;
 }
 
 export function useCreatePost(): UseCreatePost {
@@ -103,7 +105,7 @@ export function useCreatePost(): UseCreatePost {
 
   const [tempReel, setTempReel] = useState<File[]>([]);
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
-
+  const [isAnonymousPost, setIsAnonymousPost] = useState<boolean>(false);
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -151,6 +153,9 @@ export function useCreatePost(): UseCreatePost {
     setMediaList(mediaCopy);
   }
 
+  const changeAnonymousPostStatus = (): void => {
+    setIsAnonymousPost((current) => !current);
+  };
   function addReel(event: React.ChangeEvent<HTMLInputElement>) {
     const mediaArray = event.target.files;
     if (!allowThumbnail) {
@@ -381,6 +386,7 @@ export function useCreatePost(): UseCreatePost {
             .setText(textContent)
             .setTopicIds(selectedTopicIds)
             .setTempId(Date.now().toString())
+            .setIsAnonymous(isAnonymousPost)
             .build(),
         );
         if (call.success) {
@@ -399,12 +405,14 @@ export function useCreatePost(): UseCreatePost {
       allowThumbnail,
       currentUser?.sdkClientInfo.uuid,
       customEventClient,
+      isAnonymousPost,
       lmFeedclient,
       lmfeedAnalyticsClient,
       mediaList,
       mediaUploadMode,
       ogTag,
       selectedTopicIds,
+      setOpenPostCreationProgressBar,
     ],
   );
 
@@ -481,6 +489,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgets: call.data.widgets,
             },
           );
           customEventClient?.dispatchEvent(
@@ -489,6 +498,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgetsMap: call.data.widgets,
             },
           );
         }
@@ -594,6 +604,8 @@ export function useCreatePost(): UseCreatePost {
           setOgtag,
           textFieldRef,
           containerRef,
+          isAnonymousPost,
+          changeAnonymousPostStatus,
         },
         applicationGeneralStore: {
           userDataStore: {
@@ -619,6 +631,7 @@ export function useCreatePost(): UseCreatePost {
       currentUser,
       displaySnackbarMessage,
       editPost,
+      isAnonymousPost,
       logoutUser,
       mediaList,
       mediaUploadMode,
@@ -681,6 +694,8 @@ export function useCreatePost(): UseCreatePost {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
     selectedTopicIds,
     setSelectedTopicIds,
     preSelectedTopics,
