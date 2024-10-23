@@ -30,15 +30,20 @@ const LMFeedPostHeader = () => {
     useState<boolean>(false);
   const [openDeletePostDialog, setOpenDeletePostDialog] =
     useState<boolean>(false);
+  const [anchor, setAnchor] = useState<HTMLImageElement | null>(null);
   function closeDeletePostDialog() {
     setOpenDeletePostDialog(false);
   }
   const { createdAt, isEdited, menuItems, isPinned } = post!;
-  const { name, imageUrl, customTitle } = useMemo(
-    () => users![post!.uuid],
-    [post, users],
-  );
-
+  const user = useMemo(() => {
+    if (users) {
+      return users![post!.uuid];
+    }
+  }, [post, users]);
+  if (!user) {
+    return null;
+  }
+  const { name, imageUrl, customTitle } = user;
   const avatarContent = getAvatar({ imageUrl, name });
 
   function closeReportDialog() {
@@ -97,7 +102,7 @@ const LMFeedPostHeader = () => {
       }
     }
   }
-  const [anchor, setAnchor] = useState<HTMLImageElement | null>(null);
+
   return (
     <>
       <Dialog open={openDeletePostDialog} onClose={closeDeletePostDialog}>
@@ -139,7 +144,7 @@ const LMFeedPostHeader = () => {
               style={LMPostHeaderStyles?.title}
               lm-feed-component-id={`lm-feed-post-header-pqrst-${post?.id}`}
             >
-              {name}{" "}
+              {name || ""}{" "}
               {customTitle ? (
                 <span
                   style={LMPostHeaderStyles?.customTitle}

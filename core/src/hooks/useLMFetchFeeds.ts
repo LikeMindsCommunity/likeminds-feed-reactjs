@@ -360,7 +360,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       LMFeedCustomActionEvents.POST_EDITED,
       (e: Event) => {
         const detail = (e as CustomEvent).detail;
-        const { post, usersMap, topicsMap } = detail;
+        const { post, usersMap, topicsMap, widgetsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
           if (feed.id === post?.id) {
             return post;
@@ -370,9 +370,11 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         });
         const feedUsersCopy = { ...feedUsersList, ...usersMap };
         const topicsCopy = { ...topics, ...topicsMap };
+        const widgetsCopy = { ...widgets, ...widgetsMap };
         setFeedList(feedListCopy);
         setTopics(topicsCopy);
         setFeedUsersList(feedUsersCopy);
+        setWidgets(widgetsCopy);
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS)!,

@@ -501,13 +501,15 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       LMFeedCustomActionEvents.POST_EDITED_TARGET_DETAILS,
       (e: Event) => {
         const detail = (e as CustomEvent).detail;
-        const { post, usersMap, topicsMap } = detail;
+        const { post, usersMap, topicsMap, widgetsMap } = detail;
         const postCopy = { ...post };
+        const widgetsCopy = { ...widgets, ...widgetsMap };
         const feedUsersCopy = { ...users, ...usersMap };
         const topicsCopy = { ...topics, ...topicsMap };
         setPost(postCopy);
         setTopics(topicsCopy);
         setUsers(feedUsersCopy);
+        setWidgets(widgetsCopy);
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS)!,

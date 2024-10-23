@@ -16,7 +16,7 @@ function App() {
   const [apiKey, setApiKey] = useState<string>("");
   const [uuid, setUUID] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-
+  const [counter, setCounter] = useState<number>(1);
   const [showFeed, setShowFeed] = useState<boolean>(false);
   function login() {
     if (accessToken.length && refreshToken.length) {
@@ -83,12 +83,9 @@ function App() {
         }}
         isAnonymousPostAllowed
         PostCreationCustomCallbacks={{
-          postFeedCustomAction: async (store) => {
-            store.postCreationDataStore.setSelectedTopicIds([
-              "asdfgb",
-              "dsafg",
-            ]);
-            store.defaultActions.postFeed();
+          editPostCustomAction: async (store) => {
+            const { defaultActions } = store;
+            defaultActions.editPost([{ key: counter }]);
           },
         }}
       ></LMFeed>
