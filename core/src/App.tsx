@@ -57,35 +57,15 @@ function App() {
 
   const LMCORECALLBACKS = new LMCoreCallbacks(
     (a: string, b: string) => {
-      console.log(
-        "hello buddy how do u do from accessTokenRefreshedAndExpired",
-      );
+      console.log();
     },
     async () => {
-      console.log("hello buddy how do u do from onRefreshToken expired");
       return {
         accessToken: "",
         refreshToken: "",
       };
     },
   );
-  if (!showFeed && !localStorage.getItem("LOCAL_USER")) {
-    return (
-      <LoginScreen
-        accessToken={accessToken}
-        refreshToken={refreshToken}
-        setAccessToken={setAccessToken}
-        setRefreshToken={setRefreshToken}
-        apiKey={apiKey}
-        setApiKey={setApiKey}
-        username={username}
-        uuid={uuid}
-        setUUID={setUUID}
-        setUsername={setUsername}
-        login={login}
-      />
-    );
-  }
 
   return (
     <>
@@ -94,11 +74,7 @@ function App() {
         client={lmFeedClient}
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
-        userDetails={{
-          apiKey: "b1f10c5c-778c-4a07-b4ae-bd57d3d54da9",
-          username: "user_name 2",
-          uuid: "user_unique_id 2",
-        }}
+        userDetails={}
         isAnonymousPostAllowed
         PostCreationCustomCallbacks={{
           editPostCustomAction: async (store) => {
@@ -112,14 +88,3 @@ function App() {
 }
 
 export default App;
-
-function CustomUniversalFeed() {
-  useEffect(() => {
-    alert("Custom Alert");
-  });
-  return (
-    <div>
-      <LMFeedUniversalFeed />
-    </div>
-  );
-}
