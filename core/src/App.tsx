@@ -9,6 +9,7 @@ import {
   initiateFeedClient,
   LMFeedUniversalFeed,
 } from "./old_index";
+import LoginScreen from "./LoginScreen";
 // import { GetUserTopicsRequest } from "@likeminds.community/feed-js-beta";
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -56,12 +57,9 @@ function App() {
 
   const LMCORECALLBACKS = new LMCoreCallbacks(
     (a: string, b: string) => {
-      console.log(
-        "hello buddy how do u do from accessTokenRefreshedAndExpired",
-      );
+      console.log();
     },
     async () => {
-      console.log("hello buddy how do u do from onRefreshToken expired");
       return {
         accessToken: "",
         refreshToken: "",
@@ -76,11 +74,7 @@ function App() {
         client={lmFeedClient}
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
-        userDetails={{
-          apiKey: "f2dbe40c-6c8a-489a-aa9c-13315bd3c162",
-          username: "User_One_Admin",
-          uuid: "User_One_Admin",
-        }}
+        userDetails={}
         isAnonymousPostAllowed
         PostCreationCustomCallbacks={{
           editPostCustomAction: async (store) => {
@@ -94,14 +88,3 @@ function App() {
 }
 
 export default App;
-
-function CustomUniversalFeed() {
-  useEffect(() => {
-    alert("Custom Alert");
-  });
-  return (
-    <div>
-      <LMFeedUniversalFeed />
-    </div>
-  );
-}
