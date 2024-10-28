@@ -77,7 +77,7 @@ function App() {
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
         userDetails={{
-          apiKey: "f2dbe40c-6c8a-489a-aa9c-13315bd3c162",
+          apiKey: "b1f10c5c-778c-4a07-b4ae-bd57d3d54da9",
           username: "User_One_Admin",
           uuid: "User_One_Admin",
         }}
