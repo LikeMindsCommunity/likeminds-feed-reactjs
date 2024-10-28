@@ -101,6 +101,7 @@
       &__content {
         padding: 0.5rem pxToRem(8) 0.5rem 1rem;
         word-wrap: break-word;
+
       }
       &__attachment {
         display: flex;
@@ -384,4 +385,10 @@
     max-width: 125px;
     margin: 0 auto;
   }
+}
+
+
+.title{
+  font-size: 14px;
+  color: #666;
 }

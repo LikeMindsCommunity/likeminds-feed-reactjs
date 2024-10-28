@@ -347,10 +347,24 @@
   width: 100%;
   position: relative;
 }
+.lm-feed-create-post-text-box {
+  outline: none;
+  width: 100%;
+  border: none;
+  color: #333;
+  font-weight: var(--font-weight-bold-light);
+  font-size: var(--font-size-base); 
+  border-bottom: 1px solid #eceff3;
+  padding: 15px 0;
+  margin: 0 0 20px 0;
+  border-top: 1px solid #eceff3;
+}
+
 .lm-feed-create-post-text-area {
   outline: none;
   width: 100%;
   border: none;
+  color: #9fa5b1;
   font-weight: var(--font-weight-bold-light);
   font-size: var(--font-size-base);
   overflow-y: auto;

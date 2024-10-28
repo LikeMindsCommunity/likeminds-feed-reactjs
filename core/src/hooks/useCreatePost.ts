@@ -27,10 +27,7 @@ import { GetOgTagResponse } from "../shared/types/api-responses/getOgTagResponse
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
-import {
-  AddPostResponse,
-  EditPostResponse,
-} from "../shared/types/api-responses/addPostResponse";
+import { EditPostResponse } from "../shared/types/api-responses/addPostResponse";
 import { PostCreationActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
@@ -41,6 +38,8 @@ import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 interface UseCreatePost {
   postText: string | null;
   setPostText: (text: string) => void;
+  question: string | null;
+  setQuestionText: (text: string) => void;
   mediaList: File[];
   addMediaItem: (event: React.ChangeEvent<HTMLInputElement>) => void;
   removeMedia: (index: number) => void;
@@ -103,6 +102,8 @@ export function useCreatePost(): UseCreatePost {
     useState<boolean>(true);
   const [text, setText] = useState<string | null>("");
 
+  const [question, setQuestion] = useState<string | null>("");
+
   const [tempReel, setTempReel] = useState<File[]>([]);
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
   const [isAnonymousPost, setIsAnonymousPost] = useState<boolean>(false);
@@ -124,6 +125,7 @@ export function useCreatePost(): UseCreatePost {
 
   function resetStates() {
     setShowOGTagViewContainer(true);
+    setQuestion("");
     setText(null);
     setTemporaryPost(null);
     setMediaList([]);
@@ -137,6 +139,10 @@ export function useCreatePost(): UseCreatePost {
 
   function setPostText(txt: string) {
     setText(txt);
+  }
+
+  function setQuestionText(txt: string) {
+    setQuestion(txt);
   }
 
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
@@ -379,17 +385,21 @@ export function useCreatePost(): UseCreatePost {
             );
           }
         }
+        const addPostRequestBuilder = AddPostRequest.builder()
+          .setAttachments(attachmentResponseArray)
+          .setText(textContent)
+          .setTopicIds(selectedTopicIds)
+          .setTempId(Date.now().toString())
+          .setIsAnonymous(isAnonymousPost);
 
-        const call: AddPostResponse = await lmFeedclient!.addPost(
-          AddPostRequest.builder()
-            .setAttachments(attachmentResponseArray)
-            .setText(textContent)
-            .setTopicIds(selectedTopicIds)
-            .setTempId(Date.now().toString())
-            .setIsAnonymous(isAnonymousPost)
-            .build(),
-        );
-        if (call.success) {
+        if (question && question?.length > 0) {
+          addPostRequestBuilder.setHeading(question);
+        }
+
+        const addPostRequest = addPostRequestBuilder.build();
+
+        const call = await lmFeedclient?.addPost(addPostRequest);
+        if (call?.success) {
           lmfeedAnalyticsClient?.sendPostCreatedEvent(call.data.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
@@ -412,7 +422,10 @@ export function useCreatePost(): UseCreatePost {
       mediaUploadMode,
       ogTag,
       selectedTopicIds,
+
       setOpenPostCreationProgressBar,
+
+      question,
     ],
   );
 
@@ -473,13 +486,22 @@ export function useCreatePost(): UseCreatePost {
             );
           }
         }
+
+        const editPostRequestBuilder = EditPostRequest.builder()
+          .setAttachments(attachmentResponseArray)
+          .setText(textContent)
+          .setTopicIds(selectedTopicIds)
+          .setPostId(temporaryPost?.id || "");
+
+        // let questionText;
+        if (question && question?.length > 0) {
+          editPostRequestBuilder.setHeading(question);
+        }
+
+        const editPostRequest = editPostRequestBuilder.build();
+
         const call: EditPostResponse = (await lmFeedclient?.editPost(
-          EditPostRequest.builder()
-            .setAttachments(attachmentResponseArray)
-            .setText(textContent)
-            .setTopicIds(selectedTopicIds)
-            .setPostId(temporaryPost?.id || "")
-            .build(),
+          editPostRequest,
         )) as never;
         if (call.success) {
           lmfeedAnalyticsClient?.sendPostEditedEvent(call.data.post);
@@ -514,6 +536,7 @@ export function useCreatePost(): UseCreatePost {
       selectedTopicIds,
       temporaryPost?.id,
       temporaryPost?.attachments,
+      question,
     ],
   );
 
@@ -675,8 +698,10 @@ export function useCreatePost(): UseCreatePost {
   }, [lmfeedAnalyticsClient, ogTag, temporaryPost]);
   return {
     postText: text,
-    mediaList,
     setPostText,
+    question: question,
+    setQuestionText,
+    mediaList,
     addMediaItem,
     removeMedia,
     clearMedia,

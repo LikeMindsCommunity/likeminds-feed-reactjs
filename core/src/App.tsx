@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 import {
-  LMFeed,
+  LMSocialFeed,
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   LMCoreCallbacks,
@@ -72,7 +72,7 @@ function App() {
   return (
     <>
       <LMFeedNotificationHeader customEventClient={customEventClient} />
-      <LMFeed
+      <LMSocialFeed
         client={lmFeedClient}
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
@@ -88,7 +88,7 @@ function App() {
             defaultActions.editPost([{ key: counter }]);
           },
         }}
-      ></LMFeed>
+      ></LMSocialFeed>
     </>
   );
 }

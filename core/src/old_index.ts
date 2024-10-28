@@ -1,4 +1,4 @@
-import LMFeed from "./components/LMFeed";
+import LMSocialFeed from "./components/LMSocialFeed";
 import LMFeedAllMembers from "./components/LMFeedAllMembers";
 import LMFeedCreateMediaPost from "./components/LMFeedCreateMediaPost";
 import LMFeedCreatePost from "./components/LMFeedCreatePost";
@@ -68,9 +68,29 @@ import { LikeActionType } from "./shared/enums/lmLikeActionType";
 import { LMTopicsDropdownMode } from "./shared/enums/lmTopicFeedDropdownMode";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 import { initiateFeedClient } from "./shared/getClient";
+import LMQNAFeed from "./components/LMQNAFeed";
+import LMQNAFeedCreateMediaPost from "./components/LMQNAFeedCreateMediaPost";
+import LMQNAFeedCreatePost from "./components/LMQNAFeedCreatePost";
+import LMQNAFeedCreatePostDialog from "./components/LMQNAFeedCreatePostDialog";
+import LMQNAFeedDataContextProvider from "./components/LMQNAFeedDataContextProvider";
+import LMQNAFeedDetails from "./components/LMQNAFeedDetails";
+import LMQNAFeedPostBody from "./components/LMQNAFeedPostBody";
+import LMQNAFeedPostFooter from "./components/LMQNAFeedPostFooter";
+import LMQNAFeedPosts from "./components/LMQNAFeedPosts";
+import LMQNAFeedUniversalFeed from "./components/LMQNAFeedUniversalFeed";
 
 export {
-  LMFeed,
+  LMSocialFeed,
+  LMQNAFeed,
+  LMQNAFeedCreateMediaPost,
+  LMQNAFeedCreatePost,
+  LMQNAFeedCreatePostDialog,
+  LMQNAFeedDataContextProvider,
+  LMQNAFeedDetails,
+  LMQNAFeedPostBody,
+  LMQNAFeedPostFooter,
+  LMQNAFeedPosts,
+  LMQNAFeedUniversalFeed,
   LMFeedError,
   LMFeedLoader,
   LMFeedPost,

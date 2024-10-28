@@ -14,7 +14,7 @@ import { LMFeedCustomEvents } from "../shared/customEvents";
 import { pdfjs } from "react-pdf";
 import { useLMFeedGeneralContextProvider } from "../hooks/useLMFeedGeneralContextProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import LMFeedListDataContextProvider from "./LMFeedDataContextProvider";
+import LMQNAFeedListDataContextProvider from "./LMQNAFeedDataContextProvider";
 import { Snackbar } from "@mui/material";
 import { AnalyticsCallback } from "../shared/types/analyticsCallback";
 import { LMFeedAnalytics } from "../shared/analytics";
@@ -22,7 +22,6 @@ import {
   LMCoreCallbacks,
   LMSDKCallbacksImplementations,
 } from "../shared/LMSDKCoreCallbacks";
-import LMFeedPostCreationProgressBar from "./LMFeedPostCreationProgressBar";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -35,7 +34,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   allowThumbnail?: boolean;
 }
 
-function LMFeed({
+function LMQNAFeed({
   LMFeedCoreCallbacks,
   userDetails,
   client,
@@ -58,19 +57,11 @@ function LMFeed({
   createPostComponentClickCustomCallback,
   topicComponentClickCustomCallback,
   memberComponentClickCustomCallback,
-  hintTextForAnonymous,
-  isAnonymousPostAllowed,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(client, customEventClient, userDetails);
-  const {
-    showSnackbar,
-    message,
-    closeSnackbar,
-    displaySnackbarMessage,
-    openPostCreationProgressBar,
-    setOpenPostCreationProgressBar,
-  } = useLMFeedGeneralContextProvider();
+  const { showSnackbar, message, closeSnackbar, displaySnackbarMessage } =
+    useLMFeedGeneralContextProvider();
   useEffect(() => {
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
@@ -115,8 +106,6 @@ function LMFeed({
             TopicsCustomCallbacks,
             RepliesCustomCallbacks,
             PostCreationCustomCallbacks,
-            isAnonymousPostAllowed,
-            hintTextForAnonymous,
           }}
         >
           <GeneralContext.Provider
@@ -127,8 +116,6 @@ function LMFeed({
               displaySnackbarMessage,
               routes,
               allowThumbnail,
-              openPostCreationProgressBar,
-              setOpenPostCreationProgressBar,
             }}
           >
             <UserProviderContext.Provider
@@ -138,7 +125,7 @@ function LMFeed({
                 logoutUser: logoutUser,
               }}
             >
-              <LMFeedListDataContextProvider />
+              <LMQNAFeedListDataContextProvider />
             </UserProviderContext.Provider>
           </GeneralContext.Provider>
         </CustomAgentProviderContext.Provider>
@@ -148,10 +135,9 @@ function LMFeed({
           onClose={closeSnackbar}
           autoHideDuration={3000}
         />
-        <LMFeedPostCreationProgressBar open={openPostCreationProgressBar} />
       </GlobalClientProviderContext.Provider>
     </div>
   );
 }
 
-export default LMFeed;
+export default LMQNAFeed;

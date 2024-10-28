@@ -6,6 +6,8 @@ import { Topic } from "../shared/types/models/topic";
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 interface LMFeedCreatePostContextInterface {
   postText?: string | null;
+  question?: string | null;
+  setQuestionText?: (text: string) => void;
   setPostText?: (text: string) => void;
   mediaList?: File[];
   addMediaItem?: (event: React.ChangeEvent<HTMLInputElement>) => void;
