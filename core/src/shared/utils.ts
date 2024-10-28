@@ -2,7 +2,7 @@
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 
-import pluralize from "pluralize";
+import { Pluralize } from "./variables";
 
 import { TokenValues } from "./enums/tokens";
 import { WordAction } from "./enums/wordAction";
@@ -298,27 +298,27 @@ export function pluralizeOrCapitalize(
   switch (action) {
     case WordAction.FIRST_LETTER_CAPITAL_SINGULAR:
       return (
-        pluralize.singular(word).charAt(0).toUpperCase() +
-        pluralize.singular(word).slice(1).toLowerCase()
+        Pluralize().singular(word).charAt(0).toUpperCase() +
+        Pluralize().singular(word).slice(1).toLowerCase()
       );
 
     case WordAction.ALL_CAPITAL_SINGULAR:
-      return pluralize.singular(word).toUpperCase();
+      return Pluralize().singular(word).toUpperCase();
 
     case WordAction.ALL_SMALL_SINGULAR:
-      return pluralize.singular(word).toLowerCase();
+      return Pluralize().singular(word).toLowerCase();
 
     case WordAction.FIRST_LETTER_CAPITAL_PLURAL:
       return (
-        pluralize.plural(word).charAt(0).toUpperCase() +
-        pluralize.plural(word).slice(1).toLowerCase()
+        Pluralize().plural(word).charAt(0).toUpperCase() +
+        Pluralize().plural(word).slice(1).toLowerCase()
       );
 
     case WordAction.ALL_CAPITAL_PLURAL:
-      return pluralize.plural(word).toUpperCase();
+      return Pluralize().plural(word).toUpperCase();
 
     case WordAction.ALL_SMALL_PLURAL:
-      return pluralize.plural(word).toLowerCase();
+      return Pluralize().plural(word).toLowerCase();
 
     default:
       throw new Error("Invalid action type");
