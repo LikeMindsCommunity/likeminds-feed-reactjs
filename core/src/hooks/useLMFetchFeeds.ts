@@ -27,8 +27,6 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 import { getDisplayMessage } from "../shared/utils";
 
-// import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
-
 interface useFetchFeedsResponse {
   topics: Record<string, Topic>;
   widgets: Record<string, any>;

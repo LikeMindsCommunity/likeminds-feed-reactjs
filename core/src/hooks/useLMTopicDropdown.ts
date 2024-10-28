@@ -17,9 +17,6 @@ import {
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 export function useTopicDropdown(
   currentSelectedTopicIds?: string[],
-  // setCurrentSelectedTopicIds?: React.Dispatch<
-  //   React.SetStateAction<string[]> | string[]
-  // >,
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setCurrentSelectedTopicIds?: any,

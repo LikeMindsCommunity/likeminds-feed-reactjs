@@ -117,7 +117,6 @@ const LMFeedCreatePost = ({
             <div className="lm-createPost">
               <div className="lm-createPost__media">
                 <div className="lm-createPost__media__imgBox lm-avatar">
-                  {/* <img src={user} alt="user photo" /> */}
                   {avatar}
                 </div>
                 <div
@@ -223,7 +222,6 @@ const LMFeedCreatePost = ({
                       setOpenCreatePostDialog(!openCreatePostDialog);
                     }}
                   >
-                    {/* {changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)} */}
                     POST
                   </button>
                 </div>

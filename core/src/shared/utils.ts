@@ -7,7 +7,7 @@ import { Pluralize } from "./variables";
 import { TokenValues } from "./enums/tokens";
 import { WordAction } from "./enums/wordAction";
 import { LMDisplayMessages } from "..";
-// import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
+
 import { GetCommunityConfigurationsResponse } from "./types/api-responses/getComunityConfigurations";
 dayjs.extend(relativeTime);
 

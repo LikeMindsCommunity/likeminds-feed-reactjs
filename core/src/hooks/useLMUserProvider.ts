@@ -14,7 +14,7 @@ import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
 import { TokenValues } from "../shared/enums/tokens";
-// import { TokenValues } from "../shared/enums/tokens";
+
 export interface UserDetails {
   accessToken?: string;
   refreshToken?: string;
