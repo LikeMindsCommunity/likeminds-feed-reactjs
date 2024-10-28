@@ -9,6 +9,7 @@ import {
   initiateFeedClient,
   LMFeedUniversalFeed,
 } from "./old_index";
+import LoginScreen from "./LoginScreen";
 // import { GetUserTopicsRequest } from "@likeminds.community/feed-js-beta";
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -68,6 +69,23 @@ function App() {
       };
     },
   );
+  if (!showFeed && !localStorage.getItem("LOCAL_USER")) {
+    return (
+      <LoginScreen
+        accessToken={accessToken}
+        refreshToken={refreshToken}
+        setAccessToken={setAccessToken}
+        setRefreshToken={setRefreshToken}
+        apiKey={apiKey}
+        setApiKey={setApiKey}
+        username={username}
+        uuid={uuid}
+        setUUID={setUUID}
+        setUsername={setUsername}
+        login={login}
+      />
+    );
+  }
 
   return (
     <>
@@ -77,9 +95,9 @@ function App() {
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
         userDetails={{
-          apiKey: "f2dbe40c-6c8a-489a-aa9c-13315bd3c162",
-          username: "User_One_Admin",
-          uuid: "User_One_Admin",
+          apiKey: "b1f10c5c-778c-4a07-b4ae-bd57d3d54da9",
+          username: "user_name 2",
+          uuid: "user_unique_id 2",
         }}
         isAnonymousPostAllowed
         PostCreationCustomCallbacks={{

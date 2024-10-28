@@ -33,6 +33,11 @@
       justify-content: center;
       align-items: center;
     }
+    .lm-feed-user-avatar{
+      height: inherit;
+      width: inherit;
+      border-radius: 50%;
+    }
     .notification-content {
       width: 72%;
       .notification-text {

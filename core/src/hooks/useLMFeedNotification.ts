@@ -41,15 +41,18 @@ export function useLMFeedNotification(
     },
     [lmFeedClient],
   );
-  async function markReadNotification(id: string) {
-    try {
-      await lmFeedClient?.markReadNotification(
-        MarkReadNotificationRequest.builder().setActivityId(id).build(),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const markReadNotification = useCallback(
+    async function (id: string) {
+      try {
+        await lmFeedClient?.markReadNotification(
+          MarkReadNotificationRequest.builder().setActivityId(id).build(),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [lmFeedClient],
+  );
   const getNotifications = useCallback(
     async function () {
       try {
@@ -108,7 +111,7 @@ export function useLMFeedNotification(
     if (lmFeedClient) {
       getNotificationCount();
     }
-  }, [lmFeedClient]);
+  }, [getNotificationCount, lmFeedClient]);
   useEffect(() => {
     customEventClient.listen(
       LMFeedCustomActionEvents.USER_INITIATED,

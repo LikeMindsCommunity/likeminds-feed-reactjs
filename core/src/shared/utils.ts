@@ -372,5 +372,9 @@ export function getDisplayMessage(message: LMDisplayMessages) {
       return "Comment deleted";
     case LMDisplayMessages.ERROR_LOADING_POST:
       return `error loading ${changePostCase(WordAction.ALL_SMALL_SINGULAR)}`;
+    case LMDisplayMessages.POST_HIDE_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} hidden`;
+    case LMDisplayMessages.POST_UNHIDE_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} unhidden`;
   }
 }
