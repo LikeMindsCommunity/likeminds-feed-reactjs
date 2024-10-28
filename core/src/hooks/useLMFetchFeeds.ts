@@ -295,11 +295,11 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           if (displaySnackbarMessage) {
             if (tempPost.isHidden) {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
+                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
               );
             } else {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
+                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
               );
             }
           }

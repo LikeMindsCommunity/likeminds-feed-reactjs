@@ -217,13 +217,13 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             );
           }
           if (displaySnackbarMessage) {
-            if (tempPost.isPinned) {
+            if (tempPost.isHidden) {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
+                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
               );
             } else {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
+                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
               );
             }
           }

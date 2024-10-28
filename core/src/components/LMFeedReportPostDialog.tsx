@@ -11,6 +11,8 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { LMFeedEntityType } from "../shared/constants/lmEntityType";
 import { Reply } from "../shared/types/models/replies";
 import { Post } from "../shared/types/models/post";
+import { changePostCase } from "../shared/utils";
+import { WordAction } from "../shared/enums/wordAction";
 
 interface LMFeedReportPostDialogProps {
   closeReportDialog: () => void;
@@ -90,7 +92,9 @@ const LMFeedReportPostDialog = ({
   }, [lmFeedclient]);
   return (
     <div className="lmReportPostWrapper">
-      <div className="lmReportPostWrapper__header">Report Post</div>
+      <div className="lmReportPostWrapper__header">
+        Report {changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}
+      </div>
       <img
         src={closeIcon}
         className="lmReportPostWrapper__header__closeIcon"
@@ -101,7 +105,9 @@ const LMFeedReportPostDialog = ({
         <div className="lmReportPostWrapper__body__content">
           <div className="lmReportPostWrapper__body__content--texted">
             <span>Please specify the problem to continue </span> <br />
-            You would be able to report this Post after selecting a problem.
+            You would be able to report this{" "}
+            {changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)} after
+            selecting a problem.
           </div>
           <div className="lmReportPostWrapper__body__content__types">
             {reportTags.map((tag) => {

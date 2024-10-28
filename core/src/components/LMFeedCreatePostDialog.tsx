@@ -13,8 +13,9 @@ import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Checkbox, Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
-import { CREATE_POST, EDIT_POST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { changePostCase } from "../shared/utils";
+import { WordAction } from "../shared/enums/wordAction";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -72,7 +73,9 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       }}
     >
       <div className="lm-feed-create-post-wrapper__dialog-heading">
-        {temporaryPost ? EDIT_POST : CREATE_POST}
+        {temporaryPost
+          ? `Edit ${changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`
+          : `Create ${changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`}
         <img
           src={cancelModelMcon}
           alt="cancelModelMcon"
