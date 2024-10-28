@@ -31,6 +31,7 @@ const LMFeedPostTopicsWrapper = () => {
                   topicsMap![topicId],
                 );
               }}
+              key={topicId}
             >
               <LMFeedTopicsTile key={topicId} topic={topicsMap![topicId]} />
             </div>

@@ -4,10 +4,7 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import {
-  GetFeedRequest,
-  HidePostRequest,
-} from "@likeminds.community/feed-js-beta";
+import { GetFeedRequest, HidePostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
@@ -15,7 +12,7 @@ import {
   // GetReportTagsRequest,
   PinPostRequest,
   // PostReportRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";

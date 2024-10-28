@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/likeminds-feed-reactjs",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -20,14 +20,15 @@
     }
   },
   "dependencies": {
+    "@ast-grep/napi-darwin-x64": "^0.28.1",
     "@aws-sdk/client-s3": "3.556.0",
     "@aws-sdk/credential-provider-cognito-identity": "3.556.0",
     "@aws-sdk/credential-providers": "3.556.0",
     "@emotion/react": "11.11.3",
     "@emotion/styled": "11.11.0",
-    "@likeminds.community/feed-js": "^1.13.0",
-    "@likeminds.community/feed-js-beta": "^1.12.37",
+    "@likeminds.community/feed-js": "^1.14.0",
     "@mui/material": "5.15.10",
+    "@rollup/rollup-darwin-x64": "^4.24.2",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "13.0.0",
     "@testing-library/user-event": "13.2.1",
@@ -117,5 +118,18 @@
     "vite": "^5.2.2",
     "vite-plugin-dts": "^3.7.3",
     "vite-plugin-lib-inject-css": "^2.0.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    }
   }
 }
