@@ -27,10 +27,7 @@ import { GetOgTagResponse } from "../shared/types/api-responses/getOgTagResponse
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
-import {
-  AddPostResponse,
-  EditPostResponse,
-} from "../shared/types/api-responses/addPostResponse";
+import { EditPostResponse } from "../shared/types/api-responses/addPostResponse";
 import { PostCreationActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
@@ -70,6 +67,8 @@ interface UseCreatePost {
   addReel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   tempReel: File[];
   tempReelThumbnail: File[];
+  isAnonymousPost: boolean;
+  changeAnonymousPostStatus: () => void;
 }
 
 export function useCreatePost(): UseCreatePost {
@@ -87,6 +86,7 @@ export function useCreatePost(): UseCreatePost {
     allowThumbnail,
     showSnackbar,
     message,
+    setOpenPostCreationProgressBar,
   } = useContext(GeneralContext);
   const {
     PostCreationCustomCallbacks = {},
@@ -106,7 +106,7 @@ export function useCreatePost(): UseCreatePost {
 
   const [tempReel, setTempReel] = useState<File[]>([]);
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
-
+  const [isAnonymousPost, setIsAnonymousPost] = useState<boolean>(false);
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -159,6 +159,9 @@ export function useCreatePost(): UseCreatePost {
     setMediaList(mediaCopy);
   }
 
+  const changeAnonymousPostStatus = (): void => {
+    setIsAnonymousPost((current) => !current);
+  };
   function addReel(event: React.ChangeEvent<HTMLInputElement>) {
     const mediaArray = event.target.files;
     if (!allowThumbnail) {
@@ -219,6 +222,9 @@ export function useCreatePost(): UseCreatePost {
         ).trim();
 
         const attachmentResponseArray: Attachment[] = [];
+        if (mediaList.length) {
+          setOpenPostCreationProgressBar!(true);
+        }
         for (let index = 0; index < mediaList.length; index++) {
           const file: File = mediaList[index];
 
@@ -383,7 +389,8 @@ export function useCreatePost(): UseCreatePost {
           .setAttachments(attachmentResponseArray)
           .setText(textContent)
           .setTopicIds(selectedTopicIds)
-          .setTempId(Date.now().toString());
+          .setTempId(Date.now().toString())
+          .setIsAnonymous(isAnonymousPost);
 
         if (question && question?.length > 0) {
           addPostRequestBuilder.setHeading(question);
@@ -400,18 +407,24 @@ export function useCreatePost(): UseCreatePost {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setOpenPostCreationProgressBar!(false);
       }
     },
     [
       allowThumbnail,
       currentUser?.sdkClientInfo.uuid,
       customEventClient,
+      isAnonymousPost,
       lmFeedclient,
       lmfeedAnalyticsClient,
       mediaList,
       mediaUploadMode,
       ogTag,
       selectedTopicIds,
+
+      setOpenPostCreationProgressBar,
+
       question,
     ],
   );
@@ -498,6 +511,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgets: call.data.widgets,
             },
           );
           customEventClient?.dispatchEvent(
@@ -506,6 +520,7 @@ export function useCreatePost(): UseCreatePost {
               post: call.data.post,
               usersMap: call.data.users,
               topicsMap: call.data.topics,
+              widgetsMap: call.data.widgets,
             },
           );
         }
@@ -612,6 +627,8 @@ export function useCreatePost(): UseCreatePost {
           setOgtag,
           textFieldRef,
           containerRef,
+          isAnonymousPost,
+          changeAnonymousPostStatus,
         },
         applicationGeneralStore: {
           userDataStore: {
@@ -637,6 +654,7 @@ export function useCreatePost(): UseCreatePost {
       currentUser,
       displaySnackbarMessage,
       editPost,
+      isAnonymousPost,
       logoutUser,
       mediaList,
       mediaUploadMode,
@@ -701,6 +719,8 @@ export function useCreatePost(): UseCreatePost {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
     selectedTopicIds,
     setSelectedTopicIds,
     preSelectedTopics,

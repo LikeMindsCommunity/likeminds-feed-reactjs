@@ -10,4 +10,6 @@ interface GeneralContextInterface {
   message?: string;
   routes?: LMFeedCustomAppRoutes;
   allowThumbnail?: boolean;
+  openPostCreationProgressBar?: boolean;
+  setOpenPostCreationProgressBar?: (open: boolean) => void;
 }

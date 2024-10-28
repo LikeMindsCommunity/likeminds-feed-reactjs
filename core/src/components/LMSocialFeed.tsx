@@ -22,6 +22,7 @@ import {
   LMCoreCallbacks,
   LMSDKCallbacksImplementations,
 } from "../shared/LMSDKCoreCallbacks";
+import LMFeedPostCreationProgressBar from "./LMFeedPostCreationProgressBar";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   client: T;
@@ -57,11 +58,19 @@ function LMSocialFeed({
   createPostComponentClickCustomCallback,
   topicComponentClickCustomCallback,
   memberComponentClickCustomCallback,
+  hintTextForAnonymous,
+  isAnonymousPostAllowed,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(client, customEventClient, userDetails);
-  const { showSnackbar, message, closeSnackbar, displaySnackbarMessage } =
-    useLMFeedGeneralContextProvider();
+  const {
+    showSnackbar,
+    message,
+    closeSnackbar,
+    displaySnackbarMessage,
+    openPostCreationProgressBar,
+    setOpenPostCreationProgressBar,
+  } = useLMFeedGeneralContextProvider();
   useEffect(() => {
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
@@ -106,6 +115,8 @@ function LMSocialFeed({
             TopicsCustomCallbacks,
             RepliesCustomCallbacks,
             PostCreationCustomCallbacks,
+            isAnonymousPostAllowed,
+            hintTextForAnonymous,
           }}
         >
           <GeneralContext.Provider
@@ -116,6 +127,8 @@ function LMSocialFeed({
               displaySnackbarMessage,
               routes,
               allowThumbnail,
+              openPostCreationProgressBar,
+              setOpenPostCreationProgressBar,
             }}
           >
             <UserProviderContext.Provider
@@ -135,6 +148,7 @@ function LMSocialFeed({
           onClose={closeSnackbar}
           autoHideDuration={3000}
         />
+        <LMFeedPostCreationProgressBar open={openPostCreationProgressBar} />
       </GlobalClientProviderContext.Provider>
     </div>
   );

@@ -10,14 +10,9 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
-import {
-  PDF,
-  PHOTO,
-  POST,
-  VIDEO,
-  REEL,
-} from "../shared/constants/lmAppConstant";
+import { PDF, PHOTO, VIDEO, REEL } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
 }
@@ -63,6 +58,8 @@ const LMFeedCreatePost = ({
     tempReelThumbnail,
     removeThumbnailReel,
     removeAddReel,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -96,6 +93,8 @@ const LMFeedCreatePost = ({
         closeOGTagContainer,
         removeThumbnailReel,
         removeAddReel,
+        isAnonymousPost,
+        changeAnonymousPostStatus,
       }}
     >
       {showStarterComponent ? (
@@ -118,7 +117,6 @@ const LMFeedCreatePost = ({
             <div className="lm-createPost">
               <div className="lm-createPost__media">
                 <div className="lm-createPost__media__imgBox lm-avatar">
-                  {/* <img src={user} alt="user photo" /> */}
                   {avatar}
                 </div>
                 <div
@@ -224,7 +222,7 @@ const LMFeedCreatePost = ({
                       setOpenCreatePostDialog(!openCreatePostDialog);
                     }}
                   >
-                    {POST}
+                    POST
                   </button>
                 </div>
               </div>

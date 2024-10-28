@@ -454,3 +454,23 @@
     }
   }
 }
+
+
+.lm-feed-create-post-anonymous-post{
+  margin-bottom: pxToRem(24);
+  .anonymous-post-checkbox{
+    padding: 0px;
+    height: pxToRem(16);
+    width: pxToRem(16);
+    margin-right: pxToRem(8);
+    
+  }
+  .anonymous-post-checkbox.Mui-checked{
+    color: var(--lm-feed-primary-color);
+  }
+  .anonymous-post-text{
+    line-height: pxToRem(20);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold-heavy);
+  }
+}

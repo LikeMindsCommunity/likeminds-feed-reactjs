@@ -4,7 +4,7 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetFeedRequest } from "@likeminds.community/feed-js";
+import { GetFeedRequest, HidePostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
@@ -25,8 +25,7 @@ import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/data
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
-
-// import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
+import { getDisplayMessage } from "../shared/utils";
 
 interface useFetchFeedsResponse {
   topics: Record<string, Topic>;
@@ -40,6 +39,7 @@ interface useFetchFeedsResponse {
   deletePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   likePost: (id: string) => Promise<void>;
+  hidePost: (postId: string) => Promise<void>;
   postComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 
@@ -164,7 +164,9 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           feedListCopy.splice(index, 1);
           setFeedList(feedListCopy);
           if (displaySnackbarMessage)
-            displaySnackbarMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY);
+            displaySnackbarMessage(
+              getDisplayMessage(LMDisplayMessages.POST_DELETED_SUCCESSFULLY)!,
+            );
         }
       } catch (error) {
         console.log(error);
@@ -221,9 +223,13 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           setFeedList(feedListCopy);
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
-              displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS)!,
+              );
             } else {
-              displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS)!,
+              );
             }
           }
         }
@@ -233,7 +239,78 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     },
     [displaySnackbarMessage, feedList, lmFeedclient],
   );
+  const hidePost = useCallback(
+    async (postId: string) => {
+      try {
+        const call = await lmFeedclient?.hidePost(
+          HidePostRequest.builder().setPostId(postId).build(),
+        );
+        if (call?.success) {
+          const post = feedList.find((post) => post.id === postId);
 
+          const tempPost = { ...post };
+          if (tempPost.isHidden) {
+            tempPost.isHidden = false;
+            // TODO
+            lmfeedAnalyticsClient?.sendPostUnPinnedEvent(post!, topics);
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.UNHIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.HIDE_POST),
+                  title: "Hide Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          } else {
+            tempPost.isHidden = true;
+            lmfeedAnalyticsClient?.sendPostPinnedEvent(post!, topics);
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.HIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.UNHIDE_POST),
+                  title: "Unhide this Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          }
+
+          setFeedList((currentFeedList) => {
+            return currentFeedList.map((post) => {
+              if (post.id === postId) {
+                return tempPost as Post;
+              }
+              return post;
+            });
+          });
+
+          if (displaySnackbarMessage) {
+            if (tempPost.isHidden) {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
+              );
+            } else {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
+              );
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [
+      displaySnackbarMessage,
+      feedList,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      topics,
+    ],
+  );
   const likePost = useCallback(
     async function (id: string) {
       try {
@@ -265,7 +342,9 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
       loadFeed();
       if (displaySnackbarMessage) {
-        displaySnackbarMessage(LMDisplayMessages.POST_CREATED_SUCCESS);
+        displaySnackbarMessage(
+          getDisplayMessage(LMDisplayMessages.POST_CREATED_SUCCESS)!,
+        );
       }
     });
     return () =>
@@ -276,7 +355,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       LMFeedCustomActionEvents.POST_EDITED,
       (e: Event) => {
         const detail = (e as CustomEvent).detail;
-        const { post, usersMap, topicsMap } = detail;
+        const { post, usersMap, topicsMap, widgetsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
           if (feed.id === post?.id) {
             return post;
@@ -286,11 +365,15 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
         });
         const feedUsersCopy = { ...feedUsersList, ...usersMap };
         const topicsCopy = { ...topics, ...topicsMap };
+        const widgetsCopy = { ...widgets, ...widgetsMap };
         setFeedList(feedListCopy);
         setTopics(topicsCopy);
         setFeedUsersList(feedUsersCopy);
+        setWidgets(widgetsCopy);
         if (displaySnackbarMessage) {
-          displaySnackbarMessage(LMDisplayMessages.POST_EDIT_SUCCESS);
+          displaySnackbarMessage(
+            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS)!,
+          );
         }
       },
     );
@@ -381,6 +464,36 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   });
   useEffect(() => {
     customEventClient?.listen(
+      LMFeedCustomActionEvents.HIDDEN_ON_DETAIL,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.id;
+        const feedListCopy = [...feedList].map((post) => {
+          if (post?.id === id) {
+            post.menuItems = post.menuItems.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.HIDE_POST) {
+                menuItem.id = parseInt(LMFeedPostMenuItems.UNHIDE_POST);
+                menuItem.title = "Unhine This Post";
+              } else if (
+                menuItem.id.toString() === LMFeedPostMenuItems.UNHIDE_POST
+              ) {
+                menuItem.id = parseInt(LMFeedPostMenuItems.HIDE_POST);
+                menuItem.title = "Hide Post";
+              }
+              return menuItem;
+            });
+            post.isHidden = !post.isHidden;
+          }
+
+          return post;
+        });
+        setFeedList(feedListCopy);
+      },
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.HIDDEN_ON_DETAIL);
+  });
+  useEffect(() => {
+    customEventClient?.listen(
       LMFeedCustomActionEvents.DELETE_POST_ON_DETAILS,
       async (e: Event) => {
         const id = (e as CustomEvent).detail.postId;
@@ -467,6 +580,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     feedList,
     feedUsersList,
     getNextPage,
+    hidePost,
     deletePost: deletePostCustomAction
       ? deletePostCustomAction.bind(null, feedListActionsAndDataStore)
       : deletePost,

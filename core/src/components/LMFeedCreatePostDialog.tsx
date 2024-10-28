@@ -10,11 +10,12 @@ import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMed
 import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
-import { Divider } from "@mui/material";
+import { Checkbox, Divider } from "@mui/material";
 import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
-import { CREATE_POST, EDIT_POST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { changePostCase } from "../shared/utils";
+import { WordAction } from "../shared/enums/wordAction";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -33,9 +34,34 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
     setOpenCreatePostDialog,
     createPostComponentClickCustomCallback,
     ogTag,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
   } = useContext(LMFeedCreatePostContext);
-  const { CustomComponents = {} } = useContext(CustomAgentProviderContext);
+  const {
+    CustomComponents = {},
+    isAnonymousPostAllowed,
+    hintTextForAnonymous,
+  } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
+
+  const renderAnonymousOption = () => {
+    if (isAnonymousPostAllowed && !temporaryPost) {
+      return (
+        <>
+          <div className="lm-feed-create-post-anonymous-post">
+            <Checkbox
+              checked={isAnonymousPost}
+              className="anonymous-post-checkbox"
+              onChange={changeAnonymousPostStatus}
+            />
+            <span className="anonymous-post-text">
+              {hintTextForAnonymous || "Post this anonymously"}
+            </span>
+          </div>
+        </>
+      );
+    }
+  };
 
   return (
     <div
@@ -47,7 +73,9 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       }}
     >
       <div className="lm-feed-create-post-wrapper__dialog-heading">
-        {temporaryPost ? EDIT_POST : CREATE_POST}
+        {temporaryPost
+          ? `Edit ${changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`
+          : `Create ${changePostCase(WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`}
         <img
           src={cancelModelMcon}
           alt="cancelModelMcon"
@@ -68,6 +96,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         </div>
         <div>{currentUser?.name}</div>
       </div>
+      {renderAnonymousOption()}
       {CustomTopicDropDown || (
         <LMFeedViewTopicDropdown
           mode={
@@ -81,6 +110,7 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
           setPreSelectedTopics={setPreSelectedTopics}
         />
       )}
+
       <Divider
         sx={{
           borderColor: "#FFF",

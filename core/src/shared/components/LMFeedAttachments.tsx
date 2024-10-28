@@ -284,7 +284,7 @@ export const LMFeedDocumentAttachmentView = ({
             className="attachmentPdf__content--url"
             lm-feed-component-id={`lm-feed-post-attachments-uvwxy-${postId}`}
           >
-            {formatFileSize(size || 0)}
+            {formatFileSize && formatFileSize(size || 0)}
           </div>
         </div>
       </div>

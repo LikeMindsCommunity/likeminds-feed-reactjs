@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import { LMFeedCreatePostContext } from "../../contexts/LMFeedCreatePostContext";
+import { changePostCase } from "../utils";
+import { WordAction } from "../enums/wordAction";
 
 const LMFeedCreatePostSubmitButton = () => {
   const { postFeed, temporaryPost, editPost } = useContext(
@@ -16,7 +18,11 @@ const LMFeedCreatePostSubmitButton = () => {
         }
       }}
     >
-      <span>{temporaryPost ? "SAVE" : "POST"}</span>
+      <span>
+        {temporaryPost
+          ? "SAVE"
+          : changePostCase(WordAction.ALL_CAPITAL_SINGULAR)}
+      </span>
     </div>
   );
 };

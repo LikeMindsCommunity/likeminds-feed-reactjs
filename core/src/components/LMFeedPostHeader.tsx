@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useState } from "react";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { formatTimeAgo } from "../shared/utils";
-import { EDITED, POST } from "../shared/constants/lmAppConstant";
+import { changePostCase, formatTimeAgo } from "../shared/utils";
+import { EDITED } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { Dialog, Menu } from "@mui/material";
@@ -14,12 +14,14 @@ import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import pinIcon from "../assets/images/Icon-pin_new.svg";
 import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
+import { WordAction } from "../shared/enums/wordAction";
 const LMFeedPostHeader = () => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  const { post, users, topics, pinPost } = useContext(FeedPostContext);
+  const { post, users, topics, pinPost, hidePost } =
+    useContext(FeedPostContext);
   const { LMPostHeaderStyles, LMFeedCustomIcons } = useContext(
     CustomAgentProviderContext,
   );
@@ -28,15 +30,20 @@ const LMFeedPostHeader = () => {
     useState<boolean>(false);
   const [openDeletePostDialog, setOpenDeletePostDialog] =
     useState<boolean>(false);
+  const [anchor, setAnchor] = useState<HTMLImageElement | null>(null);
   function closeDeletePostDialog() {
     setOpenDeletePostDialog(false);
   }
   const { createdAt, isEdited, menuItems, isPinned } = post!;
-  const { name, imageUrl, customTitle } = useMemo(
-    () => users![post!.uuid],
-    [post, users],
-  );
-
+  const user = useMemo(() => {
+    if (users) {
+      return users![post!.uuid];
+    }
+  }, [post, users]);
+  if (!user) {
+    return null;
+  }
+  const { name, imageUrl, customTitle } = user;
   const avatarContent = getAvatar({ imageUrl, name });
 
   function closeReportDialog() {
@@ -81,9 +88,21 @@ const LMFeedPostHeader = () => {
         }
         break;
       }
+      case LMFeedPostMenuItems.HIDE_POST: {
+        if (hidePost) {
+          hidePost(post?.id);
+        }
+        break;
+      }
+      case LMFeedPostMenuItems.UNHIDE_POST: {
+        if (hidePost) {
+          hidePost(post?.id);
+        }
+        break;
+      }
     }
   }
-  const [anchor, setAnchor] = useState<HTMLImageElement | null>(null);
+
   return (
     <>
       <Dialog open={openDeletePostDialog} onClose={closeDeletePostDialog}>
@@ -125,7 +144,7 @@ const LMFeedPostHeader = () => {
               style={LMPostHeaderStyles?.title}
               lm-feed-component-id={`lm-feed-post-header-pqrst-${post?.id}`}
             >
-              {name}{" "}
+              {name || ""}{" "}
               {customTitle ? (
                 <span
                   style={LMPostHeaderStyles?.customTitle}
@@ -159,7 +178,10 @@ const LMFeedPostHeader = () => {
                 </>
               ) : (
                 <>
-                  {LMPostHeaderStyles?.postBadgeText || POST}
+                  {changePostCase(
+                    WordAction.FIRST_LETTER_CAPITAL_SINGULAR,
+                    LMPostHeaderStyles?.postBadgeText,
+                  )}
                   <span
                     lm-feed-component-id={`lm-feed-post-header-opqrs-${post?.id}`}
                   >

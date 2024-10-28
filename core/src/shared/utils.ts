@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-// import { AvatarProps } from "./types/models/avatarProps";
+
+import { Pluralize } from "./variables";
+
+import { TokenValues } from "./enums/tokens";
+import { WordAction } from "./enums/wordAction";
+import { LMDisplayMessages } from "..";
+
+import { GetCommunityConfigurationsResponse } from "./types/api-responses/getComunityConfigurations";
 dayjs.extend(relativeTime);
 
 const formatTimeAgo = (timestamp: number): string => {
@@ -275,5 +282,99 @@ export function returnPostId() {
     return postId;
   } else {
     return "";
+  }
+}
+
+export function getCommunityConfigurationFromLocalStorage(): GetCommunityConfigurationsResponse {
+  return JSON.parse(
+    localStorage.getItem(TokenValues.COMMUNITY_CONFIGURATIONS)!,
+  ) as GetCommunityConfigurationsResponse;
+}
+
+export function pluralizeOrCapitalize(
+  word: string,
+  action: WordAction,
+): string {
+  switch (action) {
+    case WordAction.FIRST_LETTER_CAPITAL_SINGULAR:
+      return (
+        Pluralize().singular(word).charAt(0).toUpperCase() +
+        Pluralize().singular(word).slice(1).toLowerCase()
+      );
+
+    case WordAction.ALL_CAPITAL_SINGULAR:
+      return Pluralize().singular(word).toUpperCase();
+
+    case WordAction.ALL_SMALL_SINGULAR:
+      return Pluralize().singular(word).toLowerCase();
+
+    case WordAction.FIRST_LETTER_CAPITAL_PLURAL:
+      return (
+        Pluralize().plural(word).charAt(0).toUpperCase() +
+        Pluralize().plural(word).slice(1).toLowerCase()
+      );
+
+    case WordAction.ALL_CAPITAL_PLURAL:
+      return Pluralize().plural(word).toUpperCase();
+
+    case WordAction.ALL_SMALL_PLURAL:
+      return Pluralize().plural(word).toLowerCase();
+
+    default:
+      throw new Error("Invalid action type");
+  }
+}
+
+export function changePostCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const postVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.post || "post";
+  return pluralizeOrCapitalize(word || postVariable, action);
+}
+
+export function changeCommentCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const commentVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.comment || "comment";
+  return pluralizeOrCapitalize(word || commentVariable, action);
+}
+
+export function changeLikeCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const likeVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.likeEntityVariable?.entityName || "like";
+  return pluralizeOrCapitalize(word || likeVariable, action);
+}
+
+export function getDisplayMessage(message: LMDisplayMessages) {
+  switch (message) {
+    case LMDisplayMessages.POST_DELETED_SUCCESSFULLY:
+      return `The ${changePostCase(WordAction.ALL_SMALL_SINGULAR)} was deleted successfully`;
+    case LMDisplayMessages.POST_PINNED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} pinned`;
+    case LMDisplayMessages.PIN_REMOVED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} unpinned`;
+    case LMDisplayMessages.POST_CREATED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} created`;
+    case LMDisplayMessages.POST_EDIT_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} edited`;
+    case LMDisplayMessages.POST_LIKE_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} liked`;
+    case LMDisplayMessages.REPLY_DELETED_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} deleted`;
+    case LMDisplayMessages.COMMENT_DELETED_SUCCESS:
+      return "Comment deleted";
+    case LMDisplayMessages.ERROR_LOADING_POST:
+      return `error loading ${changePostCase(WordAction.ALL_SMALL_SINGULAR)}`;
+    case LMDisplayMessages.POST_HIDE_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} hidden`;
+    case LMDisplayMessages.POST_UNHIDE_SUCCESS:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} unhidden`;
   }
 }

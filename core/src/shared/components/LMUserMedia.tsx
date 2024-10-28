@@ -37,6 +37,7 @@ const getAvatar = ({ imageUrl, name, onError }: AvatarProps): JSX.Element => {
       onError={handleImageError}
       alt="avatar"
       loading="lazy"
+      className="lm-feed-user-avatar"
       lm-feed-component-id={`lm-feed-user-avatar-opqrs-${imageUrl}`}
     />
   ) : (

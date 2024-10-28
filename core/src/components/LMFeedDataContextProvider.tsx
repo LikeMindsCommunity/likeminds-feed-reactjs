@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 
@@ -6,6 +6,7 @@ import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 
 import LMFeedDetails from "./LMFeedDetails";
 import { returnPostId } from "../shared/utils";
+import { CustomAgentProviderContext } from "..";
 
 const LMFeedListDataContextProvider = () => {
   const {
@@ -20,18 +21,27 @@ const LMFeedListDataContextProvider = () => {
     pinPost,
     likePost,
     postComponentClickCustomCallback,
-
+    hidePost,
     widgets,
   } = useFetchFeeds();
-
+  const { CustomComponents } = useContext(CustomAgentProviderContext);
   const renderComponents = () => {
     const postId = returnPostId();
     if (postId.length) {
-      return <LMFeedDetails postId={postId} />;
+      if (CustomComponents && CustomComponents.CustomFeedDetails) {
+        return <CustomComponents.CustomFeedDetails postId={postId} />;
+      } else {
+        return <LMFeedDetails postId={postId} />;
+      }
     } else {
-      return <LMFeedUniversalFeed />;
+      if (CustomComponents && CustomComponents.CustomUniversalFeed) {
+        return CustomComponents?.CustomUniversalFeed;
+      } else {
+        return <LMFeedUniversalFeed />;
+      }
     }
   };
+
   return (
     <LMFeedDataContext.Provider
       value={{
@@ -47,6 +57,7 @@ const LMFeedListDataContextProvider = () => {
         pinPost,
         likePost,
         postComponentClickCustomCallback,
+        hidePost,
       }}
     >
       {renderComponents()}

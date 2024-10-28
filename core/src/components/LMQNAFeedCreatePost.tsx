@@ -65,6 +65,8 @@ const LMQNAFeedCreatePost = ({
     removeAddReel,
     question,
     setQuestionText,
+    isAnonymousPost,
+    changeAnonymousPostStatus,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -100,6 +102,8 @@ const LMQNAFeedCreatePost = ({
         closeOGTagContainer,
         removeThumbnailReel,
         removeAddReel,
+        isAnonymousPost,
+        changeAnonymousPostStatus,
       }}
     >
       {showStarterComponent ? (

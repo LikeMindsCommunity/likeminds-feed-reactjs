@@ -5,7 +5,7 @@ import { Post } from "../shared/types/models/post";
 import { Reply } from "../shared/types/models/replies";
 import { GetPostDetailsResponse } from "../shared/types/api-responses/getPostDetailsResponse";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetPostRequest } from "@likeminds.community/feed-js";
+import { GetPostRequest, HidePostRequest } from "@likeminds.community/feed-js";
 import { Topic } from "../shared/types/models/topic";
 import { DeleteCommentResponse } from "../shared/types/api-responses/deletePostResponse";
 import {
@@ -26,6 +26,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 
 import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+import { getDisplayMessage } from "../shared/utils";
 
 interface UseFeedDetailsInterface {
   post: Post | null;
@@ -43,7 +44,7 @@ interface UseFeedDetailsInterface {
   likePost: (id: string) => Promise<void>;
   pinPost: (id: string) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
-
+  hidePost: (postId: string) => Promise<void>;
   postComponentClickCustomCallback?: ComponentDelegatorListener;
 }
 
@@ -116,7 +117,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getPostDetailsCall?.errorMessage ||
-              LMDisplayMessages.ERROR_LOADING_POST,
+              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
         window.history.back();
@@ -165,6 +166,77 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       setReplies(repliesCopy);
     },
     [replies],
+  );
+
+  const hidePost = useCallback(
+    async (postId: string) => {
+      try {
+        const call = await lmFeedclient?.hidePost(
+          HidePostRequest.builder().setPostId(postId).build(),
+        );
+        if (call?.success) {
+          const tempPost = { ...post };
+          if (tempPost.isHidden) {
+            tempPost.isHidden = false;
+
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.UNHIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.HIDE_POST),
+                  title: "Hide Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          } else {
+            tempPost.isHidden = true;
+
+            tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
+              if (menuItem.id.toString() === LMFeedPostMenuItems.HIDE_POST) {
+                return {
+                  id: parseInt(LMFeedPostMenuItems.UNHIDE_POST),
+                  title: "Unhide this Post",
+                };
+              } else {
+                return menuItem;
+              }
+            });
+          }
+
+          setPost(tempPost as Post);
+          if (customEventClient) {
+            customEventClient.dispatchEvent(
+              LMFeedCustomActionEvents.HIDDEN_ON_DETAIL,
+              {
+                id: postId,
+              },
+            );
+          }
+          if (displaySnackbarMessage) {
+            if (tempPost.isHidden) {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_HIDE_SUCCESS) || "",
+              );
+            } else {
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_UNHIDE_SUCCESS) || "",
+              );
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [
+      customEventClient,
+      displaySnackbarMessage,
+      lmFeedclient,
+      lmfeedAnalyticsClient,
+      post,
+      topics,
+    ],
   );
 
   const addNewComment = useCallback(
@@ -363,12 +435,6 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
               }
             });
           }
-          // if (tempPost.isPinned) {
-          //   tempPost.isPinned = false;
-          // } else {
-          //   tempPost.isPinned = true;
-          // }
-          // feedListCopy.splice(index, 1);
 
           setPost(tempPost as Post);
           if (customEventClient) {
@@ -381,9 +447,13 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           }
           if (displaySnackbarMessage) {
             if (tempPost.isPinned) {
-              displaySnackbarMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.PIN_REMOVED_SUCCESS)!,
+              );
             } else {
-              displaySnackbarMessage(LMDisplayMessages.POST_PINNED_SUCCESS);
+              displaySnackbarMessage(
+                getDisplayMessage(LMDisplayMessages.POST_PINNED_SUCCESS)!,
+              );
             }
           }
         }
@@ -427,15 +497,19 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
       LMFeedCustomActionEvents.POST_EDITED_TARGET_DETAILS,
       (e: Event) => {
         const detail = (e as CustomEvent).detail;
-        const { post, usersMap, topicsMap } = detail;
+        const { post, usersMap, topicsMap, widgetsMap } = detail;
         const postCopy = { ...post };
+        const widgetsCopy = { ...widgets, ...widgetsMap };
         const feedUsersCopy = { ...users, ...usersMap };
         const topicsCopy = { ...topics, ...topicsMap };
         setPost(postCopy);
         setTopics(topicsCopy);
         setUsers(feedUsersCopy);
+        setWidgets(widgetsCopy);
         if (displaySnackbarMessage) {
-          displaySnackbarMessage(LMDisplayMessages.POST_EDIT_SUCCESS);
+          displaySnackbarMessage(
+            getDisplayMessage(LMDisplayMessages.POST_EDIT_SUCCESS)!,
+          );
         }
       },
     );
@@ -544,7 +618,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     deletePost:
       deletePostCustomAction?.bind(null, feedPostDetailsActionsAndDataStore) ||
       deletePost,
-
+    hidePost,
     postComponentClickCustomCallback: postComponentClickCustomCallback
       ? postComponentClickCustomCallback?.bind(
           null,
