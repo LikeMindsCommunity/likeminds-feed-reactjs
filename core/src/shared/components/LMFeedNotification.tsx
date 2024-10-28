@@ -5,7 +5,7 @@ import { LMFeedCustomEvents } from "../customEvents";
 import { useLMFeedNotification } from "../../hooks/useLMFeedNotification";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Activity } from "../types/models/Activity";
-import { convertTextToHTML } from "../taggingParser";
+import { parseAndReplaceTags } from "../taggingParser";
 import dayjs from "dayjs";
 import noNotifications from "../../assets/images/no-notifications.svg";
 import { getAvatar } from "./LMUserMedia";
@@ -59,7 +59,10 @@ const LMFeedNotification = ({
                   scrollableTarget="scroller"
                 >
                   {notifications.map((activity: Activity) => {
-                    const { imageUrl, name } = users[activity?.actionBy[0]];
+                    const actionByUsersList = activity?.actionBy;
+                    const actionByUsersListLength = actionByUsersList.length;
+                    const { imageUrl = "", name = "" } =
+                      users[actionByUsersList[actionByUsersListLength - 1]];
                     const avatar = getAvatar({ imageUrl, name });
                     return (
                       <div
@@ -80,12 +83,10 @@ const LMFeedNotification = ({
                         >
                           <div
                             className="notification-text"
-                            dangerouslySetInnerHTML={{
-                              __html: convertTextToHTML(activity?.activityText)
-                                ?.innerHTML,
-                            }}
                             lm-feed-component-id={`lm-feed-notifications-wrapper-cdefg-${activity?.id}`}
-                          ></div>
+                          >
+                            {parseAndReplaceTags(activity?.activityText)}
+                          </div>
                           <div
                             className="notification-time-before"
                             lm-feed-component-id={`lm-feed-notifications-wrapper-hijkl-${activity?.id}`}

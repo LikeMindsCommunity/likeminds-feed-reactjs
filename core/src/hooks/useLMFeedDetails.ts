@@ -181,8 +181,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
           const tempPost = { ...post };
           if (tempPost.isHidden) {
             tempPost.isHidden = false;
-            // TODO
-            lmfeedAnalyticsClient?.sendPostUnPinnedEvent(post!, topics);
+
             tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
               if (menuItem.id.toString() === LMFeedPostMenuItems.UNHIDE_POST) {
                 return {
@@ -195,7 +194,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             });
           } else {
             tempPost.isHidden = true;
-            lmfeedAnalyticsClient?.sendPostPinnedEvent(post!, topics);
+
             tempPost.menuItems = tempPost.menuItems?.map((menuItem) => {
               if (menuItem.id.toString() === LMFeedPostMenuItems.HIDE_POST) {
                 return {
