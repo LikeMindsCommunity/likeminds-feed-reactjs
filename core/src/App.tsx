@@ -74,7 +74,9 @@ function App() {
         client={lmFeedClient}
         customEventClient={customEventClient}
         LMFeedCoreCallbacks={LMCORECALLBACKS}
+
         userDetails={}
+
         isAnonymousPostAllowed
         PostCreationCustomCallbacks={{
           editPostCustomAction: async (store) => {
