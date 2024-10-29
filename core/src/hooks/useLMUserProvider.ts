@@ -124,6 +124,7 @@ export default function useUserProvider(
             JSON.stringify(initiateUserCall.data?.user),
           );
         }
+
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
 
