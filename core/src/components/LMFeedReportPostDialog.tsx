@@ -38,7 +38,7 @@ const LMFeedReportPostDialog = ({
   const { lmFeedclient, lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
-  const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
+  const { displaySnackbarMessage } =
   useContext(GeneralContext);
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const [reportTags, setReportTags] = useState<ReportObject[]>([]);
