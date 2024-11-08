@@ -1,5 +1,5 @@
 {
-  "name": "likeminds-chat-reactjs-beta",
+  "name": "@likeminds.community/likeminds-feed-reactjs",
   "version": "1.6.1",
   "scripts": {
     "start": "react-app-rewired start",
@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
+    "prepare": "husky install",
     "sitemap": "node sitemap-update.js",
     "build-lib": "tsc && vite build"
   },
@@ -116,5 +117,18 @@
     "vite": "^5.2.2",
     "vite-plugin-dts": "^3.7.3",
     "vite-plugin-lib-inject-css": "^2.0.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    }
   }
 }

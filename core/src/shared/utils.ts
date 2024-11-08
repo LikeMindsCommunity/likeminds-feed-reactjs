@@ -6,7 +6,7 @@ import { Pluralize } from "./variables";
 
 import { TokenValues } from "./enums/tokens";
 import { WordAction } from "./enums/wordAction";
-import { LMDisplayMessages } from "../old_index";
+import { LMDisplayMessages } from "..";
 
 import { GetCommunityConfigurationsResponse } from "./types/api-responses/getComunityConfigurations";
 dayjs.extend(relativeTime);
