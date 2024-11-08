@@ -221,6 +221,17 @@ export function useCreatePost(): UseCreatePost {
           textFieldRef.current,
         ).trim();
 
+        const isCustomWidgetsDataEmpty =
+          !customWidgetsData || customWidgetsData.length === 0;
+
+        if (
+          !textContent &&
+          mediaList.length === 0 &&
+          isCustomWidgetsDataEmpty
+        ) {
+          return;
+        }
+
         const attachmentResponseArray: Attachment[] = [];
         if (mediaList.length) {
           setOpenPostCreationProgressBar!(true);
@@ -386,7 +397,6 @@ export function useCreatePost(): UseCreatePost {
           }
         }
 
-        
         const addPostRequestBuilder = AddPostRequest.builder()
           .setAttachments(attachmentResponseArray)
           .setText(textContent)
@@ -407,7 +417,7 @@ export function useCreatePost(): UseCreatePost {
             LMFeedCustomActionEvents.POST_CREATED,
           );
         }
-      } catch (error) { 
+      } catch (error) {
         console.log(error);
       } finally {
         setOpenPostCreationProgressBar!(false);
