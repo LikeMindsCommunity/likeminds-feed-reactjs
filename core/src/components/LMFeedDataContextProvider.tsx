@@ -6,7 +6,7 @@ import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 
 import LMFeedDetails from "./LMFeedDetails";
 import { returnPostId } from "../shared/utils";
-import { CustomAgentProviderContext } from "../old_index";
+import { CustomAgentProviderContext } from "..";
 
 const LMFeedListDataContextProvider = () => {
   const {
