@@ -334,6 +334,15 @@ export function changePostCase(action: WordAction, word?: string) {
   return pluralizeOrCapitalize(word || postVariable, action);
 }
 
+export function changePollCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const pollVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.poll || "poll";
+  return pluralizeOrCapitalize(word || pollVariable, action);
+}
+
 export function changeCommentCase(action: WordAction, word?: string) {
   const communityConfigurations =
     getCommunityConfigurationFromLocalStorage().communityConfigurations;
