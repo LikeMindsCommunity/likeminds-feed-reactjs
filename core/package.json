@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/likeminds-feed-reactjs",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -20,7 +20,6 @@
     }
   },
   "dependencies": {
-    "@ast-grep/napi-darwin-x64": "^0.28.1",
     "@aws-sdk/client-s3": "3.556.0",
     "@aws-sdk/credential-provider-cognito-identity": "3.556.0",
     "@aws-sdk/credential-providers": "3.556.0",
@@ -28,7 +27,6 @@
     "@emotion/styled": "11.11.0",
     "@likeminds.community/feed-js": "^1.14.1",
     "@mui/material": "5.15.10",
-    "@rollup/rollup-darwin-x64": "^4.24.2",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "13.0.0",
     "@testing-library/user-event": "13.2.1",
@@ -78,7 +76,6 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/pluralize": "^0.0.33",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@types/react-slick": "^0.23.13",

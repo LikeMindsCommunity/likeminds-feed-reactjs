@@ -23,7 +23,7 @@ const LMFeedTextArea = () => {
     LMFeedGlobalClientProviderContext,
   );
   // const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  function setCursorToTheEnd() {
+  const setCursorToTheEnd = React.useCallback(() => {
     if (textFieldRef?.current) {
       // Setting the cursor at the end of the div
       textFieldRef.current.focus();
@@ -40,7 +40,7 @@ const LMFeedTextArea = () => {
         selection.addRange(range);
       }
     }
-  }
+  }, [textFieldRef]);
 
   useEffect(() => {
     if (temporaryPost && textFieldRef?.current) {
@@ -49,7 +49,7 @@ const LMFeedTextArea = () => {
       ).innerHTML;
     }
     setCursorToTheEnd();
-  }, [textFieldRef, temporaryPost]);
+  }, [textFieldRef, temporaryPost, setCursorToTheEnd]);
   return (
     <div ref={containerRef}>
       {taggingList && taggingList?.length > 0 ? (

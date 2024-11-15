@@ -223,7 +223,9 @@ export function useCreatePost(): UseCreatePost {
 
         const attachmentResponseArray: Attachment[] = [];
         if (mediaList.length) {
-          setOpenPostCreationProgressBar!(true);
+          if (setOpenPostCreationProgressBar) {
+            setOpenPostCreationProgressBar(true);
+          }
         }
         for (let index = 0; index < mediaList.length; index++) {
           const file: File = mediaList[index];
@@ -696,6 +698,12 @@ export function useCreatePost(): UseCreatePost {
       lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url);
     }
   }, [lmfeedAnalyticsClient, ogTag, temporaryPost]);
+
+  useEffect(() => {
+    if (temporaryPost && temporaryPost.heading) {
+      setQuestion(temporaryPost.heading);
+    }
+  }, [temporaryPost]);
   return {
     postText: text,
     setPostText,

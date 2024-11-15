@@ -60,8 +60,14 @@ function LMQNAFeed({
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(client, customEventClient, userDetails);
-  const { showSnackbar, message, closeSnackbar, displaySnackbarMessage } =
-    useLMFeedGeneralContextProvider();
+  const {
+    showSnackbar,
+    message,
+    closeSnackbar,
+    displaySnackbarMessage,
+    openPostCreationProgressBar,
+    setOpenPostCreationProgressBar,
+  } = useLMFeedGeneralContextProvider();
   useEffect(() => {
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
@@ -116,6 +122,8 @@ function LMQNAFeed({
               displaySnackbarMessage,
               routes,
               allowThumbnail,
+              openPostCreationProgressBar,
+              setOpenPostCreationProgressBar,
             }}
           >
             <UserProviderContext.Provider
