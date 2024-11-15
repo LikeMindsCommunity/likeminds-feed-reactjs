@@ -1,6 +1,6 @@
 {
-  "name": "likeminds-feed-reactjs-beta",
-  "version": "2.0.61",
+  "name": "@likeminds.community/likeminds-feed-reactjs",
+  "version": "1.6.2",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -27,7 +27,6 @@
     "@emotion/styled": "11.11.0",
     "@likeminds.community/feed-js": "^1.14.1",
     "@mui/material": "5.15.10",
-
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "13.0.0",
     "@testing-library/user-event": "13.2.1",
