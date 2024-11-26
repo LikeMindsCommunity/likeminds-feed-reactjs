@@ -75,10 +75,7 @@ export const LMPostPoll = () => {
                                 pollOption.voteCount += 1;
                                 setTotalVotesCount((totalVotesCount) => totalVotesCount + 1);
                                 pollOption.percentage = ((pollOption.voteCount) / totalVotesCount) * 100;
-                            }} className="poll-option-wrapper progress-bar" style={{
-                                width: `${pollOption.percentage}%`,
-                                backgroundColor: '#4caf50', // You can customize the color
-                            }} key={index} >
+                            }} className="poll-option-wrapper progress-bar" key={index} >
                                 <div
                                     className="poll-feed-option-text-input poll-option-text-input-preview"
                                 >{pollOption.text}</div>

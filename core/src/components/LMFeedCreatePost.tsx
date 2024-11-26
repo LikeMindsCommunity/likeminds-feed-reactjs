@@ -138,7 +138,6 @@ const LMFeedCreatePost = ({
         updateAdvancedOptions,
       }}
     >
-
       {showStarterComponent ? (
         CustomComponents.CustomCreatePostInitiateView ? (
           <CustomComponents.CustomCreatePostInitiateView
