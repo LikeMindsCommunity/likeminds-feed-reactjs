@@ -1,0 +1,80 @@
+.poll-feed-option-text-input {
+  border: 1px solid #d0d8e2;
+  height: 58px;
+  padding: 16px;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 16px;
+  padding-right: 48px;
+  color: #484f67;
+}
+
+.poll-feed-preview-advance-options-votes {
+  margin: 16px;
+  margin-top: 6px;
+}
+
+.poll-feed-option-add-more {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  border: 1px solid #d0d8e2;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+
+  span {
+    margin-left: 6px;
+  }
+}
+
+.poll-feed-preview-advance-options-total {
+  margin: 16px 0px;
+  display: flex;
+}
+
+.poll-feed-total-votes {
+  color: #5046e5;
+  margin-right: 1rem;
+}
+
+.poll-feed-preview-advance-options-select {
+  margin: 8px 0px;
+}
+
+.poll-feed-title {
+  margin-bottom: 4px;
+  color: #5f657a;
+  font-weight: 600;
+}
+
+.poll-feed-add-option-dialog-text {
+  margin-bottom: 1rem;
+}
+
+.poll-feed-submit-button {
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.poll-feed-multiple-options-submit-button {
+  width: 10rem;
+  color: white;
+  border: solid white;
+}
+
+.poll-feed-multiple-options-submit-button-disabled {
+  background-color: #ebebeb;
+}
+
+.poll-feed-submit-button-disabled {
+  background-color: #ebebeb;
+}
+
+.poll-option-img {
+  width: auto;
+  height: auto;
+}

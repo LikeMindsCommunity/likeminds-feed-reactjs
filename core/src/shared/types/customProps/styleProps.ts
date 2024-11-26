@@ -9,6 +9,28 @@ export interface LMPostHeaderStyles {
   postBadgeText?: string;
 }
 
+export interface LMPostPollDialogStyles {
+  pollQuestionsStyle?: CSSProperties;
+  pollOptionsStyle?: CSSProperties;
+  pollExpiryTimeStyle?: CSSProperties;
+  pollAdvancedOptionTextStyle?: CSSProperties;
+  pollAdvanceOptionsSwitchStyle?: CSSProperties;
+  pollDropDownMenuStyles?: CSSProperties;
+}
+
+export interface LMPostPollFeedStyles {
+  pollQuestionStyles?: React.CSSProperties;
+  pollOptionSelectedColor?: string;
+  pollOptionOtherColor?: string;
+  votesCountStyles?: React.CSSProperties;
+  memberVotedCountStyles?: React.CSSProperties;
+  pollInfoStyles?: React.CSSProperties;
+  submitButtonStyles?: React.CSSProperties;
+  allowAddPollOptionButtonStyles?: React.CSSProperties;
+  editPollOptionsStyles?: React.CSSProperties;
+  clearPollOptionsStyles?: React.CSSProperties;
+}
+
 export interface LMFeedCustomIcons {
   postLikesNormalCustomIcon?: () => JSX.Element;
   postLikesLikedCustomIcon?: () => JSX.Element;

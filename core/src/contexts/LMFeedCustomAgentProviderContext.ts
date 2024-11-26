@@ -2,6 +2,8 @@ import React, { createContext } from "react";
 import {
   LMFeedCustomIcons,
   LMPostHeaderStyles,
+  LMPostPollDialogStyles,
+  LMPostPollFeedStyles,
 } from "../shared/types/customProps/styleProps";
 import { CustomComponents } from "../shared/types/customProps/customComponentsProps";
 import {
@@ -33,8 +35,22 @@ export interface CustomAgentProviderInterface {
   createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
   topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;
   memberComponentClickCustomCallback?: MemberComponentCustomClickEventDelegatorCallback;
+
+  onPollExpiryTimeClickedCustomCallback?: PollExpiryTimeCustomClickCallback;
+  onAddOptionClickedCustomCallback?: AddOptionCustomClickEventDelegatorCallback;
+  onPollOptionClearedCustomCallback?: PollOptionClearedCustomClickEventDelegatorCallback;
+  onPollCompleteClickedCustomCallback?: PollCompleteCustomClickEventDelegatorCallback;
+
   isAnonymousPostAllowed?: boolean;
   hintTextForAnonymous?: string;
+  LMPostPollDialogStyles?: LMPostPollDialogStyles;
+  LMPostPollFeedStyles?: LMPostPollFeedStyles;
+
+  onSubmitButtonClickedCustomCallback?: SubmitButtonClickEventDelegatorCallback;
+  onAddPollOptionsClickedCustomCallback?: AddPollOptionsClickEventDelegatorCallback;
+  onPollEditClickedCustomCallback?: PollEditClickEventDelegatorCallback;
+  onPollClearClickedCustomCallback?: PollClearClickEventDelegatorCallback;
+  onPollOptionClickedCustomCallback?: OnPollOptionClickEventDelegatorCallback;
 }
 export const CustomAgentProviderContext =
   createContext<CustomAgentProviderInterface>({});
@@ -55,3 +71,41 @@ export type CreatePostComponentCustomClickEventDelegatorCallback = (
 export type MemberComponentCustomClickEventDelegatorCallback = (
   event: React.MouseEvent,
 ) => void;
+
+export type PollExpiryTimeCustomClickCallback = () => void;
+export type AddOptionCustomClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;
+export type PollOptionClearedCustomClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;
+export type PollCompleteCustomClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;
+
+export type SubmitButtonClickEventDelegatorCallback = (
+  pollOptions: PollOptions[],
+  event: React.MouseEvent,
+) => void;
+export type AddPollOptionsClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;
+export type PollEditClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;
+export type PollClearClickEventDelegatorCallback = (
+  event: React.MouseEvent,
+) => void;
+export type OnPollOptionClickEventDelegatorCallback = (
+  option: PollOptions,
+  event: React.MouseEvent,
+) => void;
+
+export type PollOptions = {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  percentage: number;
+  uuid: string;
+  voteCount: number;
+};

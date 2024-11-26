@@ -29,7 +29,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
     loadMoreFeeds = true,
     feedList = [],
     feedUsersList = {},
-    getNextPage = () => {},
+    getNextPage = () => { },
     deletePost,
     pinPost,
     likePost,
@@ -146,7 +146,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
           loader={null}
           scrollThreshold={0.6}
 
-          // scrollableTarget="feed-scroller"
+        // scrollableTarget="feed-scroller"
         >
           {renderFeeds()}
         </InfiniteScroll>

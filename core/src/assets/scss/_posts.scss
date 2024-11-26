@@ -101,7 +101,6 @@
       &__content {
         padding: 0.5rem pxToRem(8) 0.5rem 1rem;
         word-wrap: break-word;
-
       }
       &__attachment {
         display: flex;
@@ -114,7 +113,7 @@
           width: 100%;
           background-color: var(--lm-feed-light-color);
           img {
-            width: 100%;
+            width: auto;
             // height: auto;
             // max-height: pxToRem(500);;
             object-fit: contain;
@@ -261,6 +260,10 @@
         .attachment-unsupported {
           padding: pxToRem(0) pxToRem(20);
         }
+        .attachment-poll {
+          padding: pxToRem(0) pxToRem(16);
+          margin-top: 1rem;
+        }
       }
       .userTag {
         color: var(--lm-feed-tag-text-color);
@@ -346,7 +349,7 @@
 }
 
 .react-pdf__Page__canvas {
-  width: 100% !important; 
+  width: 100% !important;
 }
 
 .three-dot-menu-options {
@@ -360,11 +363,11 @@
   background-color: #fff;
 }
 
-.lm-feed-text-link{
+.lm-feed-text-link {
   color: var(--lm-feed-link-text-color);
 }
 
-.tempReel{
+.tempReel {
   width: 100%;
   overflow: hidden;
   text-align: center;
@@ -373,22 +376,22 @@
   background: #f5f5f5;
   position: relative;
 
-  .removeIcon{
+  .removeIcon {
     position: absolute;
     top: 10px;
     right: 10px;
     width: 24px;
     cursor: pointer;
   }
-  video, img{
+  video,
+  img {
     width: 100%;
     max-width: 125px;
     margin: 0 auto;
   }
 }
 
-
-.title{
+.title {
   font-size: 14px;
   color: #666;
 }
