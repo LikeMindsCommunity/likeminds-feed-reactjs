@@ -31,6 +31,18 @@ export interface LMPostPollFeedStyles {
   clearPollOptionsStyles?: React.CSSProperties;
 }
 
+export interface LMPostPollUniversalFeedStyles {
+  addPollOptionHeadingStyles?: React.CSSProperties;
+  addPollOptionInputBoxStyles?: React.CSSProperties;
+  submitButtonStyles?: React.CSSProperties;
+}
+
+export interface LMFeedPostPollResultScreenStyles {
+  selectOptionStyles?: React.CSSProperties;
+  otherOptionsStyles?: React.CSSProperties;
+  tabLayoutStyles?: React.CSSProperties;
+}
+
 export interface LMFeedCustomIcons {
   postLikesNormalCustomIcon?: () => JSX.Element;
   postLikesLikedCustomIcon?: () => JSX.Element;

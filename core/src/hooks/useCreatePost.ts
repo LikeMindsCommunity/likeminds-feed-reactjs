@@ -43,6 +43,8 @@ import {
   ZeroArgVoidReturns,
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
+import { useFeedDetails } from "./useLMFeedDetails";
+import { WidgetResponse } from "../shared/utils";
 
 interface UseCreatePost {
   postText: string | null;
@@ -96,12 +98,14 @@ interface UseCreatePost {
   updateAdvancedOptions: OneArgVoidReturns<
     React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<number>
   >;
+  pollData: WidgetResponse | null;
+  setPollDataValues: (data: WidgetResponse | null) => void;
 }
 
 export interface AdvancedPollOptions {
   ALLOW_VOTERS_TO_ADD_OPTIONS: boolean;
   ALLOW_ANONYMOUS_VOTING: boolean;
-  SHOW_LIVE_RESULTS: boolean;
+  DONT_SHOW_LIVE_RESULTS: boolean;
   MULTIPLE_SELECTION_STATE: number;
   MULTIPLE_SELECTION_NO: number;
 }
@@ -125,7 +129,7 @@ export function useCreatePost(): UseCreatePost {
       ALLOW_VOTERS_TO_ADD_OPTIONS: false,
       MULTIPLE_SELECTION_NO: 1,
       MULTIPLE_SELECTION_STATE: 0,
-      SHOW_LIVE_RESULTS: false,
+      DONT_SHOW_LIVE_RESULTS: false,
     });
   const [pollOptions, setPollOptions] = useState<PollOption[]>([
     {
@@ -187,10 +191,10 @@ export function useCreatePost(): UseCreatePost {
             ...currentOptions,
             ALLOW_ANONYMOUS_VOTING: !currentOptions.ALLOW_ANONYMOUS_VOTING,
           };
-        case "SHOW_LIVE_RESULTS":
+        case "DONT_SHOW_LIVE_RESULTS":
           return {
             ...currentOptions,
-            SHOW_LIVE_RESULTS: !currentOptions.SHOW_LIVE_RESULTS,
+            DONT_SHOW_LIVE_RESULTS: !currentOptions.DONT_SHOW_LIVE_RESULTS,
           };
         case "MULTIPLE_SELECTION_STATE":
           return {
@@ -288,6 +292,10 @@ export function useCreatePost(): UseCreatePost {
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
   const [isAnonymousPost, setIsAnonymousPost] = useState<boolean>(false);
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
+
+  const { widgets } = useFeedDetails(temporaryPost?.id ?? "");
+  const [pollData, setPollData] = useState<WidgetResponse | null>(null);
+
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [preSelectedTopics, setPreSelectedTopics] = useState<Topic[]>([]);
@@ -324,7 +332,7 @@ export function useCreatePost(): UseCreatePost {
       ALLOW_VOTERS_TO_ADD_OPTIONS: false,
       MULTIPLE_SELECTION_NO: 1,
       MULTIPLE_SELECTION_STATE: 0,
-      SHOW_LIVE_RESULTS: false,
+      DONT_SHOW_LIVE_RESULTS: false,
     });
     setPollOptions([
       {
@@ -343,6 +351,10 @@ export function useCreatePost(): UseCreatePost {
 
   function setQuestionText(txt: string) {
     setQuestion(txt);
+  }
+
+  function setPollDataValues(data: WidgetResponse | null) {
+    setPollData(data);
   }
 
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
@@ -415,8 +427,8 @@ export function useCreatePost(): UseCreatePost {
   const postFeed = useCallback(
     async function (customWidgetsData?: Record<string, any>[]) {
       try {
-        setOpenCreatePostDialog(false);
-        setOpenCreatePollDialog(false);
+        if (openCreatePostDialog) setOpenCreatePostDialog(false);
+        if (openCreatePollDialog) setOpenCreatePollDialog(false);
 
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
@@ -431,6 +443,10 @@ export function useCreatePost(): UseCreatePost {
             numberToPollMultipleSelectState[
               advancedPollOptions.MULTIPLE_SELECTION_STATE
             ];
+
+          const pollType = advancedPollOptions.DONT_SHOW_LIVE_RESULTS
+            ? PollType.DEFERRED
+            : PollType.INSTANT;
           attachmentResponseArray.push(
             LMFeedPostAttachment.builder()
               .setAttachmentType(6)
@@ -441,7 +457,7 @@ export function useCreatePost(): UseCreatePost {
                   .setExpiryTime(pollExpirationDate ?? 0)
                   .setOptions(pollOtionsList)
                   .setMultipleSelectState(multipleSelectState)
-                  .setPollType(PollType.INSTANT)
+                  .setPollType(pollType)
                   .setMultipleSelectNumber(
                     advancedPollOptions.MULTIPLE_SELECTION_NO,
                   )
@@ -677,6 +693,11 @@ export function useCreatePost(): UseCreatePost {
         let attachmentResponseArray: Attachment[] = temporaryPost?.attachments
           ? temporaryPost.attachments
           : [];
+
+        if (temporaryPost?.attachments[0].attachmentType === 6) {
+          attachmentResponseArray = [];
+        }
+
         if (ogTag) {
           if (
             !attachmentResponseArray.some(
@@ -808,12 +829,17 @@ export function useCreatePost(): UseCreatePost {
   }, [lmFeedclient, text]);
 
   useEffect(() => {
+    setPollData(Object.values(widgets)[0]);
+  }, [widgets, editPost]);
+
+  useEffect(() => {
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
       (event: Event) => {
         setOpenCreatePostDialog(true);
         const details = (event as CustomEvent).detail;
         const tempPost = details.post;
+        console.log("detailsssss--------", details);
         const topicsMap = details.topics;
         setTemporaryPost(tempPost);
         const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
@@ -994,5 +1020,7 @@ export function useCreatePost(): UseCreatePost {
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
+    pollData,
+    setPollDataValues,
   };
 }

@@ -145,8 +145,6 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
           // TODO set shimmer on loader component
           loader={null}
           scrollThreshold={0.6}
-
-        // scrollableTarget="feed-scroller"
         >
           {renderFeeds()}
         </InfiniteScroll>

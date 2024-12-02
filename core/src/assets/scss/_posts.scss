@@ -114,8 +114,6 @@
           background-color: var(--lm-feed-light-color);
           img {
             width: auto;
-            // height: auto;
-            // max-height: pxToRem(500);;
             object-fit: contain;
           }
         }
@@ -124,8 +122,6 @@
           background-color: var(--lm-feed-black-color);
           img {
             width: 100%;
-            // height: auto;
-            // max-height: pxToRem(500);
             object-fit: contain;
             aspect-ratio: 16/9;
           }
@@ -136,8 +132,6 @@
           video {
             width: 100%;
             aspect-ratio: 16/9;
-            // height: auto;
-            // max-height: pxToRem(310);
             object-fit: contain;
           }
         }
@@ -306,9 +300,6 @@
 .slick-prev:before,
 .slick-next:before {
   font-size: 30px !important;
-  // background: url(../images/carousel-arrow.svg) no-repeat ;
-  // width: 30px;
-  // height: 30px;
 }
 
 .slick-next {

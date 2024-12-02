@@ -435,7 +435,7 @@ export const numberToPollMultipleSelectState: {
 
 export interface WidgetResponse {
   id: string;
-  lmMeta: Record<string, any> | null; // Nullable key
+  LmMeta: Record<string, any> | null; // Nullable key
   createdAt: number;
   metadata: Record<string, any>;
   parentEntityId: string;
@@ -455,9 +455,9 @@ export const getTimeLeftInPoll = (pollExpiryTime: number): string => {
   const hours = Math.floor((timeLeft % DAY_IN_MILLIS) / HOUR_IN_MILLIS);
   const minutes = Math.floor((timeLeft % HOUR_IN_MILLIS) / MINUTE_IN_MILLIS);
 
-  if (days > 0) return `${days}d`;
-  if (hours > 0) return `${hours}h`;
-  if (minutes > 0) return `${minutes} min`;
+  if (days > 0) return `${days}d left`;
+  if (hours > 0) return `${hours}h left`;
+  if (minutes > 0) return `${minutes} min left`;
   return "Just Now";
 };
 
@@ -585,4 +585,22 @@ export const shouldShowAddOptionButton = ({
   }
 
   return false; // Hide the button
+};
+
+export const multipleOptionSubmitVoteValidation = (
+  pollMultiSelectNo: number,
+  pollMultiSelectState: PollMultipleSelectState,
+  pollMultiSelectCount: number,
+): boolean => {
+  if (pollMultiSelectCount == 0) return false;
+  switch (pollMultiSelectState) {
+    case PollMultipleSelectState.EXACTLY:
+      return pollMultiSelectNo === pollMultiSelectCount;
+    case PollMultipleSelectState.AT_MAX:
+      return pollMultiSelectNo >= pollMultiSelectCount;
+    case PollMultipleSelectState.AT_LEAST:
+      return pollMultiSelectNo <= pollMultiSelectCount;
+    default:
+      return false;
+  }
 };

@@ -384,8 +384,8 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                   <ThemeProvider theme={switchButtonTheme}>
                     <Switch
                       style={LMPostPollDialogStyles?.pollAdvanceOptionsSwitchStyle}
-                      name={"SHOW_LIVE_RESULTS"}
-                      checked={advancedOptions.SHOW_LIVE_RESULTS}
+                      name={"DONT_SHOW_LIVE_RESULTS"}
+                      checked={advancedOptions.DONT_SHOW_LIVE_RESULTS}
                       onChange={updateAdvancedOptions}
                     />
                   </ThemeProvider>

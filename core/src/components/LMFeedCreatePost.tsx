@@ -84,6 +84,8 @@ const LMFeedCreatePost = ({
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
+    pollData,
+    setPollDataValues,
   } = useCreatePost();
 
   return (
@@ -136,6 +138,8 @@ const LMFeedCreatePost = ({
         previewPoll,
         setPreviewPoll,
         updateAdvancedOptions,
+        pollData,
+        setPollDataValues,
       }}
     >
       {showStarterComponent ? (
@@ -306,7 +310,6 @@ const LMFeedCreatePost = ({
           setOpenCreatePollDialog(false);
         }}
       >
-        {/* {CustomComponents.CustomCreatePostDialog || <LMFeedCreatePostDialog />} */}
         {<LMFeedCreatePollDialog />}
       </Dialog>
     </LMFeedCreatePostContext.Provider>

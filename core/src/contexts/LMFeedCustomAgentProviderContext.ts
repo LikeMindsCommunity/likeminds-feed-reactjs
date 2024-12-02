@@ -4,6 +4,8 @@ import {
   LMPostHeaderStyles,
   LMPostPollDialogStyles,
   LMPostPollFeedStyles,
+  LMPostPollUniversalFeedStyles,
+  LMFeedPostPollResultScreenStyles,
 } from "../shared/types/customProps/styleProps";
 import { CustomComponents } from "../shared/types/customProps/customComponentsProps";
 import {
@@ -45,12 +47,17 @@ export interface CustomAgentProviderInterface {
   hintTextForAnonymous?: string;
   LMPostPollDialogStyles?: LMPostPollDialogStyles;
   LMPostPollFeedStyles?: LMPostPollFeedStyles;
+  LMPostPollUniversalFeedStyles?: LMPostPollUniversalFeedStyles;
+  LMFeedPostPollResultScreenStyles?: LMFeedPostPollResultScreenStyles;
 
   onSubmitButtonClickedCustomCallback?: SubmitButtonClickEventDelegatorCallback;
   onAddPollOptionsClickedCustomCallback?: AddPollOptionsClickEventDelegatorCallback;
   onPollEditClickedCustomCallback?: PollEditClickEventDelegatorCallback;
   onPollClearClickedCustomCallback?: PollClearClickEventDelegatorCallback;
-  onPollOptionClickedCustomCallback?: OnPollOptionClickEventDelegatorCallback;
+  onPollOptionClickedCustomCallback?: PollOptionClickEventDelegatorCallback;
+  onPollFeedSubmitButtonClicked?: PollFeedSubmitButtonClickEventDelegatorCallback;
+
+  onOptionSelectedCustomCallback?: onOptionSelectedEventDelegatorCallback;
 }
 export const CustomAgentProviderContext =
   createContext<CustomAgentProviderInterface>({});
@@ -96,10 +103,12 @@ export type PollEditClickEventDelegatorCallback = (
 export type PollClearClickEventDelegatorCallback = (
   event: React.MouseEvent,
 ) => void;
-export type OnPollOptionClickEventDelegatorCallback = (
+export type PollOptionClickEventDelegatorCallback = (
   option: PollOptions,
   event: React.MouseEvent,
 ) => void;
+export type onOptionSelectedEventDelegatorCallback = () => void;
+export type PollFeedSubmitButtonClickEventDelegatorCallback = () => void;
 
 export type PollOptions = {
   id: string;

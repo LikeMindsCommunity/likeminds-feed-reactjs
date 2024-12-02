@@ -13,6 +13,7 @@ import {
 } from "../hooks/useInputs";
 import { AdvancedPollOptions } from "../hooks/useCreatePost";
 import { SelectChangeEvent } from "@mui/material";
+import { WidgetResponse } from "../shared/utils";
 
 interface LMFeedCreatePostContextInterface {
   postText?: string | null;
@@ -66,6 +67,8 @@ interface LMFeedCreatePostContextInterface {
   updateAdvancedOptions: OneArgVoidReturns<
     React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<number>
   >;
+  pollData: WidgetResponse | null;
+  setPollDataValues: (data: WidgetResponse | null) => void;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>(
