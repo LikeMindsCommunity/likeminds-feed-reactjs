@@ -530,6 +530,7 @@ type PollProps = {
   pollExpiryTime: number;
   pollMultiSelectNo: number;
   pollMultiSelectState: PollMultipleSelectState;
+  isEditMode: boolean;
 };
 
 export const shouldShowSubmitButton = ({
@@ -538,11 +539,13 @@ export const shouldShowSubmitButton = ({
   pollExpiryTime,
   pollMultiSelectNo,
   pollMultiSelectState,
+  isEditMode,
 }: PollProps): boolean => {
   // Check if poll is instant and already submitted, or if the poll has ended
   if (
     (isInstantPoll(pollType) && isPollSubmitted(pollOptions)) ||
-    hasPollEnded(pollExpiryTime)
+    hasPollEnded(pollExpiryTime) ||
+    (!isInstantPoll(pollType) && !isEditMode)
   ) {
     return false; // Hide the submit button
   }
@@ -560,6 +563,7 @@ type PollPropsForAddOption = {
   pollOptions: PollOption[];
   pollExpiryTime: number;
   allowAddOption: boolean;
+  isEditMode: boolean;
 };
 
 export const shouldShowAddOptionButton = ({
@@ -567,6 +571,7 @@ export const shouldShowAddOptionButton = ({
   pollOptions,
   pollExpiryTime,
   allowAddOption,
+  isEditMode,
 }: PollPropsForAddOption): boolean => {
   // Check if add option is allowed for instant poll
   const isAddOptionAllowedForInstantPoll =
@@ -574,6 +579,8 @@ export const shouldShowAddOptionButton = ({
 
   // Check if add option is allowed for deferred poll
   const isAddOptionAllowedForDeferredPoll = !isInstantPoll(pollType);
+
+  if (!isInstantPoll(pollType) && !isEditMode) return false;
 
   // Final condition to determine visibility of the add option button
   if (

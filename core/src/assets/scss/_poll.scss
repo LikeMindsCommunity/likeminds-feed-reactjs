@@ -37,17 +37,6 @@
 
 .poll-feed-total-votes {
   color: #5046e5;
-  margin-right: 1rem;
-}
-
-.poll-feed-time-left::before {
-  content: ".";
-  color: var(--lm-feed-secondary-color);
-  font-size: pxToRem(26);
-  position: absolute;
-  margin: pxToRem(4) 0 0 -12px;
-  height: pxToRem(4);
-  width: pxToRem(4);
 }
 
 .poll-feed-preview-advance-options-select {
@@ -108,7 +97,7 @@
 }
 
 .poll-text-added-by {
-  padding: 8px 1rem;
+  padding: 7px 1rem;
 }
 
 .poll-background-bar {
@@ -119,12 +108,27 @@
   z-index: 1;
 }
 
+.poll-feed-time-left {
+  display: flex;
+}
+
+.poll-feed-dot {
+  margin: 0px 4px;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
 
+.cursor-default {
+  cursor: default;
+}
+
 .poll-margin-bottom {
   margin-bottom: 1rem;
+}
+.poll-margin-remove {
+  margin-bottom: 0rem;
 }
 
 .poll-feed-added-by {
@@ -167,7 +171,7 @@
 .poll-results-memeber-list-wrapper {
   display: flex;
   flex-direction: column;
-  margin: 1rem 0rem;
+  margin: 1rem;
   height: 50vh;
   overflow-y: scroll;
   scroll-behavior: smooth;

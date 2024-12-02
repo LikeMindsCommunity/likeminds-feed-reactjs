@@ -34,7 +34,7 @@ interface UsePostPoll {
   hasMultiOptionSelect: MutableRefObject<boolean>;
   pollResultSelectedTab: number;
   setPollResultSelectedTabFun: (tab: number) => void;
-  totalMultipleOptions: MutableRefObject<number>;
+  totalMultipleOptions: number;
   newOption: string;
   setNewOptionFun: (option: string) => void;
   voteDetails: {
@@ -45,6 +45,8 @@ interface UsePostPoll {
   handleAddOptionSubmit: () => void;
   submitVoteHandler: () => void;
   totalVotesCount: number;
+  isEditMode: boolean;
+  setIsEditModeFun: (toggle: boolean) => void;
 }
 
 export function usePostPoll(): UsePostPoll {
@@ -80,7 +82,7 @@ export function usePostPoll(): UsePostPoll {
   const [resultScreenDialogOpen, setResultScreenDialogOpen] =
     useState<boolean>(false);
   const [pollResultSelectedTab, setPollResultSelectedTab] = useState<number>(0);
-  const totalMultipleOptions = useRef<number>(0);
+  const [totalMultipleOptions, setTotalMultipleOptions] = useState<number>(0);
   const [newOption, setNewOption] = useState<string>("");
   const [voteDetails, setVoteDetails] = useState<{
     users: (User | undefined)[];
@@ -88,22 +90,30 @@ export function usePostPoll(): UsePostPoll {
 
   const totalVotes = useMemo(() => {
     let totalCount = 0;
+    let alreadySelectedCount = 0;
     pollOptions.map((pollOption) => {
       totalCount += pollOption.voteCount;
+      if (pollOption.isSelected) alreadySelectedCount++;
     });
+    setTotalMultipleOptions(alreadySelectedCount);
 
     return totalCount;
   }, []);
 
   const [totalVotesCount, setTotalVotesCount] = useState<number>(totalVotes);
+  const [isEditMode, setIsEditMode] = useState(!hasSelectedOption);
 
   const handleOptionClick = (index: number) => {
-    if (hasSelectedOption) return;
+    if (hasPollEnded(pollExpiryTime)) return;
+    if (hasSelectedOption && isInstantPoll(pollType)) return;
+    if (hasSelectedOption && !isInstantPoll(pollType) && !isEditMode) return;
     if (hasMultiOptionSelect.current) {
       setPollOptions((prevOptions) =>
         prevOptions.map((option, idx) => {
           if (idx === index) {
-            totalMultipleOptions.current += option.isSelected ? -1 : 1;
+            setTotalMultipleOptions(
+              totalMultipleOptions + (option.isSelected ? -1 : 1),
+            );
             return {
               ...option,
               isSelected: !option.isSelected,
@@ -135,6 +145,7 @@ export function usePostPoll(): UsePostPoll {
 
   const handleAddOptionSubmit = async () => {
     try {
+      setNewOptionFun("");
       const pollId = postId2;
       if (!pollId) {
         return;
@@ -154,10 +165,15 @@ export function usePostPoll(): UsePostPoll {
   };
 
   const submitVoteHandler = () => {
-    setTotalVotesCount(
-      (totalVotesCount) => totalVotesCount + totalMultipleOptions.current,
-    );
+    setTotalVotesCount(() => {
+      let count = 0;
+      pollOptions.map((pollOption) => {
+        count += pollOption.voteCount;
+      });
+      return count;
+    });
     setHasSelectedOption(true);
+    setIsEditMode(false);
   };
 
   const voteSubmissionHandler = async () => {
@@ -200,6 +216,10 @@ export function usePostPoll(): UsePostPoll {
     setIsAddOptionDialogOpen(toggle);
   };
 
+  const setIsEditModeFun = (toggle: boolean) => {
+    setIsEditMode(toggle);
+  };
+
   useEffect(() => {
     if (hasSelectedOption) {
       setPollOptions((prevOptions) =>
@@ -215,6 +235,7 @@ export function usePostPoll(): UsePostPoll {
     } else {
       if (isPollSubmitted(pollOptions)) {
         setHasSelectedOption(true);
+        setIsEditMode(false);
       }
     }
   }, [totalVotesCount]);
@@ -227,6 +248,7 @@ export function usePostPoll(): UsePostPoll {
         pollExpiryTime,
         pollMultiSelectNo: multiSelectNo,
         pollMultiSelectState: multiSelectState,
+        isEditMode,
       }),
     );
     setShowAddOptionButton(
@@ -235,9 +257,10 @@ export function usePostPoll(): UsePostPoll {
         pollOptions,
         pollExpiryTime,
         allowAddOption,
+        isEditMode,
       }),
     );
-  }, [hasSelectedOption]);
+  }, [hasSelectedOption, isEditMode]);
 
   const selectedOptionMemberList = async () => {
     const pollId = pollData?.id;
@@ -290,5 +313,7 @@ export function usePostPoll(): UsePostPoll {
     handleAddOptionSubmit,
     submitVoteHandler,
     totalVotesCount,
+    isEditMode,
+    setIsEditModeFun,
   };
 }

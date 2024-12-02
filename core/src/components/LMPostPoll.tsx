@@ -1,6 +1,6 @@
 import { FeedPostContext } from "..";
 import { useContext } from "react";
-import { getTimeLeftInPoll, hasPollEnded, getPollSelectionText, PollOption, multipleOptionSubmitVoteValidation } from "../shared/utils";
+import { getTimeLeftInPoll, hasPollEnded, getPollSelectionText, PollOption, multipleOptionSubmitVoteValidation, isInstantPoll } from "../shared/utils";
 import { Dialog } from "@mui/material";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 import checkPollOptionIcon from '../assets/images/select tick.svg';
@@ -12,6 +12,7 @@ import Tab from '@mui/material/Tab';
 import { getAvatar } from "../shared/components/LMUserMedia";
 import noResponses from "../assets/images/no response.svg";
 import { usePostPoll } from "../hooks/usePostPoll";
+import DotIcon from '../assets/images/Ellipse 638.svg';
 
 export const LMPostPoll = () => {
     const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -36,6 +37,8 @@ export const LMPostPoll = () => {
         handleAddOptionSubmit,
         submitVoteHandler,
         totalVotesCount,
+        isEditMode,
+        setIsEditModeFun,
     } = usePostPoll();
 
     const {
@@ -50,6 +53,7 @@ export const LMPostPoll = () => {
     const multiSelectState = pollData?.metadata.multipleSelectState;
     const pollSelectionText = getPollSelectionText(multiSelectNo, multiSelectState);
     const allowAddOption = pollData?.metadata.allowAddOption;
+    const pollType = pollData?.metadata.pollType;
 
     const renderProgress = (option: PollOption) => {
         const percentage = pollData?.LmMeta?.toShowResults ? option.percentage : 0;
@@ -92,9 +96,14 @@ export const LMPostPoll = () => {
                                 handleOptionClick(index);
                             }}
                                 style={LMPostPollUniversalFeedStyles?.addPollOptionInputBoxStyles}
-                                className={`poll-feed-option-wrapper ` + (hasSelectedOption ? `` : ` cursor-pointer poll-margin-bottom`) + (pollOption.isSelected ? ` poll-feed-selected-option-wrapper ` : ` `)} key={index} >
-                                {hasSelectedOption && renderProgress(pollOption)}
-                                <div className={`poll-feed-option-text-input poll-option-text-input-preview poll-text` + (allowAddOption && addedByText ? ` .poll-text-added-by ` : ``)} >
+                                className={`poll-feed-option-wrapper cursor-pointer poll-margin-bottom ` +
+                                    (!isInstantPoll(pollType) ? (isEditMode ? ` ` : `cursor-default`) :
+                                        (hasSelectedOption ? `cursor-default poll-margin-remove` : ` `)) +
+                                    (pollOption.isSelected ? ` poll-feed-selected-option-wrapper ` : ` `) +
+                                    (hasPollEnded(pollExpiryTime) ? `cursor-default poll-margin-remove` : ``)} key={index} >
+
+                                {((hasSelectedOption && isInstantPoll(pollType)) || (hasPollEnded(pollExpiryTime))) && renderProgress(pollOption)}
+                                <div className={`poll-feed-option-text-input poll-option-text-input-preview poll-text` + (allowAddOption && addedByText ? ` poll-text-added-by ` : ``)} >
                                     {pollOption.text}
                                     {allowAddOption && addedByText && (
                                         <div className="poll-feed-added-by">
@@ -102,13 +111,13 @@ export const LMPostPoll = () => {
                                         </div>
                                     )}
                                 </div>
-                                {!hasSelectedOption && pollOption.isSelected ? <span
+                                {((isInstantPoll(pollType) && !hasSelectedOption) || (!isInstantPoll(pollType)) && pollOption.isSelected) ? <span
                                     className="poll-option-remove"
                                 >
                                     <img src={checkPollOptionIcon} alt="check" />
                                 </span> : null}
                             </div>
-                            {hasSelectedOption && pollData?.LmMeta?.toShowResults && pollOption.voteCount >= 0 && (
+                            {((isInstantPoll(pollType) && hasSelectedOption) || (hasPollEnded(pollExpiryTime))) && pollData?.LmMeta?.toShowResults && (
                                 <div
                                     onClick={() => { setPollResultSelectedTabFun(index); setResultScreenDialogOpenFun(true); }}
                                     className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style">
@@ -130,32 +139,43 @@ export const LMPostPoll = () => {
                 }
             </div>
 
-            <div>
-                {showSubmitVoteButton && (
-                    multipleOptionSubmitVoteValidation(multiSelectNo,
-                        multiSelectState, totalMultipleOptions.current) ?
-                        <div
-                            style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
-                            className={`lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button `}
-                            onClick={submitVoteHandler}
-                        >
-                            Submit Vote
-                        </div> : <div
-                            style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
-                            className={` lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled`}
-                        >
-                            Submit Vote
-                        </div>
-                )
-                }
-            </div>
+
+            {showSubmitVoteButton && (
+                multipleOptionSubmitVoteValidation(multiSelectNo,
+                    multiSelectState, totalMultipleOptions) ?
+                    <div
+                        style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
+                        className={`lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button `}
+                        onClick={submitVoteHandler}
+                    >
+                        Submit Vote
+                    </div> : <div
+                        style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
+                        className={` lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled`}
+                    >
+                        Submit Vote
+                    </div>
+            )
+            }
+
 
             <div className="poll-feed-vote-count poll-feed-preview-advance-options-total poll-preview-subheading-style">
-                <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setPollResultSelectedTabFun(0); setResultScreenDialogOpenFun(true); }}>
-                    {totalVotesCount} votes</div>
+                {
+                    (isInstantPoll(pollType) || hasPollEnded(pollExpiryTime)) &&
+                    <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setPollResultSelectedTabFun(0); setResultScreenDialogOpenFun(true); }}>
+                        {totalVotesCount} votes</div>
+                }
                 <div className="poll-feed-time-left">
+                    <img className="poll-feed-dot" src={DotIcon} alt="" />
                     {pollTimeLeft}
                 </div>
+                {
+                    !hasPollEnded(pollExpiryTime) && !isInstantPoll(pollType) && !isEditMode &&
+                    <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setIsEditModeFun(true); }}>
+                        <img className="poll-feed-dot" src={DotIcon} alt="" />
+                        Edit Vote
+                    </div>
+                }
             </div>
 
             <Dialog
@@ -207,7 +227,7 @@ export const LMPostPoll = () => {
 
 
             {
-                (pollData?.LmMeta?.toShowResults && !pollData?.metadata.isAnonymous || hasPollEnded(pollData?.metadata.expiryTime)) ?
+                (isInstantPoll(pollType) && pollData?.LmMeta?.toShowResults && !pollData?.metadata.isAnonymous || hasPollEnded(pollData?.metadata.expiryTime)) ?
                     <Dialog
                         open={resultScreenDialogOpen}
                         onClose={() => {
@@ -215,7 +235,7 @@ export const LMPostPoll = () => {
                         }}
                         sx={{
                             '& .MuiDialog-paper': {
-                                width: '70%', // Default width for larger screens
+                                width: '50%', // Default width for larger screens
                                 maxWidth: '800px', // Restrict max width
                                 '@media (max-width: 900px)': {
                                     width: '85%', // Adjust for medium screens
