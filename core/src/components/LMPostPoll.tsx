@@ -111,7 +111,7 @@ export const LMPostPoll = () => {
                                         </div>
                                     )}
                                 </div>
-                                {((isInstantPoll(pollType) && !hasSelectedOption) || (!isInstantPoll(pollType)) && pollOption.isSelected) ? <span
+                                {((isInstantPoll(pollType) && !hasSelectedOption) || (!isInstantPoll(pollType))) && pollOption.isSelected ? <span
                                     className="poll-option-remove"
                                 >
                                     <img src={checkPollOptionIcon} alt="check" />
@@ -227,7 +227,7 @@ export const LMPostPoll = () => {
 
 
             {
-                (isInstantPoll(pollType) && pollData?.LmMeta?.toShowResults && !pollData?.metadata.isAnonymous || hasPollEnded(pollData?.metadata.expiryTime)) ?
+                (!pollData?.metadata.isAnonymous && (isInstantPoll(pollType) && pollData?.LmMeta?.toShowResults || hasPollEnded(pollData?.metadata.expiryTime))) ?
                     <Dialog
                         open={resultScreenDialogOpen}
                         onClose={() => {

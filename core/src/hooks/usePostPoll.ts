@@ -67,8 +67,7 @@ export function usePostPoll(): UsePostPoll {
     hasPollEnded(pollExpiryTime),
   );
   const hasMultiOptionSelect = useRef<boolean>(
-    isMultiChoicePoll(multiSelectNo, multiSelectState) ||
-      !isInstantPoll(pollData?.metadata.pollType),
+    isMultiChoicePoll(multiSelectNo, multiSelectState),
   );
   const [pollOptions, setPollOptions] = useState<PollOption[]>(
     pollData?.LmMeta.options,
@@ -126,6 +125,20 @@ export function usePostPoll(): UsePostPoll {
         }),
       );
     } else {
+      if (hasSelectedOption) {
+        setPollOptions((prevOptions) =>
+          prevOptions.map((option) => {
+            if (option.isSelected) {
+              return {
+                ...option,
+                isSelected: false,
+                voteCount: option.voteCount - 1,
+              };
+            }
+            return option;
+          }),
+        );
+      }
       setPollOptions((prevOptions) =>
         prevOptions.map((option, idx) => {
           if (idx === index) {
@@ -140,6 +153,7 @@ export function usePostPoll(): UsePostPoll {
       );
       setTotalVotesCount((totalVotesCount) => totalVotesCount + 1);
       setHasSelectedOption(true);
+      setIsEditMode(false);
     }
   };
 

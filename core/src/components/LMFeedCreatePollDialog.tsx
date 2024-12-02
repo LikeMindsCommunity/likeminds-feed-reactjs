@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 import { changePollCase } from "../shared/utils";
-import { renderMessage } from "../shared/utils";
 import { WordAction } from "../shared/enums/wordAction";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers";
@@ -208,7 +207,7 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
           {
             advancedOptions.MULTIPLE_SELECTION_NO > 1 &&
             <div className="poll-preview-advance-options poll-preview-subheading-style">
-              *Select {renderMessage(advancedOptions.MULTIPLE_SELECTION_STATE)} {advancedOptions.MULTIPLE_SELECTION_NO} options.
+              *Select {advancedOptions.MULTIPLE_SELECTION_STATE} {advancedOptions.MULTIPLE_SELECTION_NO} options.
             </div>
           }
           <div>

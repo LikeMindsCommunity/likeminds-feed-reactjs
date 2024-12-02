@@ -690,13 +690,10 @@ export function useCreatePost(): UseCreatePost {
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
         ).trim();
+
         let attachmentResponseArray: Attachment[] = temporaryPost?.attachments
           ? temporaryPost.attachments
           : [];
-
-        if (temporaryPost?.attachments[0].attachmentType === 6) {
-          attachmentResponseArray = [];
-        }
 
         if (ogTag) {
           if (
@@ -836,10 +833,10 @@ export function useCreatePost(): UseCreatePost {
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
       (event: Event) => {
+        setPollDataValues(null);
         setOpenCreatePostDialog(true);
         const details = (event as CustomEvent).detail;
         const tempPost = details.post;
-        console.log("detailsssss--------", details);
         const topicsMap = details.topics;
         setTemporaryPost(tempPost);
         const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {

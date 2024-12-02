@@ -142,7 +142,7 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
       ) : null}
       {!temporaryPost && <LMFeedCreatePostAttachmentController />}
 
-      {pollData &&
+      {temporaryPost && pollData &&
         <div className="poll-preview-wrapper">
           <div className="poll-preview-title-parent">
             <div className="poll-preview-title">{pollData.metadata.title}</div>

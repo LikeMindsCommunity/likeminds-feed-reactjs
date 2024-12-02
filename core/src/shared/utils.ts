@@ -573,25 +573,22 @@ export const shouldShowAddOptionButton = ({
   allowAddOption,
   isEditMode,
 }: PollPropsForAddOption): boolean => {
-  // Check if add option is allowed for instant poll
   const isAddOptionAllowedForInstantPoll =
     isInstantPoll(pollType) && !isPollSubmitted(pollOptions);
 
-  // Check if add option is allowed for deferred poll
   const isAddOptionAllowedForDeferredPoll = !isInstantPoll(pollType);
 
   if (!isInstantPoll(pollType) && !isEditMode) return false;
 
-  // Final condition to determine visibility of the add option button
   if (
     allowAddOption &&
     !hasPollEnded(pollExpiryTime) &&
     (isAddOptionAllowedForInstantPoll || isAddOptionAllowedForDeferredPoll)
   ) {
-    return true; // Show the button
+    return true;
   }
 
-  return false; // Hide the button
+  return false;
 };
 
 export const multipleOptionSubmitVoteValidation = (
