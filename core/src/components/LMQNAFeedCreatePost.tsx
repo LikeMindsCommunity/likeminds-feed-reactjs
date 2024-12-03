@@ -50,6 +50,7 @@ const LMQNAFeedCreatePost = ({
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    setTemporaryPostFun,
     selectedTopicIds,
     setSelectedTopicIds,
     preSelectedTopics,
@@ -83,8 +84,6 @@ const LMQNAFeedCreatePost = ({
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
-    pollData,
-    setPollDataValues,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -110,6 +109,7 @@ const LMQNAFeedCreatePost = ({
         openCreatePostDialog,
         setOpenCreatePostDialog,
         temporaryPost,
+        setTemporaryPostFun,
         selectedTopicIds,
         setSelectedTopicIds,
         preSelectedTopics,
@@ -138,8 +138,6 @@ const LMQNAFeedCreatePost = ({
         previewPoll,
         setPreviewPoll,
         updateAdvancedOptions,
-        pollData,
-        setPollDataValues,
       }}
     >
       {showStarterComponent ? (

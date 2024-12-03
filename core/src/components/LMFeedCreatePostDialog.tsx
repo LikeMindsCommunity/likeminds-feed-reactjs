@@ -17,8 +17,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { changePostCase } from "../shared/utils";
 import { WordAction } from "../shared/enums/wordAction";
 import removePollOptionIcon from '../assets/images/remove-poll-option.svg';
-import { renderMessage, formatDate } from "../shared/utils";
-import { PollOption } from "../shared/utils";
+import { formatDate, renderMessage2 } from "../shared/utils";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -33,14 +32,13 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
     setPreSelectedTopics,
     mediaList,
     temporaryPost,
+    setTemporaryPostFun,
     showOGTagViewContainer,
     setOpenCreatePostDialog,
     createPostComponentClickCustomCallback,
     ogTag,
     isAnonymousPost,
     changeAnonymousPostStatus,
-    pollData,
-    setPollDataValues,
   } = useContext(LMFeedCreatePostContext);
   const {
     CustomComponents = {},
@@ -48,7 +46,7 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
     hintTextForAnonymous,
   } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
-
+  const attachmentMeta = (temporaryPost?.attachments && temporaryPost?.attachments.length > 0) ? temporaryPost?.attachments[0].attachmentMeta : undefined;
 
   const renderAnonymousOption = () => {
     if (isAnonymousPostAllowed && !temporaryPost) {
@@ -68,6 +66,8 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
       );
     }
   };
+
+  console.log("temporary post---- post dialog", temporaryPost);
 
   return (
     <div
@@ -142,15 +142,15 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
       ) : null}
       {!temporaryPost && <LMFeedCreatePostAttachmentController />}
 
-      {temporaryPost && pollData &&
+      {attachmentMeta &&
         <div className="poll-preview-wrapper">
           <div className="poll-preview-title-parent">
-            <div className="poll-preview-title">{pollData.metadata.title}</div>
+            <div className="poll-preview-title">{attachmentMeta?.title}</div>
             <div className="poll-preview-edit-button-parent">
               <span
                 className="poll-preview-header-icon lm-cursor-pointer"
                 onClick={() => {
-                  setPollDataValues(null);
+                  setTemporaryPostFun();
                 }}
               >
                 <img src={removePollOptionIcon} alt="remove" />
@@ -158,24 +158,24 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
             </div>
           </div>
           {
-            pollData.metadata.multipleSelectNumber > 1 &&
+            attachmentMeta?.multipleSelectNumber && (attachmentMeta?.multipleSelectNumber > 1) &&
             <div className="poll-preview-advance-options poll-preview-subheading-style">
-              *Select {renderMessage(pollData.metadata.multipleSelectState)} {pollData.metadata.multipleSelectNumber} options.
+              *Select {renderMessage2(attachmentMeta.multipleSelectState)} {attachmentMeta.multipleSelectNumber} options.
             </div>
           }
           <div>
-            {pollData?.LmMeta?.options.map((pollOption: PollOption, index: number) => {
+            {attachmentMeta.options?.map((pollOption: string, index: number) => {
               return (
                 <div className="poll-option-wrapper" key={index}>
                   <div
                     className="poll-option-text-input poll-option-text-input-preview"
-                  >{pollOption.text}</div>
+                  >{pollOption}</div>
                 </div>
               );
             })}
           </div>
           <div className="poll-preview-subheading-style">
-            Expires on {pollData.metadata.expiryTime && formatDate(pollData.metadata.expiryTime)}
+            Expires on {attachmentMeta.expiryTime && formatDate(attachmentMeta.expiryTime)}
           </div>
         </div>}
 

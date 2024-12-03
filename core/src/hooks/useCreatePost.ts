@@ -43,8 +43,6 @@ import {
   ZeroArgVoidReturns,
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
-import { useFeedDetails } from "./useLMFeedDetails";
-import { WidgetResponse } from "../shared/utils";
 
 interface UseCreatePost {
   postText: string | null;
@@ -65,6 +63,7 @@ interface UseCreatePost {
   openCreatePostDialog: boolean;
   setOpenCreatePostDialog: React.Dispatch<boolean>;
   temporaryPost: Post | null;
+  setTemporaryPostFun: () => void;
   selectedTopicIds: string[];
   setSelectedTopicIds: React.Dispatch<string[]>;
   preSelectedTopics: Topic[];
@@ -98,8 +97,6 @@ interface UseCreatePost {
   updateAdvancedOptions: OneArgVoidReturns<
     React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<number>
   >;
-  pollData: WidgetResponse | null;
-  setPollDataValues: (data: WidgetResponse | null) => void;
 }
 
 export interface AdvancedPollOptions {
@@ -115,8 +112,6 @@ export interface PollOption {
 }
 
 export function useCreatePost(): UseCreatePost {
-  //poll
-
   const [openCreatePollDialog, setOpenCreatePollDialog] =
     useState<boolean>(false);
 
@@ -292,10 +287,6 @@ export function useCreatePost(): UseCreatePost {
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
   const [isAnonymousPost, setIsAnonymousPost] = useState<boolean>(false);
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
-
-  const { widgets } = useFeedDetails(temporaryPost?.id ?? "");
-  const [pollData, setPollData] = useState<WidgetResponse | null>(null);
-
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [preSelectedTopics, setPreSelectedTopics] = useState<Topic[]>([]);
@@ -351,10 +342,6 @@ export function useCreatePost(): UseCreatePost {
 
   function setQuestionText(txt: string) {
     setQuestion(txt);
-  }
-
-  function setPollDataValues(data: WidgetResponse | null) {
-    setPollData(data);
   }
 
   function addMediaItem(event: React.ChangeEvent<HTMLInputElement>) {
@@ -422,6 +409,17 @@ export function useCreatePost(): UseCreatePost {
 
   function closeOGTagContainer() {
     setShowOGTagViewContainer(false);
+  }
+
+  function setTemporaryPostFun() {
+    setTemporaryPost((prev) => {
+      if (prev) {
+        return { ...prev, attachments: [] };
+      } else {
+        return null;
+      }
+    });
+    console.log("temporaryPost--", temporaryPost);
   }
 
   const postFeed = useCallback(
@@ -690,10 +688,13 @@ export function useCreatePost(): UseCreatePost {
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
         ).trim();
+        console.log("temporary post--------", temporaryPost);
+        let attachmentResponseArray: Attachment[] =
+          temporaryPost?.attachments && temporaryPost.attachments.length > 0
+            ? temporaryPost.attachments
+            : [];
 
-        let attachmentResponseArray: Attachment[] = temporaryPost?.attachments
-          ? temporaryPost.attachments
-          : [];
+        console.log("attachmentResposeArray-------", attachmentResponseArray);
 
         if (ogTag) {
           if (
@@ -826,14 +827,9 @@ export function useCreatePost(): UseCreatePost {
   }, [lmFeedclient, text]);
 
   useEffect(() => {
-    setPollData(Object.values(widgets)[0]);
-  }, [widgets, editPost]);
-
-  useEffect(() => {
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
       (event: Event) => {
-        setPollDataValues(null);
         setOpenCreatePostDialog(true);
         const details = (event as CustomEvent).detail;
         const tempPost = details.post;
@@ -980,6 +976,7 @@ export function useCreatePost(): UseCreatePost {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    setTemporaryPostFun,
     isAnonymousPost,
     changeAnonymousPostStatus,
     selectedTopicIds,
@@ -1017,7 +1014,5 @@ export function useCreatePost(): UseCreatePost {
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
-    pollData,
-    setPollDataValues,
   };
 }

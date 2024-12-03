@@ -53,6 +53,7 @@ const LMFeedCreatePost = ({
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    setTemporaryPostFun,
     selectedTopicIds,
     setSelectedTopicIds,
     preSelectedTopics,
@@ -84,8 +85,6 @@ const LMFeedCreatePost = ({
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
-    pollData,
-    setPollDataValues,
   } = useCreatePost();
 
   return (
@@ -110,6 +109,7 @@ const LMFeedCreatePost = ({
         openCreatePostDialog,
         setOpenCreatePostDialog,
         temporaryPost,
+        setTemporaryPostFun,
         selectedTopicIds,
         setSelectedTopicIds,
         preSelectedTopics,
@@ -138,8 +138,6 @@ const LMFeedCreatePost = ({
         previewPoll,
         setPreviewPoll,
         updateAdvancedOptions,
-        pollData,
-        setPollDataValues,
       }}
     >
       {showStarterComponent ? (

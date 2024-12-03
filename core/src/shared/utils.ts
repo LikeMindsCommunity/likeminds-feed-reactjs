@@ -425,6 +425,19 @@ export const renderMessage = (state: number): string => {
   }
 };
 
+export const renderMessage2 = (state: string | undefined): string => {
+  switch (state) {
+    case "exactly":
+      return "exactly";
+    case "at_max":
+      return "at max";
+    case "at_least":
+      return "at least";
+    default:
+      return "Unknown state";
+  }
+};
+
 export const numberToPollMultipleSelectState: {
   [key: number]: PollMultipleSelectState;
 } = {
