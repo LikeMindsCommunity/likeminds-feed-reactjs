@@ -67,8 +67,6 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
     }
   };
 
-  console.log("temporary post---- post dialog", temporaryPost);
-
   return (
     <div
       className="lm-feed-create-post-wrapper"

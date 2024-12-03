@@ -419,7 +419,6 @@ export function useCreatePost(): UseCreatePost {
         return null;
       }
     });
-    console.log("temporaryPost--", temporaryPost);
   }
 
   const postFeed = useCallback(
@@ -688,13 +687,10 @@ export function useCreatePost(): UseCreatePost {
         const textContent: string = extractTextFromNode(
           textFieldRef.current,
         ).trim();
-        console.log("temporary post--------", temporaryPost);
         let attachmentResponseArray: Attachment[] =
           temporaryPost?.attachments && temporaryPost.attachments.length > 0
             ? temporaryPost.attachments
             : [];
-
-        console.log("attachmentResposeArray-------", attachmentResponseArray);
 
         if (ogTag) {
           if (
