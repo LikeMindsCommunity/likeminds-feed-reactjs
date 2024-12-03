@@ -46,7 +46,7 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
     hintTextForAnonymous,
   } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
-  const attachmentMeta = (temporaryPost?.attachments && temporaryPost?.attachments.length > 0) ? temporaryPost?.attachments[0].attachmentMeta : undefined;
+  const attachmentMeta = (temporaryPost?.attachments && temporaryPost?.attachments.length > 0 && temporaryPost?.attachments[0].attachmentType === 6) ? temporaryPost?.attachments[0].attachmentMeta : undefined;
 
   const renderAnonymousOption = () => {
     if (isAnonymousPostAllowed && !temporaryPost) {
