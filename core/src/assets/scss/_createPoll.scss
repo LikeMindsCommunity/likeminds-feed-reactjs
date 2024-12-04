@@ -33,7 +33,7 @@
   font-size: 16px;
   color: #484f67;
   resize: none;
-  font-family: "Inter";
+  font-family: var(--font-family-base);
 }
 
 .poll-options-head-text {
@@ -80,7 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  color: #5046e5;
+  color: var(--lm-feed-primary-color);
   border: 1px solid #d0d8e2;
   border-radius: 10px;
   padding: 16px;
@@ -179,7 +179,7 @@
 .poll-create-button {
   width: 54px;
   height: 54px;
-  background-color: #5046e5 !important;
+  background-color: var(--lm-feed-primary-color) !important;
   /* position: absolute !important; */
 }
 

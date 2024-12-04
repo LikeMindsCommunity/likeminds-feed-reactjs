@@ -26,17 +26,17 @@ interface UsePostPoll {
   pollData: WidgetResponse | null;
   hasSelectedOption: boolean;
   isAddOptionDialogOpen: boolean;
-  setIsAddOptionDialogOpenFun: (toggle: boolean) => void;
+  setIsAddOptionDialogOpenFunction: (toggle: boolean) => void;
   showSubmitVoteButton: boolean;
   showAddOptionButton: boolean;
   resultScreenDialogOpen: boolean;
-  setResultScreenDialogOpenFun: (toggle: boolean) => void;
+  setResultScreenDialogOpenFunction: (toggle: boolean) => void;
   hasMultiOptionSelect: MutableRefObject<boolean>;
   pollResultSelectedTab: number;
-  setPollResultSelectedTabFun: (tab: number) => void;
+  setPollResultSelectedTabFunction: (tab: number) => void;
   totalMultipleOptions: number;
   newOption: string;
-  setNewOptionFun: (option: string) => void;
+  setNewOptionFunction: (option: string) => void;
   voteDetails: {
     users: (User | undefined)[];
   } | null;
@@ -46,7 +46,7 @@ interface UsePostPoll {
   submitVoteHandler: () => void;
   totalVotesCount: number;
   isEditMode: boolean;
-  setIsEditModeFun: (toggle: boolean) => void;
+  setIsEditModeFunction: (toggle: boolean) => void;
 }
 
 export function usePostPoll(): UsePostPoll {
@@ -55,8 +55,8 @@ export function usePostPoll(): UsePostPoll {
   const { onPollFeedSubmitButtonClicked } = useContext(
     CustomAgentProviderContext,
   );
-  const postId2 = post?.attachments[0].attachmentMeta.entityId;
-  const pollData = widgets && postId2 ? widgets[postId2] : null;
+  const pollId = post?.attachments[0].attachmentMeta.entityId;
+  const pollData = widgets && pollId ? widgets[pollId] : null;
   const pollExpiryTime = pollData?.metadata.expiryTime;
   const multiSelectNo = pollData?.metadata.multipleSelectNumber;
   const multiSelectState = pollData?.metadata.multipleSelectState;
@@ -159,8 +159,6 @@ export function usePostPoll(): UsePostPoll {
 
   const handleAddOptionSubmit = async () => {
     try {
-      setNewOptionFun("");
-      const pollId = postId2;
       if (!pollId) {
         return;
       }
@@ -173,6 +171,7 @@ export function usePostPoll(): UsePostPoll {
         setPollOptions(options);
       }
       setIsAddOptionDialogOpen(false);
+      setNewOptionFunction("");
     } catch (error) {
       console.error("Error adding poll option:", error);
     }
@@ -214,24 +213,45 @@ export function usePostPoll(): UsePostPoll {
     }
   };
 
-  const setResultScreenDialogOpenFun = (toggle: boolean) => {
+  const setResultScreenDialogOpenFunction = (toggle: boolean) => {
     setResultScreenDialogOpen(toggle);
   };
 
-  const setPollResultSelectedTabFun = (tab: number) => {
+  const setPollResultSelectedTabFunction = (tab: number) => {
     setPollResultSelectedTab(tab);
   };
 
-  const setNewOptionFun = (option: string) => {
+  const setNewOptionFunction = (option: string) => {
     setNewOption(option);
   };
 
-  const setIsAddOptionDialogOpenFun = (toggle: boolean) => {
+  const setIsAddOptionDialogOpenFunction = (toggle: boolean) => {
     setIsAddOptionDialogOpen(toggle);
   };
 
-  const setIsEditModeFun = (toggle: boolean) => {
+  const setIsEditModeFunction = (toggle: boolean) => {
     setIsEditMode(toggle);
+  };
+
+  const setShowSubmitVoteButtonFunction = (): boolean => {
+    return shouldShowSubmitButton({
+      pollType,
+      pollOptions,
+      pollExpiryTime,
+      pollMultiSelectNo: multiSelectNo,
+      pollMultiSelectState: multiSelectState,
+      isEditMode,
+    });
+  };
+
+  const setShowAddOptionButtonFunction = (): boolean => {
+    return shouldShowAddOptionButton({
+      pollType,
+      pollOptions,
+      pollExpiryTime,
+      allowAddOption,
+      isEditMode,
+    });
   };
 
   useEffect(() => {
@@ -255,25 +275,8 @@ export function usePostPoll(): UsePostPoll {
   }, [totalVotesCount]);
 
   useEffect(() => {
-    setShowSubmitVoteButton(
-      shouldShowSubmitButton({
-        pollType,
-        pollOptions,
-        pollExpiryTime,
-        pollMultiSelectNo: multiSelectNo,
-        pollMultiSelectState: multiSelectState,
-        isEditMode,
-      }),
-    );
-    setShowAddOptionButton(
-      shouldShowAddOptionButton({
-        pollType,
-        pollOptions,
-        pollExpiryTime,
-        allowAddOption,
-        isEditMode,
-      }),
-    );
+    setShowSubmitVoteButton(setShowSubmitVoteButtonFunction);
+    setShowAddOptionButton(setShowAddOptionButtonFunction);
   }, [hasSelectedOption, isEditMode]);
 
   const selectedOptionMemberList = async () => {
@@ -310,17 +313,17 @@ export function usePostPoll(): UsePostPoll {
     pollData,
     hasSelectedOption,
     isAddOptionDialogOpen,
-    setIsAddOptionDialogOpenFun,
+    setIsAddOptionDialogOpenFunction,
     showSubmitVoteButton,
     showAddOptionButton,
     resultScreenDialogOpen,
-    setResultScreenDialogOpenFun,
+    setResultScreenDialogOpenFunction,
     hasMultiOptionSelect,
     pollResultSelectedTab,
-    setPollResultSelectedTabFun,
+    setPollResultSelectedTabFunction,
     totalMultipleOptions,
     newOption,
-    setNewOptionFun,
+    setNewOptionFunction,
     voteDetails,
     pollOptions,
     handleOptionClick,
@@ -328,6 +331,6 @@ export function usePostPoll(): UsePostPoll {
     submitVoteHandler,
     totalVotesCount,
     isEditMode,
-    setIsEditModeFun,
+    setIsEditModeFunction,
   };
 }

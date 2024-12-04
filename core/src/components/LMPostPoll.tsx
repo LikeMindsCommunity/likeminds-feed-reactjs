@@ -1,18 +1,18 @@
 import { FeedPostContext } from "..";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { getTimeLeftInPoll, hasPollEnded, getPollSelectionText, PollOption, multipleOptionSubmitVoteValidation, isInstantPoll } from "../shared/utils";
 import { Dialog } from "@mui/material";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
-import checkPollOptionIcon from '../assets/images/select tick.svg';
+import checkPollOptionIcon from '../assets/images/select-tick.svg';
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import Box from '@mui/material/Box';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { getAvatar } from "../shared/components/LMUserMedia";
-import noResponses from "../assets/images/no response.svg";
+import noResponses from "../assets/images/no-response.svg";
 import { usePostPoll } from "../hooks/usePostPoll";
-import DotIcon from '../assets/images/Ellipse 638.svg';
+import DotIcon from '../assets/images/dot-icon.svg';
 
 export const LMPostPoll = () => {
     const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -21,16 +21,16 @@ export const LMPostPoll = () => {
         pollData,
         hasSelectedOption,
         isAddOptionDialogOpen,
-        setIsAddOptionDialogOpenFun,
+        setIsAddOptionDialogOpenFunction,
         showSubmitVoteButton,
         showAddOptionButton,
         resultScreenDialogOpen,
-        setResultScreenDialogOpenFun,
+        setResultScreenDialogOpenFunction,
         pollResultSelectedTab,
-        setPollResultSelectedTabFun,
+        setPollResultSelectedTabFunction,
         totalMultipleOptions,
         newOption,
-        setNewOptionFun,
+        setNewOptionFunction,
         voteDetails,
         pollOptions,
         handleOptionClick,
@@ -38,7 +38,7 @@ export const LMPostPoll = () => {
         submitVoteHandler,
         totalVotesCount,
         isEditMode,
-        setIsEditModeFun,
+        setIsEditModeFunction,
     } = usePostPoll();
 
     const {
@@ -60,14 +60,95 @@ export const LMPostPoll = () => {
         return (
             <div
                 className="poll-background-bar"
-                style={{
-                    width: `${percentage}%`,
-                    backgroundColor: "#e6ebf5",
-                    transition: "width 0.5s ease",
-                }}
+                style={{ width: `${percentage}%` }}
             />
         );
     };
+
+    const memoizedPollOptions = useMemo(() => {
+        return pollOptions.map((pollOption: PollOption, index: number) => {
+            const addedByText = pollData?.metadata.allowAddOption
+                ? pollOption.uuid === currentUser?.uuid
+                    ? "Added by you"
+                    : users && users[pollOption.uuid]?.name
+                        ? `Added by ${users[pollOption.uuid].name}`
+                        : ""
+                : "";
+
+            return (
+                <div key={index}>
+                    <div
+                        onClick={() => handleOptionClick(index)}
+                        style={LMPostPollUniversalFeedStyles?.addPollOptionInputBoxStyles}
+                        className={
+                            `poll-feed-option-wrapper cursor-pointer poll-margin-bottom ` +
+                            (!isInstantPoll(pollType)
+                                ? isEditMode
+                                    ? ` `
+                                    : `cursor-default`
+                                : hasSelectedOption
+                                    ? `cursor-default poll-margin-remove`
+                                    : ` `) +
+                            (pollOption.isSelected ? ` poll-feed-selected-option-wrapper ` : ` `) +
+                            (hasPollEnded(pollExpiryTime) ? `cursor-default poll-margin-remove` : ``)
+                        }
+                    >
+                        {((hasSelectedOption && isInstantPoll(pollType)) ||
+                            hasPollEnded(pollExpiryTime)) &&
+                            renderProgress(pollOption)}
+                        <div
+                            className={
+                                `poll-feed-option-text-input poll-option-text-input-preview poll-text` +
+                                (allowAddOption && addedByText ? ` poll-text-added-by ` : ``)
+                            }
+                        >
+                            {pollOption.text}
+                            {allowAddOption && addedByText && (
+                                <div className="poll-feed-added-by">{addedByText}</div>
+                            )}
+                        </div>
+                        {((isInstantPoll(pollType) && !hasSelectedOption) ||
+                            !isInstantPoll(pollType)) &&
+                            pollOption.isSelected ? (
+                            <span className="poll-option-remove">
+                                <img src={checkPollOptionIcon} alt="check" />
+                            </span>
+                        ) : null}
+                    </div>
+                    {((isInstantPoll(pollType) && hasSelectedOption) ||
+                        hasPollEnded(pollExpiryTime)) &&
+                        pollData?.LmMeta?.toShowResults && (
+                            <div
+                                onClick={() => {
+                                    setPollResultSelectedTabFunction(index);
+                                    setResultScreenDialogOpenFunction(true);
+                                }}
+                                className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style"
+                            >
+                                {pollOption.voteCount} votes
+                            </div>
+                        )}
+                </div>
+            );
+        });
+    }, [
+        pollOptions,
+        pollData,
+        currentUser,
+        users,
+        pollType,
+        isEditMode,
+        hasSelectedOption,
+        pollExpiryTime,
+        allowAddOption,
+        handleOptionClick,
+        renderProgress,
+        checkPollOptionIcon,
+        isInstantPoll,
+        hasPollEnded,
+        setPollResultSelectedTabFunction,
+        setResultScreenDialogOpenFunction
+    ]);
 
     return (
         <div
@@ -82,55 +163,10 @@ export const LMPostPoll = () => {
                 </div>
             }
             <div>
-                {pollOptions.map((pollOption: PollOption, index: number) => {
-                    const addedByText = pollData?.metadata.allowAddOption
-                        ? pollOption.uuid === currentUser?.uuid
-                            ? "Added by you"
-                            : users && users[pollOption.uuid]?.name
-                                ? `Added by ${users[pollOption.uuid].name}`
-                                : ""
-                        : "";
-                    return (
-                        <div key={index}>
-                            <div onClick={() => {
-                                handleOptionClick(index);
-                            }}
-                                style={LMPostPollUniversalFeedStyles?.addPollOptionInputBoxStyles}
-                                className={`poll-feed-option-wrapper cursor-pointer poll-margin-bottom ` +
-                                    (!isInstantPoll(pollType) ? (isEditMode ? ` ` : `cursor-default`) :
-                                        (hasSelectedOption ? `cursor-default poll-margin-remove` : ` `)) +
-                                    (pollOption.isSelected ? ` poll-feed-selected-option-wrapper ` : ` `) +
-                                    (hasPollEnded(pollExpiryTime) ? `cursor-default poll-margin-remove` : ``)} key={index} >
-
-                                {((hasSelectedOption && isInstantPoll(pollType)) || (hasPollEnded(pollExpiryTime))) && renderProgress(pollOption)}
-                                <div className={`poll-feed-option-text-input poll-option-text-input-preview poll-text` + (allowAddOption && addedByText ? ` poll-text-added-by ` : ``)} >
-                                    {pollOption.text}
-                                    {allowAddOption && addedByText && (
-                                        <div className="poll-feed-added-by">
-                                            {addedByText}
-                                        </div>
-                                    )}
-                                </div>
-                                {((isInstantPoll(pollType) && !hasSelectedOption) || (!isInstantPoll(pollType))) && pollOption.isSelected ? <span
-                                    className="poll-option-remove"
-                                >
-                                    <img src={checkPollOptionIcon} alt="check" />
-                                </span> : null}
-                            </div>
-                            {((isInstantPoll(pollType) && hasSelectedOption) || (hasPollEnded(pollExpiryTime))) && pollData?.LmMeta?.toShowResults && (
-                                <div
-                                    onClick={() => { setPollResultSelectedTabFun(index); setResultScreenDialogOpenFun(true); }}
-                                    className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style">
-                                    {pollOption.voteCount} votes
-                                </div>
-                            )}
-                        </div>
-                    );
-                })}
-
+                {memoizedPollOptions}
                 {
                     showAddOptionButton ? <div className="poll-feed-option-add-more" onClick={() => {
-                        setIsAddOptionDialogOpenFun(true);
+                        setIsAddOptionDialogOpenFunction(true);
                     }}>
                         <div className="poll-option-add-more-icon">
                             <span className="add-more-text">+ Add an option</span>
@@ -145,13 +181,13 @@ export const LMPostPoll = () => {
                     multiSelectState, totalMultipleOptions) ?
                     <div
                         style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
-                        className={`lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button `}
+                        className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button "
                         onClick={submitVoteHandler}
                     >
                         Submit Vote
                     </div> : <div
                         style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
-                        className={` lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled`}
+                        className="lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled"
                     >
                         Submit Vote
                     </div>
@@ -162,16 +198,16 @@ export const LMPostPoll = () => {
             <div className="poll-feed-vote-count poll-feed-preview-advance-options-total poll-preview-subheading-style">
                 {
                     (isInstantPoll(pollType) || hasPollEnded(pollExpiryTime)) &&
-                    <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setPollResultSelectedTabFun(0); setResultScreenDialogOpenFun(true); }}>
+                    <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setPollResultSelectedTabFunction(0); setResultScreenDialogOpenFunction(true); }}>
                         {totalVotesCount} votes</div>
                 }
                 <div className="poll-feed-time-left">
-                    <img className="poll-feed-dot" src={DotIcon} alt="" />
+                    <img className="poll-feed-dot" src={DotIcon} alt="dot-icon" />
                     {pollTimeLeft}
                 </div>
                 {
                     !hasPollEnded(pollExpiryTime) && !isInstantPoll(pollType) && !isEditMode &&
-                    <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setIsEditModeFun(true); }}>
+                    <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setIsEditModeFunction(true); }}>
                         <img className="poll-feed-dot" src={DotIcon} alt="" />
                         Edit Vote
                     </div>
@@ -181,7 +217,7 @@ export const LMPostPoll = () => {
             <Dialog
                 open={isAddOptionDialogOpen}
                 onClose={() => {
-                    setIsAddOptionDialogOpenFun(false);
+                    setIsAddOptionDialogOpenFunction(false);
                 }}
             >
                 <div
@@ -193,8 +229,8 @@ export const LMPostPoll = () => {
                             src={cancelModelMcon}
                             alt="cancelModelMcon"
                             onClick={() => {
-                                setIsAddOptionDialogOpenFun(false);
-                                setNewOptionFun("");
+                                setIsAddOptionDialogOpenFunction(false);
+                                setNewOptionFunction("");
                             }}
                             className="cancelIcon"
                         />
@@ -208,8 +244,8 @@ export const LMPostPoll = () => {
                         <input
                             type="text"
                             value={newOption}
-                            onChange={(e) => setNewOptionFun(e.target.value)}
-                            placeholder={`Type new Option`}
+                            onChange={(e) => setNewOptionFunction(e.target.value)}
+                            placeholder="Type new Option"
                             className="poll-option-text-input"
                         />
                     </div>
@@ -231,7 +267,7 @@ export const LMPostPoll = () => {
                     <Dialog
                         open={resultScreenDialogOpen}
                         onClose={() => {
-                            setResultScreenDialogOpenFun(false);
+                            setResultScreenDialogOpenFunction(false);
                         }}
                         sx={{
                             '& .MuiDialog-paper': {
@@ -253,7 +289,7 @@ export const LMPostPoll = () => {
                                     src={cancelModelMcon}
                                     alt="cancelModelMcon"
                                     onClick={() => {
-                                        setResultScreenDialogOpenFun(false);
+                                        setResultScreenDialogOpenFunction(false);
                                     }}
                                     className="cancelIcon"
                                 />
@@ -270,7 +306,12 @@ export const LMPostPoll = () => {
                                 >
                                     <Tabs
                                         value={pollResultSelectedTab}
-                                        onChange={(e, val) => { setPollResultSelectedTabFun(val); onOptionSelectedCustomCallback?.(); }}
+                                        onChange={(e, val) => {
+                                            setPollResultSelectedTabFunction(val);
+                                            if (onOptionSelectedCustomCallback) {
+                                                onOptionSelectedCustomCallback();
+                                            }
+                                        }}
                                         variant="scrollable"
                                         scrollButtons
                                         aria-label="visible arrows tabs example"
@@ -303,8 +344,8 @@ export const LMPostPoll = () => {
                                 </Box>
                                 <div className="poll-results-memeber-list-wrapper">
                                     {
-                                        voteDetails ? voteDetails.users.map((currentUser, idx) => (
-                                            <div key={idx}
+                                        voteDetails ? voteDetails.users.map((currentUser) => (
+                                            <div key={currentUser?.id}
                                                 className="lm-feed-create-post-wrapper__user-meta poll-results__user-meta">
                                                 <div className="lm-avatar lm-mr-4">
                                                     {getAvatar({
@@ -330,7 +371,7 @@ export const LMPostPoll = () => {
                     <Dialog
                         open={resultScreenDialogOpen}
                         onClose={() => {
-                            setResultScreenDialogOpenFun(false);
+                            setResultScreenDialogOpenFunction(false);
                         }}
                     >
                         <div className="lm-feed-create-post-wrapper" >
@@ -340,7 +381,7 @@ export const LMPostPoll = () => {
                                     src={cancelModelMcon}
                                     alt="cancelModelMcon"
                                     onClick={() => {
-                                        setResultScreenDialogOpenFun(false);
+                                        setResultScreenDialogOpenFunction(false);
                                     }}
                                     className="cancelIcon"
                                 />

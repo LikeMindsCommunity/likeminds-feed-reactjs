@@ -425,7 +425,9 @@ export const renderMessage = (state: number): string => {
   }
 };
 
-export const renderMessage2 = (state: string | undefined): string => {
+export const previewMultiSelectStateModifier = (
+  state: string | undefined,
+): string => {
   switch (state) {
     case "exactly":
       return "exactly";

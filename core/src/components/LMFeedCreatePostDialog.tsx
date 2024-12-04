@@ -17,7 +17,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { changePostCase } from "../shared/utils";
 import { WordAction } from "../shared/enums/wordAction";
 import removePollOptionIcon from '../assets/images/remove-poll-option.svg';
-import { formatDate, renderMessage2 } from "../shared/utils";
+import { formatDate, previewMultiSelectStateModifier } from "../shared/utils";
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -32,7 +32,7 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
     setPreSelectedTopics,
     mediaList,
     temporaryPost,
-    setTemporaryPostFun,
+    setTemporaryPostFunction,
     showOGTagViewContainer,
     setOpenCreatePostDialog,
     createPostComponentClickCustomCallback,
@@ -148,7 +148,7 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
               <span
                 className="poll-preview-header-icon lm-cursor-pointer"
                 onClick={() => {
-                  setTemporaryPostFun();
+                  setTemporaryPostFunction();
                 }}
               >
                 <img src={removePollOptionIcon} alt="remove" />
@@ -158,7 +158,7 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
           {
             attachmentMeta?.multipleSelectNumber && (attachmentMeta?.multipleSelectNumber > 1) &&
             <div className="poll-preview-advance-options poll-preview-subheading-style">
-              *Select {renderMessage2(attachmentMeta.multipleSelectState)} {attachmentMeta.multipleSelectNumber} options.
+              *Select {previewMultiSelectStateModifier(attachmentMeta.multipleSelectState)} {attachmentMeta.multipleSelectNumber} options.
             </div>
           }
           <div>

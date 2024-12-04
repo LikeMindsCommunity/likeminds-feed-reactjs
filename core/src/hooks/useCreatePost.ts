@@ -63,7 +63,7 @@ interface UseCreatePost {
   openCreatePostDialog: boolean;
   setOpenCreatePostDialog: React.Dispatch<boolean>;
   temporaryPost: Post | null;
-  setTemporaryPostFun: () => void;
+  setTemporaryPostFunction: () => void;
   selectedTopicIds: string[];
   setSelectedTopicIds: React.Dispatch<string[]>;
   preSelectedTopics: Topic[];
@@ -411,7 +411,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
 
-  function setTemporaryPostFun() {
+  function setTemporaryPostFunction() {
     setTemporaryPost((prev) => {
       if (prev) {
         return { ...prev, attachments: [] };
@@ -972,7 +972,7 @@ export function useCreatePost(): UseCreatePost {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
-    setTemporaryPostFun,
+    setTemporaryPostFunction,
     isAnonymousPost,
     changeAnonymousPostStatus,
     selectedTopicIds,
