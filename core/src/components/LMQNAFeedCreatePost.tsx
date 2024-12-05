@@ -50,6 +50,7 @@ const LMQNAFeedCreatePost = ({
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    setTemporaryPostFunction,
     selectedTopicIds,
     setSelectedTopicIds,
     preSelectedTopics,
@@ -67,6 +68,22 @@ const LMQNAFeedCreatePost = ({
     setQuestionText,
     isAnonymousPost,
     changeAnonymousPostStatus,
+
+    openCreatePollDialog,
+    setOpenCreatePollDialog,
+    pollOptions,
+    addPollOption,
+    removePollOption,
+    updatePollOption,
+    changePollText,
+    pollText,
+    updatePollExpirationDate,
+    pollExpirationDate,
+    advancedOptions: advancedPollOptions,
+    validatePoll,
+    previewPoll,
+    setPreviewPoll,
+    updateAdvancedOptions,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -92,6 +109,7 @@ const LMQNAFeedCreatePost = ({
         openCreatePostDialog,
         setOpenCreatePostDialog,
         temporaryPost,
+        setTemporaryPostFunction,
         selectedTopicIds,
         setSelectedTopicIds,
         preSelectedTopics,
@@ -104,6 +122,22 @@ const LMQNAFeedCreatePost = ({
         removeAddReel,
         isAnonymousPost,
         changeAnonymousPostStatus,
+
+        openCreatePollDialog,
+        setOpenCreatePollDialog,
+        pollOptions,
+        addPollOption,
+        removePollOption,
+        updatePollOption,
+        changePollText,
+        pollText,
+        updatePollExpirationDate,
+        pollExpirationDate,
+        advancedOptions: advancedPollOptions,
+        validatePoll,
+        previewPoll,
+        setPreviewPoll,
+        updateAdvancedOptions,
       }}
     >
       {showStarterComponent ? (

@@ -7,6 +7,7 @@ import { Pluralize } from "./variables";
 import { TokenValues } from "./enums/tokens";
 import { WordAction } from "./enums/wordAction";
 import { LMDisplayMessages } from "..";
+import { PollMultipleSelectState, PollType } from "./enums/ImPollType";
 
 import { GetCommunityConfigurationsResponse } from "./types/api-responses/getComunityConfigurations";
 dayjs.extend(relativeTime);
@@ -45,6 +46,23 @@ const formatTimeAgo = (timestamp: number): string => {
     return `${diffMinutes} ${diffMinutes === 1 ? "minute" : "minutes"} ago`;
   }
 };
+
+const formatDate = (milliseconds: number) => {
+  const date = new Date(milliseconds);
+
+  // Explicitly typing the options object
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  return date.toLocaleString("en-US", options).replace(",", "");
+};
+
 // TODO remove the daysjs dependency and manually do it
 const timeFromNow = (time: string) => dayjs(time).fromNow();
 
@@ -72,7 +90,13 @@ const formatFileSize = (bytes: number) => {
   }
 };
 
-export { formatTimeAgo, timeFromNow, truncateString, formatFileSize };
+export {
+  formatTimeAgo,
+  timeFromNow,
+  truncateString,
+  formatFileSize,
+  formatDate,
+};
 export function getCharacterWidth(character: string): number {
   const font: string = "Roboto",
     fontSize: number = 16;
@@ -334,6 +358,15 @@ export function changePostCase(action: WordAction, word?: string) {
   return pluralizeOrCapitalize(word || postVariable, action);
 }
 
+export function changePollCase(action: WordAction, word?: string) {
+  const communityConfigurations =
+    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+  const pollVariable =
+    communityConfigurations?.find((config) => config.type === "feed_metadata")
+      ?.value?.poll || "poll";
+  return pluralizeOrCapitalize(word || pollVariable, action);
+}
+
 export function changeCommentCase(action: WordAction, word?: string) {
   const communityConfigurations =
     getCommunityConfigurationFromLocalStorage().communityConfigurations;
@@ -378,3 +411,215 @@ export function getDisplayMessage(message: LMDisplayMessages) {
       return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} unhidden`;
   }
 }
+
+export const renderMessage = (state: number): string => {
+  switch (state) {
+    case 0:
+      return "exactly";
+    case 1:
+      return "at max";
+    case 2:
+      return "at least";
+    default:
+      return "Unknown state";
+  }
+};
+
+export const previewMultiSelectStateModifier = (
+  state: string | undefined,
+): string => {
+  switch (state) {
+    case "exactly":
+      return "exactly";
+    case "at_max":
+      return "at max";
+    case "at_least":
+      return "at least";
+    default:
+      return "Unknown state";
+  }
+};
+
+export const numberToPollMultipleSelectState: {
+  [key: number]: PollMultipleSelectState;
+} = {
+  0: PollMultipleSelectState.EXACTLY,
+  1: PollMultipleSelectState.AT_MAX,
+  2: PollMultipleSelectState.AT_LEAST,
+};
+
+export interface WidgetResponse {
+  id: string;
+  LmMeta: Record<string, any> | null; // Nullable key
+  createdAt: number;
+  metadata: Record<string, any>;
+  parentEntityId: string;
+  parentEntityType: string;
+  updatedAt: number;
+}
+
+export const getTimeLeftInPoll = (pollExpiryTime: number): string => {
+  const timeLeft = pollExpiryTime - Date.now();
+  if (timeLeft <= 0) return "Poll Ended";
+
+  const DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
+  const HOUR_IN_MILLIS = 60 * 60 * 1000;
+  const MINUTE_IN_MILLIS = 60 * 1000;
+
+  const days = Math.floor(timeLeft / DAY_IN_MILLIS);
+  const hours = Math.floor((timeLeft % DAY_IN_MILLIS) / HOUR_IN_MILLIS);
+  const minutes = Math.floor((timeLeft % HOUR_IN_MILLIS) / MINUTE_IN_MILLIS);
+
+  if (days > 0) return `${days}d left`;
+  if (hours > 0) return `${hours}h left`;
+  if (minutes > 0) return `${minutes} min left`;
+  return "Just Now";
+};
+
+export type PollOption = {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  percentage: number;
+  uuid: string;
+  voteCount: number;
+};
+
+export const isPollSubmitted = (pollOptions: PollOption[]): boolean => {
+  for (const option of pollOptions) {
+    if (option.isSelected) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const hasPollEnded = (pollExpiryTime: number): boolean => {
+  const currentSystemTime = Date.now();
+  return pollExpiryTime - currentSystemTime <= 0;
+};
+
+export const getPollSelectionText = (
+  pollMultiSelectNo: number,
+  pollMultiSelectState: PollMultipleSelectState,
+): string | null => {
+  if (
+    pollMultiSelectState === PollMultipleSelectState.EXACTLY &&
+    pollMultiSelectNo === 1
+  ) {
+    return null; // No message needed for EXACTLY 1
+  }
+
+  switch (pollMultiSelectState) {
+    case PollMultipleSelectState.EXACTLY:
+      return `*Select exactly ${pollMultiSelectNo} options`;
+    case PollMultipleSelectState.AT_MAX:
+      return `*Select at most ${pollMultiSelectNo} options`;
+    case PollMultipleSelectState.AT_LEAST:
+      return `*Select at least ${pollMultiSelectNo} options`;
+    default:
+      return null;
+  }
+};
+
+export const isInstantPoll = (pollType: PollType): boolean => {
+  return pollType === PollType.INSTANT;
+};
+
+export const isMultiChoicePoll = (
+  pollMultiSelectNo: number,
+  pollMultiSelectState: PollMultipleSelectState,
+): boolean => {
+  if (
+    pollMultiSelectState === PollMultipleSelectState.EXACTLY &&
+    pollMultiSelectNo === 1
+  ) {
+    return false; // Single choice poll
+  }
+  return true; // Multi-choice poll
+};
+
+type PollProps = {
+  pollType: PollType;
+  pollOptions: PollOption[];
+  pollExpiryTime: number;
+  pollMultiSelectNo: number;
+  pollMultiSelectState: PollMultipleSelectState;
+  isEditMode: boolean;
+};
+
+export const shouldShowSubmitButton = ({
+  pollType,
+  pollOptions,
+  pollExpiryTime,
+  pollMultiSelectNo,
+  pollMultiSelectState,
+  isEditMode,
+}: PollProps): boolean => {
+  // Check if poll is instant and already submitted, or if the poll has ended
+  if (
+    (isInstantPoll(pollType) && isPollSubmitted(pollOptions)) ||
+    hasPollEnded(pollExpiryTime) ||
+    (!isInstantPoll(pollType) && !isEditMode)
+  ) {
+    return false; // Hide the submit button
+  }
+
+  // Check if the poll is not a multi-choice poll
+  if (!isMultiChoicePoll(pollMultiSelectNo, pollMultiSelectState)) {
+    return false; // Hide the submit button
+  }
+
+  return true; // Show the submit button
+};
+
+type PollPropsForAddOption = {
+  pollType: PollType;
+  pollOptions: PollOption[];
+  pollExpiryTime: number;
+  allowAddOption: boolean;
+  isEditMode: boolean;
+};
+
+export const shouldShowAddOptionButton = ({
+  pollType,
+  pollOptions,
+  pollExpiryTime,
+  allowAddOption,
+  isEditMode,
+}: PollPropsForAddOption): boolean => {
+  const isAddOptionAllowedForInstantPoll =
+    isInstantPoll(pollType) && !isPollSubmitted(pollOptions);
+
+  const isAddOptionAllowedForDeferredPoll = !isInstantPoll(pollType);
+
+  if (!isInstantPoll(pollType) && !isEditMode) return false;
+
+  if (
+    allowAddOption &&
+    !hasPollEnded(pollExpiryTime) &&
+    (isAddOptionAllowedForInstantPoll || isAddOptionAllowedForDeferredPoll)
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+export const multipleOptionSubmitVoteValidation = (
+  pollMultiSelectNo: number,
+  pollMultiSelectState: PollMultipleSelectState,
+  pollMultiSelectCount: number,
+): boolean => {
+  if (pollMultiSelectCount == 0) return false;
+  switch (pollMultiSelectState) {
+    case PollMultipleSelectState.EXACTLY:
+      return pollMultiSelectNo === pollMultiSelectCount;
+    case PollMultipleSelectState.AT_MAX:
+      return pollMultiSelectNo >= pollMultiSelectCount;
+    case PollMultipleSelectState.AT_LEAST:
+      return pollMultiSelectNo <= pollMultiSelectCount;
+    default:
+      return false;
+  }
+};

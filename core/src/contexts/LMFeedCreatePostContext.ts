@@ -4,6 +4,16 @@ import { OgTag } from "../shared/types/models/ogTag";
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
+
+import { PollOption } from "../hooks/useCreatePost";
+import {
+  ZeroArgVoidReturns,
+  TwoArgVoidReturns,
+  OneArgVoidReturns,
+} from "../hooks/useInputs";
+import { AdvancedPollOptions } from "../hooks/useCreatePost";
+import { SelectChangeEvent } from "@mui/material";
+
 interface LMFeedCreatePostContextInterface {
   postText?: string | null;
   question?: string | null;
@@ -23,6 +33,7 @@ interface LMFeedCreatePostContextInterface {
   openCreatePostDialog?: boolean;
   setOpenCreatePostDialog?: React.Dispatch<boolean>;
   temporaryPost?: Post | null;
+  setTemporaryPostFunction: () => void;
   selectedTopicIds?: string[];
   setSelectedTopicIds?: React.Dispatch<string[]>;
   preSelectedTopics?: Topic[];
@@ -38,6 +49,24 @@ interface LMFeedCreatePostContextInterface {
   removeAddReel: () => void;
   isAnonymousPost: boolean;
   changeAnonymousPostStatus: () => void;
+
+  openCreatePollDialog?: boolean;
+  setOpenCreatePollDialog?: React.Dispatch<boolean>;
+  pollOptions: PollOption[];
+  addPollOption: ZeroArgVoidReturns;
+  updatePollOption: TwoArgVoidReturns<string, number>;
+  removePollOption: OneArgVoidReturns<number>;
+  changePollText: OneArgVoidReturns<React.ChangeEvent<HTMLTextAreaElement>>;
+  pollText: string;
+  updatePollExpirationDate: OneArgVoidReturns<number | null>;
+  pollExpirationDate: number | null;
+  advancedOptions: AdvancedPollOptions;
+  validatePoll: boolean;
+  previewPoll: boolean;
+  setPreviewPoll: React.Dispatch<boolean>;
+  updateAdvancedOptions: OneArgVoidReturns<
+    React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<number>
+  >;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>(
