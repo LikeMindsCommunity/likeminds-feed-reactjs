@@ -53,6 +53,7 @@ function LMSocialFeed({
   TopicsCustomCallbacks,
   RepliesCustomCallbacks,
   PostCreationCustomCallbacks,
+  PollCreationCustomCallbacks,
   allowThumbnail = false,
   postComponentClickCustomCallback,
   createPostComponentClickCustomCallback,
@@ -60,7 +61,6 @@ function LMSocialFeed({
   memberComponentClickCustomCallback,
   hintTextForAnonymous,
   isAnonymousPostAllowed,
-  LMPostPollDialogStyles,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(client, customEventClient, userDetails);
@@ -116,9 +116,9 @@ function LMSocialFeed({
             TopicsCustomCallbacks,
             RepliesCustomCallbacks,
             PostCreationCustomCallbacks,
+            PollCreationCustomCallbacks,
             isAnonymousPostAllowed,
             hintTextForAnonymous,
-            LMPostPollDialogStyles,
           }}
         >
           <GeneralContext.Provider

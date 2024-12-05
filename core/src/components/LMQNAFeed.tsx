@@ -52,12 +52,12 @@ function LMQNAFeed({
   TopicsCustomCallbacks,
   RepliesCustomCallbacks,
   PostCreationCustomCallbacks,
+  PollCreationCustomCallbacks,
   allowThumbnail = false,
   postComponentClickCustomCallback,
   createPostComponentClickCustomCallback,
   topicComponentClickCustomCallback,
   memberComponentClickCustomCallback,
-  LMPostPollDialogStyles,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(client, customEventClient, userDetails);
@@ -107,7 +107,7 @@ function LMQNAFeed({
             TopicsCustomCallbacks,
             RepliesCustomCallbacks,
             PostCreationCustomCallbacks,
-            LMPostPollDialogStyles,
+            PollCreationCustomCallbacks,
           }}
         >
           <GeneralContext.Provider

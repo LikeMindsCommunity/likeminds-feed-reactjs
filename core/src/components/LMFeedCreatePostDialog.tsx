@@ -146,7 +146,7 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
             <div className="poll-preview-title">{attachmentMeta?.title}</div>
             <div className="poll-preview-edit-button-parent">
               <span
-                className="poll-preview-header-icon lm-cursor-pointer"
+                className="poll-preview-header-icon lm-cursor-pointer post-poll-clear-poll-options-custom-style"
                 onClick={() => {
                   setTemporaryPostFunction();
                 }}

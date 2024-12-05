@@ -10,6 +10,8 @@ import { OgTag } from "../models/ogTag";
 import { Post } from "../models/post";
 import { Reply } from "../models/replies";
 import { Topic } from "../models/topic";
+import { PollOption, AdvancedPollOptions } from "../../../hooks/useCreatePost";
+import { WidgetResponse } from "../../utils";
 
 export interface FeedListsDataStore {
   selectedTopics: string[];
@@ -154,6 +156,16 @@ export interface PostCreationDataStore {
   containerRef: React.MutableRefObject<HTMLDivElement | null>;
   isAnonymousPost: boolean;
   changeAnonymousPostStatus: (value: boolean) => void;
+
+  openCreatePollDialog: boolean;
+  setOpenCreatePollDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  pollOptions: PollOption[];
+  pollText: string;
+  pollExpirationDate: number | null;
+  advancedOptions: AdvancedPollOptions;
+  validatePoll: boolean;
+  previewPoll: boolean;
+  setPreviewPoll: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface PostCreationDefaultActions {
@@ -164,4 +176,32 @@ export interface PostCreationDefaultActions {
 export interface ApplicationGeneralsStore {
   userDataStore: UserDataStore;
   generalDataStore: GeneralDataStore;
+}
+
+export interface PollCreationDataStore {
+  pollData: WidgetResponse | null;
+  hasSelectedOption: boolean;
+  isAddOptionDialogOpen: boolean;
+  showSubmitVoteButton: boolean;
+  showAddOptionButton: boolean;
+  resultScreenDialogOpen: boolean;
+  hasMultiOptionSelect: React.MutableRefObject<boolean>;
+  pollResultSelectedTab: number;
+  totalMultipleOptions: number;
+  newOption: string;
+  voteDetails: { users: (User | undefined)[] } | null;
+  pollOptions: PollOption[];
+  totalVotesCount: number;
+  isEditMode: boolean;
+}
+
+export interface PollCreationDefaultActions {
+  setIsAddOptionDialogOpenFunction: (toggle: boolean) => void;
+  setResultScreenDialogOpenFunction: (toggle: boolean) => void;
+  setPollResultSelectedTabFunction: (tab: number) => void;
+  setNewOptionFunction: (option: string) => void;
+  handleOptionClick: (index: number) => void;
+  handleAddOptionSubmit: () => void;
+  submitVoteHandler: () => void;
+  setIsEditModeFunction: (toggle: boolean) => void;
 }

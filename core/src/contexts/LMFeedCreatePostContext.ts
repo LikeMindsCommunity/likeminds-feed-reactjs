@@ -67,6 +67,7 @@ interface LMFeedCreatePostContextInterface {
   updateAdvancedOptions: OneArgVoidReturns<
     React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<number>
   >;
+  pollExpiryTimeClickFunction: () => void;
 }
 export const LMFeedCreatePostContext =
   createContext<LMFeedCreatePostContextInterface>(

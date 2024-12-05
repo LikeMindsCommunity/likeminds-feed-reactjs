@@ -1,11 +1,10 @@
-import { FeedPostContext } from "..";
+import { FeedPostContext } from "../old_index";
 import { useContext, useMemo } from "react";
 import { getTimeLeftInPoll, hasPollEnded, getPollSelectionText, PollOption, multipleOptionSubmitVoteValidation, isInstantPoll } from "../shared/utils";
 import { Dialog } from "@mui/material";
 import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 import checkPollOptionIcon from '../assets/images/select-tick.svg';
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
-import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import Box from '@mui/material/Box';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -39,13 +38,8 @@ export const LMPostPoll = () => {
         totalVotesCount,
         isEditMode,
         setIsEditModeFunction,
+        optionVoteCountClickFunction,
     } = usePostPoll();
-
-    const {
-        LMPostPollUniversalFeedStyles,
-        LMFeedPostPollResultScreenStyles,
-        onOptionSelectedCustomCallback,
-    } = useContext(CustomAgentProviderContext);
 
     const pollExpiryTime = pollData?.metadata.expiryTime;
     const pollTimeLeft = getTimeLeftInPoll(pollExpiryTime);
@@ -59,7 +53,7 @@ export const LMPostPoll = () => {
         const percentage = pollData?.LmMeta?.toShowResults ? option.percentage : 0;
         return (
             <div
-                className="poll-background-bar"
+                className="poll-background-bar post-poll-selected-color-custom-style"
                 style={{ width: `${percentage}%` }}
             />
         );
@@ -79,7 +73,6 @@ export const LMPostPoll = () => {
                 <div key={index}>
                     <div
                         onClick={() => handleOptionClick(index)}
-                        style={LMPostPollUniversalFeedStyles?.addPollOptionInputBoxStyles}
                         className={
                             `poll-feed-option-wrapper cursor-pointer poll-margin-bottom ` +
                             (!isInstantPoll(pollType)
@@ -99,7 +92,8 @@ export const LMPostPoll = () => {
                         <div
                             className={
                                 `poll-feed-option-text-input poll-option-text-input-preview poll-text` +
-                                (allowAddOption && addedByText ? ` poll-text-added-by ` : ``)
+                                (allowAddOption && addedByText ? ` poll-text-added-by ` : ``) + (((hasSelectedOption && isInstantPoll(pollType)) ||
+                                    hasPollEnded(pollExpiryTime)) && !pollOption.isSelected ? ` post-poll-other-color-custom-style ` : ` `)
                             }
                         >
                             {pollOption.text}
@@ -119,11 +113,8 @@ export const LMPostPoll = () => {
                         hasPollEnded(pollExpiryTime)) &&
                         pollData?.LmMeta?.toShowResults && (
                             <div
-                                onClick={() => {
-                                    setPollResultSelectedTabFunction(index);
-                                    setResultScreenDialogOpenFunction(true);
-                                }}
-                                className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style"
+                                onClick={() => { optionVoteCountClickFunction(index, true); }}
+                                className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style post-poll-vote-count-custom-style"
                             >
                                 {pollOption.voteCount} votes
                             </div>
@@ -154,18 +145,18 @@ export const LMPostPoll = () => {
         <div
             className="attachment-poll"
         >
-            <div style={LMPostPollUniversalFeedStyles?.addPollOptionHeadingStyles} className="poll-feed-title">
+            <div className="poll-feed-title post-poll-question-custom-style">
                 {pollData?.metadata.title}
             </div>
             {
-                pollSelectionText && <div className="poll-feed-vote-count poll-feed-preview-advance-options-select poll-preview-subheading-style">
+                pollSelectionText && <div className="poll-feed-vote-count poll-feed-preview-advance-options-select poll-preview-subheading-style post-poll-info-custom-style">
                     {pollSelectionText}
                 </div>
             }
             <div>
                 {memoizedPollOptions}
                 {
-                    showAddOptionButton ? <div className="poll-feed-option-add-more" onClick={() => {
+                    showAddOptionButton ? <div className="poll-feed-option-add-more post-poll-add-option-custom-style" onClick={() => {
                         setIsAddOptionDialogOpenFunction(true);
                     }}>
                         <div className="poll-option-add-more-icon">
@@ -180,14 +171,12 @@ export const LMPostPoll = () => {
                 multipleOptionSubmitVoteValidation(multiSelectNo,
                     multiSelectState, totalMultipleOptions) ?
                     <div
-                        style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
-                        className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button "
+                        className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button post-poll-submit-button-custom-style"
                         onClick={submitVoteHandler}
                     >
                         Submit Vote
                     </div> : <div
-                        style={LMPostPollUniversalFeedStyles?.submitButtonStyles}
-                        className="lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled"
+                        className="lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled post-poll-submit-button-custom-style"
                     >
                         Submit Vote
                     </div>
@@ -224,7 +213,9 @@ export const LMPostPoll = () => {
                     className="lm-feed-create-post-wrapper"
                 >
                     <div className="lm-feed-create-post-wrapper__dialog-heading">
-                        Add new poll option
+                        <div className="poll-feed-add-poll-option-heading-custom-style">
+                            Add new poll option
+                        </div>
                         <img
                             src={cancelModelMcon}
                             alt="cancelModelMcon"
@@ -246,12 +237,11 @@ export const LMPostPoll = () => {
                             value={newOption}
                             onChange={(e) => setNewOptionFunction(e.target.value)}
                             placeholder="Type new Option"
-                            className="poll-option-text-input"
+                            className="poll-option-text-input poll-feed-add-poll-option-input-custom-style"
                         />
                     </div>
-
                     <div
-                        className={`lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-submit-button ` + (newOption.trim().length === 0 ? `poll-feed-submit-button-disabled` : ``)}
+                        className={`lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-submit-button ` + (newOption.trim().length === 0 ? `poll-feed-submit-button-disabled` : ``) + ` poll-feed-add-poll-option-submit-button-custom-style `}
                         onClick={handleAddOptionSubmit}
                     >
                         <span>
@@ -308,13 +298,11 @@ export const LMPostPoll = () => {
                                         value={pollResultSelectedTab}
                                         onChange={(e, val) => {
                                             setPollResultSelectedTabFunction(val);
-                                            if (onOptionSelectedCustomCallback) {
-                                                onOptionSelectedCustomCallback();
-                                            }
                                         }}
                                         variant="scrollable"
                                         scrollButtons
                                         aria-label="visible arrows tabs example"
+                                        className="post-poll-results-tab-layout-custom-style "
                                         sx={{
                                             [`& .${tabsClasses.scrollButtons}`]: {
                                                 '&.Mui-disabled': { opacity: 0.3 },
@@ -328,7 +316,7 @@ export const LMPostPoll = () => {
                                         {
                                             pollOptions.map((option, idx) => (
                                                 <Tab
-                                                    label={<div style={pollResultSelectedTab == idx ? LMFeedPostPollResultScreenStyles?.selectOptionStyles : LMFeedPostPollResultScreenStyles?.otherOptionsStyles} className="poll-results-tab2"> <span>{option.voteCount}</span>
+                                                    label={<div className={`poll-results-tab2 ` + (pollResultSelectedTab == idx ? ` post-poll-results-selected-option-custom-style ` : ` post-poll-results-other-option-custom-style `)}> <span>{option.voteCount}</span>
                                                         <span> {option.text.length > 20 ? option.text.slice(0, 20) + "..." : option.text}</span></div>}
                                                     sx={{
                                                         color: '#666666', // Default color for unselected tabs

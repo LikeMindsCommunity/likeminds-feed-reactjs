@@ -10,6 +10,8 @@ import {
   RepliesDefaultAction,
   PostCreationDataStore,
   PostCreationDefaultActions,
+  PollCreationDataStore,
+  PollCreationDefaultActions,
   NotificationsDataStore,
   NotificationsDefaultActions,
 } from "./dataStores";
@@ -46,4 +48,10 @@ export interface PostCreationActionsAndDataStore {
 export interface NotificationsActionsAndDataStore {
   notificationsDataStore: NotificationsDataStore;
   defaultActions: NotificationsDefaultActions;
+}
+
+export interface PollCreationActionsAndDataStore {
+  pollCreationDataStore: PollCreationDataStore;
+  applicationGeneralStore: ApplicationGeneralsStore;
+  defaultActions: PollCreationDefaultActions;
 }

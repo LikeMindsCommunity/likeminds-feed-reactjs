@@ -83,17 +83,14 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
+    pollExpiryTimeClickFunction,
   } = useContext(LMFeedCreatePostContext);
   const {
     CustomComponents = {},
     isAnonymousPostAllowed,
     hintTextForAnonymous,
-    LMPostPollDialogStyles,
-    onPollExpiryTimeClickedCustomCallback,
-    onAddOptionClickedCustomCallback,
-    onPollOptionClearedCustomCallback,
-    onPollCompleteClickedCustomCallback,
   } = useContext(CustomAgentProviderContext);
+
   const { CustomTopicDropDown } = CustomComponents;
 
   const renderAnonymousOption = () => {
@@ -247,10 +244,9 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
 
         <div className="lm-poll-creation-body">
           <textarea
-            style={LMPostPollDialogStyles?.pollQuestionsStyle}
             name="poll-creation-textarea"
             id="poll-creation-textarea"
-            className="poll-creation-textarea"
+            className="poll-creation-textarea poll-question-custom-style"
             value={pollText}
             onChange={changePollText}
             placeholder="Ask a question*"
@@ -261,21 +257,17 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
               return (
                 <div className="poll-option-wrapper" key={index}>
                   <input
-                    style={LMPostPollDialogStyles?.pollOptionsStyle}
                     type="text"
                     value={pollOption.text}
                     onChange={(e) => updatePollOption(e.target.value, index)}
                     placeholder={`Option`}
-                    className="poll-option-text-input"
+                    className="poll-option-text-input poll-options-custom-style"
                   />
                   {
                     pollOptions.length > 2 ? <span
                       className="poll-option-remove lm-cursor-pointer"
-                      onClick={(e) => {
+                      onClick={() => {
                         removePollOption(index);
-                        if (onPollOptionClearedCustomCallback) {
-                          onPollOptionClearedCustomCallback(e);
-                        }
                       }}
                     >
                       <img src={removePollOptionIcon} alt="remove" />
@@ -284,11 +276,8 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                 </div>
               );
             })}
-            <div className="poll-option-add-more" onClick={(e) => {
+            <div className="poll-option-add-more" onClick={() => {
               addPollOption();
-              if (onAddOptionClickedCustomCallback) {
-                onAddOptionClickedCustomCallback(e);
-              }
             }}>
               <div className="poll-option-add-more-icon">
                 <img src={pollOptionAddMoreIcon} alt="addMore" />
@@ -326,13 +315,10 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                 })}
               >
                 <DateTimePicker
-                  sx={LMPostPollDialogStyles?.pollExpiryTimeStyle}
                   onOpen={() => {
-                    if (onPollExpiryTimeClickedCustomCallback) {
-                      onPollExpiryTimeClickedCustomCallback();
-                    }
+                    pollExpiryTimeClickFunction();
                   }}
-                  className="poll-expiry-field"
+                  className="poll-expiry-field poll-expiry-time-custom-style"
                   disablePast
                   value={pollExpirationDate ? dayjs(pollExpirationDate) : null}
                   onChange={(day) => {
@@ -352,7 +338,7 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                   </span>
                   <ThemeProvider theme={switchButtonTheme}>
                     <Switch
-                      style={LMPostPollDialogStyles?.pollAdvanceOptionsSwitchStyle}
+                      className="poll-advace-option-switch-custom-style"
                       name={"ALLOW_VOTERS_TO_ADD_OPTIONS"}
                       checked={advancedOptions.ALLOW_VOTERS_TO_ADD_OPTIONS}
                       onChange={updateAdvancedOptions}
@@ -367,7 +353,7 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                   </span>
                   <ThemeProvider theme={switchButtonTheme}>
                     <Switch
-                      style={LMPostPollDialogStyles?.pollAdvanceOptionsSwitchStyle}
+                      className="poll-advace-option-switch-custom-style"
                       name={"ALLOW_ANONYMOUS_VOTING"}
                       checked={advancedOptions.ALLOW_ANONYMOUS_VOTING}
                       onChange={updateAdvancedOptions}
@@ -382,7 +368,7 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                   </span>
                   <ThemeProvider theme={switchButtonTheme}>
                     <Switch
-                      style={LMPostPollDialogStyles?.pollAdvanceOptionsSwitchStyle}
+                      className="poll-advace-option-switch-custom-style"
                       name={"DONT_SHOW_LIVE_RESULTS"}
                       checked={advancedOptions.DONT_SHOW_LIVE_RESULTS}
                       onChange={updateAdvancedOptions}
@@ -404,8 +390,7 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                         value={advancedOptions.MULTIPLE_SELECTION_STATE}
                         onChange={updateAdvancedOptions}
                         name="MULTIPLE_SELECTION_STATE"
-                        sx={LMPostPollDialogStyles?.pollDropDownMenuStyles}
-                        className="custom-select-text"
+                        className="custom-select-text poll-dropdown-menu-custom-style"
                         MenuProps={{
                           MenuListProps: {
                             className: 'custom-select-text',
@@ -431,8 +416,7 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
                         onChange={updateAdvancedOptions}
                         defaultValue={1}
                         name="MULTIPLE_SELECTION_NO"
-                        sx={LMPostPollDialogStyles?.pollDropDownMenuStyles}
-                        className="custom-select-text"
+                        className="custom-select-text poll-dropdown-menu-custom-style"
                         MenuProps={{
                           MenuListProps: {
                             className: 'custom-select-text',
@@ -454,7 +438,7 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
               className="poll-advanced-option-toggle"
               onClick={toggleAdvancedOptions}
             >
-              <div style={LMPostPollDialogStyles?.pollAdvancedOptionTextStyle} className="poll-advanced-option-parent">
+              <div className="poll-advanced-option-parent poll-advance-options-text-custom-style">
                 ADVANCED{" "}
                 <img src={downArrow} alt="down-arrow" />
               </div>
@@ -465,11 +449,8 @@ const LMFeedCreatePollDialog = ({ }: LMFeedCreatePollDialogProps) => {
         <div className="poll-create-button-parent">
           <IconButton
             className={validatePoll ? `poll-create-button` : `poll-create-button-disabled`}
-            onClick={validatePoll ? (e) => {
+            onClick={validatePoll ? () => {
               setPreviewPoll(true);
-              if (onPollCompleteClickedCustomCallback) {
-                onPollCompleteClickedCustomCallback(e);
-              }
             } : () => { }}
           >
             <img src={createPollTick} alt="Create Poll" />

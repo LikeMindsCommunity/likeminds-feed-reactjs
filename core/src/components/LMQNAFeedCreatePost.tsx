@@ -84,6 +84,7 @@ const LMQNAFeedCreatePost = ({
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
+    pollExpiryTimeClickFunction,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -138,6 +139,7 @@ const LMQNAFeedCreatePost = ({
         previewPoll,
         setPreviewPoll,
         updateAdvancedOptions,
+        pollExpiryTimeClickFunction,
       }}
     >
       {showStarterComponent ? (

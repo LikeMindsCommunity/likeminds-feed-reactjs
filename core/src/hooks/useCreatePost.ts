@@ -97,6 +97,7 @@ interface UseCreatePost {
   updateAdvancedOptions: OneArgVoidReturns<
     React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<number>
   >;
+  pollExpiryTimeClickFunction: () => void;
 }
 
 export interface AdvancedPollOptions {
@@ -271,8 +272,16 @@ export function useCreatePost(): UseCreatePost {
     PostCreationCustomCallbacks = {},
     createPostComponentClickCustomCallback,
   } = useContext(CustomAgentProviderContext);
-  const { postFeedCustomAction, editPostCustomAction } =
-    PostCreationCustomCallbacks;
+  const {
+    postFeedCustomAction,
+    editPostCustomAction,
+
+    onPollClearClicked,
+    onAddOptionClicked,
+    onPollOptionCleared,
+    onPollCompleteClicked,
+    onPollExpiryTimeClicked,
+  } = PostCreationCustomCallbacks;
 
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
@@ -410,6 +419,8 @@ export function useCreatePost(): UseCreatePost {
   function closeOGTagContainer() {
     setShowOGTagViewContainer(false);
   }
+
+  function pollExpiryTimeClickFunction() {}
 
   function setTemporaryPostFunction() {
     setTemporaryPost((prev) => {
@@ -882,6 +893,16 @@ export function useCreatePost(): UseCreatePost {
           containerRef,
           isAnonymousPost,
           changeAnonymousPostStatus,
+
+          openCreatePollDialog,
+          setOpenCreatePollDialog,
+          pollOptions,
+          pollText,
+          pollExpirationDate,
+          advancedOptions: advancedPollOptions,
+          validatePoll,
+          previewPoll,
+          setPreviewPoll,
         },
         applicationGeneralStore: {
           userDataStore: {
@@ -972,7 +993,9 @@ export function useCreatePost(): UseCreatePost {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
-    setTemporaryPostFunction,
+    setTemporaryPostFunction: onPollClearClicked
+      ? onPollClearClicked.bind(null, postCreationActionAndDataStore)
+      : setTemporaryPostFunction,
     isAnonymousPost,
     changeAnonymousPostStatus,
     selectedTopicIds,
@@ -998,8 +1021,12 @@ export function useCreatePost(): UseCreatePost {
     openCreatePollDialog,
     setOpenCreatePollDialog,
     pollOptions,
-    addPollOption,
-    removePollOption,
+    addPollOption: onAddOptionClicked
+      ? onAddOptionClicked.bind(null, postCreationActionAndDataStore)
+      : addPollOption,
+    removePollOption: onPollOptionCleared
+      ? onPollOptionCleared.bind(null, postCreationActionAndDataStore)
+      : removePollOption,
     updatePollOption,
     changePollText,
     pollText,
@@ -1008,7 +1035,12 @@ export function useCreatePost(): UseCreatePost {
     advancedOptions: advancedPollOptions,
     validatePoll,
     previewPoll,
-    setPreviewPoll,
+    setPreviewPoll: onPollCompleteClicked
+      ? onPollCompleteClicked.bind(null, postCreationActionAndDataStore)
+      : setPreviewPoll,
     updateAdvancedOptions,
+    pollExpiryTimeClickFunction: onPollExpiryTimeClicked
+      ? onPollExpiryTimeClicked.bind(null, postCreationActionAndDataStore)
+      : pollExpiryTimeClickFunction,
   };
 }

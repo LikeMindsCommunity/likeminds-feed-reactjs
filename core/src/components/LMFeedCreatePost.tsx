@@ -85,6 +85,7 @@ const LMFeedCreatePost = ({
     previewPoll,
     setPreviewPoll,
     updateAdvancedOptions,
+    pollExpiryTimeClickFunction,
   } = useCreatePost();
 
   return (
@@ -138,6 +139,7 @@ const LMFeedCreatePost = ({
         previewPoll,
         setPreviewPoll,
         updateAdvancedOptions,
+        pollExpiryTimeClickFunction,
       }}
     >
       {showStarterComponent ? (

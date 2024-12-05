@@ -17,10 +17,17 @@ import {
   useState,
 } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { FeedPostContext } from "..";
+import { FeedPostContext } from "../old_index";
 import { User } from "../shared/types/models/member";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { WidgetResponse } from "../shared/utils";
+import {
+  ApplicationGeneralsStore,
+  PollCreationDataStore,
+  PollCreationDefaultActions,
+} from "../shared/types/cutomCallbacks/dataStores";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 
 interface UsePostPoll {
   pollData: WidgetResponse | null;
@@ -47,14 +54,28 @@ interface UsePostPoll {
   totalVotesCount: number;
   isEditMode: boolean;
   setIsEditModeFunction: (toggle: boolean) => void;
+  optionVoteCountClickFunction: (tab: number, toggle: boolean) => void;
 }
 
 export function usePostPoll(): UsePostPoll {
   const { post, widgets } = useContext(FeedPostContext);
   const { lmFeedclient } = useContext(LMFeedGlobalClientProviderContext);
-  const { onPollFeedSubmitButtonClicked } = useContext(
+  const { currentCommunity, currentUser, logoutUser } = useContext(
+    LMFeedUserProviderContext,
+  );
+
+  const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
+    useContext(GeneralContext);
+  const { PollCreationCustomCallbacks = {} } = useContext(
     CustomAgentProviderContext,
   );
+  const {
+    onSubmitButtonClicked,
+    onAddPollOptionsClicked,
+    onPollOptionClicked,
+    onOptionSelected,
+  } = PollCreationCustomCallbacks;
+
   const pollId = post?.attachments[0].attachmentMeta.entityId;
   const pollData = widgets && pollId ? widgets[pollId] : null;
   const pollExpiryTime = pollData?.metadata.expiryTime;
@@ -97,7 +118,7 @@ export function usePostPoll(): UsePostPoll {
     setTotalMultipleOptions(alreadySelectedCount);
 
     return totalCount;
-  }, []);
+  }, [pollOptions]);
 
   const [totalVotesCount, setTotalVotesCount] = useState<number>(totalVotes);
   const [isEditMode, setIsEditMode] = useState(!hasSelectedOption);
@@ -204,10 +225,6 @@ export function usePostPoll(): UsePostPoll {
         pollId: pollId ?? "",
         votes: selectedOptionIds,
       });
-
-      if (onPollFeedSubmitButtonClicked) {
-        onPollFeedSubmitButtonClicked();
-      }
     } catch (error) {
       console.log(error);
     }
@@ -215,6 +232,11 @@ export function usePostPoll(): UsePostPoll {
 
   const setResultScreenDialogOpenFunction = (toggle: boolean) => {
     setResultScreenDialogOpen(toggle);
+  };
+
+  const optionVoteCountClickFunction = (tab: number, toggle: boolean) => {
+    setPollResultSelectedTabFunction(tab);
+    setResultScreenDialogOpenFunction(toggle);
   };
 
   const setPollResultSelectedTabFunction = (tab: number) => {
@@ -309,18 +331,72 @@ export function usePostPoll(): UsePostPoll {
     }
   }, [pollResultSelectedTab, resultScreenDialogOpen]);
 
+  const pollPostDataStore: PollCreationDataStore = {
+    pollData,
+    hasSelectedOption,
+    isAddOptionDialogOpen,
+    showSubmitVoteButton,
+    showAddOptionButton,
+    resultScreenDialogOpen,
+    hasMultiOptionSelect,
+    pollResultSelectedTab,
+    totalMultipleOptions,
+    newOption,
+    voteDetails,
+    pollOptions,
+    totalVotesCount,
+    isEditMode,
+  };
+
+  const defaultActions: PollCreationDefaultActions = {
+    setIsAddOptionDialogOpenFunction,
+    setResultScreenDialogOpenFunction,
+    setPollResultSelectedTabFunction,
+    setNewOptionFunction,
+    handleOptionClick,
+    handleAddOptionSubmit,
+    submitVoteHandler,
+    setIsEditModeFunction,
+  };
+
+  const applicationGeneralsStore: ApplicationGeneralsStore = {
+    userDataStore: {
+      lmFeedUser: currentUser,
+      lmFeedUserCurrentCommunity: currentCommunity,
+      logOutUser: logoutUser,
+    },
+    generalDataStore: {
+      displaySnackbarMessage,
+      closeSnackbar,
+      showSnackbar,
+      message,
+    },
+  };
+
   return {
     pollData,
     hasSelectedOption,
     isAddOptionDialogOpen,
-    setIsAddOptionDialogOpenFunction,
+    setIsAddOptionDialogOpenFunction: onAddPollOptionsClicked
+      ? onAddPollOptionsClicked.bind(null, {
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : setIsAddOptionDialogOpenFunction,
     showSubmitVoteButton,
     showAddOptionButton,
     resultScreenDialogOpen,
     setResultScreenDialogOpenFunction,
     hasMultiOptionSelect,
     pollResultSelectedTab,
-    setPollResultSelectedTabFunction,
+    setPollResultSelectedTabFunction: onOptionSelected
+      ? onOptionSelected.bind(null, {
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : setPollResultSelectedTabFunction,
     totalMultipleOptions,
     newOption,
     setNewOptionFunction,
@@ -328,9 +404,22 @@ export function usePostPoll(): UsePostPoll {
     pollOptions,
     handleOptionClick,
     handleAddOptionSubmit,
-    submitVoteHandler,
+    submitVoteHandler: onSubmitButtonClicked
+      ? onSubmitButtonClicked.bind(null, {
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : submitVoteHandler,
     totalVotesCount,
     isEditMode,
     setIsEditModeFunction,
+    optionVoteCountClickFunction: onPollOptionClicked
+      ? onPollOptionClicked.bind(null, {
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : optionVoteCountClickFunction,
   };
 }
