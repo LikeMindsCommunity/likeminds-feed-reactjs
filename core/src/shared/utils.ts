@@ -401,6 +401,8 @@ export function getDisplayMessage(message: LMDisplayMessages) {
       return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} liked`;
     case LMDisplayMessages.REPLY_DELETED_SUCCESS:
       return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} deleted`;
+    case LMDisplayMessages.POST_REPORTED_SUCCESSFULLY:
+      return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} reported`;
     case LMDisplayMessages.COMMENT_DELETED_SUCCESS:
       return "Comment deleted";
     case LMDisplayMessages.ERROR_LOADING_POST:

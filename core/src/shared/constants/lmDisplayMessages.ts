@@ -10,4 +10,5 @@ export enum LMDisplayMessages {
   REPLY_DELETED_SUCCESS = "Reply deleted",
   COMMENT_DELETED_SUCCESS = "Comment deleted",
   ERROR_LOADING_POST = "ERROR LOADING POST",
+  POST_REPORTED_SUCCESSFULLY = "Post Reported",
 }
