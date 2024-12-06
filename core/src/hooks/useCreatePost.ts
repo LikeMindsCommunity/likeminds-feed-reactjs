@@ -232,6 +232,17 @@ export function useCreatePost(): UseCreatePost {
         setValidatePoll(false);
         return;
       }
+      const pollOptionsMap: Record<string, PollOption> = {};
+      for (const option of pollOptions) {
+        const optionText = option.text;
+        const existingOption = pollOptionsMap[optionText];
+        if (existingOption) {
+          setValidatePoll(false);
+          return;
+        } else {
+          pollOptionsMap[optionText] = option;
+        }
+      }
       setValidatePoll(true);
     } catch (error) {
       console.log(error);

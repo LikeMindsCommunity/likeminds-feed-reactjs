@@ -65,6 +65,7 @@
 
 .poll-option-text-input-preview {
   height: auto;
+  padding: 16px;
 }
 
 .poll-option-remove {
@@ -202,6 +203,8 @@
   width: 100%;
   border-radius: 10px;
   font-size: 16px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .poll-preview-title-parent {
@@ -439,3 +442,8 @@
   }
 }
 /* Poll View */
+
+.overflow-word-break {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

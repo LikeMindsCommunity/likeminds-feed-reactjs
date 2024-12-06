@@ -55,6 +55,8 @@ interface UsePostPoll {
   isEditMode: boolean;
   setIsEditModeFunction: (toggle: boolean) => void;
   optionVoteCountClickFunction: (tab: number, toggle: boolean) => void;
+  pollReadMoreTapped: boolean;
+  pollReadMoreTappedFunction: () => void;
 }
 
 export function usePostPoll(): UsePostPoll {
@@ -122,6 +124,7 @@ export function usePostPoll(): UsePostPoll {
 
   const [totalVotesCount, setTotalVotesCount] = useState<number>(totalVotes);
   const [isEditMode, setIsEditMode] = useState(!hasSelectedOption);
+  const [pollReadMoreTapped, setPollReadMoreTapped] = useState<boolean>(false);
 
   const handleOptionClick = (index: number) => {
     if (hasPollEnded(pollExpiryTime)) return;
@@ -253,6 +256,10 @@ export function usePostPoll(): UsePostPoll {
 
   const setIsEditModeFunction = (toggle: boolean) => {
     setIsEditMode(toggle);
+  };
+
+  const pollReadMoreTappedFunction = () => {
+    setPollReadMoreTapped((pollReadMoreTapped) => !pollReadMoreTapped);
   };
 
   const setShowSubmitVoteButtonFunction = (): boolean => {
@@ -421,5 +428,7 @@ export function usePostPoll(): UsePostPoll {
           defaultActions: defaultActions,
         })
       : optionVoteCountClickFunction,
+    pollReadMoreTapped,
+    pollReadMoreTappedFunction,
   };
 }

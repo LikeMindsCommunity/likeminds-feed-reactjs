@@ -12,6 +12,7 @@ import { getAvatar } from "../shared/components/LMUserMedia";
 import noResponses from "../assets/images/no-response.svg";
 import { usePostPoll } from "../hooks/usePostPoll";
 import DotIcon from '../assets/images/dot-icon.svg';
+import { textPreprocessor } from "../shared/taggingParser";
 
 export const LMPostPoll = () => {
     const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -39,6 +40,8 @@ export const LMPostPoll = () => {
         isEditMode,
         setIsEditModeFunction,
         optionVoteCountClickFunction,
+        pollReadMoreTapped,
+        pollReadMoreTappedFunction,
     } = usePostPoll();
 
     const pollExpiryTime = pollData?.metadata.expiryTime;
@@ -48,16 +51,6 @@ export const LMPostPoll = () => {
     const pollSelectionText = getPollSelectionText(multiSelectNo, multiSelectState);
     const allowAddOption = pollData?.metadata.allowAddOption;
     const pollType = pollData?.metadata.pollType;
-
-    const renderProgress = (option: PollOption) => {
-        const percentage = pollData?.LmMeta?.toShowResults ? option.percentage : 0;
-        return (
-            <div
-                className="poll-background-bar post-poll-selected-color-custom-style"
-                style={{ width: `${percentage}%` }}
-            />
-        );
-    };
 
     const memoizedPollOptions = useMemo(() => {
         return pollOptions.map((pollOption: PollOption, index: number) => {
@@ -88,7 +81,10 @@ export const LMPostPoll = () => {
                     >
                         {((hasSelectedOption && isInstantPoll(pollType)) ||
                             hasPollEnded(pollExpiryTime)) &&
-                            renderProgress(pollOption)}
+                            <div
+                                className="poll-background-bar post-poll-selected-color-custom-style"
+                                style={{ width: `${pollData?.LmMeta?.toShowResults ? pollOption.percentage : 0}%` }}
+                            />}
                         <div
                             className={
                                 `poll-feed-option-text-input poll-option-text-input-preview poll-text` +
@@ -116,7 +112,7 @@ export const LMPostPoll = () => {
                                 onClick={() => { optionVoteCountClickFunction(index, true); }}
                                 className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style post-poll-vote-count-custom-style"
                             >
-                                {pollOption.voteCount} votes
+                                {pollOption.voteCount <= 1 ? `${pollOption.voteCount} vote` : `${pollOption.voteCount} votes`}
                             </div>
                         )}
                 </div>
@@ -133,12 +129,7 @@ export const LMPostPoll = () => {
         pollExpiryTime,
         allowAddOption,
         handleOptionClick,
-        renderProgress,
-        checkPollOptionIcon,
-        isInstantPoll,
-        hasPollEnded,
-        setPollResultSelectedTabFunction,
-        setResultScreenDialogOpenFunction
+        optionVoteCountClickFunction,
     ]);
 
     return (
@@ -146,8 +137,32 @@ export const LMPostPoll = () => {
             className="attachment-poll"
         >
             <div className="poll-feed-title post-poll-question-custom-style">
-                {pollData?.metadata.title}
-            </div>
+                {(() => {
+                    const preprocessedText = textPreprocessor(pollData?.metadata.title);
+
+                    if (preprocessedText.showReadMore && !pollReadMoreTapped) {
+                        return (<>
+                            {preprocessedText.text}
+                            <span
+                                className="lm-feed-wrapper__card__body__content__read-more-tap-icon"
+                                style={{
+                                    color: "gray",
+                                    fontWeight: "400",
+                                    cursor: "pointer",
+                                    fontSize: "14px",
+                                }}
+                                onClick={() => pollReadMoreTappedFunction()}
+                            >
+                                ...ReadMore
+                            </span>
+                        </>)
+                    }
+                    else {
+                        return pollData?.metadata.title
+                    }
+                })()
+                }
+            </div >
             {
                 pollSelectionText && <div className="poll-feed-vote-count poll-feed-preview-advance-options-select poll-preview-subheading-style post-poll-info-custom-style">
                     {pollSelectionText}
@@ -167,20 +182,21 @@ export const LMPostPoll = () => {
             </div>
 
 
-            {showSubmitVoteButton && (
-                multipleOptionSubmitVoteValidation(multiSelectNo,
-                    multiSelectState, totalMultipleOptions) ?
-                    <div
-                        className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button post-poll-submit-button-custom-style"
-                        onClick={submitVoteHandler}
-                    >
-                        Submit Vote
-                    </div> : <div
-                        className="lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled post-poll-submit-button-custom-style"
-                    >
-                        Submit Vote
-                    </div>
-            )
+            {
+                showSubmitVoteButton && (
+                    multipleOptionSubmitVoteValidation(multiSelectNo,
+                        multiSelectState, totalMultipleOptions) ?
+                        <div
+                            className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button post-poll-submit-button-custom-style"
+                            onClick={submitVoteHandler}
+                        >
+                            Submit Vote
+                        </div> : <div
+                            className="lm-feed-create-post-wrapper__submit-button lm-mt-4 poll-feed-multiple-options-submit-button poll-feed-submit-button-disabled post-poll-submit-button-custom-style"
+                        >
+                            Submit Vote
+                        </div>
+                )
             }
 
 
@@ -188,10 +204,11 @@ export const LMPostPoll = () => {
                 {
                     (isInstantPoll(pollType) || hasPollEnded(pollExpiryTime)) &&
                     <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setPollResultSelectedTabFunction(0); setResultScreenDialogOpenFunction(true); }}>
-                        {totalVotesCount} votes</div>
+                        {totalVotesCount <= 1 ? `${totalVotesCount} vote` : `${totalVotesCount} votes`}
+                    </div>
                 }
                 <div className="poll-feed-time-left">
-                    <img className="poll-feed-dot" src={DotIcon} alt="dot-icon" />
+                    {(isInstantPoll(pollType) || hasPollEnded(pollExpiryTime)) && <img className="poll-feed-dot" src={DotIcon} alt="dot-icon" />}
                     {pollTimeLeft}
                 </div>
                 {

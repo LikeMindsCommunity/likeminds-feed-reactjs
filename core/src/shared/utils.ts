@@ -42,8 +42,10 @@ const formatTimeAgo = (timestamp: number): string => {
     return `${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
   } else if (diffHours > 0) {
     return `${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
-  } else {
+  } else if (diffMinutes > 0) {
     return `${diffMinutes} ${diffMinutes === 1 ? "minute" : "minutes"} ago`;
+  } else {
+    return "Just Now";
   }
 };
 

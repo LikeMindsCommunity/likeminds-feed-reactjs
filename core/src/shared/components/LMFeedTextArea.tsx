@@ -19,6 +19,7 @@ const LMFeedTextArea = () => {
   const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
     LMFeedCreatePostContext,
   );
+
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
