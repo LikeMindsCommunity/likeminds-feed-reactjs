@@ -9,7 +9,7 @@ import {
   FeedPostDetailsCustomActions,
   GeneralClickCallbacks,
   PostCreationCustomActions,
-  PollCreationCustomActions,
+  PostPollCustomActions,
   RepliesCustomActions,
   TopicsCustomActions,
 } from "../shared/types/cutomCallbacks/callbacks";
@@ -30,7 +30,7 @@ export interface CustomAgentProviderInterface {
   TopicsCustomCallbacks?: TopicsCustomActions;
   RepliesCustomCallbacks?: RepliesCustomActions;
   PostCreationCustomCallbacks?: PostCreationCustomActions;
-  PollCreationCustomCallbacks?: PollCreationCustomActions;
+  PostPollCustomCallbacks?: PostPollCustomActions;
   postComponentClickCustomCallback?: PostComponentCustomClickEventDelegatorCallback;
   createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
   topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;

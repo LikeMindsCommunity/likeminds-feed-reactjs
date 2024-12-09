@@ -52,7 +52,7 @@ function LMQNAFeed({
   TopicsCustomCallbacks,
   RepliesCustomCallbacks,
   PostCreationCustomCallbacks,
-  PollCreationCustomCallbacks,
+  PostPollCustomCallbacks,
   allowThumbnail = false,
   postComponentClickCustomCallback,
   createPostComponentClickCustomCallback,
@@ -107,7 +107,7 @@ function LMQNAFeed({
             TopicsCustomCallbacks,
             RepliesCustomCallbacks,
             PostCreationCustomCallbacks,
-            PollCreationCustomCallbacks,
+            PostPollCustomCallbacks,
           }}
         >
           <GeneralContext.Provider

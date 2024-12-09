@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { FeedPostContext } from "../old_index";
+import { FeedPostContext } from "..";
 import { User } from "../shared/types/models/member";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { WidgetResponse } from "../shared/utils";
@@ -33,7 +33,7 @@ interface UsePostPoll {
   pollData: WidgetResponse | null;
   hasSelectedOption: boolean;
   isAddOptionDialogOpen: boolean;
-  setIsAddOptionDialogOpenFunction: (toggle: boolean) => void;
+  handleAddOptionDialog: (toggle: boolean) => void;
   showSubmitVoteButton: boolean;
   showAddOptionButton: boolean;
   resultScreenDialogOpen: boolean;
@@ -54,7 +54,7 @@ interface UsePostPoll {
   totalVotesCount: number;
   isEditMode: boolean;
   setIsEditModeFunction: (toggle: boolean) => void;
-  optionVoteCountClickFunction: (tab: number, toggle: boolean) => void;
+  onOptionVoteCountClick: (tab: number, toggle: boolean) => void;
   pollReadMoreTapped: boolean;
   pollReadMoreTappedFunction: () => void;
 }
@@ -68,15 +68,16 @@ export function usePostPoll(): UsePostPoll {
 
   const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
     useContext(GeneralContext);
-  const { PollCreationCustomCallbacks = {} } = useContext(
+  const { PostPollCustomCallbacks = {} } = useContext(
     CustomAgentProviderContext,
   );
   const {
     onSubmitButtonClicked,
     onAddPollOptionsClicked,
     onPollOptionClicked,
+    onSubmitButtonClick,
     onOptionSelected,
-  } = PollCreationCustomCallbacks;
+  } = PostPollCustomCallbacks;
 
   const pollId = post?.attachments[0].attachmentMeta.entityId;
   const pollData = widgets && pollId ? widgets[pollId] : null;
@@ -237,7 +238,7 @@ export function usePostPoll(): UsePostPoll {
     setResultScreenDialogOpen(toggle);
   };
 
-  const optionVoteCountClickFunction = (tab: number, toggle: boolean) => {
+  const onOptionVoteCountClick = (tab: number, toggle: boolean) => {
     setPollResultSelectedTabFunction(tab);
     setResultScreenDialogOpenFunction(toggle);
   };
@@ -250,7 +251,7 @@ export function usePostPoll(): UsePostPoll {
     setNewOption(option);
   };
 
-  const setIsAddOptionDialogOpenFunction = (toggle: boolean) => {
+  const handleAddOptionDialog = (toggle: boolean) => {
     setIsAddOptionDialogOpen(toggle);
   };
 
@@ -301,11 +302,13 @@ export function usePostPoll(): UsePostPoll {
         setIsEditMode(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalVotesCount]);
 
   useEffect(() => {
     setShowSubmitVoteButton(setShowSubmitVoteButtonFunction);
     setShowAddOptionButton(setShowAddOptionButtonFunction);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSelectedOption, isEditMode]);
 
   const selectedOptionMemberList = async () => {
@@ -336,6 +339,7 @@ export function usePostPoll(): UsePostPoll {
     if (resultScreenDialogOpen) {
       selectedOptionMemberList();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pollResultSelectedTab, resultScreenDialogOpen]);
 
   const pollPostDataStore: PollCreationDataStore = {
@@ -356,7 +360,7 @@ export function usePostPoll(): UsePostPoll {
   };
 
   const defaultActions: PollCreationDefaultActions = {
-    setIsAddOptionDialogOpenFunction,
+    handleAddOptionDialog,
     setResultScreenDialogOpenFunction,
     setPollResultSelectedTabFunction,
     setNewOptionFunction,
@@ -384,13 +388,13 @@ export function usePostPoll(): UsePostPoll {
     pollData,
     hasSelectedOption,
     isAddOptionDialogOpen,
-    setIsAddOptionDialogOpenFunction: onAddPollOptionsClicked
+    handleAddOptionDialog: onAddPollOptionsClicked
       ? onAddPollOptionsClicked.bind(null, {
           pollCreationDataStore: pollPostDataStore,
           applicationGeneralStore: applicationGeneralsStore,
           defaultActions: defaultActions,
         })
-      : setIsAddOptionDialogOpenFunction,
+      : handleAddOptionDialog,
     showSubmitVoteButton,
     showAddOptionButton,
     resultScreenDialogOpen,
@@ -410,7 +414,13 @@ export function usePostPoll(): UsePostPoll {
     voteDetails,
     pollOptions,
     handleOptionClick,
-    handleAddOptionSubmit,
+    handleAddOptionSubmit: onSubmitButtonClick
+      ? onSubmitButtonClick.bind(null, {
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : handleAddOptionSubmit,
     submitVoteHandler: onSubmitButtonClicked
       ? onSubmitButtonClicked.bind(null, {
           pollCreationDataStore: pollPostDataStore,
@@ -421,13 +431,13 @@ export function usePostPoll(): UsePostPoll {
     totalVotesCount,
     isEditMode,
     setIsEditModeFunction,
-    optionVoteCountClickFunction: onPollOptionClicked
+    onOptionVoteCountClick: onPollOptionClicked
       ? onPollOptionClicked.bind(null, {
           pollCreationDataStore: pollPostDataStore,
           applicationGeneralStore: applicationGeneralsStore,
           defaultActions: defaultActions,
         })
-      : optionVoteCountClickFunction,
+      : onOptionVoteCountClick,
     pollReadMoreTapped,
     pollReadMoreTappedFunction,
   };

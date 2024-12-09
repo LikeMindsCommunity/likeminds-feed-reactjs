@@ -68,7 +68,6 @@ export type PostCreationCustomActions = {
 
   onPollClearClicked?: PostCreationCustomActionCallback;
   onPollExpiryTimeClicked?: PostCreationCustomActionCallback;
-
   onAddOptionClicked?: PostCreationCustomActionCallback;
   onPollOptionCleared?: PostCreationCustomActionCallback;
   onPollCompleteClicked?: PostCreationCustomActionCallback;
@@ -88,10 +87,9 @@ export type NotificationCustomActionCallback = (
 
 export type ComponentDelegatorListener = (event: React.MouseEvent) => void;
 
-export type PollCreationCustomActions = {
+export type PostPollCustomActions = {
   onSubmitButtonClicked?: PollCreationCustomActionCallback;
   onAddPollOptionsClicked?: PollCreationCustomActionCallback;
-  onPollEditClicked?: PollCreationCustomActionCallback;
   onPollOptionClicked?: PollCreationCustomActionCallback;
 
   onSubmitButtonClick?: PollCreationCustomActionCallback;

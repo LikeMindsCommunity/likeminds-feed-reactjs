@@ -50,6 +50,7 @@ const LMFeedTextArea = () => {
       ).innerHTML;
     }
     setCursorToTheEnd();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textFieldRef, temporaryPost]);
   return (
     <div ref={containerRef}>

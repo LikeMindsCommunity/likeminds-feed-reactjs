@@ -6,7 +6,7 @@ import { Pluralize } from "./variables";
 
 import { TokenValues } from "./enums/tokens";
 import { WordAction } from "./enums/wordAction";
-import { LMDisplayMessages } from "../old_index";
+import { LMDisplayMessages } from "..";
 import { PollMultipleSelectState, PollType } from "./enums/ImPollType";
 
 import { GetCommunityConfigurationsResponse } from "./types/api-responses/getComunityConfigurations";
@@ -411,6 +411,8 @@ export function getDisplayMessage(message: LMDisplayMessages) {
       return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} hidden`;
     case LMDisplayMessages.POST_UNHIDE_SUCCESS:
       return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} unhidden`;
+    case LMDisplayMessages.POLL_OPTIONS_SHOULD_BE_UNIQUE:
+      return `Poll options should be unique`;
   }
 }
 

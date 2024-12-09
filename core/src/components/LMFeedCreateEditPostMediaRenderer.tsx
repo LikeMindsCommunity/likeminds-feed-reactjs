@@ -10,11 +10,13 @@ import { Document, Page } from "react-pdf";
 import pdfIcon from "../assets/images/pdf-icon.svg";
 import { formatFileSize } from "../shared/utils";
 import { OgTag } from "../shared/types/models/ogTag";
+import removePollOptionIcon from '../assets/images/remove-poll-option.svg';
+import { formatDate, previewMultiSelectStateModifier } from "../shared/utils";
 interface LMFeedCreatePostDMediaPost {
   mediaUploadDialog?: string;
 }
 // eslint-disable-next-line no-empty-pattern
-const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
+const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost) => {
   const {
     mediaList,
     addMediaItem,
@@ -56,10 +58,6 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
               return <VideoMediaItem attachment={attachment} />;
             case 11:
               return <ReelMediaItem attachment={attachment} />;
-            // case 4:
-            //   return (
-            //     <OGTagMediaItem ogTags={attachment.attachmentMeta.ogTags} />
-            //   );
 
             default:
               return null;
@@ -184,39 +182,68 @@ const LMFeedCreateMediaPost = memo(({}: LMFeedCreatePostDMediaPost) => {
     return null;
   }
   return (
-    <div className="postImgSlider">
-      {!temporaryPost &&
-        mediaUploadMode !== LMFeedCreatePostMediaUploadMode.REEL && (
-          <div className="postImgSlider__header">
-            <label className="postImgSlider__header--addMore">
-              <img src={addMoreIcon} alt="icon" /> Add More
-              <input
-                lm-feed-component-id={`lm-feed-create-media-vwxyz`}
-                onChange={addMediaItem}
-                type="file"
-                accept={
-                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.DOCUMENT
-                    ? "application/pdf"
-                    : "image/png, image/jpeg, image/jpg, video/mp4"
-                }
-              />
-            </label>
-            <div className="postImgSlider__header--cancelBtn">
-              <img
-                src={cancelBtnIcon}
-                alt="video"
-                onClick={() => {
-                  if (removeMedia) {
-                    removeMedia(activeSlide || 0);
+    <>
+      <div className="postImgSlider">
+        {!temporaryPost &&
+          mediaUploadMode !== LMFeedCreatePostMediaUploadMode.REEL && (
+            <div className="postImgSlider__header">
+              <label className="postImgSlider__header--addMore">
+                <img src={addMoreIcon} alt="icon" /> Add More
+                <input
+                  lm-feed-component-id={`lm-feed-create-media-vwxyz`}
+                  onChange={addMediaItem}
+                  type="file"
+                  accept={
+                    mediaUploadMode === LMFeedCreatePostMediaUploadMode.DOCUMENT
+                      ? "application/pdf"
+                      : "image/png, image/jpeg, image/jpg, video/mp4"
                   }
-                }}
-                lm-feed-component-id={`lm-feed-create-media-fghij`}
-              />
+                />
+              </label>
+              <div className="postImgSlider__header--cancelBtn">
+                <img
+                  src={cancelBtnIcon}
+                  alt="video"
+                  onClick={() => {
+                    if (removeMedia) {
+                      removeMedia(activeSlide || 0);
+                    }
+                  }}
+                  lm-feed-component-id={`lm-feed-create-media-fghij`}
+                />
+              </div>
             </div>
-          </div>
-        )}
-      {renderMediaItems()}
-    </div>
+          )}
+        {renderMediaItems()}
+      </div>
+      {(() => {
+        if (temporaryPost) {
+          const attachmentsArray = temporaryPost.attachments.filter(
+            (attachment) => {
+              if (attachment.attachmentType !== 5) {
+                return attachment;
+              }
+            },
+          );
+
+          switch (attachmentsArray.length) {
+            case 0:
+              return null;
+            case 1: {
+              const attachment = attachmentsArray[0];
+              switch (attachment.attachmentType) {
+                case 6:
+                  return <PollItem attachment={attachment} />;
+                default:
+                  return null;
+              }
+            }
+          }
+        }
+      })()
+      }
+    </>
+
   );
 });
 interface MediaItemProps {
@@ -278,6 +305,50 @@ export const VideoMediaItem = memo(
   },
 );
 
+const PollItem = ({ attachment }: MediaItemProps) => {
+  const attachmentMeta = attachment?.attachmentMeta ?? undefined;
+  const {
+    clearPollFunction: clearPollFunction,
+  } = useContext(LMFeedCreatePostContext);
+  return <>
+    {attachmentMeta &&
+      <div className="poll-preview-wrapper">
+        <div className="poll-preview-title-parent">
+          <div className="poll-preview-title">{attachmentMeta?.title}</div>
+          <div className="poll-preview-edit-button-parent">
+            <span
+              className="poll-preview-header-icon lm-cursor-pointer post-poll-clear-poll-options-custom-style"
+              onClick={() => {
+                clearPollFunction();
+              }}
+            >
+              <img src={removePollOptionIcon} alt="remove" />
+            </span>
+          </div>
+        </div>
+        {
+          attachmentMeta?.multipleSelectNumber && (attachmentMeta?.multipleSelectNumber > 1) &&
+          <div className="poll-preview-advance-options poll-preview-subheading-style">
+            *Select {previewMultiSelectStateModifier(attachmentMeta.multipleSelectState)} {attachmentMeta.multipleSelectNumber} options.
+          </div>
+        }
+
+        {attachmentMeta.options?.map((pollOption: string, index: number) => {
+          return (
+            <div className="poll-option-wrapper" key={index}>
+              <div
+                className="poll-option-text-input poll-option-text-input-preview"
+              >{pollOption}</div>
+            </div>
+          );
+        })}
+
+        <div className="poll-preview-subheading-style">
+          Expires on {attachmentMeta.expiryTime && formatDate(attachmentMeta.expiryTime)}
+        </div>
+      </div>}</>
+};
+
 const ReelMediaItem = ({ file, attachment }: MediaItemProps) => {
   if (file) {
     return (
@@ -315,7 +386,7 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
             className={"pdfPage"}
             renderAnnotationLayer={false}
             renderTextLayer={false}
-            // height={200}
+          // height={200}
           />
         </Document>
 
@@ -352,7 +423,7 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
             className={"pdfPage"}
             renderAnnotationLayer={false}
             renderTextLayer={false}
-            // height={324}
+          // height={324}
           />
         </Document>
 
@@ -366,7 +437,7 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
             <a
               className="attachmentPdf__content--title"
               target="_blank"
-              // href={url}
+            // href={url}
             >
               {file.name}
             </a>
@@ -380,4 +451,4 @@ const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
   }
 };
 
-export default LMFeedCreateMediaPost;
+export default LMFeedCreateEditPostMediaRenderer;

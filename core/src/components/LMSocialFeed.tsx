@@ -53,7 +53,7 @@ function LMSocialFeed({
   TopicsCustomCallbacks,
   RepliesCustomCallbacks,
   PostCreationCustomCallbacks,
-  PollCreationCustomCallbacks,
+  PostPollCustomCallbacks,
   allowThumbnail = false,
   postComponentClickCustomCallback,
   createPostComponentClickCustomCallback,
@@ -116,7 +116,7 @@ function LMSocialFeed({
             TopicsCustomCallbacks,
             RepliesCustomCallbacks,
             PostCreationCustomCallbacks,
-            PollCreationCustomCallbacks,
+            PostPollCustomCallbacks,
             isAnonymousPostAllowed,
             hintTextForAnonymous,
           }}

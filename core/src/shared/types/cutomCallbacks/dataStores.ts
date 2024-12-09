@@ -196,7 +196,7 @@ export interface PollCreationDataStore {
 }
 
 export interface PollCreationDefaultActions {
-  setIsAddOptionDialogOpenFunction: (toggle: boolean) => void;
+  handleAddOptionDialog: (toggle: boolean) => void;
   setResultScreenDialogOpenFunction: (toggle: boolean) => void;
   setPollResultSelectedTabFunction: (tab: number) => void;
   setNewOptionFunction: (option: string) => void;

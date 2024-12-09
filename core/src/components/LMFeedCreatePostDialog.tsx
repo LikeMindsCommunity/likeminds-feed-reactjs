@@ -7,7 +7,7 @@ import LMFeedCreatePostAttachmentController from "../shared/components/LMFeedCre
 import LMFeedCreatePostSubmitButton from "../shared/components/LMFeedCreatePostSubmitButton";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
-import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
+import LMFeedCreateEditPostMediaRenderer from "./LMFeedCreateEditPostMediaRenderer";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Checkbox, Divider } from "@mui/material";
@@ -16,8 +16,7 @@ import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { changePostCase } from "../shared/utils";
 import { WordAction } from "../shared/enums/wordAction";
-import removePollOptionIcon from '../assets/images/remove-poll-option.svg';
-import { formatDate, previewMultiSelectStateModifier } from "../shared/utils";
+
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
@@ -32,7 +31,6 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
     setPreSelectedTopics,
     mediaList,
     temporaryPost,
-    setTemporaryPostFunction,
     showOGTagViewContainer,
     setOpenCreatePostDialog,
     createPostComponentClickCustomCallback,
@@ -46,7 +44,6 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
     hintTextForAnonymous,
   } = useContext(CustomAgentProviderContext);
   const { CustomTopicDropDown } = CustomComponents;
-  const attachmentMeta = (temporaryPost?.attachments && temporaryPost?.attachments.length > 0 && temporaryPost?.attachments[0].attachmentType === 6) ? temporaryPost?.attachments[0].attachmentMeta : undefined;
 
   const renderAnonymousOption = () => {
     if (isAnonymousPostAllowed && !temporaryPost) {
@@ -132,50 +129,13 @@ const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
         <LMFeedOGTagMediaItem />
       ) : null}
 
-      <LMFeedCreateMediaPost />
+      <LMFeedCreateEditPostMediaRenderer />
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
         !temporaryPost &&
         !mediaList?.length ? (
         <LMFeedMediaUpload />
       ) : null}
       {!temporaryPost && <LMFeedCreatePostAttachmentController />}
-
-      {attachmentMeta &&
-        <div className="poll-preview-wrapper">
-          <div className="poll-preview-title-parent">
-            <div className="poll-preview-title">{attachmentMeta?.title}</div>
-            <div className="poll-preview-edit-button-parent">
-              <span
-                className="poll-preview-header-icon lm-cursor-pointer post-poll-clear-poll-options-custom-style"
-                onClick={() => {
-                  setTemporaryPostFunction();
-                }}
-              >
-                <img src={removePollOptionIcon} alt="remove" />
-              </span>
-            </div>
-          </div>
-          {
-            attachmentMeta?.multipleSelectNumber && (attachmentMeta?.multipleSelectNumber > 1) &&
-            <div className="poll-preview-advance-options poll-preview-subheading-style">
-              *Select {previewMultiSelectStateModifier(attachmentMeta.multipleSelectState)} {attachmentMeta.multipleSelectNumber} options.
-            </div>
-          }
-          <div>
-            {attachmentMeta.options?.map((pollOption: string, index: number) => {
-              return (
-                <div className="poll-option-wrapper" key={index}>
-                  <div
-                    className="poll-option-text-input poll-option-text-input-preview"
-                  >{pollOption}</div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="poll-preview-subheading-style">
-            Expires on {attachmentMeta.expiryTime && formatDate(attachmentMeta.expiryTime)}
-          </div>
-        </div>}
 
       <LMFeedCreatePostSubmitButton />
     </div>

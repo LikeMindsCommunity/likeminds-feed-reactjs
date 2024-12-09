@@ -11,6 +11,7 @@ import {
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
 import { extractTextFromNode } from "../shared/utils";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import {
   AddPostRequest,
   Attachment,
@@ -36,6 +37,7 @@ import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callb
 import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 import { numberToPollMultipleSelectState } from "../shared/utils";
 import { PollType } from "../shared/enums/ImPollType";
+import { getDisplayMessage } from "../shared/utils";
 
 import {
   OneArgVoidReturns,
@@ -63,7 +65,7 @@ interface UseCreatePost {
   openCreatePostDialog: boolean;
   setOpenCreatePostDialog: React.Dispatch<boolean>;
   temporaryPost: Post | null;
-  setTemporaryPostFunction: () => void;
+  clearPollFunction: () => void;
   selectedTopicIds: string[];
   setSelectedTopicIds: React.Dispatch<string[]>;
   preSelectedTopics: Topic[];
@@ -211,9 +213,23 @@ export function useCreatePost(): UseCreatePost {
       }
     });
   };
+  const {
+    displaySnackbarMessage,
+    closeSnackbar,
+    allowThumbnail,
+    showSnackbar,
+    message,
+    setOpenPostCreationProgressBar,
+  } = useContext(GeneralContext);
 
-  const createPollValidation = () => {
-    // createPollConversation
+  const changePollText = (
+    changeEvent: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const text = changeEvent.target.value;
+    setPollText(text);
+  };
+
+  useEffect(() => {
     try {
       if (pollText.length === 0) {
         setValidatePoll(false);
@@ -237,6 +253,13 @@ export function useCreatePost(): UseCreatePost {
         const optionText = option.text;
         const existingOption = pollOptionsMap[optionText];
         if (existingOption) {
+          if (displaySnackbarMessage) {
+            displaySnackbarMessage(
+              getDisplayMessage(
+                LMDisplayMessages.POLL_OPTIONS_SHOULD_BE_UNIQUE,
+              )!,
+            );
+          }
           setValidatePoll(false);
           return;
         } else {
@@ -247,22 +270,8 @@ export function useCreatePost(): UseCreatePost {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const changePollText = (
-    changeEvent: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const text = changeEvent.target.value;
-    setPollText(text);
-  };
-
-  useEffect(() => {
-    createPollValidation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pollText, pollOptions, pollExpirationDate]);
-
-  //poll end
-
-  // Getting context values
 
   const { lmFeedclient, customEventClient, lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
@@ -272,14 +281,6 @@ export function useCreatePost(): UseCreatePost {
   );
 
   const {
-    displaySnackbarMessage,
-    closeSnackbar,
-    allowThumbnail,
-    showSnackbar,
-    message,
-    setOpenPostCreationProgressBar,
-  } = useContext(GeneralContext);
-  const {
     PostCreationCustomCallbacks = {},
     createPostComponentClickCustomCallback,
   } = useContext(CustomAgentProviderContext);
@@ -287,11 +288,11 @@ export function useCreatePost(): UseCreatePost {
     postFeedCustomAction,
     editPostCustomAction,
 
-    onPollClearClicked,
+    onPollExpiryTimeClicked,
     onAddOptionClicked,
     onPollOptionCleared,
     onPollCompleteClicked,
-    onPollExpiryTimeClicked,
+    onPollClearClicked,
   } = PostCreationCustomCallbacks;
 
   // declating state variables
@@ -433,7 +434,7 @@ export function useCreatePost(): UseCreatePost {
 
   function pollExpiryTimeClickFunction() {}
 
-  function setTemporaryPostFunction() {
+  function clearPollFunction() {
     setTemporaryPost((prev) => {
       if (prev) {
         return { ...prev, attachments: [] };
@@ -680,25 +681,28 @@ export function useCreatePost(): UseCreatePost {
       }
     },
     [
+      openCreatePostDialog,
+      openCreatePollDialog,
+      pollText,
       allowThumbnail,
-      currentUser?.sdkClientInfo.uuid,
-      customEventClient,
-      isAnonymousPost,
-      lmFeedclient,
-      lmfeedAnalyticsClient,
       mediaList,
-      mediaUploadMode,
       ogTag,
       selectedTopicIds,
-
-      setOpenPostCreationProgressBar,
-
+      isAnonymousPost,
       question,
-
-      advancedPollOptions,
-      pollExpirationDate,
+      lmFeedclient,
       pollOptions,
-      pollText,
+      advancedPollOptions.MULTIPLE_SELECTION_STATE,
+      advancedPollOptions.DONT_SHOW_LIVE_RESULTS,
+      advancedPollOptions.MULTIPLE_SELECTION_NO,
+      advancedPollOptions.ALLOW_ANONYMOUS_VOTING,
+      advancedPollOptions.ALLOW_VOTERS_TO_ADD_OPTIONS,
+      pollExpirationDate,
+      setOpenPostCreationProgressBar,
+      currentUser?.sdkClientInfo.uuid,
+      mediaUploadMode,
+      lmfeedAnalyticsClient,
+      customEventClient,
     ],
   );
 
@@ -934,6 +938,7 @@ export function useCreatePost(): UseCreatePost {
         },
       };
     }, [
+      advancedPollOptions,
       closeSnackbar,
       currentCommunity,
       currentUser,
@@ -945,14 +950,20 @@ export function useCreatePost(): UseCreatePost {
       mediaUploadMode,
       message,
       ogTag,
+      openCreatePollDialog,
       openCreatePostDialog,
+      pollExpirationDate,
+      pollOptions,
+      pollText,
       postFeed,
       preSelectedTopics,
+      previewPoll,
       selectedTopicIds,
       showOGTagViewContainer,
       showSnackbar,
       temporaryPost,
       text,
+      validatePoll,
     ]);
 
   // effects fo running analytics
@@ -1004,9 +1015,9 @@ export function useCreatePost(): UseCreatePost {
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
-    setTemporaryPostFunction: onPollClearClicked
+    clearPollFunction: onPollClearClicked
       ? onPollClearClicked.bind(null, postCreationActionAndDataStore)
-      : setTemporaryPostFunction,
+      : clearPollFunction,
     isAnonymousPost,
     changeAnonymousPostStatus,
     selectedTopicIds,

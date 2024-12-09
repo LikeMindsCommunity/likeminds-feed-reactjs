@@ -1,4 +1,4 @@
-import { FeedPostContext } from "../old_index";
+import { FeedPostContext } from "..";
 import { useContext, useMemo } from "react";
 import { getTimeLeftInPoll, hasPollEnded, getPollSelectionText, PollOption, multipleOptionSubmitVoteValidation, isInstantPoll } from "../shared/utils";
 import { Dialog } from "@mui/material";
@@ -21,7 +21,7 @@ export const LMPostPoll = () => {
         pollData,
         hasSelectedOption,
         isAddOptionDialogOpen,
-        setIsAddOptionDialogOpenFunction,
+        handleAddOptionDialog,
         showSubmitVoteButton,
         showAddOptionButton,
         resultScreenDialogOpen,
@@ -39,7 +39,7 @@ export const LMPostPoll = () => {
         totalVotesCount,
         isEditMode,
         setIsEditModeFunction,
-        optionVoteCountClickFunction,
+        onOptionVoteCountClick,
         pollReadMoreTapped,
         pollReadMoreTappedFunction,
     } = usePostPoll();
@@ -82,14 +82,14 @@ export const LMPostPoll = () => {
                         {((hasSelectedOption && isInstantPoll(pollType)) ||
                             hasPollEnded(pollExpiryTime)) &&
                             <div
-                                className="poll-background-bar post-poll-selected-color-custom-style"
+                                className="poll-background-bar post-poll-selected-option-custom-style"
                                 style={{ width: `${pollData?.LmMeta?.toShowResults ? pollOption.percentage : 0}%` }}
                             />}
                         <div
                             className={
                                 `poll-feed-option-text-input poll-option-text-input-preview poll-text` +
                                 (allowAddOption && addedByText ? ` poll-text-added-by ` : ``) + (((hasSelectedOption && isInstantPoll(pollType)) ||
-                                    hasPollEnded(pollExpiryTime)) && !pollOption.isSelected ? ` post-poll-other-color-custom-style ` : ` `)
+                                    hasPollEnded(pollExpiryTime)) && !pollOption.isSelected ? ` post-poll-unselected-option-custom-style ` : ` `)
                             }
                         >
                             {pollOption.text}
@@ -109,7 +109,7 @@ export const LMPostPoll = () => {
                         hasPollEnded(pollExpiryTime)) &&
                         pollData?.LmMeta?.toShowResults && (
                             <div
-                                onClick={() => { optionVoteCountClickFunction(index, true); }}
+                                onClick={() => { onOptionVoteCountClick(index, true); }}
                                 className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style post-poll-vote-count-custom-style"
                             >
                                 {pollOption.voteCount <= 1 ? `${pollOption.voteCount} vote` : `${pollOption.voteCount} votes`}
@@ -129,7 +129,7 @@ export const LMPostPoll = () => {
         pollExpiryTime,
         allowAddOption,
         handleOptionClick,
-        optionVoteCountClickFunction,
+        onOptionVoteCountClick,
     ]);
 
     return (
@@ -168,18 +168,18 @@ export const LMPostPoll = () => {
                     {pollSelectionText}
                 </div>
             }
-            <div>
-                {memoizedPollOptions}
-                {
-                    showAddOptionButton ? <div className="poll-feed-option-add-more post-poll-add-option-custom-style" onClick={() => {
-                        setIsAddOptionDialogOpenFunction(true);
-                    }}>
-                        <div className="poll-option-add-more-icon">
-                            <span className="add-more-text">+ Add an option</span>
-                        </div>
-                    </div> : null
-                }
-            </div>
+
+            {memoizedPollOptions}
+            {
+                showAddOptionButton ? <div className="poll-feed-option-add-more post-poll-add-option-custom-style" onClick={() => {
+                    handleAddOptionDialog(true);
+                }}>
+                    <div className="poll-option-add-more-icon">
+                        <span className="add-more-text">+ Add an option</span>
+                    </div>
+                </div> : null
+            }
+
 
 
             {
@@ -203,7 +203,7 @@ export const LMPostPoll = () => {
             <div className="poll-feed-vote-count poll-feed-preview-advance-options-total poll-preview-subheading-style">
                 {
                     (isInstantPoll(pollType) || hasPollEnded(pollExpiryTime)) &&
-                    <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setPollResultSelectedTabFunction(0); setResultScreenDialogOpenFunction(true); }}>
+                    <div className="lm-cursor-pointer poll-feed-total-votes member-voted-count-custom-style" onClick={() => { setPollResultSelectedTabFunction(0); setResultScreenDialogOpenFunction(true); }}>
                         {totalVotesCount <= 1 ? `${totalVotesCount} vote` : `${totalVotesCount} votes`}
                     </div>
                 }
@@ -223,7 +223,7 @@ export const LMPostPoll = () => {
             <Dialog
                 open={isAddOptionDialogOpen}
                 onClose={() => {
-                    setIsAddOptionDialogOpenFunction(false);
+                    handleAddOptionDialog(false);
                 }}
             >
                 <div
@@ -237,7 +237,7 @@ export const LMPostPoll = () => {
                             src={cancelModelMcon}
                             alt="cancelModelMcon"
                             onClick={() => {
-                                setIsAddOptionDialogOpenFunction(false);
+                                handleAddOptionDialog(false);
                                 setNewOptionFunction("");
                             }}
                             className="cancelIcon"
