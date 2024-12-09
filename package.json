@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "reactotron-react-js": "^3.3.15"
-  },
-  "dependencies": {
-    "@likeminds.community/feed-js-beta": "^1.12.45"
-  }
-}
