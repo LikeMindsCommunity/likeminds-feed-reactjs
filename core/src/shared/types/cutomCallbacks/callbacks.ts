@@ -5,6 +5,7 @@ import {
   PostCreationActionsAndDataStore,
   RepliesActionsAndDataStore,
   TopicsActionsAndDataStore,
+  PollCreationActionsAndDataStore,
 } from "./dataProvider";
 
 export interface FeedListCustomActions {
@@ -64,6 +65,12 @@ export type RepliesCustomActionCallback = (
 export type PostCreationCustomActions = {
   editPostCustomAction?: PostCreationCustomActionCallback;
   postFeedCustomAction?: PostCreationCustomActionCallback;
+
+  onPollClearClicked?: PostCreationCustomActionCallback;
+  onPollExpiryTimeClicked?: PostCreationCustomActionCallback;
+  onAddOptionClicked?: PostCreationCustomActionCallback;
+  onPollOptionCleared?: PostCreationCustomActionCallback;
+  onPollCompleteClicked?: PostCreationCustomActionCallback;
 };
 
 export type PostCreationCustomActionCallback = (
@@ -79,3 +86,16 @@ export type NotificationCustomActionCallback = (
 ) => void;
 
 export type ComponentDelegatorListener = (event: React.MouseEvent) => void;
+
+export type PostPollCustomActions = {
+  onSubmitButtonClicked?: PollCreationCustomActionCallback;
+  onAddPollOptionsClicked?: PollCreationCustomActionCallback;
+  onPollOptionClicked?: PollCreationCustomActionCallback;
+
+  onSubmitButtonClick?: PollCreationCustomActionCallback;
+  onOptionSelected?: PollCreationCustomActionCallback;
+};
+
+export type PollCreationCustomActionCallback = (
+  store: PollCreationActionsAndDataStore,
+) => Promise<void>;

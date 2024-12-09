@@ -3,7 +3,7 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import {
   GetReportTagsRequest,
   PostReportRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTagsResponse";
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";

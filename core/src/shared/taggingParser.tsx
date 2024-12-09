@@ -86,14 +86,13 @@ export const textPreprocessor = (
   showReadMore: boolean;
   text: string;
 } => {
-  const wordsSplit = text.split(" ");
-  if (wordsSplit.length <= 300) {
+  if (text.length <= 300) {
     return {
       text,
       showReadMore: false,
     };
   } else {
-    return { showReadMore: true, text: wordsSplit.slice(0, 299).join(" ") };
+    return { showReadMore: true, text: text.slice(0, 300) };
   }
 };
 

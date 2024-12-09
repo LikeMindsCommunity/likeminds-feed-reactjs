@@ -7,7 +7,7 @@ import LMFeedCreatePostAttachmentController from "../shared/components/LMFeedCre
 import LMFeedCreatePostSubmitButton from "../shared/components/LMFeedCreatePostSubmitButton";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
-import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
+import LMFeedCreateEditPostMediaRenderer from "./LMFeedCreateEditPostMediaRenderer";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Checkbox, Divider } from "@mui/material";
@@ -16,11 +16,12 @@ import cancelModelMcon from "../assets/images/cancel-model-icon.svg";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { changePostCase } from "../shared/utils";
 import { WordAction } from "../shared/enums/wordAction";
+
 interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
 // eslint-disable-next-line no-empty-pattern
-const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
+const LMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const {
     mediaUploadMode = "NULL",
@@ -122,16 +123,16 @@ const LMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       </div>
 
       {showOGTagViewContainer &&
-      ogTag &&
-      mediaUploadMode === LMFeedCreatePostMediaUploadMode.NULL &&
-      !mediaList?.length ? (
+        ogTag &&
+        mediaUploadMode === LMFeedCreatePostMediaUploadMode.NULL &&
+        !mediaList?.length ? (
         <LMFeedOGTagMediaItem />
       ) : null}
 
-      <LMFeedCreateMediaPost />
+      <LMFeedCreateEditPostMediaRenderer />
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
-      !temporaryPost &&
-      !mediaList?.length ? (
+        !temporaryPost &&
+        !mediaList?.length ? (
         <LMFeedMediaUpload />
       ) : null}
       {!temporaryPost && <LMFeedCreatePostAttachmentController />}

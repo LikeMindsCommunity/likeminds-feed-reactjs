@@ -9,6 +9,7 @@ import {
   FeedPostDetailsCustomActions,
   GeneralClickCallbacks,
   PostCreationCustomActions,
+  PostPollCustomActions,
   RepliesCustomActions,
   TopicsCustomActions,
 } from "../shared/types/cutomCallbacks/callbacks";
@@ -20,19 +21,21 @@ import {
 } from "../shared/types/cutomCallbacks/dataProvider";
 
 export interface CustomAgentProviderInterface {
-  LMPostHeaderStyles?: LMPostHeaderStyles; //
-  LMFeedCustomIcons?: LMFeedCustomIcons; //
-  CustomComponents?: CustomComponents; //
-  FeedListCustomActions?: FeedListCustomActions; //
-  FeedPostDetailsCustomActions?: FeedPostDetailsCustomActions; //
+  LMPostHeaderStyles?: LMPostHeaderStyles;
+  LMFeedCustomIcons?: LMFeedCustomIcons;
+  CustomComponents?: CustomComponents;
+  FeedListCustomActions?: FeedListCustomActions;
+  FeedPostDetailsCustomActions?: FeedPostDetailsCustomActions;
   GeneralCustomCallbacks?: GeneralClickCallbacks;
   TopicsCustomCallbacks?: TopicsCustomActions;
   RepliesCustomCallbacks?: RepliesCustomActions;
   PostCreationCustomCallbacks?: PostCreationCustomActions;
+  PostPollCustomCallbacks?: PostPollCustomActions;
   postComponentClickCustomCallback?: PostComponentCustomClickEventDelegatorCallback;
   createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
   topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;
   memberComponentClickCustomCallback?: MemberComponentCustomClickEventDelegatorCallback;
+
   isAnonymousPostAllowed?: boolean;
   hintTextForAnonymous?: string;
 }
@@ -55,3 +58,12 @@ export type CreatePostComponentCustomClickEventDelegatorCallback = (
 export type MemberComponentCustomClickEventDelegatorCallback = (
   event: React.MouseEvent,
 ) => void;
+
+export type PollOptions = {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  percentage: number;
+  uuid: string;
+  voteCount: number;
+};

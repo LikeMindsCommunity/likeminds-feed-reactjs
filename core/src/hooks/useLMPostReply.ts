@@ -5,7 +5,7 @@ import {
   AddCommentRequest,
   EditCommentRequest,
   ReplyCommentRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { extractTextFromNode } from "../shared/utils";
 import {
   EditCommentResponse,
@@ -75,7 +75,6 @@ export function useLMPostReply(
       )) as never;
       if (call.success && addNewComment) {
         lmfeedAnalyticsClient?.sendCommentPostedEvent(call.data.comment);
-        console.log(call.data.comment);
         addNewComment(call.data.comment, call.data.users);
       }
     } catch (error) {

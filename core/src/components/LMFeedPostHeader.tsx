@@ -20,7 +20,7 @@ const LMFeedPostHeader = () => {
     LMFeedGlobalClientProviderContext,
   );
   const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  const { post, users, topics, pinPost, hidePost } =
+  const { post, users, topics, pinPost, hidePost, widgets } =
     useContext(FeedPostContext);
   const { LMPostHeaderStyles, LMFeedCustomIcons } = useContext(
     CustomAgentProviderContext,
@@ -53,6 +53,31 @@ const LMFeedPostHeader = () => {
     if (!post) {
       return;
     }
+    const newPost = { ...post };
+    newPost.attachments = newPost.attachments.map((attachment) => {
+      if (attachment.attachmentType === 6) {
+        const newAttachment = { ...attachment };
+        const pollWidget = widgets![attachment.attachmentMeta.entityId!];
+        const { title, pollType, multipleSelectState, multipleSelectNumber, isAnonymous, expiryTime, allowAddOption } = pollWidget.metadata;
+        const options = pollWidget.LmMeta.options.map((option: { text: string }) => option.text);
+
+        Object.assign(newAttachment.attachmentMeta, {
+          title,
+          pollQuestion: title,
+          pollType,
+          multipleSelectState,
+          multipleSelectNumber,
+          isAnonymous,
+          expiryTime,
+          allowAddOption,
+          options,
+        });
+        return newAttachment;
+      }
+      else {
+        return attachment;
+      }
+    })
     setAnchor(null);
     const menuId = e.currentTarget.id;
     switch (menuId) {
@@ -61,7 +86,7 @@ const LMFeedPostHeader = () => {
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
             {
-              post: post,
+              post: newPost,
               topics: topics,
             },
           );

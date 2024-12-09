@@ -5,7 +5,7 @@ import imgMedia from "../assets/images/img-media.svg";
 import docMedia from "../assets/images/doc-media.svg";
 import closeIcon from "../assets/images/close-media-upload-icon.svg";
 import reelIcon from "../assets/images/vid-media.svg";
-import { VideoMediaItem } from "./LMFeedCreateMediaPost";
+import { VideoMediaItem } from "./LMFeedCreateEditPostMediaRenderer";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 
 const LMFeedMediaUpload = () => {

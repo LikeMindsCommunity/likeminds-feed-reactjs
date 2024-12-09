@@ -7,7 +7,7 @@ import LMFeedCreatePostAttachmentController from "../shared/components/LMFeedCre
 import LMFeedCreatePostSubmitButton from "../shared/components/LMFeedCreatePostSubmitButton";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
-import LMFeedCreateMediaPost from "./LMFeedCreateMediaPost";
+import LMFeedCreateEditPostMediaRenderer from "./LMFeedCreateEditPostMediaRenderer";
 import LMFeedViewTopicDropdown from "./lmTopicFeed/LMFeedViewTopicDropdown";
 import { LMTopicsDropdownMode } from "../shared/enums/lmTopicFeedDropdownMode";
 import { Divider } from "@mui/material";
@@ -19,7 +19,7 @@ interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
 // eslint-disable-next-line no-empty-pattern
-const LMQNAFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
+const LMQNAFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const {
     mediaUploadMode = "NULL",
@@ -107,15 +107,15 @@ const LMQNAFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
       </div>
 
       {showOGTagViewContainer &&
-      ogTag &&
-      mediaUploadMode === LMFeedCreatePostMediaUploadMode.NULL &&
-      !mediaList?.length ? (
+        ogTag &&
+        mediaUploadMode === LMFeedCreatePostMediaUploadMode.NULL &&
+        !mediaList?.length ? (
         <LMFeedOGTagMediaItem />
       ) : null}
-      <LMFeedCreateMediaPost />
+      <LMFeedCreateEditPostMediaRenderer />
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
-      !temporaryPost &&
-      !mediaList?.length ? (
+        !temporaryPost &&
+        !mediaList?.length ? (
         <LMFeedMediaUpload />
       ) : null}
       {!temporaryPost && <LMFeedCreatePostAttachmentController />}

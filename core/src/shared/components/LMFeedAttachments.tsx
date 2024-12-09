@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick-theme.css";
 import pdfIcon from "../../assets/images/pdf-icon.svg";
 import { Document, Page } from "react-pdf";
 import { OgTag } from "../types/models/ogTag";
+import LMPostPoll from "../../components/LMPostPoll";
 
 export interface LMFeedAttachmentsProps {
   attachments: AttachmentType[];
@@ -62,56 +63,20 @@ const RenderAttachment: React.FC<{
 }> = memo(({ attachment, postId }) => {
   // Render attachment based on attachmentType
   const { attachmentMeta, attachmentType } = attachment;
-  const { name, url, ogTags } = attachmentMeta;
+  const { ogTags } = attachmentMeta;
 
   switch (attachmentType) {
     case 1: // Image
       return (
-        <div
-          className="attachment-image"
-          lm-feed-component-id={`lm-feed-post-attachments-efghi-${postId}`}
-        >
-          <img
-            loading="lazy"
-            src={url}
-            alt={name}
-            lm-feed-component-id={`lm-feed-post-attachments-jklmn-${postId}`}
-          />
-        </div>
+        <LMFeedImageAttachmentView postId={postId} attachment={attachment} />
       );
     case 2: // Video
       return (
-        <div
-          className="attachment-video"
-          lm-feed-component-id={`lm-feed-post-attachments-opqrs-${postId}`}
-        >
-          <video
-            controls
-            width="100%"
-            height="auto"
-            lm-feed-component-id={`lm-feed-post-attachments-tuvwx-${postId}`}
-          >
-            <source src={url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
+        <LMFeedVideoAttachmentView postId={postId} attachment={attachment} />
       );
     case 11: // Reel
       return (
-        <div
-          className="attachment-video"
-          lm-feed-component-id={`lm-feed-post-attachments-opqrs-${postId}`}
-        >
-          <video
-            controls
-            width="100%"
-            height="auto"
-            lm-feed-component-id={`lm-feed-post-attachments-tuvwx-${postId}`}
-          >
-            <source src={url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
+        <LMFeedReelAttachmentView postId={postId} attachment={attachment} />
       );
     case 3: // PDF
       return (
@@ -120,15 +85,11 @@ const RenderAttachment: React.FC<{
     case 4: // OG Tags
       return <LMFeedOGTagAttachmentView postId={postId} ogTags={ogTags!} />;
 
+    case 6:
+      return <LMPostPoll />
+
     default: // Unsupported attachment type
-      return (
-        <div
-          className="attachment-unsupported"
-          lm-feed-component-id={`lm-feed-post-attachments-defgh-${postId}`}
-        >
-          Unsupported attachment type
-        </div>
-      );
+      return null;
   }
 });
 interface OgTagHolderProps {
@@ -140,26 +101,6 @@ export const LMFeedOGTagAttachmentView = ({
   postId,
 }: OgTagHolderProps) => {
   return (
-    // <div className="attachmentOGTag">
-    //   {ogTags?.image ? (
-    //     <img
-    //       src={ogTags.image}
-    //       alt="og tag image"
-    //       className="attachmentOGTag__img"
-    //     />
-    //   ) : (
-    //     <div className="attachmentOGTag__noImg">{ogTags?.url}</div>
-    //   )}
-    //   <div className="attachmentOGTag__content">
-    //     <a href={ogTags.url} target="_blank">
-    //       {truncateString(ogTags?.title, 100)}
-    //     </a>
-    //     <div className="attachmentOGTag__content--desc">
-    //       {truncateString(ogTags?.description, 300)}
-    //     </div>
-    //     <div className="attachmentOGTag__content--url">{ogTags?.url}</div>
-    //   </div>
-    // </div>
     <div
       className="attachmentOGTag"
       lm-feed-component-id={`lm-feed-post-attachments-ijklm-${postId}`}
@@ -217,37 +158,6 @@ export const LMFeedDocumentAttachmentView = ({
   const { attachmentMeta } = attachment;
   const { name, url, size } = attachmentMeta;
   return (
-    // <div className="attachmentPdf">
-    //   <Document file={attachmentMeta?.url}>
-    //     <Page
-    //       pageNumber={1}
-    //       className={"pdfPage"}
-    //       renderAnnotationLayer={false}
-    //       renderTextLayer={false}
-    //       // height={324}
-    //     />
-    //   </Document>
-
-    //   <div className="attachmentPdf__content">
-    //     <img
-    //       src={pdfIcon}
-    //       alt="pdf"
-    //       className="attachmentOGTag__content--icon"
-    //     />
-    //     <div>
-    //       <a
-    //         className="attachmentPdf__content--title"
-    //         target="_blank"
-    //         href={url}
-    //       >
-    //         {name}
-    //       </a>
-    //       <div className="attachmentPdf__content--url">
-    //         {formatFileSize(size)}
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
     <div
       className="attachmentPdf"
       lm-feed-component-id={`lm-feed-post-attachments-rstuw-${postId}`}
@@ -291,4 +201,90 @@ export const LMFeedDocumentAttachmentView = ({
     </div>
   );
 };
+
+
+interface LMFeedImageAttachmentViewProps {
+  attachment: Attachment;
+  postId: string;
+}
+export const LMFeedImageAttachmentView = ({
+  attachment,
+  postId,
+}: LMFeedImageAttachmentViewProps) => {
+  const { attachmentMeta } = attachment;
+  const { name, url } = attachmentMeta;
+  return (
+    <div
+      className="attachment-image"
+      lm-feed-component-id={`lm-feed-post-attachments-efghi-${postId}`}
+    >
+      <img
+        loading="lazy"
+        src={url}
+        alt={name}
+        lm-feed-component-id={`lm-feed-post-attachments-jklmn-${postId}`}
+      />
+    </div>
+  );
+};
+
+interface LMFeedVidoeAttachmentViewProps {
+  attachment: Attachment;
+  postId: string;
+}
+export const LMFeedVideoAttachmentView = ({
+  attachment,
+  postId,
+}: LMFeedVidoeAttachmentViewProps) => {
+  const { attachmentMeta } = attachment;
+  const { url } = attachmentMeta;
+  return (
+    <div
+      className="attachment-video"
+      lm-feed-component-id={`lm-feed-post-attachments-opqrs-${postId}`}
+    >
+      <video
+        controls
+        width="100%"
+        height="auto"
+        lm-feed-component-id={`lm-feed-post-attachments-tuvwx-${postId}`}
+      >
+        <source src={url} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  );
+};
+
+
+interface LMFeedReelAttachmentViewProps {
+  attachment: Attachment;
+  postId: string;
+}
+export const LMFeedReelAttachmentView = ({
+  attachment,
+  postId,
+}: LMFeedReelAttachmentViewProps) => {
+  const { attachmentMeta } = attachment;
+  const { url } = attachmentMeta;
+  return (
+    <div
+      className="attachment-video"
+      lm-feed-component-id={`lm-feed-post-attachments-opqrs-${postId}`}
+    >
+      <video
+        controls
+        width="100%"
+        height="auto"
+        lm-feed-component-id={`lm-feed-post-attachments-tuvwx-${postId}`}
+      >
+        <source src={url} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  );
+};
+
 export default LMFeedAttachments;
+
+
