@@ -7,7 +7,6 @@ const LMFeedCreatePostSubmitButton = () => {
   const { postFeed, temporaryPost, editPost } = useContext(
     LMFeedCreatePostContext,
   );
-
   return (
     <div
       className="lm-cursor-pointer lm-feed-create-post-wrapper__submit-button lm-mt-4"

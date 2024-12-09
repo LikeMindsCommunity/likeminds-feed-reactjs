@@ -10,7 +10,6 @@ import "slick-carousel/slick/slick-theme.css";
 import pdfIcon from "../../assets/images/pdf-icon.svg";
 import { Document, Page } from "react-pdf";
 import { OgTag } from "../types/models/ogTag";
-import LMPostPoll from "../../components/LMPostPoll";
 
 export interface LMFeedAttachmentsProps {
   attachments: AttachmentType[];
@@ -120,9 +119,6 @@ const RenderAttachment: React.FC<{
       );
     case 4: // OG Tags
       return <LMFeedOGTagAttachmentView postId={postId} ogTags={ogTags!} />;
-
-    case 6:
-      return <LMPostPoll />
 
     default: // Unsupported attachment type
       return (

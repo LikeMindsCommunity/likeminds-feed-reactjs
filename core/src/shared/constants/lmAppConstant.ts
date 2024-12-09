@@ -27,4 +27,3 @@ export const PHOTO = "photo";
 export const VIDEO = "video";
 export const PDF = "PDF";
 export const REEL = "reel";
-export const POLL = "poll";

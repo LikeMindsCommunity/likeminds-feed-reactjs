@@ -60,7 +60,6 @@ function LMSocialFeed({
   memberComponentClickCustomCallback,
   hintTextForAnonymous,
   isAnonymousPostAllowed,
-  LMPostPollDialogStyles,
 }: PropsWithChildren<LMFeedProps<LMClient>>) {
   const { lmFeedUser, logoutUser, lmFeedUserCurrentCommunity } =
     useUserProvider(client, customEventClient, userDetails);
@@ -118,7 +117,6 @@ function LMSocialFeed({
             PostCreationCustomCallbacks,
             isAnonymousPostAllowed,
             hintTextForAnonymous,
-            LMPostPollDialogStyles,
           }}
         >
           <GeneralContext.Provider
