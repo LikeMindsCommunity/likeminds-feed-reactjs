@@ -20,21 +20,17 @@
 // Import topic feed styles
 @import "topicFeed";
 
+
 // Import post styles
 @import "posts";
 
 // Import replies styles
 @import "replies";
 
+
 @import "tagging";
 // Import Create post styles
 @import "createPost";
-
-// Import Create poll styles
-@import "createPoll";
-
-// Import Create poll styles
-@import "poll";
 
 // Import all members styles
 @import "allMembers";
@@ -48,4 +44,4 @@
 // Import responsive styles
 @import "responsive";
 
-@import "delete";
+@import "delete"

@@ -29,7 +29,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
     loadMoreFeeds = true,
     feedList = [],
     feedUsersList = {},
-    getNextPage = () => { },
+    getNextPage = () => {},
     deletePost,
     pinPost,
     likePost,
@@ -145,6 +145,8 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
           // TODO set shimmer on loader component
           loader={null}
           scrollThreshold={0.6}
+
+          // scrollableTarget="feed-scroller"
         >
           {renderFeeds()}
         </InfiniteScroll>

@@ -2,7 +2,6 @@ import { Dialog } from "@mui/material";
 import photo from "../assets/images/lm-photo.svg";
 import video from "../assets/images/VideoCamera.svg";
 import pdf from "../assets/images/lm-attach.svg";
-import union from "../assets/images/Union.svg";
 import { LMFeedCreatePostContext } from "../contexts/LMFeedCreatePostContext";
 import { useCreatePost } from "../hooks/useCreatePost";
 import { LMFeedCreatePostMediaUploadMode } from "../shared/enums/lmCreatePostMediaHandlingMode";
@@ -11,15 +10,8 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
-import {
-  PDF,
-  PHOTO,
-  VIDEO,
-  REEL,
-  POLL,
-} from "../shared/constants/lmAppConstant";
+import { PDF, PHOTO, VIDEO, REEL } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import LMFeedCreatePollDialog from "./LMFeedCreatePollDialog";
 
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
@@ -53,7 +45,6 @@ const LMFeedCreatePost = ({
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
-    setTemporaryPostFunction,
     selectedTopicIds,
     setSelectedTopicIds,
     preSelectedTopics,
@@ -69,24 +60,7 @@ const LMFeedCreatePost = ({
     removeAddReel,
     isAnonymousPost,
     changeAnonymousPostStatus,
-
-    openCreatePollDialog,
-    setOpenCreatePollDialog,
-    pollOptions,
-    addPollOption,
-    removePollOption,
-    updatePollOption,
-    changePollText,
-    pollText,
-    updatePollExpirationDate,
-    pollExpirationDate,
-    advancedOptions: advancedPollOptions,
-    validatePoll,
-    previewPoll,
-    setPreviewPoll,
-    updateAdvancedOptions,
   } = useCreatePost();
-
   return (
     <LMFeedCreatePostContext.Provider
       value={{
@@ -109,7 +83,6 @@ const LMFeedCreatePost = ({
         openCreatePostDialog,
         setOpenCreatePostDialog,
         temporaryPost,
-        setTemporaryPostFunction,
         selectedTopicIds,
         setSelectedTopicIds,
         preSelectedTopics,
@@ -122,22 +95,6 @@ const LMFeedCreatePost = ({
         removeAddReel,
         isAnonymousPost,
         changeAnonymousPostStatus,
-
-        openCreatePollDialog,
-        setOpenCreatePollDialog,
-        pollOptions,
-        addPollOption,
-        removePollOption,
-        updatePollOption,
-        changePollText,
-        pollText,
-        updatePollExpirationDate,
-        pollExpirationDate,
-        advancedOptions: advancedPollOptions,
-        validatePoll,
-        previewPoll,
-        setPreviewPoll,
-        updateAdvancedOptions,
       }}
     >
       {showStarterComponent ? (
@@ -257,24 +214,6 @@ const LMFeedCreatePost = ({
                       {PDF}
                     </div>
                   </div>
-
-                  <div
-                    className="lm-createPost__footer__left__media lm-cursor-pointer"
-                    onClick={() => {
-                      setOpenCreatePollDialog(!openCreatePollDialog);
-                    }}
-                  >
-                    <div className="lm-createPost__footer__left__media--imgBox">
-                      {LMFeedCustomIcons?.createPostFooterDocumentIcon ? (
-                        <LMFeedCustomIcons.createPostFooterDocumentIcon />
-                      ) : (
-                        <img src={union} alt="poll" />
-                      )}
-                    </div>
-                    <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
-                      {POLL}
-                    </div>
-                  </div>
                 </div>
                 <div className="lm-createPost__footer__right">
                   <button
@@ -299,16 +238,6 @@ const LMFeedCreatePost = ({
         }}
       >
         {CustomComponents.CustomCreatePostDialog || <LMFeedCreatePostDialog />}
-      </Dialog>
-
-      <Dialog
-        open={openCreatePollDialog}
-        onClose={() => {
-          changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.NULL);
-          setOpenCreatePollDialog(false);
-        }}
-      >
-        {<LMFeedCreatePollDialog />}
       </Dialog>
     </LMFeedCreatePostContext.Provider>
   );
