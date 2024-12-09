@@ -992,6 +992,12 @@ export function useCreatePost(): UseCreatePost {
       lmfeedAnalyticsClient?.sendLinkAttachedEvent(ogTag.url);
     }
   }, [lmfeedAnalyticsClient, ogTag, temporaryPost]);
+
+  useEffect(() => {
+    if (temporaryPost && temporaryPost.heading) {
+      setQuestion(temporaryPost.heading);
+    }
+  }, [temporaryPost]);
   return {
     postText: text,
     setPostText,

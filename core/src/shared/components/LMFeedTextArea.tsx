@@ -24,7 +24,7 @@ const LMFeedTextArea = () => {
     LMFeedGlobalClientProviderContext,
   );
   // const { customEventClient } = useContext(LMFeedGlobalClientProviderContext);
-  function setCursorToTheEnd() {
+  const setCursorToTheEnd = React.useCallback(() => {
     if (textFieldRef?.current) {
       // Setting the cursor at the end of the div
       textFieldRef.current.focus();
@@ -41,7 +41,7 @@ const LMFeedTextArea = () => {
         selection.addRange(range);
       }
     }
-  }
+  }, [textFieldRef]);
 
   useEffect(() => {
     if (temporaryPost && textFieldRef?.current) {
