@@ -34,6 +34,7 @@ interface LMFeedCreatePostContextInterface {
   setOpenCreatePostDialog?: React.Dispatch<boolean>;
   temporaryPost?: Post | null;
   clearPollFunction: () => void;
+  editPollFunction: () => void;
   selectedTopicIds?: string[];
   setSelectedTopicIds?: React.Dispatch<string[]>;
   preSelectedTopics?: Topic[];

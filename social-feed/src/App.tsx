@@ -5,7 +5,7 @@ import {
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   initiateFeedClient,
-} from "likeminds-feed-reactjs-beta";
+} from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
 

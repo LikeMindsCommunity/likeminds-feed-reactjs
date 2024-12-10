@@ -16,6 +16,7 @@ import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { changePostCase } from "../shared/utils";
 import { formatDate } from '../shared/utils';
+import { renderMessage } from "../shared/utils";
 
 const LMFeedPollDialogPreview = () => {
     const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -26,18 +27,19 @@ const LMFeedPollDialogPreview = () => {
         setPreSelectedTopics,
         temporaryPost,
         showOGTagViewContainer,
-        setOpenCreatePostDialog,
         createPostComponentClickCustomCallback,
         ogTag,
         isAnonymousPost,
         changeAnonymousPostStatus,
 
         setOpenCreatePollDialog,
+        clearPollFunction,
         pollOptions,
         pollText,
         pollExpirationDate,
         advancedOptions,
-        setPreviewPoll,
+        editPollFunction,
+
     } = useContext(LMFeedCreatePostContext);
     const {
         CustomComponents = {},
@@ -136,19 +138,14 @@ const LMFeedPollDialogPreview = () => {
                     <div className="poll-preview-edit-button-parent">
                         <span
                             className="poll-preview-header-icon lm-cursor-pointer"
-                            onClick={() => { setPreviewPoll(false) }}
+                            onClick={() => { editPollFunction() }}
                         >
                             <img src={editIcon} alt="edit" />
                         </span>
                         <span
                             className="poll-preview-header-icon lm-cursor-pointer"
                             onClick={() => {
-                                if (setOpenCreatePollDialog) {
-                                    setOpenCreatePollDialog(false);
-                                }
-                                if (setOpenCreatePostDialog) {
-                                    setOpenCreatePostDialog(true);
-                                }
+                                clearPollFunction();
                             }}
                         >
                             <img src={removePollOptionIcon} alt="remove" />
@@ -156,9 +153,9 @@ const LMFeedPollDialogPreview = () => {
                     </div>
                 </div>
                 {
-                    advancedOptions.MULTIPLE_SELECTION_NO > 1 &&
+                    !(advancedOptions.MULTIPLE_SELECTION_STATE == 0 && advancedOptions.MULTIPLE_SELECTION_NO <= 1) &&
                     <div className="poll-preview-advance-options poll-preview-subheading-style">
-                        *Select {advancedOptions.MULTIPLE_SELECTION_STATE} {advancedOptions.MULTIPLE_SELECTION_NO} options.
+                        *Select {renderMessage(advancedOptions.MULTIPLE_SELECTION_STATE)} {advancedOptions.MULTIPLE_SELECTION_NO} options.
                     </div>
                 }
 

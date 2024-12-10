@@ -13,6 +13,9 @@ import noResponses from "../assets/images/no-response.svg";
 import { usePostPoll } from "../hooks/usePostPoll";
 import DotIcon from '../assets/images/dot-icon.svg';
 import { textPreprocessor } from "../shared/taggingParser";
+import { pluralizeOrCapitalize } from "../shared/utils";
+import { WordAction } from "../shared/enums/wordAction";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const LMPostPoll = () => {
     const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -36,12 +39,14 @@ export const LMPostPoll = () => {
         handleOptionClick,
         handleAddOptionSubmit,
         submitVoteHandler,
-        totalVotesCount,
+        totalMembersVotes,
         isEditMode,
         setIsEditModeFunction,
         onOptionVoteCountClick,
         pollReadMoreTapped,
         pollReadMoreTappedFunction,
+        hasMoreVotes,
+        fetchNextPage,
     } = usePostPoll();
 
     const pollExpiryTime = pollData?.metadata.expiryTime;
@@ -56,9 +61,9 @@ export const LMPostPoll = () => {
         return pollOptions.map((pollOption: PollOption, index: number) => {
             const addedByText = pollData?.metadata.allowAddOption
                 ? pollOption.uuid === currentUser?.uuid
-                    ? "Added by you"
+                    ? `Added by you`
                     : users && users[pollOption.uuid]?.name
-                        ? `Added by ${users[pollOption.uuid].name}`
+                        ? `Added by ${pluralizeOrCapitalize(users[pollOption.uuid].name, WordAction.FIRST_LETTER_CAPITAL_SINGULAR)}`
                         : ""
                 : "";
 
@@ -199,18 +204,25 @@ export const LMPostPoll = () => {
                 )
             }
 
-
             <div className="poll-feed-vote-count poll-feed-preview-advance-options-total poll-preview-subheading-style">
                 {
-                    (isInstantPoll(pollType) || hasPollEnded(pollExpiryTime)) &&
+                    (isInstantPoll(pollType) && hasSelectedOption || hasPollEnded(pollExpiryTime)) &&
                     <div className="lm-cursor-pointer poll-feed-total-votes member-voted-count-custom-style" onClick={() => { setPollResultSelectedTabFunction(0); setResultScreenDialogOpenFunction(true); }}>
-                        {totalVotesCount <= 1 ? `${totalVotesCount} vote` : `${totalVotesCount} votes`}
+                        {totalMembersVotes <= 1 ? `${totalMembersVotes} vote` : `${totalMembersVotes} votes`}
                     </div>
                 }
-                <div className="poll-feed-time-left">
-                    {(isInstantPoll(pollType) || hasPollEnded(pollExpiryTime)) && <img className="poll-feed-dot" src={DotIcon} alt="dot-icon" />}
-                    {pollTimeLeft}
-                </div>
+                {
+                    (!hasSelectedOption && !hasPollEnded(pollExpiryTime) && totalMembersVotes == 0) &&
+                    <div className=" poll-feed-total-votes poll-first-vote-text" >
+                        {pollData?.LmMeta?.pollAnswerText}
+                    </div>
+                }
+                {(isInstantPoll(pollType) && hasSelectedOption || hasPollEnded(pollExpiryTime) || (!isInstantPoll(pollType) && hasSelectedOption)) &&
+                    <div className="poll-feed-time-left">
+                        {(isInstantPoll(pollType) && hasSelectedOption || hasPollEnded(pollExpiryTime)) && <img className="poll-feed-dot" src={DotIcon} alt="dot-icon" />}
+                        {pollTimeLeft}
+                    </div>
+                }
                 {
                     !hasPollEnded(pollExpiryTime) && !isInstantPoll(pollType) && !isEditMode &&
                     <div className="lm-cursor-pointer poll-feed-total-votes" onClick={() => { setIsEditModeFunction(true); }}>
@@ -347,27 +359,41 @@ export const LMPostPoll = () => {
                                         }
                                     </Tabs>
                                 </Box>
-                                <div className="poll-results-memeber-list-wrapper">
-                                    {
-                                        voteDetails ? voteDetails.users.map((currentUser) => (
-                                            <div key={currentUser?.id}
-                                                className="lm-feed-create-post-wrapper__user-meta poll-results__user-meta">
-                                                <div className="lm-avatar lm-mr-4">
-                                                    {getAvatar({
-                                                        imageUrl: currentUser?.imageUrl,
-                                                        name: currentUser?.name,
-                                                    })}
+
+                                <div className="poll-results-memeber-list-wrapper" id="poll-scroll-container">
+                                    {voteDetails && voteDetails.users.length > 0 ? (
+                                        <InfiniteScroll
+                                            dataLength={voteDetails.users.length}
+                                            next={fetchNextPage}
+                                            hasMore={hasMoreVotes}
+                                            loader={<div>Loading...</div>}
+                                            scrollableTarget="poll-scroll-container"
+                                        >
+                                            {voteDetails.users.map((currentUser) => (
+                                                <div
+                                                    key={currentUser?.id}
+                                                    className="lm-feed-create-post-wrapper__user-meta poll-results__user-meta"
+                                                >
+                                                    <div className="lm-avatar lm-mr-4">
+                                                        {getAvatar({
+                                                            imageUrl: currentUser?.imageUrl,
+                                                            name: currentUser?.name,
+                                                        })}
+                                                    </div>
+                                                    <div>{currentUser?.name}</div>
                                                 </div>
-                                                <div>{currentUser?.name}</div>
-                                            </div>
-                                        )) : <>
-                                            <div className="poll-results-no-response">
-                                                <img src={noResponses} alt="check" />
-                                                <span className="poll-results-no-response-text">No Responses</span>
-                                            </div>
-                                        </>
-                                    }
+                                            ))}
+                                        </InfiniteScroll>
+                                    ) : (
+                                        <div className="poll-results-no-response">
+                                            <img src={noResponses} alt="check" />
+                                            <span className="poll-results-no-response-text">
+                                                No Responses
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
+
                             </div>
 
                         </div>

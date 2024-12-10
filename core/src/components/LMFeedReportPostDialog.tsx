@@ -3,7 +3,7 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import {
   GetReportTagsRequest,
   PostReportRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTagsResponse";
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";
@@ -39,14 +39,14 @@ const LMFeedReportPostDialog = ({
     LMFeedGlobalClientProviderContext,
   );
   const { displaySnackbarMessage } =
-  useContext(GeneralContext);
+    useContext(GeneralContext);
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const [reportTags, setReportTags] = useState<ReportObject[]>([]);
   const [selectedTag, setSelectedTag] = useState<ReportObject | null>(null);
   const [otherReason, setOtherReasons] = useState<string>("");
   async function report() {
     try {
-      const call: ReportPostResponse  = (await lmFeedclient?.postReport(
+      const call: ReportPostResponse = (await lmFeedclient?.postReport(
         PostReportRequest.builder()
           .setUuid(currentUser?.sdkClientInfo.uuid || "")
           .setTagId(selectedTag?.id || 0)
@@ -58,13 +58,13 @@ const LMFeedReportPostDialog = ({
           .build(),
       )) as never;
 
-      if(call.success){
+      if (call.success) {
         if (displaySnackbarMessage)
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.POST_REPORTED_SUCCESSFULLY)!,
           );
       }
-      
+
       if (entityType === LMFeedEntityType.REPLY) {
         lmfeedAnalyticsClient?.sendReplyReportedEvent(
           post!,

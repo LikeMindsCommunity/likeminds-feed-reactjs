@@ -52,11 +52,14 @@ interface UsePostPoll {
   handleAddOptionSubmit: () => void;
   submitVoteHandler: () => void;
   totalVotesCount: number;
+  totalMembersVotes: number;
   isEditMode: boolean;
   setIsEditModeFunction: (toggle: boolean) => void;
   onOptionVoteCountClick: (tab: number, toggle: boolean) => void;
   pollReadMoreTapped: boolean;
   pollReadMoreTappedFunction: () => void;
+  fetchNextPage: () => void;
+  hasMoreVotes: boolean;
 }
 
 export function usePostPoll(): UsePostPoll {
@@ -86,7 +89,7 @@ export function usePostPoll(): UsePostPoll {
   const multiSelectState = pollData?.metadata.multipleSelectState;
   const pollType = pollData?.metadata.pollType;
   const allowAddOption = pollData?.metadata.allowAddOption;
-
+  const totalMembersVoted = pollData?.LmMeta?.votersCount;
   const [hasSelectedOption, setHasSelectedOption] = useState<boolean>(
     hasPollEnded(pollExpiryTime),
   );
@@ -110,6 +113,8 @@ export function usePostPoll(): UsePostPoll {
   const [voteDetails, setVoteDetails] = useState<{
     users: (User | undefined)[];
   } | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [hasMoreVotes, setHasMoreVotes] = useState<boolean>(true);
 
   const totalVotes = useMemo(() => {
     let totalCount = 0;
@@ -124,6 +129,9 @@ export function usePostPoll(): UsePostPoll {
   }, [pollOptions]);
 
   const [totalVotesCount, setTotalVotesCount] = useState<number>(totalVotes);
+  const [totalMembersVotes, setTotalMembersVotes] =
+    useState<number>(totalMembersVoted);
+
   const [isEditMode, setIsEditMode] = useState(!hasSelectedOption);
   const [pollReadMoreTapped, setPollReadMoreTapped] = useState<boolean>(false);
 
@@ -176,6 +184,7 @@ export function usePostPoll(): UsePostPoll {
           return option;
         }),
       );
+
       setTotalVotesCount((totalVotesCount) => totalVotesCount + 1);
       setHasSelectedOption(true);
       setIsEditMode(false);
@@ -229,6 +238,7 @@ export function usePostPoll(): UsePostPoll {
         pollId: pollId ?? "",
         votes: selectedOptionIds,
       });
+      setTotalMembersVotes((totalMembersVotes) => totalMembersVotes + 1);
     } catch (error) {
       console.log(error);
     }
@@ -311,24 +321,66 @@ export function usePostPoll(): UsePostPoll {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSelectedOption, isEditMode]);
 
-  const selectedOptionMemberList = async () => {
+  const fetchNextPage = () => {
+    if (hasMoreVotes) {
+      selectedOptionMemberList(page + 1);
+    }
+  };
+
+  // const selectedOptionMemberList = async () => {
+  //   const pollId = pollData?.id;
+  //   const pollOption = pollOptions[pollResultSelectedTab];
+  //   const optionId = pollOption.id;
+  //   if (pollOption.voteCount > 0) {
+  //     const response = await lmFeedclient?.getPollVotes({
+  //       pollId: pollId,
+  //       votes: [optionId],
+  //       page: 1,
+  //       pageSize: 10,
+  //     });
+  //     const vote = response?.data?.votes?.find((v) => v.id === optionId);
+  //     if (vote && vote.users.length > 0) {
+  //       setVoteDetails({
+  //         users: vote.users.map((userId) => response?.data?.users[userId]),
+  //       });
+  //     } else {
+  //       setVoteDetails(null);
+  //     }
+  //   } else {
+  //     setVoteDetails(null);
+  //   }
+  // };
+
+  const selectedOptionMemberList = async (currentPage = 1) => {
     const pollId = pollData?.id;
     const pollOption = pollOptions[pollResultSelectedTab];
     const optionId = pollOption.id;
+
     if (pollOption.voteCount > 0) {
-      const response = await lmFeedclient?.getPollVotes({
-        pollId: pollId,
-        votes: [optionId],
-        page: 1,
-        pageSize: 10,
-      });
-      const vote = response?.data?.votes?.find((v) => v.id === optionId);
-      if (vote && vote.users.length > 0) {
-        setVoteDetails({
-          users: vote.users.map((userId) => response?.data?.users[userId]),
+      try {
+        const response = await lmFeedclient?.getPollVotes({
+          pollId: pollId,
+          votes: [optionId],
+          page: currentPage,
+          pageSize: 10,
         });
-      } else {
+
+        const vote = response?.data?.votes?.find((v) => v.id === optionId);
+
+        if (vote && vote.users.length > 0) {
+          setVoteDetails({
+            users: vote.users.map((userId) => response?.data?.users[userId]),
+          });
+          setPage(currentPage);
+          setHasMoreVotes(vote.users.length >= 10); // If less than pageSize, assume no more data
+        } else {
+          setVoteDetails(null);
+          setHasMoreVotes(false);
+        }
+      } catch (error) {
+        console.error(error);
         setVoteDetails(null);
+        setHasMoreVotes(false);
       }
     } else {
       setVoteDetails(null);
@@ -429,6 +481,7 @@ export function usePostPoll(): UsePostPoll {
         })
       : submitVoteHandler,
     totalVotesCount,
+    totalMembersVotes,
     isEditMode,
     setIsEditModeFunction,
     onOptionVoteCountClick: onPollOptionClicked
@@ -440,5 +493,7 @@ export function usePostPoll(): UsePostPoll {
       : onOptionVoteCountClick,
     pollReadMoreTapped,
     pollReadMoreTappedFunction,
+    fetchNextPage,
+    hasMoreVotes,
   };
 }

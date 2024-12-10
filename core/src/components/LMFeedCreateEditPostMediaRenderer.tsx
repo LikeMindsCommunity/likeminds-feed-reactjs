@@ -10,7 +10,6 @@ import { Document, Page } from "react-pdf";
 import pdfIcon from "../assets/images/pdf-icon.svg";
 import { formatFileSize } from "../shared/utils";
 import { OgTag } from "../shared/types/models/ogTag";
-import removePollOptionIcon from '../assets/images/remove-poll-option.svg';
 import { formatDate, previewMultiSelectStateModifier } from "../shared/utils";
 interface LMFeedCreatePostDMediaPost {
   mediaUploadDialog?: string;
@@ -307,27 +306,14 @@ export const VideoMediaItem = memo(
 
 const PollItem = ({ attachment }: MediaItemProps) => {
   const attachmentMeta = attachment?.attachmentMeta ?? undefined;
-  const {
-    clearPollFunction: clearPollFunction,
-  } = useContext(LMFeedCreatePostContext);
   return <>
     {attachmentMeta &&
       <div className="poll-preview-wrapper">
         <div className="poll-preview-title-parent">
           <div className="poll-preview-title">{attachmentMeta?.title}</div>
-          <div className="poll-preview-edit-button-parent">
-            <span
-              className="poll-preview-header-icon lm-cursor-pointer post-poll-clear-poll-options-custom-style"
-              onClick={() => {
-                clearPollFunction();
-              }}
-            >
-              <img src={removePollOptionIcon} alt="remove" />
-            </span>
-          </div>
         </div>
         {
-          attachmentMeta?.multipleSelectNumber && (attachmentMeta?.multipleSelectNumber > 1) &&
+          !(attachmentMeta?.multipleSelectState == "exactly" && (attachmentMeta?.multipleSelectNumber ?? 1) <= 1) &&
           <div className="poll-preview-advance-options poll-preview-subheading-style">
             *Select {previewMultiSelectStateModifier(attachmentMeta.multipleSelectState)} {attachmentMeta.multipleSelectNumber} options.
           </div>

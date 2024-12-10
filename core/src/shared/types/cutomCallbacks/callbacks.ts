@@ -67,6 +67,7 @@ export type PostCreationCustomActions = {
   postFeedCustomAction?: PostCreationCustomActionCallback;
 
   onPollClearClicked?: PostCreationCustomActionCallback;
+  onPollEditClicked?: PostCreationCustomActionCallback;
   onPollExpiryTimeClicked?: PostCreationCustomActionCallback;
   onAddOptionClicked?: PostCreationCustomActionCallback;
   onPollOptionCleared?: PostCreationCustomActionCallback;

@@ -237,7 +237,7 @@ const LMQNACreatePollDialog = ({ }: LMQNACreatePollDialogProps) => {
                                                         Exactly
                                                     </MenuItem>
                                                     <MenuItem className="custom-select-text" value={1}>
-                                                        At max
+                                                        At Most
                                                     </MenuItem>
                                                     <MenuItem className="custom-select-text" value={2}>
                                                         At Least

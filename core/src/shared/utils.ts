@@ -423,7 +423,7 @@ export const renderMessage = (state: number): string => {
     case 0:
       return "exactly";
     case 1:
-      return "at max";
+      return "at most";
     case 2:
       return "at least";
     default:
@@ -438,7 +438,7 @@ export const previewMultiSelectStateModifier = (
     case "exactly":
       return "exactly";
     case "at_max":
-      return "at max";
+      return "at most";
     case "at_least":
       return "at least";
     default:

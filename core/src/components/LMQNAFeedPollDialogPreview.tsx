@@ -16,6 +16,7 @@ import { LMFeedOGTagMediaItem } from "./LMFeedOgTagMediaItem";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { changePostCase } from "../shared/utils";
 import { formatDate } from '../shared/utils';
+import { renderMessage } from "../shared/utils";
 
 const LMQNAPollDialogPreview = () => {
     const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -26,7 +27,6 @@ const LMQNAPollDialogPreview = () => {
         setPreSelectedTopics,
         temporaryPost,
         showOGTagViewContainer,
-        setOpenCreatePostDialog,
         createPostComponentClickCustomCallback,
         ogTag,
         isAnonymousPost,
@@ -37,8 +37,9 @@ const LMQNAPollDialogPreview = () => {
         pollText,
         pollExpirationDate,
         advancedOptions,
-        setPreviewPoll,
         question,
+        clearPollFunction,
+        editPollFunction,
         setQuestionText,
     } = useContext(LMFeedCreatePostContext);
     const {
@@ -152,19 +153,14 @@ const LMQNAPollDialogPreview = () => {
                     <div className="poll-preview-edit-button-parent">
                         <span
                             className="poll-preview-header-icon lm-cursor-pointer"
-                            onClick={() => { setPreviewPoll(false) }}
+                            onClick={() => { editPollFunction() }}
                         >
-                            <img src={editIcon} alt="remove" />
+                            <img src={editIcon} alt="edit" />
                         </span>
                         <span
                             className="poll-preview-header-icon lm-cursor-pointer"
                             onClick={() => {
-                                if (setOpenCreatePollDialog) {
-                                    setOpenCreatePollDialog(false);
-                                }
-                                if (setOpenCreatePostDialog) {
-                                    setOpenCreatePostDialog(true);
-                                }
+                                clearPollFunction();
                             }}
                         >
                             <img src={removePollOptionIcon} alt="remove" />
@@ -172,9 +168,9 @@ const LMQNAPollDialogPreview = () => {
                     </div>
                 </div>
                 {
-                    advancedOptions.MULTIPLE_SELECTION_NO > 1 &&
+                    !(advancedOptions.MULTIPLE_SELECTION_STATE == 0 && advancedOptions.MULTIPLE_SELECTION_NO <= 1) &&
                     <div className="poll-preview-advance-options poll-preview-subheading-style">
-                        *Select {advancedOptions.MULTIPLE_SELECTION_STATE} {advancedOptions.MULTIPLE_SELECTION_NO} options.
+                        *Select {renderMessage(advancedOptions.MULTIPLE_SELECTION_STATE)} {advancedOptions.MULTIPLE_SELECTION_NO} options.
                     </div>
                 }
 
