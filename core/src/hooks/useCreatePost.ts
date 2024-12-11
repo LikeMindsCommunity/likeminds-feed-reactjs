@@ -19,7 +19,7 @@ import {
   EditPostRequest,
   LMFeedPostAttachment,
   LMFeedPostAttachmentMeta,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { UploadMediaModel } from "../shared/types/models/uploadMedia";
 import { HelperFunctionsClass } from "../shared/helper";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
@@ -66,6 +66,7 @@ interface UseCreatePost {
   setOpenCreatePostDialog: React.Dispatch<boolean>;
   temporaryPost: Post | null;
   clearPollFunction: () => void;
+  editPollFunction: () => void;
   selectedTopicIds: string[];
   setSelectedTopicIds: React.Dispatch<string[]>;
   preSelectedTopics: Topic[];
@@ -293,6 +294,7 @@ export function useCreatePost(): UseCreatePost {
     onPollOptionCleared,
     onPollCompleteClicked,
     onPollClearClicked,
+    onPollEditClicked,
   } = PostCreationCustomCallbacks;
 
   // declating state variables
@@ -434,14 +436,17 @@ export function useCreatePost(): UseCreatePost {
 
   function pollExpiryTimeClickFunction() {}
 
+  function editPollFunction() {
+    setPreviewPoll(false);
+  }
+
   function clearPollFunction() {
-    setTemporaryPost((prev) => {
-      if (prev) {
-        return { ...prev, attachments: [] };
-      } else {
-        return null;
-      }
-    });
+    if (setOpenCreatePollDialog) {
+      setOpenCreatePollDialog(false);
+    }
+    if (setOpenCreatePostDialog) {
+      setOpenCreatePostDialog(true);
+    }
   }
 
   const postFeed = useCallback(
@@ -460,7 +465,8 @@ export function useCreatePost(): UseCreatePost {
         if (
           !textContent &&
           mediaList.length === 0 &&
-          isCustomWidgetsDataEmpty
+          isCustomWidgetsDataEmpty &&
+          pollText.length === 0
         ) {
           return;
         }
@@ -1036,6 +1042,9 @@ export function useCreatePost(): UseCreatePost {
     clearPollFunction: onPollClearClicked
       ? onPollClearClicked.bind(null, postCreationActionAndDataStore)
       : clearPollFunction,
+    editPollFunction: onPollEditClicked
+      ? onPollEditClicked.bind(null, postCreationActionAndDataStore)
+      : editPollFunction,
     isAnonymousPost,
     changeAnonymousPostStatus,
     selectedTopicIds,
@@ -1057,7 +1066,6 @@ export function useCreatePost(): UseCreatePost {
             postCreationActionAndDataStore,
           )
         : undefined,
-
     openCreatePollDialog,
     setOpenCreatePollDialog,
     pollOptions,
