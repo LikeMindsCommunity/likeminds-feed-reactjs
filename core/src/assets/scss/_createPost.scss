@@ -23,7 +23,7 @@
     }
   }
 
-  .uploadThumbnail{
+  .uploadThumbnail {
     margin-top: 20px;
     position: relative;
     z-index: 9999;
@@ -167,7 +167,7 @@
     padding: pxToRem(16);
     width: 100%;
     float: left;
-    border-bottom: 1px solid #f1f3f6; 
+    border-bottom: 1px solid #f1f3f6;
     align-items: center;
     gap: pxToRem(16);
 
@@ -353,7 +353,7 @@
   border: none;
   color: #333;
   font-weight: var(--font-weight-bold-light);
-  font-size: var(--font-size-base); 
+  font-size: var(--font-size-base);
   border-bottom: 1px solid #eceff3;
   padding: 15px 0;
   margin: 0 0 20px 0;
@@ -370,6 +370,7 @@
   overflow-y: auto;
   min-height: 50px;
   max-height: 90px;
+  margin-bottom: 1rem;
 }
 .lm-feed-create-post-text-area[contenteditable="true"]:empty:before {
   content: attr(data-placeholder);
@@ -379,7 +380,7 @@
 }
 
 .lm-feed-create-post-topic-text-area-divider {
-  border-width: calc(var(--border-width)/2);
+  border-width: calc(var(--border-width) / 2);
   border-style: solid;
   border-color: rgba(208, 216, 226, 0.4);
   margin: pxToRem(16) pxToRem(0) !important;
@@ -455,20 +456,18 @@
   }
 }
 
-
-.lm-feed-create-post-anonymous-post{
+.lm-feed-create-post-anonymous-post {
   margin-bottom: pxToRem(24);
-  .anonymous-post-checkbox{
+  .anonymous-post-checkbox {
     padding: 0px;
     height: pxToRem(16);
     width: pxToRem(16);
     margin-right: pxToRem(8);
-    
   }
-  .anonymous-post-checkbox.Mui-checked{
+  .anonymous-post-checkbox.Mui-checked {
     color: var(--lm-feed-primary-color);
   }
-  .anonymous-post-text{
+  .anonymous-post-text {
     line-height: pxToRem(20);
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold-heavy);

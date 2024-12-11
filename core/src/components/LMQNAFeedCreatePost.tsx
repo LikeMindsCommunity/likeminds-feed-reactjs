@@ -9,15 +9,18 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext } from "react";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import createPostIcon from "../assets/images/note.text.badge.plus.svg";
+import union from "../assets/images/Union.svg";
 import {
   PDF,
   PHOTO,
   POST,
   VIDEO,
   REEL,
+  POLL,
 } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import LMQNAFeedCreatePostDialog from "./LMQNAFeedCreatePostDialog";
+import LMQNACreatePollDialog from "./LMQNAFeedCreatePollDialog";
 interface LMFeedCreatePostInterface {
   showStarterComponent?: boolean;
 }
@@ -50,6 +53,8 @@ const LMQNAFeedCreatePost = ({
     openCreatePostDialog,
     setOpenCreatePostDialog,
     temporaryPost,
+    clearPollFunction,
+    editPollFunction,
     selectedTopicIds,
     setSelectedTopicIds,
     preSelectedTopics,
@@ -67,6 +72,23 @@ const LMQNAFeedCreatePost = ({
     setQuestionText,
     isAnonymousPost,
     changeAnonymousPostStatus,
+
+    openCreatePollDialog,
+    setOpenCreatePollDialog,
+    pollOptions,
+    addPollOption,
+    removePollOption,
+    updatePollOption,
+    changePollText,
+    pollText,
+    updatePollExpirationDate,
+    pollExpirationDate,
+    advancedOptions: advancedPollOptions,
+    validatePoll,
+    previewPoll,
+    setPreviewPoll,
+    updateAdvancedOptions,
+    pollExpiryTimeClickFunction,
   } = useCreatePost();
   return (
     <LMFeedCreatePostContext.Provider
@@ -92,6 +114,8 @@ const LMQNAFeedCreatePost = ({
         openCreatePostDialog,
         setOpenCreatePostDialog,
         temporaryPost,
+        clearPollFunction,
+        editPollFunction,
         selectedTopicIds,
         setSelectedTopicIds,
         preSelectedTopics,
@@ -104,6 +128,23 @@ const LMQNAFeedCreatePost = ({
         removeAddReel,
         isAnonymousPost,
         changeAnonymousPostStatus,
+
+        openCreatePollDialog,
+        setOpenCreatePollDialog,
+        pollOptions,
+        addPollOption,
+        removePollOption,
+        updatePollOption,
+        changePollText,
+        pollText,
+        updatePollExpirationDate,
+        pollExpirationDate,
+        advancedOptions: advancedPollOptions,
+        validatePoll,
+        previewPoll,
+        setPreviewPoll,
+        updateAdvancedOptions,
+        pollExpiryTimeClickFunction,
       }}
     >
       {showStarterComponent ? (
@@ -224,6 +265,25 @@ const LMQNAFeedCreatePost = ({
                       {PDF}
                     </div>
                   </div>
+
+                  <div
+                    className="lm-createPost__footer__left__media lm-cursor-pointer"
+                    onClick={() => {
+                      setOpenCreatePollDialog(!openCreatePollDialog);
+                    }}
+                  >
+                    <div className="lm-createPost__footer__left__media--imgBox">
+                      {LMFeedCustomIcons?.createPostFooterDocumentIcon ? (
+                        <LMFeedCustomIcons.createPostFooterDocumentIcon />
+                      ) : (
+                        <img src={union} alt="poll" />
+                      )}
+                    </div>
+                    <div className="lm-createPost__footer__left__media--texted lm-text-capitalize">
+                      {POLL}
+                    </div>
+                  </div>
+
                 </div>
                 <div className="lm-createPost__footer__right">
                   <button
@@ -250,6 +310,16 @@ const LMQNAFeedCreatePost = ({
         {CustomComponents.CustomCreatePostDialog || (
           <LMQNAFeedCreatePostDialog />
         )}
+      </Dialog>
+
+      <Dialog
+        open={openCreatePollDialog}
+        onClose={() => {
+          changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.NULL);
+          setOpenCreatePollDialog(false);
+        }}
+      >
+        {<LMQNACreatePollDialog />}
       </Dialog>
     </LMFeedCreatePostContext.Provider>
   );

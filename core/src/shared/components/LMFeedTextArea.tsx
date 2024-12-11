@@ -19,6 +19,7 @@ const LMFeedTextArea = () => {
   const { setPostText, textFieldRef, containerRef, temporaryPost } = useContext(
     LMFeedCreatePostContext,
   );
+
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
@@ -49,7 +50,8 @@ const LMFeedTextArea = () => {
       ).innerHTML;
     }
     setCursorToTheEnd();
-  }, [textFieldRef, temporaryPost, setCursorToTheEnd]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textFieldRef, temporaryPost]);
   return (
     <div ref={containerRef}>
       {taggingList && taggingList?.length > 0 ? (

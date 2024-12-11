@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 

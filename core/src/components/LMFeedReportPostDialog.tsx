@@ -8,11 +8,15 @@ import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTa
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { LMFeedEntityType } from "../shared/constants/lmEntityType";
 import { Reply } from "../shared/types/models/replies";
 import { Post } from "../shared/types/models/post";
 import { changePostCase } from "../shared/utils";
 import { WordAction } from "../shared/enums/wordAction";
+import { ReportPostResponse } from "../shared/types/api-responses/postReportResponse";
+import { getDisplayMessage } from "../shared/utils";
+import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 
 interface LMFeedReportPostDialogProps {
   closeReportDialog: () => void;
@@ -34,13 +38,15 @@ const LMFeedReportPostDialog = ({
   const { lmFeedclient, lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
+  const { displaySnackbarMessage } =
+    useContext(GeneralContext);
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const [reportTags, setReportTags] = useState<ReportObject[]>([]);
   const [selectedTag, setSelectedTag] = useState<ReportObject | null>(null);
   const [otherReason, setOtherReasons] = useState<string>("");
   async function report() {
     try {
-      await lmFeedclient?.postReport(
+      const call: ReportPostResponse = (await lmFeedclient?.postReport(
         PostReportRequest.builder()
           .setUuid(currentUser?.sdkClientInfo.uuid || "")
           .setTagId(selectedTag?.id || 0)
@@ -50,7 +56,15 @@ const LMFeedReportPostDialog = ({
           .setEntityId(entityId)
           .setEntityType(entityType)
           .build(),
-      );
+      )) as never;
+
+      if (call.success) {
+        if (displaySnackbarMessage)
+          displaySnackbarMessage(
+            getDisplayMessage(LMDisplayMessages.POST_REPORTED_SUCCESSFULLY)!,
+          );
+      }
+
       if (entityType === LMFeedEntityType.REPLY) {
         lmfeedAnalyticsClient?.sendReplyReportedEvent(
           post!,

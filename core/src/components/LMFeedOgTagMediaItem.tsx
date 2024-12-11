@@ -35,7 +35,7 @@ export const LMFeedOGTagMediaItem = () => {
             <img
               src={brokenLink}
               alt="broken-link"
-              // className="media-item-attachmentOGTag__attachmentOGTag__img"
+            // className="media-item-attachmentOGTag__attachmentOGTag__img"
             />
             <span>{ogTag?.url}</span>
           </div>

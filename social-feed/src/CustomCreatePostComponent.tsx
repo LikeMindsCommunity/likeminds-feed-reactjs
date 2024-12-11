@@ -97,7 +97,7 @@ import { Divider } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   CustomAgentProviderContext,
-  LMFeedCreateMediaPost,
+  LMFeedCreateEditPostMediaRenderer,
   LMFeedCreatePostContext,
   LMFeedCreatePostMediaUploadMode,
   LMFeedCreatePostSubmitButton,
@@ -112,7 +112,7 @@ interface LMFeedCreatePostDialogProps {
   mediaUploadDialog?: string;
 }
 // eslint-disable-next-line no-empty-pattern
-const CustomLMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
+const CustomLMFeedCreatePostDialog = ({ }: LMFeedCreatePostDialogProps) => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const {
     mediaUploadMode,
@@ -185,10 +185,10 @@ const CustomLMFeedCreatePostDialog = ({}: LMFeedCreatePostDialogProps) => {
         className="custom-cta-link-input"
         placeholder="Enter link for the CTA"
       />
-      <LMFeedCreateMediaPost />
+      <LMFeedCreateEditPostMediaRenderer />
       {mediaUploadMode !== LMFeedCreatePostMediaUploadMode.NULL &&
-      !temporaryPost &&
-      !mediaList?.length ? (
+        !temporaryPost &&
+        !mediaList?.length ? (
         <LMFeedMediaUpload />
       ) : null}
       {!temporaryPost && <CustomCreatePostAttachmentController />}

@@ -2,12 +2,15 @@ import React, { useContext } from "react";
 import imgMedia from "../../assets/images/img-media.svg";
 import vidMedia from "../../assets/images/vid-media.svg";
 import docMedia from "../../assets/images/doc-media.svg";
+import pollIcon from "../../assets/images/poll-icon.svg";
 import { LMFeedCreatePostContext } from "../../contexts/LMFeedCreatePostContext";
 import { LMFeedCreatePostMediaUploadMode } from "../enums/lmCreatePostMediaHandlingMode";
 import { CustomAgentProviderContext } from "../../contexts/LMFeedCustomAgentProviderContext";
+
 const LMFeedCreatePostAttachmentController = () => {
   const { changeMediaUploadMode } = useContext(LMFeedCreatePostContext);
   const { LMFeedCustomIcons } = useContext(CustomAgentProviderContext);
+  const { setOpenCreatePostDialog, setOpenCreatePollDialog } = useContext(LMFeedCreatePostContext);
   return (
     <div
       className="lm-feed-create-post-wrapper__attachments-controller"
@@ -78,6 +81,29 @@ const LMFeedCreatePostAttachmentController = () => {
       <span
         className="lm-create-dialog-document-icon-container"
         onClick={() => {
+          if (setOpenCreatePollDialog) {
+            setOpenCreatePollDialog(true);
+          }
+          if (setOpenCreatePostDialog) {
+            setOpenCreatePostDialog(false);
+          }
+        }}
+      >
+        {LMFeedCustomIcons?.createPostDialogBoxDocumentIcon ? (
+          <LMFeedCustomIcons.createPostDialogBoxDocumentIcon />
+        ) : (
+          <img
+            src={pollIcon}
+            alt="poll"
+            className="vid-media lm-cursor-pointer"
+            lm-feed-component-id={`lm-feed-create-post-attachments-controller-opqrs`}
+            title="Poll"
+          />
+        )}
+      </span>
+      <span
+        className="lm-create-dialog-document-icon-container"
+        onClick={() => {
           if (changeMediaUploadMode)
             changeMediaUploadMode(LMFeedCreatePostMediaUploadMode.DOCUMENT);
         }}
@@ -99,3 +125,4 @@ const LMFeedCreatePostAttachmentController = () => {
 };
 
 export default LMFeedCreatePostAttachmentController;
+

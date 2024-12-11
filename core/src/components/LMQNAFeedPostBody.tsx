@@ -40,7 +40,7 @@ const LMQNAFeedPostBody = () => {
 
   return (
     <div
-      className="lm-feed-wrapper__card__body"
+      className="lm-feed-wrapper__card__body overflow-word-break"
       lm-feed-component-id={`lm-feed-post-body-vwxyz-${post?.id}`}
     >
       {heading.length > 0 && (
