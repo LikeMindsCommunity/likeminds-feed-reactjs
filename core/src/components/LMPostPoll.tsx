@@ -81,14 +81,14 @@ export const LMPostPoll = () => {
                                     ? `cursor-default poll-margin-remove`
                                     : ` `) +
                             (pollOption.isSelected ? ` poll-feed-selected-option-wrapper ` : ` `) +
-                            (hasPollEnded(pollExpiryTime) ? `cursor-default poll-margin-remove ` : ``)
+                            (hasPollEnded(pollExpiryTime) ? `cursor-default poll-margin-remove` : ``) + (pollData?.LmMeta?.toShowResults ? ` ` : ` poll-results-margin `)
                         }
                     >
                         {((hasSelectedOption && isInstantPoll(pollType)) ||
                             hasPollEnded(pollExpiryTime)) &&
                             <div
                                 className="poll-background-bar post-poll-selected-option-custom-style"
-                                style={{ width: `${pollOption.percentage ?? 0}%` }}
+                                style={{ width: `${pollData?.LmMeta?.toShowResults ? pollOption.percentage : 0}%` }}
                             />}
                         <div
                             className={
@@ -111,7 +111,8 @@ export const LMPostPoll = () => {
                         ) : null}
                     </div>
                     {((isInstantPoll(pollType) && hasSelectedOption) ||
-                        hasPollEnded(pollExpiryTime)) && (
+                        hasPollEnded(pollExpiryTime)) &&
+                        pollData?.LmMeta?.toShowResults && (
                             <div
                                 onClick={() => { onOptionVoteCountClick(index, true); }}
                                 className="lm-cursor-pointer poll-feed-vote-count poll-feed-preview-advance-options-votes poll-preview-subheading-style post-poll-vote-count-custom-style"
@@ -281,7 +282,7 @@ export const LMPostPoll = () => {
 
 
             {
-                (!pollData?.metadata.isAnonymous && (isInstantPoll(pollType) || hasPollEnded(pollData?.metadata.expiryTime))) ?
+                (!pollData?.metadata.isAnonymous && (isInstantPoll(pollType) && pollData?.LmMeta?.toShowResults || hasPollEnded(pollData?.metadata.expiryTime))) ?
                     <Dialog
                         open={resultScreenDialogOpen}
                         onClose={() => {
