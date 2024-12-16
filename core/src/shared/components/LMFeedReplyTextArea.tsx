@@ -59,7 +59,7 @@ const LMFeedReplyTextArea = ({
       <div ref={containerRef} className="lm-flex-grow">
         {taggingList && taggingList?.length > 0 ? (
           <div
-            className="taggingBox "
+            className="taggingBox"
             id="scrollableTaggingContainer"
             style={returnCSSForTagging(containerRef!)}
           >
@@ -69,7 +69,6 @@ const LMFeedReplyTextArea = ({
               next={fetchTaggingList}
               dataLength={taggingList.length}
               scrollableTarget="scrollableTaggingContainer"
-              style={{ overflowX: "hidden" }}
             >
               {taggingList?.map!((item) => {
                 return (

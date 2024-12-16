@@ -225,10 +225,10 @@
 }
 
 .upvote-block {
-  background: #e6ebf5;
+  background: var(--lm-feed-bg-color);
   padding: 8px 10px;
   border-radius: 20px;
-  border: 1px solid #d0d8e2;
+  border: 1px solid var(--lm-feed-topic-btn-border-color);
   color: #666;
 }
 
