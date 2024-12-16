@@ -1,5 +1,5 @@
 {
-  "name": "example-feed",
+  "name": "likeminds-feed-reactjs-social-feed",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,7 +15,6 @@
     "@likeminds.community/likeminds-feed-reactjs": "^1.4.0",
     "@mui/icons-material": "^6.0.2",
     "@mui/material": "^6.0.2",
-    "likeminds-feed-reactjs-beta": "^2.0.78",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
