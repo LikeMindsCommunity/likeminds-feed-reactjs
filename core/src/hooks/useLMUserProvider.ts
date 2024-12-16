@@ -67,8 +67,6 @@ export default function useUserProvider(
           )) as never;
 
         if (validateUserCall.success) {
-          // Setting tokens in local storage
-          setTokensInLocalStorage(localAccessToken, localRefreshToken);
           lmFeedclient.setUserInLocalStorage(
             JSON.stringify(validateUserCall.data?.user),
           );
@@ -197,20 +195,6 @@ export default function useUserProvider(
       }
     }
 
-    customEventClient.listen(
-      LMFeedCustomActionEvents.TRIGGER_SET_USER,
-      // setUser,
-      () => {
-        const user = lmFeedclient.getUserFromLocalStorage();
-        const { uuid, name, isGuest } = JSON.parse(user);
-        initiateFeedUser(
-          lmFeedclient.getApiKeyFromLocalStorage(),
-          uuid,
-          name,
-          isGuest,
-        );
-      },
-    );
     setUser();
     return () => {
       customEventClient.remove(LMFeedCustomActionEvents.TRIGGER_SET_USER);

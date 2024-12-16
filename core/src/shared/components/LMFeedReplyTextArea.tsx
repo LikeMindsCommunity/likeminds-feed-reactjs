@@ -41,6 +41,7 @@ const LMFeedReplyTextArea = ({
   } = useLMPostReply(post?.id?.split("-")[0].toString() || "", reply?.id || "");
 
   function postReplyAndCloseReplyText() {
+    clearTaggingList();
     if (setReplyViewVisibility) {
       postReply(reply!);
       setReplyViewVisibility(false);

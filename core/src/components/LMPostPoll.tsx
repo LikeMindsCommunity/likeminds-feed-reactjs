@@ -81,7 +81,7 @@ export const LMPostPoll = () => {
                                     ? `cursor-default poll-margin-remove`
                                     : ` `) +
                             (pollOption.isSelected ? ` poll-feed-selected-option-wrapper ` : ` `) +
-                            (hasPollEnded(pollExpiryTime) ? `cursor-default poll-margin-remove` : ``)
+                            (hasPollEnded(pollExpiryTime) ? `cursor-default poll-margin-remove` : ``) + (pollData?.LmMeta?.toShowResults ? ` ` : ` poll-results-margin `)
                         }
                     >
                         {((hasSelectedOption && isInstantPoll(pollType)) ||

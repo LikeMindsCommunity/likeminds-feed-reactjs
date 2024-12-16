@@ -327,30 +327,6 @@ export function usePostPoll(): UsePostPoll {
     }
   };
 
-  // const selectedOptionMemberList = async () => {
-  //   const pollId = pollData?.id;
-  //   const pollOption = pollOptions[pollResultSelectedTab];
-  //   const optionId = pollOption.id;
-  //   if (pollOption.voteCount > 0) {
-  //     const response = await lmFeedclient?.getPollVotes({
-  //       pollId: pollId,
-  //       votes: [optionId],
-  //       page: 1,
-  //       pageSize: 10,
-  //     });
-  //     const vote = response?.data?.votes?.find((v) => v.id === optionId);
-  //     if (vote && vote.users.length > 0) {
-  //       setVoteDetails({
-  //         users: vote.users.map((userId) => response?.data?.users[userId]),
-  //       });
-  //     } else {
-  //       setVoteDetails(null);
-  //     }
-  //   } else {
-  //     setVoteDetails(null);
-  //   }
-  // };
-
   const selectedOptionMemberList = async (currentPage = 1) => {
     const pollId = pollData?.id;
     const pollOption = pollOptions[pollResultSelectedTab];

@@ -1,5 +1,3 @@
- 
-
 .lm-social-action-bar {
   @extend .lm-d-flex;
   background-color: var(--lm-feed-light-color);
@@ -134,8 +132,6 @@
   }
 }
 
-
-
 .lm-social-action-bar__lmReply
   .lm-social-action-bar__lmReply
   .lm-social-action-bar__lmReply
@@ -210,33 +206,32 @@
   height: 16px;
 }
 
-
-.qna-feed-action-bar{
+.qna-feed-action-bar {
   border-top: 1px solid #eceff3;
   padding: 10px;
 }
 
-.lm-social-action-bar__actions__QNA{
+.lm-social-action-bar__actions__QNA {
   width: 100%;
   float: left;
-  display: block; 
+  display: block;
 }
 
-.float-left{
+.float-left {
   float: left;
 }
-.float-right{
+.float-right {
   float: right;
 }
 
-.upvote-block{
-  background: #e6ebf5;
+.upvote-block {
+  background: var(--lm-feed-bg-color);
   padding: 8px 10px;
   border-radius: 20px;
-  border: 1px solid #d0d8e2;
+  border: 1px solid var(--lm-feed-topic-btn-border-color);
   color: #666;
 }
 
-.mt-1{
+.mt-1 {
   margin: 5px 0 0 0;
 }

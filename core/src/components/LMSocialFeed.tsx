@@ -36,7 +36,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 }
 
 function LMSocialFeed({
-  LMFeedCoreCallbacks,
+  LMFeedCoreCallbacks = {} as LMCoreCallbacks,
   userDetails,
   client,
   routes,
@@ -72,20 +72,19 @@ function LMSocialFeed({
     openPostCreationProgressBar,
     setOpenPostCreationProgressBar,
   } = useLMFeedGeneralContextProvider();
+
   useEffect(() => {
     const workerRrl = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     pdfjs.GlobalWorkerOptions.workerSrc = workerRrl;
   }, []);
+
   useEffect(() => {
-    if (LMFeedCoreCallbacks) {
-      client.setLMSDKCallbacks(
-        new LMSDKCallbacksImplementations(
-          LMFeedCoreCallbacks,
-          client,
-          customEventClient,
-        ),
-      );
-    }
+    const LMSDKImplementation = new LMSDKCallbacksImplementations(
+      LMFeedCoreCallbacks,
+      client,
+      customEventClient,
+    );
+    client.setLMSDKCallbacks(LMSDKImplementation);
   }, [LMFeedCoreCallbacks, client, customEventClient]);
 
   if (!lmFeedUser) {

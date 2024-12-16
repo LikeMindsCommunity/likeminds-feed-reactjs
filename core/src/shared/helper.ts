@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { S3, CognitoIdentityCredentials } from "aws-sdk";
 import {
   S3Client,
   PutObjectCommand,
@@ -72,28 +71,4 @@ export class HelperFunctionsClass {
       ContentType: media.type,
     };
   }
-
-  // static getAWS() {
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-
-  //   const s3 = new S3({
-  //     apiVersion: "2006-03-01",
-  //     params: { Bucket: "beta-likeminds-media" },
-  //     credentials: new CognitoIdentityCredentials({
-  //       IdentityPoolId: "ap-south-1:181963ba-f2db-450b-8199-964a941b38c2",
-  //     }),
-  //   });
-  //   return s3;
-  // }
-
-  // static uploadMedia(media: any, userUniqueId: any) {
-  //   const mediaObject = this.getAWS().upload({
-  //     Key: `files/post/${userUniqueId}/${media.name}`,
-  //     Bucket: "beta-likeminds-media",
-  //     Body: media,
-  //     ACL: "public-read-write",
-  //     ContentType: media.type,
-  //   });
-  //   return mediaObject.promise();
-  // }
 }
