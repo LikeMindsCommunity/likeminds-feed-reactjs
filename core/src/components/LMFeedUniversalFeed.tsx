@@ -15,6 +15,9 @@ import LMFeedAllMembers from "./LMFeedAllMembers";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
+import LMFeedLeftNavigation from "./LMFeedLeftNavigation";
+import { useSideNavbar } from "../hooks/useSideNavbar";
+import { LMFeedModeration } from "./LMFeedModeration";
 
 interface LMFeedUniversalFeedProps {
   followedTopics?: string[];
@@ -29,7 +32,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
     loadMoreFeeds = true,
     feedList = [],
     feedUsersList = {},
-    getNextPage = () => { },
+    getNextPage = () => {},
     deletePost,
     pinPost,
     likePost,
@@ -37,6 +40,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
     postComponentClickCustomCallback,
     hidePost,
   } = useContext(LMFeedDataContext);
+  const { selectedNav, selectNav } = useSideNavbar();
   const { lmfeedAnalyticsClient, customEventClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
@@ -116,44 +120,53 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
 
   return (
     <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
-      <div className="lm-flex-grow" id="feed-scroller">
-        <LMFeedCreatePost showStarterComponent />
-        {/* <div> */}
-        {/* Topics */}
-        {CustomComponents?.CustomTopicDropDown ? (
-          CustomComponents.CustomTopicDropDown
-        ) : (
-          <div
-            className="lm-mb-4 lm-mt-4"
-            lm-feed-component-id={`lm-feed-topic-dropdown`}
-          >
-            <LMFeedViewTopicDropdown
-              mode={LMTopicsDropdownMode.view}
-              selectedTopicIds={selectedTopics}
-              setSelectedTopicsIds={setSelectedTopics}
-            />
+      <div className="lm-sidenav">
+        <LMFeedLeftNavigation selectNav={selectNav} selectedNav={selectedNav} />
+      </div>
+      {selectedNav === "home" ? (
+        <>
+          <div className="lm-flex-grow" id="feed-scroller">
+            <LMFeedCreatePost showStarterComponent />
+            {/* <div> */}
+            {/* Topics */}
+            {CustomComponents?.CustomTopicDropDown ? (
+              CustomComponents.CustomTopicDropDown
+            ) : (
+              <div
+                className="lm-mb-4 lm-mt-4"
+                lm-feed-component-id={`lm-feed-topic-dropdown`}
+              >
+                <LMFeedViewTopicDropdown
+                  mode={LMTopicsDropdownMode.view}
+                  selectedTopicIds={selectedTopics}
+                  setSelectedTopicsIds={setSelectedTopics}
+                />
+              </div>
+            )}
+            {/* Topics */}
+
+            {/* Posts */}
+
+            <InfiniteScroll
+              dataLength={feedList.length}
+              hasMore={loadMoreFeeds}
+              next={getNextPage}
+              // TODO set shimmer on loader component
+              loader={null}
+              scrollThreshold={0.6}
+            >
+              {renderFeeds()}
+            </InfiniteScroll>
+            {/* Posts */}
+            {/* </div> */}
           </div>
-        )}
-        {/* Topics */}
-
-        {/* Posts */}
-
-        <InfiniteScroll
-          dataLength={feedList.length}
-          hasMore={loadMoreFeeds}
-          next={getNextPage}
-          // TODO set shimmer on loader component
-          loader={null}
-          scrollThreshold={0.6}
-        >
-          {renderFeeds()}
-        </InfiniteScroll>
-        {/* Posts */}
-        {/* </div> */}
-      </div>
-      <div className="lm-member">
-        <LMFeedAllMembers />
-      </div>
+          <div className="lm-member">
+            <LMFeedAllMembers />
+          </div>
+        </>
+      ) : (
+        <LMFeedModeration />
+      )}
     </div>
   );
 };

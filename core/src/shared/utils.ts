@@ -353,7 +353,7 @@ export function pluralizeOrCapitalize(
 
 export function changePostCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const postVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.post || "post";
@@ -362,7 +362,7 @@ export function changePostCase(action: WordAction, word?: string) {
 
 export function changePollCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const pollVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.poll || "poll";
@@ -371,7 +371,7 @@ export function changePollCase(action: WordAction, word?: string) {
 
 export function changeCommentCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const commentVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.comment || "comment";
@@ -380,7 +380,7 @@ export function changeCommentCase(action: WordAction, word?: string) {
 
 export function changeLikeCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const likeVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.likeEntityVariable?.entityName || "like";
@@ -456,7 +456,7 @@ export const numberToPollMultipleSelectState: {
 
 export interface WidgetResponse {
   id: string;
-  LmMeta: Record<string, any> | null; // Nullable key
+  lmMeta: Record<string, any> | null; // Nullable key
   createdAt: number;
   metadata: Record<string, any>;
   parentEntityId: string;

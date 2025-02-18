@@ -59,7 +59,7 @@ const LMFeedPostHeader = () => {
         const newAttachment = { ...attachment };
         const pollWidget = widgets![attachment.attachmentMeta.entityId!];
         const { title, pollType, multipleSelectState, multipleSelectNumber, isAnonymous, expiryTime, allowAddOption } = pollWidget.metadata;
-        const options = pollWidget.LmMeta.options.map((option: { text: string }) => option.text);
+        const options = pollWidget.lmMeta.options.map((option: { text: string }) => option.text);
 
         Object.assign(newAttachment.attachmentMeta, {
           title,

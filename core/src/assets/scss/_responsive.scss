@@ -39,7 +39,7 @@ $breakpoint-lg: 1200px;
     flex-grow: initial;
     width: 100%;
   }
-  .lm-member {
+  .lm-member, .lm-sidenav{
     display: none;
   }
   .lm-feed-wrapper__card {
@@ -57,7 +57,7 @@ $breakpoint-lg: 1200px;
     flex-grow: initial;
     width: 100%;
   }
-  .lm-member {
+  .lm-member, .lm-sidenav {
     display: none;
   }
   .lm-feed-wrapper__card {
@@ -68,6 +68,9 @@ $breakpoint-lg: 1200px;
 /* Small screens, laptops */
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
   /* Your CSS styles for small screens and laptops */
+  .lm-sidenav {
+    display: none;
+  }
 }
 
 /* Desktops, large screens */
