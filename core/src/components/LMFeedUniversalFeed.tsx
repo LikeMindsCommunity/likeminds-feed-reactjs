@@ -165,7 +165,9 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
           </div>
         </>
       ) : (
-        <LMFeedModeration />
+        <>
+          <LMFeedModeration />
+        </>
       )}
     </div>
   );

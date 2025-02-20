@@ -49,7 +49,7 @@
 
 .moderation-separator{
     color: var(--lm-feed-topic-btn-border-color);
-    margin: 0px;
+    margin-bottom: 20px;
 }
 
 .white-bg-container {
@@ -84,4 +84,35 @@
 .disabled-icons-size{
     height: 30px;
     width: 30px;
+}
+
+.moderation-post-footer-wrapper{
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+}
+
+.modeartion-post-header-alert{
+    display: flex;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--lm-feed-card-content-heading);
+    padding: 8px 16px;
+    gap: 10px;
+}
+
+.moderation-post-footer-wrapper-reported{
+    display: flex;
+    justify-content: space-between;
+}
+
+.moderation-footer-button-wrapper{
+    display: flex;
+    gap: 8px;
+}
+
+.moderation-edit-member-permission-button{
+ color: var(--lm-feed-primary-color);
+ background-color: #EDECFC;
+ border: none;
 }
