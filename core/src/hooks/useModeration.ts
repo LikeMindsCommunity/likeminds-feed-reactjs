@@ -60,7 +60,7 @@ export function useModeration() {
           .setPageSize(10)
           .build(),
       )) as never;
-      
+
     if (getPendingPostsForModerationCall.success) {
       setReports(getPendingPostsForModerationCall.data.reports);
       setPosts(Object.values(getPendingPostsForModerationCall.data.posts));

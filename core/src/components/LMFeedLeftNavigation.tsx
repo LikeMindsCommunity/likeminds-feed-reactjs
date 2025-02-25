@@ -1,7 +1,8 @@
 import HomeIcon from "../assets/images/home-icon.svg";
 import ModerationIcon from "../assets/images/moderation-icon.svg";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 
 interface LMFeedLeftNavigationInterface {
   selectedNav: string;
@@ -13,6 +14,13 @@ const LMFeedLeftNavigation = ({
   selectNav,
 }: LMFeedLeftNavigationInterface) => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
+  const { customEventClient } = useContext(GlobalClientProviderContext);
+
+  useEffect(() => {
+    customEventClient?.dispatchEvent("isCurrentUserCM", {
+      currentState: currentUser?.state === 1,
+    });
+  }, [customEventClient, currentUser]);
 
   return (
     <div className="lm-sidenav-wrapper">

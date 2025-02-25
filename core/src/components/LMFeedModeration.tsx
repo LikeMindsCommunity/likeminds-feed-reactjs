@@ -10,6 +10,16 @@ import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
 import { Dialog } from "@mui/material";
 import LMFeedEditMemberPermissionsDialog from "./LMFeedEditMemberPermissionsDialog";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export const LMFeedModeration = () => {
   const {
@@ -65,6 +75,16 @@ export const LMFeedModeration = () => {
     reports,
   ]);
 
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    if (newValue === 0) {
+      selectTab("approval");
+    } else if (newValue === 1) {
+      selectTab("reported");
+    } else if (newValue === 2) {
+      selectTab("closed");
+    }
+  };
+
   return (
     <>
       <FeedModerationContext.Provider
@@ -95,6 +115,70 @@ export const LMFeedModeration = () => {
         }}
       >
         <div className="lm-flex-grow" id="feed-scroller">
+          <div className="moderation-mobile-tab-wrapper">
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={
+                    selectedTab === "approval"
+                      ? 0
+                      : selectedTab === "reported"
+                        ? 1
+                        : 2
+                  }
+                  onChange={handleChange}
+                  aria-label="basic tabs example"
+                  sx={{
+                    [`& .${tabsClasses.scrollButtons}`]: {
+                      "&.Mui-disabled": { opacity: 0.3 },
+                    },
+                    "& .MuiTabs-indicator": {
+                      backgroundColor: "#5046e5",
+                      borderBottom: "5px solid #5046e5",
+                    },
+                  }}
+                  variant="fullWidth" // Ensures tabs take equal width
+                >
+                  <Tab
+                    label="Approvals"
+                    {...a11yProps(0)}
+                    sx={{
+                      color: "#666666",
+                      textTransform: "none",
+                      fontSize: "16px",
+                      fontWeight: "500",
+                      flexGrow: 1, // Ensures equal width for all tabs
+                      "&.Mui-selected": { color: "#5046e5" },
+                    }}
+                  />
+                  <Tab
+                    label="Reports"
+                    {...a11yProps(1)}
+                    sx={{
+                      color: "#666666",
+                      textTransform: "none",
+                      fontSize: "16px",
+                      fontWeight: "500",
+                      flexGrow: 1, // Ensures equal width for all tabs
+                      "&.Mui-selected": { color: "#5046e5" },
+                    }}
+                  />
+                  <Tab
+                    label="Closed"
+                    {...a11yProps(2)}
+                    sx={{
+                      color: "#666666",
+                      textTransform: "none",
+                      fontSize: "16px",
+                      fontWeight: "500",
+                      flexGrow: 1, // Ensures equal width for all tabs
+                      "&.Mui-selected": { color: "#5046e5" },
+                    }}
+                  />
+                </Tabs>
+              </Box>
+            </Box>
+          </div>
           <div className="lm-moderation-header">
             <div className="lm-moderation-header__left">
               <button

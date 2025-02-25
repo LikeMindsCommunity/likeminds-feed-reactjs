@@ -67,3 +67,34 @@
     background-color: var(--lm-feed-bg-color);
     border-radius: 20px;
   }
+
+  .lm-header-toggle-wrapper{
+    display: flex;
+    gap: 16px;
+  }
+
+  .toggle-sidebar-menu-header{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .toggle-sidebar-menu-heading{
+    color: #333333;
+    font-weight: 700 !important;
+    font-size: 13px;
+  }
+
+  .lm-sidebar-headings{
+    color: #9B9B9B;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .lm-sidebar-headings:hover{
+    color: var(--lm-feed-primary-color);
+  }
+
+  .lm-mobile-view-toggle-bar{
+    display: none;
+  }

@@ -63,7 +63,7 @@ const LMFeedModerationPostFooter = ({
                   name: reportedDetails[0].accusedUser.name,
                 })}
               </div>
-              <div>
+              <div className="lm-reported-comment-container">
                 <div className="lm-reported-comment-details">
                   <span className="reported-comment-heading">
                     {reportedDetails[0].accusedUser.name}
@@ -159,7 +159,8 @@ const LMFeedModerationPostFooter = ({
             }}
           >
             <img src={ApprovePostIcon} alt="approve-post-icon" />
-            Approve Post
+            <span className="edit-permission-mobile-view">Keep</span>
+            <span className="edit-permission-web-view">Approve Post</span>
           </button>
           <button
             className="lm-moderation-header__button lm-text-capitalize  "
@@ -171,7 +172,8 @@ const LMFeedModerationPostFooter = ({
             }}
           >
             <img src={RejectPostIcon} alt="reject-post-icon" />
-            Reject Post
+            <span className="edit-permission-mobile-view">Delete</span>
+            <span className="edit-permission-web-view">Reject Post</span>
           </button>
         </div>
       ) : selectedTab === "reported" ? (
@@ -204,7 +206,10 @@ const LMFeedModerationPostFooter = ({
                 setCurrentReport(reportedDetails[0]);
               }}
             >
-              Edit member permission
+              <span className="edit-permission-mobile-view">Edit</span>
+              <span className="edit-permission-web-view">
+                Edit member permission
+              </span>
             </button>
           )}
         </div>
