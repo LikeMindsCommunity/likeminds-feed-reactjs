@@ -13,8 +13,19 @@ import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 import { WordAction } from "../shared/enums/wordAction";
 import ApprovalPendingIcon from "../assets/images/approval-pending-icon.svg";
+import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
+import { Post } from "../shared/types/models/post";
+import ModerationReportedTitleIcon from "../assets/images/moderation-reported-title.svg";
+import WarningIcon from "../assets/images/warning-icon.svg";
+import QuestionMarkIcon from "../assets/images/question-mark-icon.svg";
 
-const LMFeedModerationPostHeader = () => {
+interface LMFeedModerationPostFooterProps {
+  postDetails: Post;
+}
+
+const LMFeedModerationPostHeader = ({
+  postDetails,
+}: LMFeedModerationPostFooterProps) => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
@@ -22,6 +33,23 @@ const LMFeedModerationPostHeader = () => {
   const { LMPostHeaderStyles, LMFeedCustomIcons } = useContext(
     CustomAgentProviderContext,
   );
+  const { selectedTab } = useContext(FeedModerationContext);
+  const { reports, comments } = useContext(FeedModerationContext);
+  let membersReported = reports.filter(
+    (report) => report.entityId === postDetails.id,
+  );
+
+  if (membersReported.length === 0) {
+    const commentId = comments.filter(
+      (comment) => comment.postId === postDetails.id,
+    )[0]?.id;
+    membersReported = reports.filter((report) => report.entityId === commentId);
+  }
+
+  const isCommentReported = membersReported[0].type === "comment";
+
+  const reportedMemberName = membersReported[0]?.reportedByUser?.name;
+  const remainingReportedMembers = membersReported.length - 1;
 
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
@@ -64,8 +92,85 @@ const LMFeedModerationPostHeader = () => {
       </Dialog>
 
       <div className="modeartion-post-header-alert">
-        <img src={ApprovalPendingIcon} alt="approval-pending-icon" />
-        <span>Approval pending</span>
+        {selectedTab === "approval" ? (
+          <>
+            <img
+              src={ApprovalPendingIcon}
+              alt="approval-pending-icon"
+              className="approval-pending-icon"
+            />
+            <span className="">Approval Pending</span>
+          </>
+        ) : selectedTab === "reported" ? (
+          <>
+            <img
+              src={ModerationReportedTitleIcon}
+              alt="approval-pending-icon"
+              className="approval-pending-icon"
+            />
+            <span className="moderation-post-header-names">
+              <span className="moderation-post-header-names__capitalize">
+                {reportedMemberName}
+              </span>{" "}
+              {remainingReportedMembers > 0
+                ? " & " +
+                  (remainingReportedMembers === 1
+                    ? remainingReportedMembers + " other "
+                    : remainingReportedMembers + " others ")
+                : null}
+              <span className="moderation-post-header-title-end">
+                {isCommentReported
+                  ? " reported a comment on this post."
+                  : " reported this post."}
+              </span>
+            </span>
+          </>
+        ) : (
+          <>
+            <div className="closed-header-wrapper">
+              <div className="moderation-closed-header">
+                {isCommentReported ? (
+                  <img
+                    src={WarningIcon}
+                    alt="warning-icon"
+                    className="warning-icon"
+                  />
+                ) : (
+                  <img
+                    src={ModerationReportedTitleIcon}
+                    alt="approval-pending-icon"
+                    className="approval-pending-icon"
+                  />
+                )}
+                <span className="moderation-post-header-names">
+                  <span className="moderation-post-header-names__capitalize">
+                    {reportedMemberName}
+                  </span>{" "}
+                  {remainingReportedMembers > 0
+                    ? " & " +
+                      (remainingReportedMembers === 1
+                        ? remainingReportedMembers + " other "
+                        : remainingReportedMembers + " others ")
+                    : null}
+                  <span className="moderation-post-header-title-end">
+                    {isCommentReported
+                      ? " reported a comment on this post."
+                      : " reported this post."}
+                  </span>
+                </span>
+              </div>
+              <div>
+                {isCommentReported ? (
+                  <img
+                    src={QuestionMarkIcon}
+                    alt="question-mark-icon"
+                    className="question-mark-icon closed-header-wrapper-question-icon"
+                  />
+                ) : null}
+              </div>
+            </div>
+          </>
+        )}
       </div>
       <div
         className="lm-feed-wrapper__card__header"

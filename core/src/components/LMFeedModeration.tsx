@@ -8,6 +8,8 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import InfiniteScroll from "react-infinite-scroll-component";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
+import { Dialog } from "@mui/material";
+import LMFeedEditMemberPermissionsDialog from "./LMFeedEditMemberPermissionsDialog";
 
 export const LMFeedModeration = () => {
   const {
@@ -19,34 +21,49 @@ export const LMFeedModeration = () => {
     topics,
     widgets,
     reports,
+    comments,
+    onApprovedOrRejectPostClicked,
+    onApprovedCallback,
+    onRejectedCallback,
+    editMemberPermissionsHandler,
+    updateMemberRightsHandler,
+    memberRights,
+    isEditPermissionDialogOpen,
+    setIsEditPermissionDialogOpen,
+    modifiedRights,
+    setModifiedRights,
+    customTitle,
+    setCustomTitle,
+    currentReport,
+    setCurrentReport,
   } = useModeration();
   const { CustomComponents } = useContext(CustomAgentProviderContext);
 
   const renderFeeds = useCallback(() => {
     return posts?.map((post: Post) => {
-      const postUuid = post.uuid;
-      const usersArray = Object.values(users);
-      const filteredUser = usersArray.find(
-        (user) => user.sdkClientInfo.uuid === postUuid,
-      );
-
-      return (
+      return post?.attachments.length === 0 ? (
         <FeedPostContext.Provider
           key={post?.id}
           value={{
-            post: post,
-            users: users,
-            topics: topics,
+            post,
+            users,
+            topics,
             widgets,
           }}
         >
-          {CustomComponents?.CustomPostView || (
-            <LMFeedModerationPosts post={post} user={filteredUser} />
-          )}
+          {CustomComponents?.CustomPostView ||
+            (post && <LMFeedModerationPosts post={post} />)}
         </FeedPostContext.Provider>
-      );
+      ) : null;
     });
-  }, [CustomComponents?.CustomPostView, posts, users]);
+  }, [
+    CustomComponents?.CustomPostView,
+    posts,
+    users,
+    topics,
+    widgets,
+    reports,
+  ]);
 
   return (
     <>
@@ -60,6 +77,21 @@ export const LMFeedModeration = () => {
           users,
           widgets,
           topics,
+          comments,
+          onApprovedOrRejectPostClicked,
+          onApprovedCallback,
+          onRejectedCallback,
+          editMemberPermissionsHandler,
+          updateMemberRightsHandler,
+          memberRights,
+          isEditPermissionDialogOpen,
+          setIsEditPermissionDialogOpen,
+          modifiedRights,
+          setModifiedRights,
+          customTitle,
+          setCustomTitle,
+          currentReport,
+          setCurrentReport,
         }}
       >
         <div className="lm-flex-grow" id="feed-scroller">
@@ -82,7 +114,7 @@ export const LMFeedModeration = () => {
                     (selectedTab === "approval" ? " selected-count" : "")
                   }
                 >
-                  {reports.length > 0 ? reports.length : null}
+                  {posts.length > 0 ? posts.length : 0}
                 </span>
               </button>
 
@@ -102,7 +134,7 @@ export const LMFeedModeration = () => {
                     (selectedTab === "reported" ? " selected-count" : "")
                   }
                 >
-                  3
+                  {posts.length > 0 ? posts.length : 0}
                 </span>
               </button>
             </div>
@@ -182,6 +214,14 @@ export const LMFeedModeration = () => {
             </>
           )}
         </div>
+        <Dialog
+          open={isEditPermissionDialogOpen}
+          onClose={() => {
+            setIsEditPermissionDialogOpen(false);
+          }}
+        >
+          <LMFeedEditMemberPermissionsDialog />
+        </Dialog>
       </FeedModerationContext.Provider>
     </>
   );

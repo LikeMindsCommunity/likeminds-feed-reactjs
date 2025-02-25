@@ -1,6 +1,5 @@
 import React, { useContext, useMemo } from "react";
 import { Post } from "../shared/types/models/post";
-import { User } from "../shared/types/models/member";
 
 import LMFeedModerationPostHeader from "./LMFeedModerationPostHeader";
 import LMFeedPostBody from "./LMFeedPostBody";
@@ -8,20 +7,20 @@ import LMFeedModerationPostFooter from "./LMFeedModerationPostFooter";
 import LMFeedPostTopicsWrapper from "./LMFeedPostTopicsWrapper";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-// import { FeedPostContext } from "../contexts/LMFeedPostContext";
+import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
+import { Comment } from "../shared/types/models/comment";
 
 interface LMFeedModerationPostProps {
   post: Post;
-  user: User | undefined;
 }
-  
+
 const LMFeedModerationPosts: React.FC<LMFeedModerationPostProps> = ({
   post: propPost,
-  user,
 }) => {
   const { CustomComponents } = useContext(CustomAgentProviderContext);
-  const { post, postComponentClickCustomCallback } =
-    useContext(FeedPostContext);
+  const { postComponentClickCustomCallback } = useContext(FeedPostContext);
+  const { reports, selectedTab, comments } = useContext(FeedModerationContext);
+
   const showCustomPostViewWidget = useMemo(() => {
     if (propPost?.attachments && propPost?.attachments.length > 0) {
       const attachments = propPost.attachments;
@@ -40,11 +39,31 @@ const LMFeedModerationPosts: React.FC<LMFeedModerationPostProps> = ({
     } else {
       return false;
     }
-  }, [post]);
+  }, [propPost]);
   if (showCustomPostViewWidget) {
     // TODO Custom Widget
     // Render the complete custom Post View widget
     return CustomComponents?.CustomWidgetPostView;
+  }
+
+  let reportedDetails = reports.filter(
+    (report) => report.entityId === propPost.id && report.isClosed === true,
+  );
+
+  let commentDetails: Comment | undefined;
+
+  if (reportedDetails.length === 0) {
+    commentDetails = comments.filter(
+      (comment) => comment.postId === propPost.id,
+    )[0];
+    reportedDetails = reports.filter(
+      (report) =>
+        report.entityId === commentDetails?.id && report.isClosed === true,
+    );
+  }
+
+  if (selectedTab === "closed" && reportedDetails.length === 0) {
+    return null;
   }
   return (
     <div
@@ -57,10 +76,10 @@ const LMFeedModerationPosts: React.FC<LMFeedModerationPostProps> = ({
         }
       }}
     >
-      <LMFeedModerationPostHeader />
+      <LMFeedModerationPostHeader postDetails={propPost} />
       <LMFeedPostTopicsWrapper />
       <LMFeedPostBody />
-      <LMFeedModerationPostFooter />
+      <LMFeedModerationPostFooter postDetails={propPost} />
     </div>
   );
 };
