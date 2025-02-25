@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import {
-  LMQNAFeed,
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
-  LMCoreCallbacks,
   initiateFeedClient,
+  LMQNAFeed,
 } from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
@@ -17,8 +15,8 @@ function App() {
   const [apiKey, setApiKey] = useState<string>("");
   const [uuid, setUUID] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-
-  const [showFeed, setShowFeed] = useState<boolean>(false);
+  const [noShowScreen, setNoShowScreen] = useState<boolean>(true);
+  const [showLoginScreen, setShowLoginScreen] = useState<boolean>(false);
   function login() {
     if (accessToken.length && refreshToken.length) {
       setUserDetails((userDetails) => {
@@ -27,7 +25,7 @@ function App() {
 
         return userDetails;
       });
-      setShowFeed(true);
+      setShowLoginScreen(false);
     } else if (uuid.length && apiKey.length) {
       setUserDetails((userDetails) => {
         userDetails.apiKey = apiKey;
@@ -36,7 +34,7 @@ function App() {
 
         return userDetails;
       });
-      setShowFeed(true);
+      setShowLoginScreen(false);
     } else {
       alert(
         "Please provide either API key and UUID OR Access and Refresh Token"
@@ -54,106 +52,33 @@ function App() {
     apiKey?: string;
   }>({});
   const lmFeedClient = initiateFeedClient();
-  const LMCORECALLBACKS = new LMCoreCallbacks(
-    (a: string, b: string) => {
-      setUserDetails((userDetails) => {
-        userDetails.accessToken = a;
-        userDetails.refreshToken = b;
-        return userDetails;
-      });
-    },
-    async () => {
-      const myHeaders = new Headers();
-      myHeaders.append("x-api-key", "");
-      myHeaders.append("x-platform-code", "rt");
-      myHeaders.append("x-version-code", "1");
-      myHeaders.append("x-sdk-source", "feed");
-      myHeaders.append("Content-Type", "application/json");
 
-      interface RequestBody {
-        user_name: string;
-        user_unique_id: string;
-      }
-
-      const requestBody: RequestBody = {
-        user_name: "",
-        user_unique_id: "",
+  useEffect(() => {
+    const getLocalUser = localStorage.getItem("LOCAL_USER");
+    if (getLocalUser) {
+      const user = JSON.parse(getLocalUser);
+      const { uuid } = user.sdkClientInfo;
+      const { name } = user;
+      const apiKey = localStorage.getItem("LOCAL_API_KEY");
+      const details = {
+        uuid,
+        username: name,
+        apiKey: apiKey || "",
+        isGuest: false,
       };
-
-      const requestOptions: RequestInit = {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify(requestBody),
-        redirect: "follow",
-      };
-
-      try {
-        const response = await fetch(
-          "https://auth.likeminds.community/sdk/initiate",
-          requestOptions
-        );
-        const result_1 = await response.json();
-
-        return {
-          accessToken: result_1.data.access_token,
-          refreshToken: result_1.data.refresh_token,
-        };
-      } catch (error) {
-        console.log(error);
-        alert(`Error occoured: ${error}`);
-        return {
-          accessToken: "",
-          refreshToken: "",
-        };
-      }
+      setUserDetails(details);
+      setNoShowScreen(false);
+    } else {
+      setNoShowScreen(false);
+      setShowLoginScreen(true);
     }
-  );
+  }, []);
 
-  async function proceedWithout() {
-    const myHeaders = new Headers();
-    myHeaders.append("x-api-key", "");
-    myHeaders.append("x-platform-code", "rt");
-    myHeaders.append("x-version-code", "9");
-    myHeaders.append("x-sdk-source", "feed");
-    myHeaders.append("Content-Type", "application/json");
-
-    interface RequestBody {
-      user_name: string;
-      user_unique_id: string;
-    }
-
-    const requestBody: RequestBody = {
-      user_name: "",
-      user_unique_id: "",
-    };
-
-    const requestOptions: RequestInit = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(requestBody),
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(
-        "https://auth.likeminds.community/sdk/initiate",
-        requestOptions
-      );
-      const result_1 = await response.json();
-
-      return {
-        accessToken: result_1.data.access_token,
-        refreshToken: result_1.data.refresh_token,
-      };
-    } catch (error) {
-      return {
-        accessToken: "",
-        refreshToken: "",
-      };
-    }
+  if (noShowScreen) {
+    return null;
   }
 
-  if (!showFeed) {
+  if (showLoginScreen) {
     return (
       <LoginScreen
         accessToken={accessToken}
@@ -176,8 +101,28 @@ function App() {
       <LMQNAFeed
         client={lmFeedClient}
         customEventClient={customEventClient}
-        LMFeedCoreCallbacks={LMCORECALLBACKS}
         userDetails={userDetails}
+        postComponentClickCustomCallback={(store, eventObject) => {
+          const target = eventObject.target as EventTarget & Element;
+          if (!target) {
+            return;
+          }
+          const className = target.className;
+          if (className.includes("lm-feed-wrapper__card__body__heading")) {
+            const lmFeedComponentId = eventObject.currentTarget.getAttribute(
+              "lm-feed-component-id"
+            );
+            const lmFeedComponentIdSplitArr =
+              lmFeedComponentId?.split("-") || [];
+            const arrLength = lmFeedComponentIdSplitArr?.length || 0;
+            const postId = lmFeedComponentIdSplitArr[arrLength - 1];
+            const currentURL = window.location.href;
+            const params = new URL(currentURL).searchParams;
+            if (!params.has("id")) {
+              window.location.search = `id=${postId}`;
+            }
+          }
+        }}
       ></LMQNAFeed>
     </>
   );

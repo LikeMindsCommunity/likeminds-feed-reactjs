@@ -15,8 +15,8 @@ function App() {
   const [apiKey, setApiKey] = useState<string>("");
   const [uuid, setUUID] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-
-  const [showFeed, setShowFeed] = useState<boolean>(false);
+  const [noShowScreen, setNoShowScreen] = useState<boolean>(true);
+  const [showLoginScreen, setShowLoginScreen] = useState<boolean>(false);
   function login() {
     if (accessToken.length && refreshToken.length) {
       setUserDetails((userDetails) => {
@@ -25,7 +25,7 @@ function App() {
 
         return userDetails;
       });
-      setShowFeed(true);
+      setShowLoginScreen(false);
     } else if (uuid.length && apiKey.length) {
       setUserDetails((userDetails) => {
         userDetails.apiKey = apiKey;
@@ -34,7 +34,7 @@ function App() {
 
         return userDetails;
       });
-      setShowFeed(true);
+      setShowLoginScreen(false);
     } else {
       alert(
         "Please provide either API key and UUID OR Access and Refresh Token"
@@ -67,11 +67,18 @@ function App() {
         isGuest: false,
       };
       setUserDetails(details);
-      setShowFeed(true);
+      setNoShowScreen(false);
+    } else {
+      setNoShowScreen(false);
+      setShowLoginScreen(true);
     }
   }, []);
 
-  if (!showFeed) {
+  if (noShowScreen) {
+    return null;
+  }
+
+  if (showLoginScreen) {
     return (
       <LoginScreen
         accessToken={accessToken}

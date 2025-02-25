@@ -380,7 +380,7 @@ export function changeCommentCase(action: WordAction, word?: string) {
 
 export function changeLikeCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const likeVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.likeEntityVariable?.entityName || "like";
