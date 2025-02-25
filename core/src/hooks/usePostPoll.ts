@@ -89,7 +89,7 @@ export function usePostPoll(): UsePostPoll {
   const multiSelectState = pollData?.metadata.multipleSelectState;
   const pollType = pollData?.metadata.pollType;
   const allowAddOption = pollData?.metadata.allowAddOption;
-  const totalMembersVoted = pollData?.LmMeta?.votersCount;
+  const totalMembersVoted = pollData?.lmMeta?.votersCount;
   const [hasSelectedOption, setHasSelectedOption] = useState<boolean>(
     hasPollEnded(pollExpiryTime),
   );
@@ -97,7 +97,7 @@ export function usePostPoll(): UsePostPoll {
     isMultiChoicePoll(multiSelectNo, multiSelectState),
   );
   const [pollOptions, setPollOptions] = useState<PollOption[]>(
-    pollData?.LmMeta.options,
+    pollData?.lmMeta.options,
   );
   const [isAddOptionDialogOpen, setIsAddOptionDialogOpen] =
     useState<boolean>(false);
@@ -201,7 +201,7 @@ export function usePostPoll(): UsePostPoll {
         text: newOption.trim(),
       });
       if (call?.success) {
-        const options = (call?.data?.widget?.LmMeta as any).options;
+        const options = (call?.data?.widget?.lmMeta as any).options;
         setPollOptions(options);
       }
       setIsAddOptionDialogOpen(false);

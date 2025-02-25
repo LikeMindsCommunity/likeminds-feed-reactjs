@@ -91,6 +91,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
               .setPageSize(10)
               .build(),
           )) as never;
+
         if (fetchFeedsCall.success) {
           setCurrentPageCount(2);
           setFeedList([...fetchFeedsCall.data.posts]);
