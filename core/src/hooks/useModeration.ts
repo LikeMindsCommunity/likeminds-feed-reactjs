@@ -13,6 +13,8 @@ import {
   GetMemberRightsRequest,
   UpdateMemberRightsRequest,
   MemberRights,
+  FilterType,
+  LMFeedReportStatus,
 } from "@likeminds.community/feed-js";
 import { GetPendingPostModerationResponse } from "../shared/types/api-responses/getPendingPostsForModerationResponse";
 import { GetPostCommentReportsResponse } from "../shared/types/api-responses/getPostCommentReports";
@@ -23,19 +25,37 @@ import { Post } from "../shared/types/models/post";
 import { Comment } from "../shared/types/models/comment";
 import { Topic } from "../shared/types/models/topic";
 import { Report } from "../shared/types/models/report";
-import { LMFeedReportStatus } from "../shared/enums/lmFilterType";
-import { FilterType } from "../shared/enums/lmFilterType";
 import { Widget } from "../shared/types/models/widget";
 import { GetMemberRightsResponse } from "../shared/types/api-responses/getMemberRightsResponse";
+import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import {
+  ModerationDataStore,
+  ModerationDefaultActions,
+  ApplicationGeneralsStore,
+} from "../shared/types/cutomCallbacks/dataStores";
 
 export function useModeration() {
   const [selectedTab, setSelectedTab] = useState<string>("approval");
   const [isPostApprovalEnabled, setIsPostApprovalEnabled] = useState<boolean>(
     JSON.parse(localStorage.getItem("isPostApprovedEnabled") || "false"),
   );
-  const { currentCommunity } = useContext(LMFeedUserProviderContext);
+  const { currentCommunity, currentUser, logoutUser } = useContext(
+    LMFeedUserProviderContext,
+  );
   const { lmFeedclient } = useContext(GlobalClientProviderContext);
-  const { displaySnackbarMessage } = useContext(GeneralContext);
+  const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
+    useContext(GeneralContext);
+  const { ModerationCustomCallbacks = {} } = useContext(
+    CustomAgentProviderContext,
+  );
+  const {
+    onApprovedPostClicked,
+    onRejectedPostClicked,
+    onLeadingTap,
+    onTextTap,
+    onTrailingTap,
+    onEditMemberPermissionClicked,
+  } = ModerationCustomCallbacks;
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [reports, setReports] = useState<Report[]>([]);
@@ -43,6 +63,7 @@ export function useModeration() {
   const [widgets, setWidgets] = useState<Record<string, Widget>>({});
   const [topics, setTopics] = useState<Record<string, Topic>>({});
   const [comments, setComments] = useState<Comment[]>([]);
+
   const [isEditPermissionDialogOpen, setIsEditPermissionDialogOpen] =
     useState<boolean>(false);
   const [memberRights, setMemberRights] = useState<MemberRights[]>([]);
@@ -115,9 +136,9 @@ export function useModeration() {
           .setPageSize(10)
           .setIsClosed(false)
           .setFilterType([
-            FilterType.PENDING_POSTS,
+            FilterType.PENDING_POST,
             FilterType.POST,
-            FilterType.COMMENTS,
+            FilterType.COMMENT,
             FilterType.REPLY,
           ])
           .build(),
@@ -155,27 +176,51 @@ export function useModeration() {
     }
   }, [lmFeedclient, selectedTab]);
 
-  const onApprovedOrRejectPostClicked = async (
-    reportIds: number[],
-    reportStatus: LMFeedReportStatus,
-  ) => {
+  const handleOnApprovedPostClicked = async (reportIds: number[]) => {
     try {
       const UpdatePendingPostStatusCall: LMResponseType<null> =
         (await lmFeedclient?.updatePendingPostStatus(
           UpdatePendingPostStatusRequest.builder()
             .setReportIds(reportIds)
-            .setStatus(reportStatus)
+            .setStatus(LMFeedReportStatus.APPROVED)
             .build(),
         )) as never;
 
       if (UpdatePendingPostStatusCall.success) {
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
-            getDisplayMessage(
-              reportStatus === LMFeedReportStatus.APPROVED
-                ? LMDisplayMessages.POST_APPROVED
-                : LMDisplayMessages.POST_REJECTED,
-            )!,
+            getDisplayMessage(LMDisplayMessages.POST_APPROVED)!,
+          );
+        }
+        window.history.back();
+      } else {
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(
+            UpdatePendingPostStatusCall?.errorMessage ||
+              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
+          );
+        }
+        window.history.back();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleOnRejectedPostClicked = async (reportIds: number[]) => {
+    try {
+      const UpdatePendingPostStatusCall: LMResponseType<null> =
+        (await lmFeedclient?.updatePendingPostStatus(
+          UpdatePendingPostStatusRequest.builder()
+            .setReportIds(reportIds)
+            .setStatus(LMFeedReportStatus.REJECTED)
+            .build(),
+        )) as never;
+
+      if (UpdatePendingPostStatusCall.success) {
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(
+            getDisplayMessage(LMDisplayMessages.POST_REJECTED)!,
           );
         }
         window.history.back();
@@ -231,7 +276,7 @@ export function useModeration() {
           (await lmFeedclient?.deletePost(
             DeletePostRequest.builder()
               .setPostId(report.entityId)
-              .setDeleteReason(report.reason)
+              // .setDeleteReason(report.reason)
               .build(),
           )) as never;
 
@@ -278,7 +323,7 @@ export function useModeration() {
       const getMemberRightsCall: GetMemberRightsResponse =
         (await lmFeedclient?.getMemberRights(
           GetMemberRightsRequest.builder()
-            .setUuid(report.accusedUser.sdkClientInfo.uuid)
+            .setUuid(report.userReported.sdkClientInfo.uuid)
             .setIsCM(false)
             .build(),
         )) as never;
@@ -303,13 +348,18 @@ export function useModeration() {
 
   const updateMemberRightsHandler = async () => {
     try {
+      const requestBuilder = UpdateMemberRightsRequest.builder()
+        .setUuid(currentReport?.userReported.sdkClientInfo.uuid || "")
+        .setIsCM(false)
+        .setRights(modifiedRights);
+
+      if (customTitle.trim() !== "") {
+        requestBuilder.setCustomTitle(customTitle);
+      }
+
       const updateMemberRightsCall: LMResponseType<null> =
         (await lmFeedclient?.updateMemberRights(
-          UpdateMemberRightsRequest.builder()
-            .setUuid(currentReport?.accusedUser.sdkClientInfo.uuid || "")
-            .setIsCM(false)
-            .setRights(modifiedRights)
-            .build(),
+          requestBuilder.build(),
         )) as never;
 
       if (updateMemberRightsCall?.success) {
@@ -332,6 +382,12 @@ export function useModeration() {
       console.log(error);
     }
   };
+
+  const handleHeaderLeadingTap = () => {
+    console.log("leading post handler");
+  };
+  const handleHeaderTextTap = () => {};
+  const handleHeaderTrailingTap = () => {};
 
   useEffect(() => {
     if (currentCommunity?.communitySettings) {
@@ -358,6 +414,53 @@ export function useModeration() {
     setSelectedTab(tab);
   }
 
+  const ModerationDataStore: ModerationDataStore = {
+    selectedTab,
+    isPostApprovalEnabled,
+    reports,
+    comments,
+    posts,
+    users,
+    widgets,
+    topics,
+    memberRights,
+    isEditPermissionDialogOpen,
+    modifiedRights,
+    customTitle,
+    currentReport,
+  };
+
+  const defaultActions: ModerationDefaultActions = {
+    selectTab,
+    handleOnApprovedPostClicked,
+    handleOnRejectedPostClicked,
+    onApprovedCallback,
+    onRejectedCallback,
+    editMemberPermissionsHandler,
+    updateMemberRightsHandler,
+    setIsEditPermissionDialogOpen,
+    setModifiedRights,
+    setCustomTitle,
+    setCurrentReport,
+    handleHeaderLeadingTap,
+    handleHeaderTextTap,
+    handleHeaderTrailingTap,
+  };
+
+  const applicationGeneralsStore: ApplicationGeneralsStore = {
+    userDataStore: {
+      lmFeedUser: currentUser,
+      lmFeedUserCurrentCommunity: currentCommunity,
+      logOutUser: logoutUser,
+    },
+    generalDataStore: {
+      displaySnackbarMessage,
+      closeSnackbar,
+      showSnackbar,
+      message,
+    },
+  };
+
   return {
     selectedTab,
     selectTab,
@@ -368,10 +471,50 @@ export function useModeration() {
     widgets,
     topics,
     comments,
-    onApprovedOrRejectPostClicked,
+    handleOnApprovedPostClicked: onApprovedPostClicked
+      ? onApprovedPostClicked.bind(null, {
+          moderationDataStore: ModerationDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : handleOnApprovedPostClicked,
+    handleOnRejectedPostClicked: onRejectedPostClicked
+      ? onRejectedPostClicked.bind(null, {
+          moderationDataStore: ModerationDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : handleOnRejectedPostClicked,
+    handleHeaderLeadingTap: onLeadingTap
+      ? onLeadingTap.bind(null, {
+          moderationDataStore: ModerationDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : handleHeaderLeadingTap,
+    handleHeaderTextTap: onTextTap
+      ? onTextTap.bind(null, {
+          moderationDataStore: ModerationDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : handleHeaderTextTap,
+    handleHeaderTrailingTap: onTrailingTap
+      ? onTrailingTap.bind(null, {
+          moderationDataStore: ModerationDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : handleHeaderTrailingTap,
     onApprovedCallback,
     onRejectedCallback,
-    editMemberPermissionsHandler,
+    editMemberPermissionsHandler: onEditMemberPermissionClicked
+      ? onEditMemberPermissionClicked.bind(null, {
+          moderationDataStore: ModerationDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
+      : editMemberPermissionsHandler,
     updateMemberRightsHandler,
     memberRights,
     isEditPermissionDialogOpen,

@@ -22,7 +22,8 @@ const LMFeedEditMemberPermissionsDialog = () => {
   };
 
   const isSaveDisabled =
-    JSON.stringify(memberRights) === JSON.stringify(modifiedRights);
+    JSON.stringify(memberRights) === JSON.stringify(modifiedRights) &&
+    customTitle.trim() === "";
 
   return (
     <div className="lm-feed-create-post-wrapper">
@@ -39,7 +40,7 @@ const LMFeedEditMemberPermissionsDialog = () => {
           >
             <span className="poll-advanced-option-text">{right.title}</span>
             <IOSSwitch
-              sx={{ m: 1 }}
+              className="iso-switch-toggle"
               checked={right.isSelected}
               onChange={() => handleToggle(right.id)}
               disabled={right.isLocked}

@@ -3,7 +3,6 @@ import RejectPostIcon from "../assets/images/reject-post-icon.svg";
 import { useContext } from "react";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
 import { Post } from "../shared/types/models/post";
-import { LMFeedReportStatus } from "../shared/enums/lmFilterType";
 import { Comment } from "../shared/types/models/comment";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { changeLikeCase, timeFromNow } from "../shared/utils";
@@ -22,7 +21,8 @@ const LMFeedModerationPostFooter = ({
 }: LMFeedModerationPostFooterProps) => {
   const {
     selectedTab,
-    onApprovedOrRejectPostClicked,
+    handleOnApprovedPostClicked,
+    handleOnRejectedPostClicked,
     reports,
     users,
     onApprovedCallback,
@@ -49,7 +49,7 @@ const LMFeedModerationPostFooter = ({
       (report) => report.entityId === commentDetails?.id,
     );
   }
-  const isCommentReported = reportedDetails[0].type === "comment";
+  const isCommentReported = reportedDetails[0].type === 6;
 
   return (
     <>
@@ -59,14 +59,14 @@ const LMFeedModerationPostFooter = ({
             <div className="reported-comment-body">
               <div className="lm-comment-avatar">
                 {getAvatar({
-                  imageUrl: reportedDetails[0].accusedUser.imageUrl,
-                  name: reportedDetails[0].accusedUser.name,
+                  imageUrl: reportedDetails[0].userReported.imageUrl,
+                  name: reportedDetails[0].userReported.name,
                 })}
               </div>
               <div className="lm-reported-comment-container">
                 <div className="lm-reported-comment-details">
                   <span className="reported-comment-heading">
-                    {reportedDetails[0].accusedUser.name}
+                    {reportedDetails[0].userReported.name}
                   </span>
                   <span className="reported-comment-subheading">
                     {commentDetails.text}
@@ -116,7 +116,6 @@ const LMFeedModerationPostFooter = ({
                         <span className="reply-badge">Reply </span>
                       )}
 
-                      {/* className="replies lm-cursor-pointer commentTitle" */}
                       <span
                         className={
                           (commentDetails?.commentsCount || 0) > 1
@@ -126,13 +125,11 @@ const LMFeedModerationPostFooter = ({
                               : "replies lm-cursor-pointer commentTitle"
                         }
                       >
-                        {/* {reply?.commentsCount} = */}
                         {(commentDetails?.commentsCount || 0) > 1
                           ? `${commentDetails?.commentsCount} Replies`
                           : (commentDetails?.commentsCount || 0) === 1
                             ? `${commentDetails?.commentsCount} Reply`
                             : ""}
-                        {/* {`${reply?.commentsCount ? reply.commentsCount.toString().concat(" ") : ""}${(reply?.commentsCount || 0) > 1 ? "Replies" : "Reply"}`} */}
                       </span>
                     </span>
                   </div>
@@ -150,12 +147,9 @@ const LMFeedModerationPostFooter = ({
       {selectedTab === "approval" ? (
         <div className="moderation-post-footer-wrapper">
           <button
-            className="lm-moderation-header__button lm-text-capitalize selected-button "
+            className="lm-moderation-header__button lm-text-capitalize selected-button approve-button-custom-style"
             onClick={() => {
-              onApprovedOrRejectPostClicked(
-                reportIds,
-                LMFeedReportStatus.APPROVED,
-              );
+              handleOnApprovedPostClicked(reportIds);
             }}
           >
             <img src={ApprovePostIcon} alt="approve-post-icon" />
@@ -163,12 +157,9 @@ const LMFeedModerationPostFooter = ({
             <span className="edit-permission-web-view">Approve Post</span>
           </button>
           <button
-            className="lm-moderation-header__button lm-text-capitalize  "
+            className="lm-moderation-header__button lm-text-capitalize reject-button-custom-style"
             onClick={() => {
-              onApprovedOrRejectPostClicked(
-                reportIds,
-                LMFeedReportStatus.REJECTED,
-              );
+              handleOnRejectedPostClicked(reportIds);
             }}
           >
             <img src={RejectPostIcon} alt="reject-post-icon" />
@@ -200,7 +191,7 @@ const LMFeedModerationPostFooter = ({
           </div>
           {accusedUserState === 1 ? null : (
             <button
-              className="lm-moderation-header__button moderation-edit-member-permission-button"
+              className="lm-moderation-header__button moderation-edit-member-permission-button edit-member-permission-custom-style"
               onClick={() => {
                 editMemberPermissionsHandler(reportedDetails[0]);
                 setCurrentReport(reportedDetails[0]);

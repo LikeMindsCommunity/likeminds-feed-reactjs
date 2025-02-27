@@ -26,9 +26,8 @@ const LMFeedNotificationHeader = ({
   };
 
   useEffect(() => {
-    const handleUserStatus = (event: any) => {
-      console.log("event", event);
-      setIsUserCM(event.detail.currentState);
+    const handleUserStatus = (event: Event) => {
+      setIsUserCM((event as CustomEvent).detail.currentState);
     };
 
     customEventClient?.listen("isCurrentUserCM", handleUserStatus);
@@ -57,7 +56,7 @@ const LMFeedNotificationHeader = ({
           <ListItemButton
             className="lm-sidebar-headings"
             onClick={() => {
-              customEventClient.dispatchEvent("sideNavbarState", {
+              customEventClient.dispatchEvent("sideNavbarCurrentState", {
                 currentState: "home",
               });
             }}
@@ -77,7 +76,7 @@ const LMFeedNotificationHeader = ({
             <ListItemButton
               className="lm-sidebar-headings"
               onClick={() => {
-                customEventClient.dispatchEvent("sideNavbarState", {
+                customEventClient.dispatchEvent("sideNavbarCurrentState", {
                   currentState: "moderation",
                 });
               }}

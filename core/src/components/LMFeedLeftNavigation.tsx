@@ -3,18 +3,12 @@ import ModerationIcon from "../assets/images/moderation-icon.svg";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
 
-interface LMFeedLeftNavigationInterface {
-  selectedNav: string;
-  selectNav: (nav: string) => void;
-}
-
-const LMFeedLeftNavigation = ({
-  selectedNav,
-  selectNav,
-}: LMFeedLeftNavigationInterface) => {
+const LMFeedLeftNavigation = () => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const { customEventClient } = useContext(GlobalClientProviderContext);
+  const { selectNav, selectedNav } = useContext(FeedSideNavbarContext);
 
   useEffect(() => {
     customEventClient?.dispatchEvent("isCurrentUserCM", {
@@ -47,8 +41,8 @@ const LMFeedLeftNavigation = ({
         >
           <div
             className={
-              "lm-nav-icons" +
-              (selectedNav === "moderation" ? " lm-selected-background " : "")
+              `lm-nav-icons` +
+              (selectedNav === `moderation` ? ` lm-selected-background ` : ``)
             }
           >
             <img src={ModerationIcon} alt="moderation" />

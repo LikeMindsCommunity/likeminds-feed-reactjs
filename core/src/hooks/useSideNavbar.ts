@@ -12,15 +12,18 @@ export function useSideNavbar() {
   );
 
   useEffect(() => {
-    const handleDrawerChange = (event: any) => {
-      setSelectedNav(event.detail.currentState);
-      localStorage.setItem("sideNavbarCurrentState", event.detail.currentState);
+    const handleDrawerChange = (event: Event) => {
+      setSelectedNav((event as CustomEvent).detail.currentState);
+      localStorage.setItem(
+        "sideNavbarCurrentState",
+        (event as CustomEvent).detail.currentState,
+      );
     };
 
-    customEventClient?.listen("sideNavbarState", handleDrawerChange);
+    customEventClient?.listen("sideNavbarCurrentState", handleDrawerChange);
 
     return () => {
-      customEventClient?.remove("sideNavbarState");
+      customEventClient?.remove("sideNavbarCurrentState");
     };
   }, [customEventClient]);
 

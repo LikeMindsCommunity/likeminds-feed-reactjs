@@ -2,7 +2,7 @@ import { useModeration } from "../hooks/useModeration";
 import PostApprovalDisabledIcon from "../assets/images/moderation-disabled-icon1.svg";
 import EmptyModeartionSizeIcon from "../assets/images/moderation-disabled-icon2.svg";
 import { Post } from "../shared/types/models/post";
-import LMFeedModerationPosts from "./LMFeedModerationPosts";
+import Posts from "./LMFeedPosts";
 import { useCallback, useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -32,7 +32,8 @@ export const LMFeedModeration = () => {
     widgets,
     reports,
     comments,
-    onApprovedOrRejectPostClicked,
+    handleOnApprovedPostClicked,
+    handleOnRejectedPostClicked,
     onApprovedCallback,
     onRejectedCallback,
     editMemberPermissionsHandler,
@@ -46,12 +47,16 @@ export const LMFeedModeration = () => {
     setCustomTitle,
     currentReport,
     setCurrentReport,
+    handleHeaderLeadingTap,
+    handleHeaderTextTap,
+    handleHeaderTrailingTap,
   } = useModeration();
   const { CustomComponents } = useContext(CustomAgentProviderContext);
 
   const renderFeeds = useCallback(() => {
     return posts?.map((post: Post) => {
-      return post?.attachments.length === 0 ? (
+      const filteredUser = users[post.uuid];
+      return (
         <FeedPostContext.Provider
           key={post?.id}
           value={{
@@ -62,9 +67,9 @@ export const LMFeedModeration = () => {
           }}
         >
           {CustomComponents?.CustomPostView ||
-            (post && <LMFeedModerationPosts post={post} />)}
+            (post && <Posts post={post} user={filteredUser} />)}
         </FeedPostContext.Provider>
-      ) : null;
+      );
     });
   }, [
     CustomComponents?.CustomPostView,
@@ -98,7 +103,8 @@ export const LMFeedModeration = () => {
           widgets,
           topics,
           comments,
-          onApprovedOrRejectPostClicked,
+          handleOnApprovedPostClicked,
+          handleOnRejectedPostClicked,
           onApprovedCallback,
           onRejectedCallback,
           editMemberPermissionsHandler,
@@ -112,6 +118,9 @@ export const LMFeedModeration = () => {
           setCustomTitle,
           currentReport,
           setCurrentReport,
+          handleHeaderLeadingTap,
+          handleHeaderTextTap,
+          handleHeaderTrailingTap,
         }}
       >
         <div className="lm-flex-grow" id="feed-scroller">
@@ -183,9 +192,9 @@ export const LMFeedModeration = () => {
             <div className="lm-moderation-header__left">
               <button
                 className={
-                  "lm-moderation-header__button lm-text-capitalize" +
+                  `lm-moderation-header__button lm-text-capitalize` +
                   (selectedTab === "approval" ? " selected-button" : "") +
-                  " post-approval-button-custom-style"
+                  ` post-approval-button-custom-style`
                 }
                 onClick={() => {
                   selectTab("approval");
@@ -205,7 +214,8 @@ export const LMFeedModeration = () => {
               <button
                 className={
                   "lm-moderation-header__button lm-text-capitalize" +
-                  (selectedTab === "reported" ? " selected-button" : "")
+                  (selectedTab === "reported" ? " selected-button" : "") +
+                  ` post-reports-button-custom-style`
                 }
                 onClick={() => {
                   selectTab("reported");
@@ -226,7 +236,8 @@ export const LMFeedModeration = () => {
             <button
               className={
                 "lm-moderation-header__button lm-text-capitalize" +
-                (selectedTab === "closed" ? " selected-button" : "")
+                (selectedTab === "closed" ? " selected-button" : "") +
+                ` post-closed-button-custom-style`
               }
               onClick={() => {
                 selectTab("closed");

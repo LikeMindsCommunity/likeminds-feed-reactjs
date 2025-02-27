@@ -12,6 +12,9 @@ import { Reply } from "../models/replies";
 import { Topic } from "../models/topic";
 import { PollOption, AdvancedPollOptions } from "../../../hooks/useCreatePost";
 import { WidgetResponse } from "../../utils";
+import { MemberRights } from "@likeminds.community/feed-js";
+import { Report } from "../models/report";
+import { Comment } from "../models/comment";
 
 export interface FeedListsDataStore {
   selectedTopics: string[];
@@ -204,4 +207,37 @@ export interface PollCreationDefaultActions {
   handleAddOptionSubmit: () => void;
   submitVoteHandler: () => void;
   setIsEditModeFunction: (toggle: boolean) => void;
+}
+
+export interface ModerationDataStore {
+  selectedTab: string;
+  isPostApprovalEnabled: boolean;
+  reports: Report[];
+  posts: Post[];
+  comments: Comment[];
+  users: Record<string, User>;
+  widgets: Record<string, unknown>;
+  topics: Record<string, Topic>;
+  memberRights: MemberRights[];
+  isEditPermissionDialogOpen: boolean;
+  modifiedRights: MemberRights[];
+  customTitle: string;
+  currentReport: Report | null;
+}
+
+export interface ModerationDefaultActions {
+  selectTab: (tab: string) => void;
+  handleOnApprovedPostClicked: (reportIds: number[]) => Promise<void>;
+  handleOnRejectedPostClicked: (reportIds: number[]) => Promise<void>;
+  onApprovedCallback: (report: Report) => Promise<void>;
+  onRejectedCallback: (report: Report) => Promise<void>;
+  editMemberPermissionsHandler: (report: Report) => Promise<void>;
+  updateMemberRightsHandler: () => Promise<void>;
+  setIsEditPermissionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setModifiedRights: React.Dispatch<React.SetStateAction<MemberRights[]>>;
+  setCustomTitle: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentReport: React.Dispatch<React.SetStateAction<Report | null>>;
+  handleHeaderLeadingTap: () => void;
+  handleHeaderTextTap: () => void;
+  handleHeaderTrailingTap: () => void;
 }

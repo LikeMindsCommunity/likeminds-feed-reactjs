@@ -33,7 +33,12 @@ const LMFeedModerationPostHeader = ({
   const { LMPostHeaderStyles, LMFeedCustomIcons } = useContext(
     CustomAgentProviderContext,
   );
-  const { selectedTab } = useContext(FeedModerationContext);
+  const {
+    selectedTab,
+    handleHeaderLeadingTap,
+    handleHeaderTrailingTap,
+    handleHeaderTextTap,
+  } = useContext(FeedModerationContext);
   const { reports, comments } = useContext(FeedModerationContext);
   let membersReported = reports.filter(
     (report) => report.entityId === postDetails.id,
@@ -46,9 +51,9 @@ const LMFeedModerationPostHeader = ({
     membersReported = reports.filter((report) => report.entityId === commentId);
   }
 
-  const isCommentReported = membersReported[0].type === "comment";
+  const isCommentReported = membersReported[0].type === 6;
 
-  const reportedMemberName = membersReported[0]?.reportedByUser?.name;
+  const reportedMemberName = membersReported[0]?.reportedBy?.name;
   const remainingReportedMembers = membersReported.length - 1;
 
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
@@ -91,24 +96,29 @@ const LMFeedModerationPostHeader = ({
         />
       </Dialog>
 
-      <div className="modeartion-post-header-alert">
+      <div className="modeartion-post-header-alert activity-header-custom-style">
         {selectedTab === "approval" ? (
           <>
             <img
+              onClick={handleHeaderLeadingTap}
               src={ApprovalPendingIcon}
               alt="approval-pending-icon"
               className="approval-pending-icon"
             />
-            <span className="">Approval Pending</span>
+            <span onClick={handleHeaderTextTap}>Approval Pending</span>
           </>
         ) : selectedTab === "reported" ? (
           <>
             <img
+              onClick={handleHeaderLeadingTap}
               src={ModerationReportedTitleIcon}
               alt="approval-pending-icon"
               className="approval-pending-icon"
             />
-            <span className="moderation-post-header-names">
+            <span
+              className="moderation-post-header-names"
+              onClick={handleHeaderTextTap}
+            >
               <span className="moderation-post-header-names__capitalize">
                 {reportedMemberName}
               </span>{" "}
@@ -131,18 +141,23 @@ const LMFeedModerationPostHeader = ({
               <div className="moderation-closed-header">
                 {isCommentReported ? (
                   <img
+                    onClick={handleHeaderLeadingTap}
                     src={WarningIcon}
                     alt="warning-icon"
                     className="warning-icon"
                   />
                 ) : (
                   <img
+                    onClick={handleHeaderLeadingTap}
                     src={ModerationReportedTitleIcon}
                     alt="approval-pending-icon"
                     className="approval-pending-icon"
                   />
                 )}
-                <span className="moderation-post-header-names">
+                <span
+                  className="moderation-post-header-names"
+                  onClick={handleHeaderTextTap}
+                >
                   <span className="moderation-post-header-names__capitalize">
                     {reportedMemberName}
                   </span>{" "}
@@ -162,6 +177,7 @@ const LMFeedModerationPostHeader = ({
               <div>
                 {isCommentReported ? (
                   <img
+                    onClick={handleHeaderTrailingTap}
                     src={QuestionMarkIcon}
                     alt="question-mark-icon"
                     className="question-mark-icon closed-header-wrapper-question-icon"

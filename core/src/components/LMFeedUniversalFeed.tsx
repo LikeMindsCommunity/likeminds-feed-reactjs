@@ -13,6 +13,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import LMFeedCreatePost from "./LMFeedCreatePost";
 import LMFeedAllMembers from "./LMFeedAllMembers";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
+import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
 import LMFeedLeftNavigation from "./LMFeedLeftNavigation";
@@ -119,57 +120,49 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
   ]);
 
   return (
-    <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
-      <div className="lm-sidenav">
-        <LMFeedLeftNavigation selectNav={selectNav} selectedNav={selectedNav} />
-      </div>
-      {selectedNav === "home" ? (
-        <>
-          <div className="lm-flex-grow" id="feed-scroller">
-            <LMFeedCreatePost showStarterComponent />
-            {/* <div> */}
-            {/* Topics */}
-            {CustomComponents?.CustomTopicDropDown ? (
-              CustomComponents.CustomTopicDropDown
-            ) : (
-              <div
-                className="lm-mb-4 lm-mt-4"
-                lm-feed-component-id={`lm-feed-topic-dropdown`}
+    <FeedSideNavbarContext.Provider value={{ selectedNav, selectNav }}>
+      <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
+        <div className="lm-sidenav">
+          <LMFeedLeftNavigation />
+        </div>
+        {selectedNav === "home" ? (
+          <>
+            <div className="lm-flex-grow" id="feed-scroller">
+              <LMFeedCreatePost showStarterComponent />
+              {CustomComponents?.CustomTopicDropDown ? (
+                CustomComponents.CustomTopicDropDown
+              ) : (
+                <div
+                  className="lm-mb-4 lm-mt-4"
+                  lm-feed-component-id={`lm-feed-topic-dropdown`}
+                >
+                  <LMFeedViewTopicDropdown
+                    mode={LMTopicsDropdownMode.view}
+                    selectedTopicIds={selectedTopics}
+                    setSelectedTopicsIds={setSelectedTopics}
+                  />
+                </div>
+              )}
+
+              <InfiniteScroll
+                dataLength={feedList.length}
+                hasMore={loadMoreFeeds}
+                next={getNextPage}
+                loader={null}
+                scrollThreshold={0.6}
               >
-                <LMFeedViewTopicDropdown
-                  mode={LMTopicsDropdownMode.view}
-                  selectedTopicIds={selectedTopics}
-                  setSelectedTopicsIds={setSelectedTopics}
-                />
-              </div>
-            )}
-            {/* Topics */}
-
-            {/* Posts */}
-
-            <InfiniteScroll
-              dataLength={feedList.length}
-              hasMore={loadMoreFeeds}
-              next={getNextPage}
-              // TODO set shimmer on loader component
-              loader={null}
-              scrollThreshold={0.6}
-            >
-              {renderFeeds()}
-            </InfiniteScroll>
-            {/* Posts */}
-            {/* </div> */}
-          </div>
-          <div className="lm-member">
-            <LMFeedAllMembers />
-          </div>
-        </>
-      ) : (
-        <>
+                {renderFeeds()}
+              </InfiniteScroll>
+            </div>
+            <div className="lm-member">
+              <LMFeedAllMembers />
+            </div>
+          </>
+        ) : selectedNav === "moderation" ? (
           <LMFeedModeration />
-        </>
-      )}
-    </div>
+        ) : null}
+      </div>
+    </FeedSideNavbarContext.Provider>
   );
 };
 
