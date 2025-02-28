@@ -58,8 +58,18 @@ const LMFeedPostHeader = () => {
       if (attachment.attachmentType === 6) {
         const newAttachment = { ...attachment };
         const pollWidget = widgets![attachment.attachmentMeta.entityId!];
-        const { title, pollType, multipleSelectState, multipleSelectNumber, isAnonymous, expiryTime, allowAddOption } = pollWidget.metadata;
-        const options = pollWidget.LmMeta.options.map((option: { text: string }) => option.text);
+        const {
+          title,
+          pollType,
+          multipleSelectState,
+          multipleSelectNumber,
+          isAnonymous,
+          expiryTime,
+          allowAddOption,
+        } = pollWidget.metadata;
+        const options = pollWidget.lmMeta.options.map(
+          (option: { text: string }) => option.text,
+        );
 
         Object.assign(newAttachment.attachmentMeta, {
           title,
@@ -73,11 +83,10 @@ const LMFeedPostHeader = () => {
           options,
         });
         return newAttachment;
-      }
-      else {
+      } else {
         return attachment;
       }
-    })
+    });
     setAnchor(null);
     const menuId = e.currentTarget.id;
     switch (menuId) {

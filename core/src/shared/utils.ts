@@ -456,7 +456,7 @@ export const numberToPollMultipleSelectState: {
 
 export interface WidgetResponse {
   id: string;
-  LmMeta: Record<string, any> | null; // Nullable key
+  lmMeta: Record<string, any> | null; // Nullable key
   createdAt: number;
   metadata: Record<string, any>;
   parentEntityId: string;
