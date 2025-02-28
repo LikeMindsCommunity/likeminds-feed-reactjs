@@ -5,6 +5,7 @@ import {
   LMFeedNotificationHeader,
   LMFeedCustomEvents,
   initiateFeedClient,
+  LMCoreCallbacks,
 } from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
@@ -42,7 +43,15 @@ function App() {
     }
   }
   const customEventClient = new LMFeedCustomEvents();
-
+  const lmCoreCallbacks = new LMCoreCallbacks(
+    (a, b) => {},
+    () => {
+      return {
+        accessToken: "",
+        refreshToken: "",
+      };
+    }
+  );
   const [userDetails, setUserDetails] = useState<{
     accessToken?: string;
     refreshToken?: string;
@@ -102,6 +111,7 @@ function App() {
         client={lmFeedClient}
         customEventClient={customEventClient}
         userDetails={userDetails}
+        LMFeedCoreCallbacks={lmCoreCallbacks}
       ></LMSocialFeed>
     </>
   );
