@@ -73,6 +73,14 @@ export default function useUserProvider(
         }
         const memberStateCall: GetMemberStateResponse =
           (await lmFeedclient?.getMemberState()) as never;
+        const getCommunityConfigurations =
+          (await lmFeedclient?.getCommunityConfigurations()) as LMResponseType<GetCommunityConfigurationsResponse>;
+        if (getCommunityConfigurations.success) {
+          localStorage.setItem(
+            TokenValues.COMMUNITY_CONFIGURATIONS,
+            JSON.stringify(getCommunityConfigurations.data),
+          );
+        }
         if (validateUserCall && memberStateCall.success) {
           const user = {
             ...validateUserCall.data?.user,
