@@ -44,7 +44,6 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
         },
       );
 
-      console.log("attachemntArray", attachmentsArray);
       switch (attachmentsArray.length) {
         case 0:
           return null;
@@ -117,7 +116,6 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
 
         default: {
           let isReelAttachmentsWithThumbnail = false;
-          console.log("mediaList", mediaList);
           if (mediaList?.length === 2) {
             const hasReelInIt = mediaList.some(
               (attachment) => attachment.type === "video/mp4",
@@ -183,7 +181,7 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
   if (!temporaryPost && !mediaList?.length) {
     return null;
   }
-  console.log("medai typa ", mediaUploadMode)
+
   return (
     <>
       <div className="postImgSlider">
