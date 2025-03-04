@@ -59,14 +59,14 @@ const LMFeedModerationPostFooter = ({
             <div className="reported-comment-body">
               <div className="lm-comment-avatar">
                 {getAvatar({
-                  imageUrl: reportedDetails[0].userReported.imageUrl,
-                  name: reportedDetails[0].userReported.name,
+                  imageUrl: reportedDetails[0].accusedUser.imageUrl,
+                  name: reportedDetails[0].accusedUser.name,
                 })}
               </div>
               <div className="lm-reported-comment-container">
                 <div className="lm-reported-comment-details">
                   <span className="reported-comment-heading">
-                    {reportedDetails[0].userReported.name}
+                    {reportedDetails[0].accusedUser.name}
                   </span>
                   <span className="reported-comment-subheading">
                     {commentDetails.text}

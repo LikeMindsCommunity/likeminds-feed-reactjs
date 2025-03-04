@@ -7,7 +7,6 @@ import { getAvatar } from "../shared/components/LMUserMedia";
 import { Dialog } from "@mui/material";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import LMFeedReportPostDialog from "./LMFeedReportPostDialog";
-import { LMFeedEntityType } from "../shared/constants/lmEntityType";
 import pinIcon from "../assets/images/Icon-pin_new.svg";
 import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
@@ -18,6 +17,7 @@ import { Post } from "../shared/types/models/post";
 import ModerationReportedTitleIcon from "../assets/images/moderation-reported-title.svg";
 import WarningIcon from "../assets/images/warning-icon.svg";
 import QuestionMarkIcon from "../assets/images/question-mark-icon.svg";
+import { ReportEntityType } from "@likeminds.community/feed-js";
 
 interface LMFeedModerationPostFooterProps {
   postDetails: Post;
@@ -53,7 +53,7 @@ const LMFeedModerationPostHeader = ({
 
   const isCommentReported = membersReported[0].type === 6;
 
-  const reportedMemberName = membersReported[0]?.reportedBy?.name;
+  const reportedMemberName = membersReported[0]?.reportedByUser?.name;
   const remainingReportedMembers = membersReported.length - 1;
 
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
@@ -89,7 +89,7 @@ const LMFeedModerationPostHeader = ({
       </Dialog>
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
         <LMFeedReportPostDialog
-          entityType={LMFeedEntityType.POST}
+          entityType={ReportEntityType.POST}
           closeReportDialog={closeReportDialog}
           entityId={post?.id || ""}
           post={post || undefined}

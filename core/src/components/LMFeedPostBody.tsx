@@ -3,6 +3,7 @@ import { parseAndReplaceTags, textPreprocessor } from "../shared/taggingParser";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedAttachments from "../shared/components/LMFeedAttachments";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
+import { AttachmentType } from "@likeminds.community/feed-js";
 
 const LMFeedPostBody = () => {
   const { post } = useContext(FeedPostContext);
@@ -30,7 +31,7 @@ const LMFeedPostBody = () => {
           <LMFeedAttachments
             postId={post?.id || ""}
             attachments={attachments.filter(
-              (attachment) => attachment.attachmentType !== 5,
+              (attachment) => attachment.type !== AttachmentType.CUSTOM,
             )}
           />
         )}

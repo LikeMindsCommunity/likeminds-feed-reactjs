@@ -8,6 +8,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMQNAFeedPostBody from "./LMQNAFeedPostBody";
 import LMQNAFeedPostFooter from "./LMQNAFeedPostFooter";
+import { AttachmentType } from "@likeminds.community/feed-js";
 
 interface LMFeedPostProps {
   post: Post;
@@ -24,7 +25,7 @@ const LMQNAFeedPosts: React.FC<LMFeedPostProps> = () => {
       const attachmentLength = attachments.length;
       let noOfCustomViewAttachments = 0;
       for (const attachment of attachments) {
-        if (attachment.attachmentType.toString() === "5") {
+        if (attachment.type === AttachmentType.CUSTOM) {
           noOfCustomViewAttachments++;
         }
       }

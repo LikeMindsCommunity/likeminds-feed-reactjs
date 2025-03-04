@@ -323,7 +323,7 @@ export function useModeration() {
       const getMemberRightsCall: GetMemberRightsResponse =
         (await lmFeedclient?.getMemberRights(
           GetMemberRightsRequest.builder()
-            .setUuid(report.userReported.sdkClientInfo.uuid)
+            .setUuid(report.accusedUser.sdkClientInfo.uuid)
             .setIsCM(false)
             .build(),
         )) as never;
@@ -349,7 +349,7 @@ export function useModeration() {
   const updateMemberRightsHandler = async () => {
     try {
       const requestBuilder = UpdateMemberRightsRequest.builder()
-        .setUuid(currentReport?.userReported.sdkClientInfo.uuid || "")
+        .setUuid(currentReport?.accusedUser.sdkClientInfo.uuid || "")
         .setIsCM(false)
         .setRights(modifiedRights);
 
@@ -383,9 +383,7 @@ export function useModeration() {
     }
   };
 
-  const handleHeaderLeadingTap = () => {
-    console.log("leading post handler");
-  };
+  const handleHeaderLeadingTap = () => {};
   const handleHeaderTextTap = () => {};
   const handleHeaderTrailingTap = () => {};
 

@@ -11,6 +11,7 @@ import pdfIcon from "../../assets/images/pdf-icon.svg";
 import { Document, Page } from "react-pdf";
 import { OgTag } from "../types/models/ogTag";
 import LMPostPoll from "../../components/LMPostPoll";
+import { AttachmentType as AttachmentTypeEnum } from "@likeminds.community/feed-js";
 
 export interface LMFeedAttachmentsProps {
   attachments: AttachmentType[];
@@ -62,31 +63,33 @@ const RenderAttachment: React.FC<{
   postId: string;
 }> = memo(({ attachment, postId }) => {
   // Render attachment based on attachmentType
-  const { attachmentMeta, attachmentType } = attachment;
-  const { ogTags } = attachmentMeta;
+  console.log("attachments", attachment);
+  const { metaData, type } = attachment;
+  console.log("meta", metaData);
+  const { ogTags } = metaData;
 
-  switch (attachmentType) {
-    case 1: // Image
+  switch (type) {
+    case AttachmentTypeEnum.IMAGE: // Image
       return (
         <LMFeedImageAttachmentView postId={postId} attachment={attachment} />
       );
-    case 2: // Video
+    case AttachmentTypeEnum.VIDEO: // Video
       return (
         <LMFeedVideoAttachmentView postId={postId} attachment={attachment} />
       );
-    case 11: // Reel
+    case AttachmentTypeEnum.REEL: // Reel
       return (
         <LMFeedReelAttachmentView postId={postId} attachment={attachment} />
       );
-    case 3: // PDF
+    case AttachmentTypeEnum.DOCUMENT: // PDF
       return (
         <LMFeedDocumentAttachmentView postId={postId} attachment={attachment} />
       );
-    case 4: // OG Tags
+    case AttachmentTypeEnum.LINK: // OG Tags
       return <LMFeedOGTagAttachmentView postId={postId} ogTags={ogTags!} />;
 
-    case 6:
-      return <LMPostPoll />
+    case AttachmentTypeEnum.POLL:
+      return <LMPostPoll />;
 
     default: // Unsupported attachment type
       return null;
@@ -155,14 +158,14 @@ export const LMFeedDocumentAttachmentView = ({
   attachment,
   postId,
 }: LMFeedDocumentAttachmentViewProps) => {
-  const { attachmentMeta } = attachment;
-  const { name, url, size } = attachmentMeta;
+  const { metaData } = attachment;
+  const { name, url, size } = metaData;
   return (
     <div
       className="attachmentPdf"
       lm-feed-component-id={`lm-feed-post-attachments-rstuw-${postId}`}
     >
-      <Document file={attachmentMeta?.url}>
+      <Document file={metaData?.url}>
         <Page
           pageNumber={1}
           // className={"pdfPage"}
@@ -202,7 +205,6 @@ export const LMFeedDocumentAttachmentView = ({
   );
 };
 
-
 interface LMFeedImageAttachmentViewProps {
   attachment: Attachment;
   postId: string;
@@ -211,8 +213,8 @@ export const LMFeedImageAttachmentView = ({
   attachment,
   postId,
 }: LMFeedImageAttachmentViewProps) => {
-  const { attachmentMeta } = attachment;
-  const { name, url } = attachmentMeta;
+  const { metaData } = attachment;
+  const { name, url } = metaData;
   return (
     <div
       className="attachment-image"
@@ -236,8 +238,8 @@ export const LMFeedVideoAttachmentView = ({
   attachment,
   postId,
 }: LMFeedVidoeAttachmentViewProps) => {
-  const { attachmentMeta } = attachment;
-  const { url } = attachmentMeta;
+  const { metaData } = attachment;
+  const { url } = metaData;
   return (
     <div
       className="attachment-video"
@@ -256,7 +258,6 @@ export const LMFeedVideoAttachmentView = ({
   );
 };
 
-
 interface LMFeedReelAttachmentViewProps {
   attachment: Attachment;
   postId: string;
@@ -265,8 +266,8 @@ export const LMFeedReelAttachmentView = ({
   attachment,
   postId,
 }: LMFeedReelAttachmentViewProps) => {
-  const { attachmentMeta } = attachment;
-  const { url } = attachmentMeta;
+  const { metaData } = attachment;
+  const { url } = metaData;
   return (
     <div
       className="attachment-video"
@@ -286,5 +287,3 @@ export const LMFeedReelAttachmentView = ({
 };
 
 export default LMFeedAttachments;
-
-

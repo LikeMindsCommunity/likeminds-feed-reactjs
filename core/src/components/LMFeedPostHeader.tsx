@@ -9,12 +9,13 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import LMFeedReportPostDialog from "./LMFeedReportPostDialog";
-import { LMFeedEntityType } from "../shared/constants/lmEntityType";
+import { ReportEntityType } from "@likeminds.community/feed-js";
 import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import pinIcon from "../assets/images/Icon-pin_new.svg";
 import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 import { WordAction } from "../shared/enums/wordAction";
+import { AttachmentType } from "@likeminds.community/feed-js";
 const LMFeedPostHeader = () => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
@@ -55,9 +56,9 @@ const LMFeedPostHeader = () => {
     }
     const newPost = { ...post };
     newPost.attachments = newPost.attachments.map((attachment) => {
-      if (attachment.attachmentType === 6) {
+      if (attachment.type === AttachmentType.POLL) {
         const newAttachment = { ...attachment };
-        const pollWidget = widgets![attachment.attachmentMeta.entityId!];
+        const pollWidget = widgets![attachment.metaData.entityId!];
         const {
           title,
           pollType,
@@ -71,7 +72,7 @@ const LMFeedPostHeader = () => {
           (option: { text: string }) => option.text,
         );
 
-        Object.assign(newAttachment.attachmentMeta, {
+        Object.assign(newAttachment.metaData, {
           title,
           pollQuestion: title,
           pollType,
@@ -147,7 +148,7 @@ const LMFeedPostHeader = () => {
       </Dialog>
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
         <LMFeedReportPostDialog
-          entityType={LMFeedEntityType.POST}
+          entityType={ReportEntityType.POST}
           closeReportDialog={closeReportDialog}
           entityId={post?.id || ""}
           post={post || undefined}

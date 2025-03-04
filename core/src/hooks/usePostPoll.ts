@@ -82,7 +82,7 @@ export function usePostPoll(): UsePostPoll {
     onOptionSelected,
   } = PostPollCustomCallbacks;
 
-  const pollId = post?.attachments[0].attachmentMeta.entityId;
+  const pollId = post?.attachments[0].metaData.entityId;
   const pollData = widgets && pollId ? widgets[pollId] : null;
   const pollExpiryTime = pollData?.metadata.expiryTime;
   const multiSelectNo = pollData?.metadata.multipleSelectNumber;
@@ -232,7 +232,7 @@ export function usePostPoll(): UsePostPoll {
           selectedOptionIds.push(option.id);
         }
       });
-      const pollId = post?.attachments[0].attachmentMeta.entityId;
+      const pollId = post?.attachments[0].metaData.entityId;
 
       await lmFeedclient?.submitPollVote({
         pollId: pollId ?? "",

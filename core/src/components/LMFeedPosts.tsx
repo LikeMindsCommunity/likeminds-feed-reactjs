@@ -13,6 +13,7 @@ import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
 import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
 import LMFeedModerationPostHeader from "./LMFeedModerationPostHeader";
 import LMFeedModerationPostFooter from "./LMFeedModerationPostFooter";
+import { AttachmentType } from "@likeminds.community/feed-js";
 
 interface LMFeedPostProps {
   post: Post;
@@ -31,7 +32,7 @@ const LMFeedPost: React.FC<LMFeedPostProps> = ({ post: propPost }) => {
       const attachmentLength = attachments.length;
       let noOfCustomViewAttachments = 0;
       for (const attachment of attachments) {
-        if (attachment.attachmentType.toString() === "5") {
+        if (attachment.type === AttachmentType.CUSTOM) {
           noOfCustomViewAttachments++;
         }
       }
