@@ -89,11 +89,12 @@ const LMFeedReportPostDialog = ({
       console.log(error);
     }
   }
+
   useEffect(() => {
     async function getReportTags() {
       try {
         const call: GetReportTagsResponse = (await lmFeedclient?.getReportTags(
-          GetReportTagsRequest.builder().setEntityType(ReportEntityType.CHATROOM).build(),
+          GetReportTagsRequest.builder().setEntityType(entityType).build(),
         )) as never;
         if (call.success) {
           setReportTags(call.data.reportTags);
