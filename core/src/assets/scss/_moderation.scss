@@ -50,7 +50,7 @@
 }
 
 .moderation-separator{
-    color: var(--lm-feed-topic-btn-border-color);
+    color: #E4E7EC;
     margin-bottom: pxToRem(20);
 }
 
@@ -92,6 +92,7 @@
     padding: pxToRem(12) pxToRem(16);
     display: flex;
     gap: pxToRem(8);
+    border-top: 1px solid #E4E7EC;
 }
 
 .modeartion-post-header-alert, .moderation-post-closed-footer{

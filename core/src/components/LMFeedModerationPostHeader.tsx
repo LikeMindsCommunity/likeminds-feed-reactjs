@@ -51,7 +51,7 @@ const LMFeedModerationPostHeader = ({
     membersReported = reports.filter((report) => report.entityId === commentId);
   }
 
-  const isCommentReported = membersReported[0].type === 6;
+  const isCommentReported = membersReported[0].type === ReportEntityType.COMMENT;
 
   const reportedMemberName = membersReported[0]?.reportedByUser?.name;
   const remainingReportedMembers = membersReported.length - 1;

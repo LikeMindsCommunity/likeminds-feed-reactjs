@@ -50,6 +50,9 @@ export const LMFeedModeration = () => {
     handleHeaderLeadingTap,
     handleHeaderTextTap,
     handleHeaderTrailingTap,
+    loadMoreFeeds,
+    getNextPage,
+    isLoading,
   } = useModeration();
   const { CustomComponents } = useContext(CustomAgentProviderContext);
 
@@ -121,6 +124,9 @@ export const LMFeedModeration = () => {
           handleHeaderLeadingTap,
           handleHeaderTextTap,
           handleHeaderTrailingTap,
+          loadMoreFeeds,
+          getNextPage,
+          isLoading,
         }}
       >
         <div className="lm-flex-grow" id="feed-scroller">
@@ -201,14 +207,14 @@ export const LMFeedModeration = () => {
                 }}
               >
                 Post Approval
-                <span
+                {/* <span
                   className={
                     "lm-moderation-header__count" +
                     (selectedTab === "approval" ? " selected-count" : "")
                   }
                 >
                   {posts.length > 0 ? posts.length : 0}
-                </span>
+                </span> */}
               </button>
 
               <button
@@ -222,14 +228,14 @@ export const LMFeedModeration = () => {
                 }}
               >
                 Post/Comment Reported
-                <span
+                {/* <span
                   className={
                     "lm-moderation-header__count" +
                     (selectedTab === "reported" ? " selected-count" : "")
                   }
                 >
                   {posts.length > 0 ? posts.length : 0}
-                </span>
+                </span> */}
               </button>
             </div>
 
@@ -247,41 +253,56 @@ export const LMFeedModeration = () => {
             </button>
           </div>
           <hr className="moderation-separator" />
-          {isPostApprovalEnabled ? (
+
+          {selectedTab === "approval" && !isPostApprovalEnabled ? (
+            <div className="white-bg-container">
+              <img
+                src={PostApprovalDisabledIcon}
+                alt="post approval"
+                className="disabled-icons-size"
+              />
+              <div className="moderation-disabled-heading">
+                Looks like post approval is disabled
+              </div>
+              <div className="moderation-disabled-subheading">
+                Please go to the{" "}
+                <span className="moderation-disabled-path">
+                  dashboard {">"} settings {">"} enable post approval
+                </span>
+              </div>
+            </div>
+          ) : posts.length > 0 ? (
             <InfiniteScroll
               dataLength={posts.length}
-              hasMore={true}
-              next={() => {}}
+              hasMore={loadMoreFeeds}
+              next={getNextPage}
               // TODO set shimmer on loader component
               loader={null}
               scrollThreshold={0.6}
             >
               {renderFeeds()}
             </InfiniteScroll>
-          ) : (
+          ) : isLoading ? null : (
             <>
               {selectedTab === "approval" ? (
                 <div className="white-bg-container">
                   <img
-                    src={PostApprovalDisabledIcon}
+                    src={EmptyModeartionSizeIcon}
                     alt="post approval"
                     className="disabled-icons-size"
                   />
                   <div className="moderation-disabled-heading">
-                    Looks like post approval is disabled
+                    Everything looks fine. No Post Approval Reports
                   </div>
                   <div className="moderation-disabled-subheading">
-                    Please go to the{" "}
-                    <span className="moderation-disabled-path">
-                      dashboard {">"} settings {">"} enable post approval
-                    </span>
+                    Post Approval reports will be visible here.
                   </div>
                 </div>
               ) : selectedTab === "reported" ? (
                 <div className="white-bg-container">
                   <img
                     src={EmptyModeartionSizeIcon}
-                    alt="post approval"
+                    alt="reported"
                     className="disabled-icons-size"
                   />
                   <div className="moderation-disabled-heading">
@@ -295,7 +316,7 @@ export const LMFeedModeration = () => {
                 <div className="white-bg-container">
                   <img
                     src={EmptyModeartionSizeIcon}
-                    alt="post approval"
+                    alt="closed"
                     className="disabled-icons-size"
                   />
                   <div className="moderation-disabled-heading">

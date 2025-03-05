@@ -104,7 +104,7 @@ const LMFeedReportPostDialog = ({
       }
     }
     getReportTags();
-  }, [lmFeedclient]);
+  }, [lmFeedclient, entityType]);
   return (
     <div className="lmReportPostWrapper">
       <div className="lmReportPostWrapper__header">

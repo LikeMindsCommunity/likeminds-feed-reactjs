@@ -35,6 +35,9 @@ export const FeedModerationContext =
     handleHeaderLeadingTap: () => {},
     handleHeaderTextTap: () => {},
     handleHeaderTrailingTap: () => {},
+    loadMoreFeeds: true,
+    getNextPage: () => {},
+    isLoading : true,
   });
 
 interface FeedModerationInterface {
@@ -65,4 +68,7 @@ interface FeedModerationInterface {
   setCustomTitle: React.Dispatch<React.SetStateAction<string>>;
   currentReport: Report | null;
   setCurrentReport: React.Dispatch<React.SetStateAction<Report | null>>;
+  loadMoreFeeds: boolean;
+  getNextPage: () => void;
+  isLoading: boolean;
 }

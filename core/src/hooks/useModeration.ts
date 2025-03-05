@@ -63,6 +63,9 @@ export function useModeration() {
   const [widgets, setWidgets] = useState<Record<string, Widget>>({});
   const [topics, setTopics] = useState<Record<string, Topic>>({});
   const [comments, setComments] = useState<Comment[]>([]);
+  const [loadMoreFeeds, setLoadMoreFeeds] = useState<boolean>(true);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isEditPermissionDialogOpen, setIsEditPermissionDialogOpen] =
     useState<boolean>(false);
@@ -73,108 +76,186 @@ export function useModeration() {
     useState<MemberRights[]>(memberRights);
   const [customTitle, setCustomTitle] = useState<string>("");
 
-  const getPendingPostsForModerationHandler = async () => {
-    const getPendingPostsForModerationCall: GetPendingPostModerationResponse =
-      (await lmFeedclient?.getPendingPostsForModeration(
-        GetPendingPostModerationRequest.builder()
-          .setPage(1)
-          .setPageSize(10)
-          .build(),
-      )) as never;
+  const pageSize = 10;
 
-    if (getPendingPostsForModerationCall.success) {
-      setReports(getPendingPostsForModerationCall.data.reports);
-      setPosts(Object.values(getPendingPostsForModerationCall.data.posts));
-      setUsers({ ...getPendingPostsForModerationCall.data.users });
-      setTopics({ ...getPendingPostsForModerationCall.data.topics });
-      setWidgets({ ...getPendingPostsForModerationCall.data.widgets });
-      setComments(
-        Object.values(getPendingPostsForModerationCall.data.comments),
-      );
-    } else {
-      if (displaySnackbarMessage) {
-        displaySnackbarMessage(
-          getPendingPostsForModerationCall?.errorMessage ||
-            getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
-        );
-      }
-      window.history.back();
-    }
-  };
-
-  const getPostCommentReportsResponseHandler = async () => {
-    const getPostCommentReportsCall: GetPostCommentReportsResponse =
-      (await lmFeedclient?.getReportsForPostAndComments(
-        GetPostCommentReportRequest.builder()
-          .setPage(1)
-          .setPageSize(10)
-          .build(),
-      )) as never;
-
-    if (getPostCommentReportsCall.success) {
-      setReports(getPostCommentReportsCall.data.reports);
-      setPosts(Object.values(getPostCommentReportsCall.data.posts));
-      setUsers({ ...getPostCommentReportsCall.data.users });
-      setTopics({ ...getPostCommentReportsCall.data.topics });
-      setWidgets({ ...getPostCommentReportsCall.data.widgets });
-      setComments(Object.values(getPostCommentReportsCall.data.comments));
-    } else {
-      if (displaySnackbarMessage) {
-        displaySnackbarMessage(
-          getPostCommentReportsCall?.errorMessage ||
-            getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
-        );
-      }
-      window.history.back();
-    }
-  };
-  const getClosedReportsResponseHandler = async () => {
-    const getClosedReportsCall: GetPostCommentReportsResponse =
-      (await lmFeedclient?.getReports(
-        GetReportsRequest.builder()
-          .setPage(1)
-          .setPageSize(10)
-          .setIsClosed(false)
-          .setFilterType([
-            FilterType.PENDING_POST,
-            FilterType.POST,
-            FilterType.COMMENT,
-            FilterType.REPLY,
-          ])
-          .build(),
-      )) as never;
-
-    if (getClosedReportsCall.success) {
-      setReports(getClosedReportsCall.data.reports);
-      setPosts(Object.values(getClosedReportsCall.data.posts));
-      setUsers({ ...getClosedReportsCall.data.users });
-      setTopics({ ...getClosedReportsCall.data.topics });
-      setWidgets({ ...getClosedReportsCall.data.widgets });
-      setComments(Object.values(getClosedReportsCall.data.comments));
-    } else {
-      if (displaySnackbarMessage) {
-        displaySnackbarMessage(
-          getClosedReportsCall?.errorMessage ||
-            getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
-        );
-      }
-      window.history.back();
-    }
-  };
-
-  const loadPost = useCallback(async () => {
+  const getPendingPostsForModerationHandler = async (page: number) => {
     try {
-      if (selectedTab === "approval") {
-        getPendingPostsForModerationHandler();
-      } else if (selectedTab === "reported") {
-        getPostCommentReportsResponseHandler();
+      setIsLoading(true);
+      const getPendingPostsForModerationCall: GetPendingPostModerationResponse =
+        (await lmFeedclient?.getPendingPostsForModeration(
+          GetPendingPostModerationRequest.builder()
+            .setPage(page)
+            .setPageSize(pageSize)
+            .build(),
+        )) as never;
+
+      setIsLoading(false);
+
+      if (getPendingPostsForModerationCall.success) {
+        setReports((prev) => [
+          ...prev,
+          ...getPendingPostsForModerationCall.data.reports,
+        ]);
+        setPosts((prev) => [
+          ...prev,
+          ...Object.values(getPendingPostsForModerationCall.data.posts),
+        ]);
+        setUsers((prev) => ({
+          ...prev,
+          ...getPendingPostsForModerationCall.data.users,
+        }));
+        setTopics((prev) => ({
+          ...prev,
+          ...getPendingPostsForModerationCall.data.topics,
+        }));
+        setWidgets((prev) => ({
+          ...prev,
+          ...getPendingPostsForModerationCall.data.widgets,
+        }));
+        setComments((prev) => [
+          ...prev,
+          ...Object.values(getPendingPostsForModerationCall.data.comments),
+        ]);
+
+        setPageCount(page);
+        if (
+          Object.values(getPendingPostsForModerationCall.data.posts).length <
+          pageSize
+        ) {
+          setLoadMoreFeeds(false);
+        }
       } else {
-        getClosedReportsResponseHandler();
+        setLoadMoreFeeds(false);
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(
+            getPendingPostsForModerationCall?.errorMessage ||
+              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
+          );
+        }
+        window.history.back();
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+      setLoadMoreFeeds(false);
+    }
+  };
+
+  const getPostCommentReportsResponseHandler = async (page: number) => {
+    try {
+      setIsLoading(true);
+      const getPostCommentReportsCall: GetPostCommentReportsResponse =
+        (await lmFeedclient?.getReportsForPostAndComments(
+          GetPostCommentReportRequest.builder()
+            .setPage(page)
+            .setPageSize(pageSize)
+            .build(),
+        )) as never;
+
+      setIsLoading(false);
+
+      if (getPostCommentReportsCall.success) {
+        setReports((prev) => [
+          ...prev,
+          ...getPostCommentReportsCall.data.reports,
+        ]);
+        setPosts((prev) => [
+          ...prev,
+          ...Object.values(getPostCommentReportsCall.data.posts),
+        ]);
+        setUsers((prev) => ({
+          ...prev,
+          ...getPostCommentReportsCall.data.users,
+        }));
+        setTopics((prev) => ({
+          ...prev,
+          ...getPostCommentReportsCall.data.topics,
+        }));
+        setWidgets((prev) => ({
+          ...prev,
+          ...getPostCommentReportsCall.data.widgets,
+        }));
+        setComments((prev) => [
+          ...prev,
+          ...Object.values(getPostCommentReportsCall.data.comments),
+        ]);
+
+        setPageCount(page);
+        if (
+          Object.values(getPostCommentReportsCall.data.posts).length < pageSize
+        ) {
+          setLoadMoreFeeds(false);
+        }
+      } else {
+        setLoadMoreFeeds(false);
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(
+            getPostCommentReportsCall?.errorMessage ||
+              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
+          );
+        }
+        window.history.back();
+      }
+    } catch (error) {
+      setLoadMoreFeeds(false);
+      console.log(error);
+    }
+  };
+  const getClosedReportsResponseHandler = async (page: number) => {
+    try {
+      setIsLoading(true);
+      const getClosedReportsCall: GetPostCommentReportsResponse =
+        (await lmFeedclient?.getReports(
+          GetReportsRequest.builder()
+            .setPage(page)
+            .setPageSize(pageSize)
+            .setIsClosed(true)
+            .setFilterType([
+              FilterType.PENDING_POST,
+              FilterType.POST,
+              FilterType.COMMENT,
+              FilterType.REPLY,
+            ])
+            .build(),
+        )) as never;
+      setIsLoading(false);
+
+      if (getClosedReportsCall.success) {
+        setReports((prev) => [...prev, ...getClosedReportsCall.data.reports]);
+        setPosts((prev) => [
+          ...prev,
+          ...Object.values(getClosedReportsCall.data.posts),
+        ]);
+        setUsers((prev) => ({ ...prev, ...getClosedReportsCall.data.users }));
+        setTopics((prev) => ({ ...prev, ...getClosedReportsCall.data.topics }));
+        setWidgets((prev) => ({
+          ...prev,
+          ...getClosedReportsCall.data.widgets,
+        }));
+        setComments((prev) => [
+          ...prev,
+          ...Object.values(getClosedReportsCall.data.comments),
+        ]);
+
+        setPageCount(page);
+        if (Object.values(getClosedReportsCall.data.posts).length < pageSize) {
+          setLoadMoreFeeds(false);
+        }
+      } else {
+        setLoadMoreFeeds(false);
+        if (displaySnackbarMessage) {
+          displaySnackbarMessage(
+            getClosedReportsCall?.errorMessage ||
+              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
+          );
+        }
+        window.history.back();
       }
     } catch (error) {
       console.log(error);
+      setLoadMoreFeeds(false);
     }
-  }, [lmFeedclient, selectedTab]);
+  };
 
   const handleOnApprovedPostClicked = async (reportIds: number[]) => {
     try {
@@ -238,6 +319,41 @@ export function useModeration() {
     }
   };
 
+  const getNextPage = () => {
+    if (selectedTab === "approval") {
+      getPendingPostsForModerationHandler(pageCount + 1);
+    } else if (selectedTab === "reported") {
+      getPostCommentReportsResponseHandler(pageCount + 1);
+    } else {
+      getClosedReportsResponseHandler(pageCount + 1);
+    }
+  };
+
+  const loadPost = useCallback(async () => {
+    try {
+      if (selectedTab === "approval") {
+        getPendingPostsForModerationHandler(1);
+      } else if (selectedTab === "reported") {
+        getPostCommentReportsResponseHandler(1);
+      } else {
+        getClosedReportsResponseHandler(1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [lmFeedclient, selectedTab, displaySnackbarMessage]);
+
+  useEffect(() => {
+    setPageCount(1);
+    setLoadMoreFeeds(true);
+    setReports([]);
+    setPosts([]);
+    setUsers({});
+    setTopics({});
+    setWidgets({});
+    setComments([]);
+  }, [selectedTab, displaySnackbarMessage]);
+
   const onApprovedCallback = useCallback(
     async (report: Report) => {
       try {
@@ -276,7 +392,7 @@ export function useModeration() {
           (await lmFeedclient?.deletePost(
             DeletePostRequest.builder()
               .setPostId(report.entityId)
-              // .setDeleteReason(report.reason)
+              .setDeleteReason(report.reason || "")
               .build(),
           )) as never;
 
@@ -523,5 +639,8 @@ export function useModeration() {
     setCustomTitle,
     currentReport,
     setCurrentReport,
+    loadMoreFeeds,
+    getNextPage,
+    isLoading,
   };
 }

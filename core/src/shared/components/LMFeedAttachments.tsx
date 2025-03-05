@@ -63,9 +63,7 @@ const RenderAttachment: React.FC<{
   postId: string;
 }> = memo(({ attachment, postId }) => {
   // Render attachment based on attachmentType
-  console.log("attachments", attachment);
   const { metaData, type } = attachment;
-  console.log("meta", metaData);
   const { ogTags } = metaData;
 
   switch (type) {
