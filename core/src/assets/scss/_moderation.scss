@@ -101,7 +101,7 @@
     font-weight: 400;
     color: var(--lm-feed-card-content-heading);
     padding: pxToRem(8) pxToRem(16);
-    gap: pxToRem(10);
+    gap: pxToRem(5);
 }
 
 .moderation-post-footer-wrapper-reported{
@@ -291,3 +291,6 @@
     margin: 10px;
 }
 
+.capitalize{
+    text-transform: capitalize;
+}

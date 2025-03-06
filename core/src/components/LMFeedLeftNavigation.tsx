@@ -4,6 +4,7 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { useContext, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 
 const LMFeedLeftNavigation = () => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -11,7 +12,7 @@ const LMFeedLeftNavigation = () => {
   const { selectNav, selectedNav } = useContext(FeedSideNavbarContext);
 
   useEffect(() => {
-    customEventClient?.dispatchEvent("isCurrentUserCM", {
+    customEventClient?.dispatchEvent(LMFeedCustomActionEvents.CURRENT_USER_CM, {
       currentState: currentUser?.state === 1,
     });
   }, [customEventClient, currentUser]);

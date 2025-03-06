@@ -15,6 +15,7 @@ import {
   MemberRights,
   FilterType,
   LMFeedReportStatus,
+  DeleteCommentRequest,
 } from "@likeminds.community/feed-js";
 import { GetPendingPostModerationResponse } from "../shared/types/api-responses/getPendingPostsForModerationResponse";
 import { GetPostCommentReportsResponse } from "../shared/types/api-responses/getPostCommentReports";
@@ -33,6 +34,7 @@ import {
   ModerationDefaultActions,
   ApplicationGeneralsStore,
 } from "../shared/types/cutomCallbacks/dataStores";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 
 export function useModeration() {
   const [selectedTab, setSelectedTab] = useState<string>("approval");
@@ -42,7 +44,9 @@ export function useModeration() {
   const { currentCommunity, currentUser, logoutUser } = useContext(
     LMFeedUserProviderContext,
   );
-  const { lmFeedclient } = useContext(GlobalClientProviderContext);
+  const { lmFeedclient, customEventClient } = useContext(
+    GlobalClientProviderContext,
+  );
   const { displaySnackbarMessage, closeSnackbar, showSnackbar, message } =
     useContext(GeneralContext);
   const { ModerationCustomCallbacks = {} } = useContext(
@@ -57,12 +61,12 @@ export function useModeration() {
     onEditMemberPermissionClicked,
   } = ModerationCustomCallbacks;
 
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Record<string, Post>>({});
   const [reports, setReports] = useState<Report[]>([]);
   const [users, setUsers] = useState<Record<string, User>>({});
   const [widgets, setWidgets] = useState<Record<string, Widget>>({});
   const [topics, setTopics] = useState<Record<string, Topic>>({});
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<Record<string, Comment>>({});
   const [loadMoreFeeds, setLoadMoreFeeds] = useState<boolean>(true);
   const [pageCount, setPageCount] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -96,10 +100,10 @@ export function useModeration() {
           ...prev,
           ...getPendingPostsForModerationCall.data.reports,
         ]);
-        setPosts((prev) => [
+        setPosts((prev) => ({
           ...prev,
-          ...Object.values(getPendingPostsForModerationCall.data.posts),
-        ]);
+          ...getPendingPostsForModerationCall.data.posts,
+        }));
         setUsers((prev) => ({
           ...prev,
           ...getPendingPostsForModerationCall.data.users,
@@ -112,14 +116,14 @@ export function useModeration() {
           ...prev,
           ...getPendingPostsForModerationCall.data.widgets,
         }));
-        setComments((prev) => [
+        setComments((prev) => ({
           ...prev,
-          ...Object.values(getPendingPostsForModerationCall.data.comments),
-        ]);
+          ...getPendingPostsForModerationCall.data.comments,
+        }));
 
         setPageCount(page);
         if (
-          Object.values(getPendingPostsForModerationCall.data.posts).length <
+          Object.values(getPendingPostsForModerationCall.data.reports).length <
           pageSize
         ) {
           setLoadMoreFeeds(false);
@@ -159,10 +163,10 @@ export function useModeration() {
           ...prev,
           ...getPostCommentReportsCall.data.reports,
         ]);
-        setPosts((prev) => [
+        setPosts((prev) => ({
           ...prev,
-          ...Object.values(getPostCommentReportsCall.data.posts),
-        ]);
+          ...getPostCommentReportsCall.data.posts,
+        }));
         setUsers((prev) => ({
           ...prev,
           ...getPostCommentReportsCall.data.users,
@@ -175,14 +179,15 @@ export function useModeration() {
           ...prev,
           ...getPostCommentReportsCall.data.widgets,
         }));
-        setComments((prev) => [
+        setComments((prev) => ({
           ...prev,
-          ...Object.values(getPostCommentReportsCall.data.comments),
-        ]);
+          ...getPostCommentReportsCall.data.comments,
+        }));
 
         setPageCount(page);
         if (
-          Object.values(getPostCommentReportsCall.data.posts).length < pageSize
+          Object.values(getPostCommentReportsCall.data.reports).length <
+          pageSize
         ) {
           setLoadMoreFeeds(false);
         }
@@ -222,23 +227,25 @@ export function useModeration() {
 
       if (getClosedReportsCall.success) {
         setReports((prev) => [...prev, ...getClosedReportsCall.data.reports]);
-        setPosts((prev) => [
+        setPosts((prev) => ({
           ...prev,
-          ...Object.values(getClosedReportsCall.data.posts),
-        ]);
+          ...getClosedReportsCall.data.posts,
+        }));
         setUsers((prev) => ({ ...prev, ...getClosedReportsCall.data.users }));
         setTopics((prev) => ({ ...prev, ...getClosedReportsCall.data.topics }));
         setWidgets((prev) => ({
           ...prev,
           ...getClosedReportsCall.data.widgets,
         }));
-        setComments((prev) => [
+        setComments((prev) => ({
           ...prev,
-          ...Object.values(getClosedReportsCall.data.comments),
-        ]);
+          ...getClosedReportsCall.data.comments,
+        }));
 
         setPageCount(page);
-        if (Object.values(getClosedReportsCall.data.posts).length < pageSize) {
+        if (
+          Object.values(getClosedReportsCall.data.reports).length < pageSize
+        ) {
           setLoadMoreFeeds(false);
         }
       } else {
@@ -268,6 +275,12 @@ export function useModeration() {
         )) as never;
 
       if (UpdatePendingPostStatusCall.success) {
+        setReports((prevReport) =>
+          prevReport.filter((report) => report.id !== reportIds[0]),
+        );
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.MODERATION_UPDATED,
+        );
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.POST_APPROVED)!,
@@ -299,6 +312,12 @@ export function useModeration() {
         )) as never;
 
       if (UpdatePendingPostStatusCall.success) {
+        setReports((prevReport) =>
+          prevReport.filter((report) => report.id !== reportIds[0]),
+        );
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.MODERATION_UPDATED,
+        );
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.POST_REJECTED)!,
@@ -341,18 +360,18 @@ export function useModeration() {
     } catch (error) {
       console.log(error);
     }
-  }, [lmFeedclient, selectedTab, displaySnackbarMessage]);
+  }, [lmFeedclient, selectedTab]);
 
   useEffect(() => {
     setPageCount(1);
     setLoadMoreFeeds(true);
     setReports([]);
-    setPosts([]);
+    setPosts({});
     setUsers({});
     setTopics({});
     setWidgets({});
-    setComments([]);
-  }, [selectedTab, displaySnackbarMessage]);
+    setComments({});
+  }, [selectedTab]);
 
   const onApprovedCallback = useCallback(
     async (report: Report) => {
@@ -363,6 +382,9 @@ export function useModeration() {
           )) as never;
 
         if (CloseReportRequestCall.success) {
+          setReports((prevReport) =>
+            prevReport.filter((currReport) => currReport.id !== report.id),
+          );
           if (displaySnackbarMessage) {
             displaySnackbarMessage(
               getDisplayMessage(LMDisplayMessages.REPORT_IGNORED)!,
@@ -386,26 +408,46 @@ export function useModeration() {
   );
 
   const onRejectedCallback = useCallback(
-    async (report: Report) => {
+    async (report: Report, postId: string) => {
       try {
-        const CloseReportRequestCall: LMResponseType<null> =
-          (await lmFeedclient?.deletePost(
+        let CloseReportRequestCall: LMResponseType<null>;
+        if (report.entityId === postId) {
+          CloseReportRequestCall = (await lmFeedclient?.deletePost(
             DeletePostRequest.builder()
-              .setPostId(report.entityId)
+              .setPostId(postId)
               .setDeleteReason(report.reason || "")
               .build(),
           )) as never;
+        } else {
+          CloseReportRequestCall = (await lmFeedclient?.deleteComment(
+            DeleteCommentRequest.builder()
+              .setPostId(postId)
+              .setCommentId(report.entityId)
+              .setReason(report.reason || "")
+              .build(),
+          )) as never;
+        }
 
         if (CloseReportRequestCall.success) {
+          setReports((prevReport) =>
+            prevReport.filter((currReport) => currReport.id !== report.id),
+          );
           const CloseReportRequestCall: LMResponseType<null> =
             (await lmFeedclient?.closeReport(
               CloseReportRequest.builder().setReportId(report.id).build(),
             )) as never;
 
           if (CloseReportRequestCall.success) {
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.MODERATION_UPDATED,
+            );
             if (displaySnackbarMessage) {
               displaySnackbarMessage(
-                getDisplayMessage(LMDisplayMessages.POST_DELETED)!,
+                getDisplayMessage(
+                  report.entityId === postId
+                    ? LMDisplayMessages.POST_DELETED
+                    : LMDisplayMessages.COMMENT_DELETED_SUCCESS,
+                )!,
               );
             }
             window.history.back();

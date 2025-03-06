@@ -340,6 +340,14 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
   );
 
   useEffect(() => {
+    customEventClient?.listen(LMFeedCustomActionEvents.MODERATION_UPDATED, () => {
+      loadFeed();
+    });
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.MODERATION_UPDATED);
+  });
+
+  useEffect(() => {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {
       loadFeed();
       if (displaySnackbarMessage) {

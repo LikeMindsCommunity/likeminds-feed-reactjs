@@ -11,7 +11,7 @@ import { MEMBER_LIST } from "../shared/constants/lmAppConstant";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 
 const LMFeedAllMembers = () => {
-  const { lmFeedclient, customEventClient } = useContext(
+  const { lmFeedclient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
   const { memberComponentClickCustomCallback } = useContext(

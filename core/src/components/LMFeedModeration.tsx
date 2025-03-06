@@ -1,7 +1,7 @@
 import { useModeration } from "../hooks/useModeration";
 import PostApprovalDisabledIcon from "../assets/images/moderation-disabled-icon1.svg";
 import EmptyModeartionSizeIcon from "../assets/images/moderation-disabled-icon2.svg";
-import { Post } from "../shared/types/models/post";
+import { Report } from "../shared/types/models/report";
 import Posts from "./LMFeedPosts";
 import { useCallback, useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
@@ -57,11 +57,17 @@ export const LMFeedModeration = () => {
   const { CustomComponents } = useContext(CustomAgentProviderContext);
 
   const renderFeeds = useCallback(() => {
-    return posts?.map((post: Post) => {
-      const filteredUser = users[post.uuid];
+    return reports?.map((report: Report) => {
+      let post = posts[report.entityId];
+      if (!post) {
+        const comment = comments[report.entityId];
+        post = posts[comment?.postId];
+      }
+      if (!post) return null;
+      const user = users[post.uuid];
       return (
         <FeedPostContext.Provider
-          key={post?.id}
+          key={report?.id}
           value={{
             post,
             users,
@@ -69,8 +75,9 @@ export const LMFeedModeration = () => {
             widgets,
           }}
         >
-          {CustomComponents?.CustomPostView ||
-            (post && <Posts post={post} user={filteredUser} />)}
+          {CustomComponents?.CustomPostView || (
+            <Posts post={post} user={user} propReport={report} />
+          )}
         </FeedPostContext.Provider>
       );
     });
@@ -271,9 +278,9 @@ export const LMFeedModeration = () => {
                 </span>
               </div>
             </div>
-          ) : posts.length > 0 ? (
+          ) : reports.length > 0 ? (
             <InfiniteScroll
-              dataLength={posts.length}
+              dataLength={reports.length}
               hasMore={loadMoreFeeds}
               next={getNextPage}
               // TODO set shimmer on loader component

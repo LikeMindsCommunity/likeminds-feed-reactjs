@@ -2,8 +2,6 @@ import ApprovePostIcon from "../assets/images/approve-post-icon.svg";
 import RejectPostIcon from "../assets/images/reject-post-icon.svg";
 import { useContext } from "react";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
-import { Post } from "../shared/types/models/post";
-import { Comment } from "../shared/types/models/comment";
 import { getAvatar } from "../shared/components/LMUserMedia";
 import { changeLikeCase, timeFromNow } from "../shared/utils";
 import likeIcon from "../assets/images/like-sm.svg";
@@ -11,20 +9,19 @@ import commentLiked from "../assets/images/liked-sm.png";
 import { WordAction } from "../shared/enums/wordAction";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { formatTimestamp } from "../shared/utils";
+import { Report } from "../shared/types/models/report";
 
 interface LMFeedModerationPostFooterProps {
-  postDetails: Post;
+  propReport: Report | undefined;
 }
 
 const LMFeedModerationPostFooter = ({
-  postDetails,
+  propReport,
 }: LMFeedModerationPostFooterProps) => {
   const {
     selectedTab,
     handleOnApprovedPostClicked,
     handleOnRejectedPostClicked,
-    reports,
-    users,
     onApprovedCallback,
     onRejectedCallback,
     editMemberPermissionsHandler,
@@ -33,23 +30,11 @@ const LMFeedModerationPostFooter = ({
   } = useContext(FeedModerationContext);
   const { LMFeedCustomIcons = {} } = useContext(CustomAgentProviderContext);
 
-  let reportedDetails = reports.filter(
-    (report) => report.entityId === postDetails.id,
-  );
-  const reportIds = reportedDetails.map((report) => report.id);
-  const accusedUserState = users[postDetails.uuid].state;
+  const accusedUserState = propReport?.accusedUser.state;
 
-  let commentDetails: Comment | undefined;
-
-  if (reportedDetails.length === 0) {
-    commentDetails = comments.filter(
-      (comment) => comment.postId === postDetails.id,
-    )[0];
-    reportedDetails = reports.filter(
-      (report) => report.entityId === commentDetails?.id,
-    );
-  }
-  const isCommentReported = reportedDetails[0].type === 6;
+  const commentDetails = propReport?.entityId
+    ? comments[propReport.entityId]
+    : undefined;
 
   return (
     <>
@@ -59,14 +44,14 @@ const LMFeedModerationPostFooter = ({
             <div className="reported-comment-body">
               <div className="lm-comment-avatar">
                 {getAvatar({
-                  imageUrl: reportedDetails[0].accusedUser.imageUrl,
-                  name: reportedDetails[0].accusedUser.name,
+                  imageUrl: propReport?.accusedUser.imageUrl,
+                  name: propReport?.accusedUser.name,
                 })}
               </div>
               <div className="lm-reported-comment-container">
                 <div className="lm-reported-comment-details">
                   <span className="reported-comment-heading">
-                    {reportedDetails[0].accusedUser.name}
+                    {propReport?.accusedUser.name}
                   </span>
                   <span className="reported-comment-subheading">
                     {commentDetails.text}
@@ -149,7 +134,9 @@ const LMFeedModerationPostFooter = ({
           <button
             className="lm-moderation-header__button lm-text-capitalize selected-button approve-button-custom-style"
             onClick={() => {
-              handleOnApprovedPostClicked(reportIds);
+              if (propReport?.id !== undefined) {
+                handleOnApprovedPostClicked([propReport.id]);
+              }
             }}
           >
             <img src={ApprovePostIcon} alt="approve-post-icon" />
@@ -159,7 +146,9 @@ const LMFeedModerationPostFooter = ({
           <button
             className="lm-moderation-header__button lm-text-capitalize reject-button-custom-style"
             onClick={() => {
-              handleOnRejectedPostClicked(reportIds);
+              if (propReport?.id !== undefined) {
+                handleOnRejectedPostClicked([propReport.id]);
+              }
             }}
           >
             <img src={RejectPostIcon} alt="reject-post-icon" />
@@ -173,7 +162,9 @@ const LMFeedModerationPostFooter = ({
             <button
               className="lm-moderation-header__button lm-text-capitalize selected-button "
               onClick={() => {
-                onApprovedCallback(reportedDetails[0]);
+                if (propReport) {
+                  onApprovedCallback(propReport);
+                }
               }}
             >
               <img src={ApprovePostIcon} alt="approve-post-icon" />
@@ -182,7 +173,9 @@ const LMFeedModerationPostFooter = ({
             <button
               className="lm-moderation-header__button lm-text-capitalize  "
               onClick={() => {
-                onRejectedCallback(reportedDetails[0]);
+                if (propReport) {
+                  onRejectedCallback(propReport, commentDetails ? commentDetails.postId :  propReport.entityId);
+                }
               }}
             >
               <img src={RejectPostIcon} alt="reject-post-icon" />
@@ -193,8 +186,10 @@ const LMFeedModerationPostFooter = ({
             <button
               className="lm-moderation-header__button moderation-edit-member-permission-button edit-member-permission-custom-style"
               onClick={() => {
-                editMemberPermissionsHandler(reportedDetails[0]);
-                setCurrentReport(reportedDetails[0]);
+                if (propReport) {
+                  editMemberPermissionsHandler(propReport);
+                  setCurrentReport(propReport);
+                }
               }}
             >
               <span className="edit-permission-mobile-view">Edit</span>
@@ -206,11 +201,21 @@ const LMFeedModerationPostFooter = ({
         </div>
       ) : (
         <div className="moderation-post-closed-footer">
-          {isCommentReported ? "Comment approved by" : " Post approved by"}
+          {propReport?.actionTaken ? (
+            propReport.actionTaken === 7 ? (
+              "Post approved by"
+            ) : propReport.actionTaken === 8 ? (
+              "Post rejected by"
+            ) : null
+          ) : (
+            <>
+              <span className="capitalize">{propReport?.type}</span> approved by
+            </>
+          )}
           <span className="moderation-post-closed-by">
-            {reportedDetails[0]?.closedBy?.name}
+            {propReport?.closedBy?.name}
           </span>
-          on {formatTimestamp(Number(reportedDetails[0].closedOn))}
+          on {formatTimestamp(Number(propReport?.closedOn))}
         </div>
       )}
     </>

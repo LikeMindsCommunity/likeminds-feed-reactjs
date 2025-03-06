@@ -213,8 +213,8 @@ export interface ModerationDataStore {
   selectedTab: string;
   isPostApprovalEnabled: boolean;
   reports: Report[];
-  posts: Post[];
-  comments: Comment[];
+  posts: Record<string, Post>;
+  comments: Record<string, Comment>;
   users: Record<string, User>;
   widgets: Record<string, unknown>;
   topics: Record<string, Topic>;
@@ -230,7 +230,7 @@ export interface ModerationDefaultActions {
   handleOnApprovedPostClicked: (reportIds: number[]) => Promise<void>;
   handleOnRejectedPostClicked: (reportIds: number[]) => Promise<void>;
   onApprovedCallback: (report: Report) => Promise<void>;
-  onRejectedCallback: (report: Report) => Promise<void>;
+  onRejectedCallback: (report: Report, postId : string) => Promise<void>;
   editMemberPermissionsHandler: (report: Report) => Promise<void>;
   updateMemberRightsHandler: () => Promise<void>;
   setIsEditPermissionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;

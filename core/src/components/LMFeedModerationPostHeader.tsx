@@ -13,18 +13,18 @@ import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 import { WordAction } from "../shared/enums/wordAction";
 import ApprovalPendingIcon from "../assets/images/approval-pending-icon.svg";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
-import { Post } from "../shared/types/models/post";
+import { Report } from "../shared/types/models/report";
 import ModerationReportedTitleIcon from "../assets/images/moderation-reported-title.svg";
 import WarningIcon from "../assets/images/warning-icon.svg";
 import QuestionMarkIcon from "../assets/images/question-mark-icon.svg";
 import { ReportEntityType } from "@likeminds.community/feed-js";
 
 interface LMFeedModerationPostFooterProps {
-  postDetails: Post;
+  propReport: Report | undefined;
 }
 
 const LMFeedModerationPostHeader = ({
-  postDetails,
+  propReport,
 }: LMFeedModerationPostFooterProps) => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
@@ -39,22 +39,10 @@ const LMFeedModerationPostHeader = ({
     handleHeaderTrailingTap,
     handleHeaderTextTap,
   } = useContext(FeedModerationContext);
-  const { reports, comments } = useContext(FeedModerationContext);
-  let membersReported = reports.filter(
-    (report) => report.entityId === postDetails.id,
-  );
 
-  if (membersReported.length === 0) {
-    const commentId = comments.filter(
-      (comment) => comment.postId === postDetails.id,
-    )[0]?.id;
-    membersReported = reports.filter((report) => report.entityId === commentId);
-  }
+  const isCommentReported = propReport?.type !== ReportEntityType.POST;
 
-  const isCommentReported = membersReported[0].type === ReportEntityType.COMMENT;
-
-  const reportedMemberName = membersReported[0]?.reportedByUser?.name;
-  const remainingReportedMembers = membersReported.length - 1;
+  const reportedMemberName = propReport?.reportedByUser?.name;
 
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
@@ -63,6 +51,7 @@ const LMFeedModerationPostHeader = ({
   function closeDeletePostDialog() {
     setOpenDeletePostDialog(false);
   }
+
   const { createdAt, isEdited, isPinned } = post!;
   const user = useMemo(() => {
     if (users) {
@@ -96,98 +85,88 @@ const LMFeedModerationPostHeader = ({
         />
       </Dialog>
 
-      <div className="modeartion-post-header-alert activity-header-custom-style">
-        {selectedTab === "approval" ? (
-          <>
-            <img
-              onClick={handleHeaderLeadingTap}
-              src={ApprovalPendingIcon}
-              alt="approval-pending-icon"
-              className="approval-pending-icon"
-            />
-            <span onClick={handleHeaderTextTap}>Approval Pending</span>
-          </>
-        ) : selectedTab === "reported" ? (
-          <>
-            <img
-              onClick={handleHeaderLeadingTap}
-              src={ModerationReportedTitleIcon}
-              alt="approval-pending-icon"
-              className="approval-pending-icon"
-            />
-            <span
-              className="moderation-post-header-names"
-              onClick={handleHeaderTextTap}
-            >
-              <span className="moderation-post-header-names__capitalize">
-                {reportedMemberName}
-              </span>{" "}
-              {remainingReportedMembers > 0
-                ? " & " +
-                  (remainingReportedMembers === 1
-                    ? remainingReportedMembers + " other "
-                    : remainingReportedMembers + " others ")
-                : null}
-              <span className="moderation-post-header-title-end">
-                {isCommentReported
-                  ? " reported a comment on this post."
-                  : " reported this post."}
-              </span>
-            </span>
-          </>
-        ) : (
-          <>
-            <div className="closed-header-wrapper">
-              <div className="moderation-closed-header">
-                {isCommentReported ? (
-                  <img
-                    onClick={handleHeaderLeadingTap}
-                    src={WarningIcon}
-                    alt="warning-icon"
-                    className="warning-icon"
-                  />
-                ) : (
-                  <img
-                    onClick={handleHeaderLeadingTap}
-                    src={ModerationReportedTitleIcon}
-                    alt="approval-pending-icon"
-                    className="approval-pending-icon"
-                  />
-                )}
-                <span
-                  className="moderation-post-header-names"
-                  onClick={handleHeaderTextTap}
-                >
-                  <span className="moderation-post-header-names__capitalize">
-                    {reportedMemberName}
-                  </span>{" "}
-                  {remainingReportedMembers > 0
-                    ? " & " +
-                      (remainingReportedMembers === 1
-                        ? remainingReportedMembers + " other "
-                        : remainingReportedMembers + " others ")
-                    : null}
-                  <span className="moderation-post-header-title-end">
-                    {isCommentReported
-                      ? " reported a comment on this post."
-                      : " reported this post."}
-                  </span>
+      {selectedTab === "closed" && propReport?.actionTaken ? null : (
+        <div className="modeartion-post-header-alert activity-header-custom-style">
+          {selectedTab === "approval" ? (
+            <>
+              <img
+                onClick={handleHeaderLeadingTap}
+                src={ApprovalPendingIcon}
+                alt="approval-pending-icon"
+                className="approval-pending-icon"
+              />
+              <span onClick={handleHeaderTextTap}>Approval Pending</span>
+            </>
+          ) : selectedTab === "reported" ? (
+            <>
+              <img
+                onClick={handleHeaderLeadingTap}
+                src={ModerationReportedTitleIcon}
+                alt="approval-pending-icon"
+                className="approval-pending-icon"
+              />
+              <span
+                className="moderation-post-header-names"
+                onClick={handleHeaderTextTap}
+              >
+                <span className="moderation-post-header-names__capitalize">
+                  {reportedMemberName}
                 </span>
+                <span className="moderation-post-header-title-end">
+                  {isCommentReported
+                    ? ` reported a ${propReport?.type} on this post.`
+                    : " reported this post."}
+                </span>
+              </span>
+            </>
+          ) : (
+            <>
+              <div className="closed-header-wrapper">
+                <div className="moderation-closed-header">
+                  {isCommentReported ? (
+                    <img
+                      onClick={handleHeaderLeadingTap}
+                      src={WarningIcon}
+                      alt="warning-icon"
+                      className="warning-icon"
+                    />
+                  ) : (
+                    <img
+                      onClick={handleHeaderLeadingTap}
+                      src={ModerationReportedTitleIcon}
+                      alt="approval-pending-icon"
+                      className="approval-pending-icon"
+                    />
+                  )}
+                  <span
+                    className="moderation-post-header-names"
+                    onClick={handleHeaderTextTap}
+                  >
+                    <span className="moderation-post-header-names__capitalize">
+                      {reportedMemberName}
+                    </span>
+                    <span className="moderation-post-header-title-end">
+                      {isCommentReported
+                        ? ` reported a ${propReport?.type} on this post.`
+                        : " reported this post."}
+                    </span>
+                  </span>
+                </div>
+                <div>
+                  {isCommentReported ? (
+                    <img
+                      onClick={handleHeaderTrailingTap}
+                      src={QuestionMarkIcon}
+                      alt="question-mark-icon"
+                      className="question-mark-icon closed-header-wrapper-question-icon"
+                    />
+                  ) : null}
+                </div>
               </div>
-              <div>
-                {isCommentReported ? (
-                  <img
-                    onClick={handleHeaderTrailingTap}
-                    src={QuestionMarkIcon}
-                    alt="question-mark-icon"
-                    className="question-mark-icon closed-header-wrapper-question-icon"
-                  />
-                ) : null}
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+            </>
+          )}
+        </div>
+      )}
       <div
         className="lm-feed-wrapper__card__header"
         lm-feed-component-id={`lm-feed-post-header-abcde-${post?.id}`}

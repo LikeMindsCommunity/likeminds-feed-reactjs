@@ -12,9 +12,9 @@ export const FeedModerationContext =
     selectTab: () => {},
     isPostApprovalEnabled: false,
     reports: [],
-    posts: [],
+    posts: {},
     users: {},
-    comments: [],
+    comments: {},
     widgets: {},
     topics: {},
     handleOnApprovedPostClicked: async () => Promise.resolve(),
@@ -37,7 +37,7 @@ export const FeedModerationContext =
     handleHeaderTrailingTap: () => {},
     loadMoreFeeds: true,
     getNextPage: () => {},
-    isLoading : true,
+    isLoading: true,
   });
 
 interface FeedModerationInterface {
@@ -45,15 +45,15 @@ interface FeedModerationInterface {
   selectTab: (tab: string) => void;
   isPostApprovalEnabled: boolean;
   reports: Report[];
-  posts: Post[];
-  comments: Comment[];
+  posts: Record<string, Post>;
+  comments: Record<string, Comment>;
   users: Record<string, User>;
   widgets: Record<string, unknown>;
   topics: Record<string, Topic>;
   handleOnApprovedPostClicked: (reportIds: number[]) => Promise<void>;
   handleOnRejectedPostClicked: (reportIds: number[]) => Promise<void>;
   onApprovedCallback: (report: Report) => Promise<void>;
-  onRejectedCallback: (report: Report) => Promise<void>;
+  onRejectedCallback: (report: Report, postId : string) => Promise<void>;
   editMemberPermissionsHandler: (report: Report) => Promise<void>;
   updateMemberRightsHandler: () => Promise<void>;
   handleHeaderLeadingTap: () => void;

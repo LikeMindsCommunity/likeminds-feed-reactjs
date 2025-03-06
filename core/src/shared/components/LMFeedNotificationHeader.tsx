@@ -11,8 +11,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "../../assets/images/bottombar-home-icon.svg";
-import ModerationIcon from "../../assets/images/bottom-bar-moderation-icon.svg";
+import SelectedHomeIcon from "../../assets/images/sidenav-selected-home.svg";
+import ModerationIcon from "../../assets/images/sidenav-unselected-moderation.svg";
+import SelectedModerationIcon from "../../assets/images/bottom-bar-moderation-icon.svg";
 import CancelIcon from "../../assets/images/cancel-model-icon.svg";
+import { LMFeedCustomActionEvents } from "../constants/lmFeedCustomEventNames";
 
 const LMFeedNotificationHeader = ({
   customEventClient,
@@ -21,6 +24,9 @@ const LMFeedNotificationHeader = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [isUserCM, setIsUserCM] = useState<boolean>(false);
+  const currentScreen = localStorage.getItem(
+    LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE || "home",
+  );
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
@@ -30,10 +36,13 @@ const LMFeedNotificationHeader = ({
       setIsUserCM((event as CustomEvent).detail.currentState);
     };
 
-    customEventClient?.listen("isCurrentUserCM", handleUserStatus);
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.CURRENT_USER_CM,
+      handleUserStatus,
+    );
 
     return () => {
-      customEventClient?.remove("isCurrentUserCM");
+      customEventClient?.remove(LMFeedCustomActionEvents.CURRENT_USER_CM);
     };
   }, [customEventClient]);
 
@@ -52,41 +61,77 @@ const LMFeedNotificationHeader = ({
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding>
+        <ListItem
+          disablePadding
+          sx={
+            currentScreen === "home"
+              ? { backgroundColor: "#F5F5F5", color: "#5046e5" }
+              : {}
+          }
+        >
           <ListItemButton
             className="lm-sidebar-headings"
             onClick={() => {
-              customEventClient.dispatchEvent("sideNavbarCurrentState", {
-                currentState: "home",
-              });
+              customEventClient.dispatchEvent(
+                LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE,
+                {
+                  currentState: "home",
+                },
+              );
             }}
           >
             <ListItemIcon>
-              <img
-                src={HomeIcon}
-                alt="post approval"
-                className="disabled-icons-size"
-              />
+              {currentScreen === "home" ? (
+                <img
+                  src={SelectedHomeIcon}
+                  alt="post approval"
+                  className="disabled-icons-size"
+                />
+              ) : (
+                <img
+                  src={HomeIcon}
+                  alt="post approval"
+                  className="disabled-icons-size"
+                />
+              )}
             </ListItemIcon>
             <ListItemText primary={"Home"} />
           </ListItemButton>
         </ListItem>
         {isUserCM ? (
-          <ListItem disablePadding>
+          <ListItem
+            disablePadding
+            sx={
+              currentScreen === "moderation"
+                ? { backgroundColor: "#F5F5F5", color: "#5046e5" }
+                : {}
+            }
+          >
             <ListItemButton
               className="lm-sidebar-headings"
               onClick={() => {
-                customEventClient.dispatchEvent("sideNavbarCurrentState", {
-                  currentState: "moderation",
-                });
+                customEventClient.dispatchEvent(
+                  LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE,
+                  {
+                    currentState: "moderation",
+                  },
+                );
               }}
             >
               <ListItemIcon>
-                <img
-                  src={ModerationIcon}
-                  alt="post approval"
-                  className="disabled-icons-size"
-                />
+                {currentScreen === "moderation" ? (
+                  <img
+                    src={SelectedModerationIcon}
+                    alt="post approval"
+                    className="disabled-icons-size"
+                  />
+                ) : (
+                  <img
+                    src={ModerationIcon}
+                    alt="post approval"
+                    className="disabled-icons-size"
+                  />
+                )}
               </ListItemIcon>
               <ListItemText primary={"Moderation"} />
             </ListItemButton>
