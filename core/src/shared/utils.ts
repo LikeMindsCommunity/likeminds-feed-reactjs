@@ -416,15 +416,15 @@ export function getDisplayMessage(message: LMDisplayMessages) {
     case LMDisplayMessages.POLL_OPTIONS_SHOULD_BE_UNIQUE:
       return `Poll options should be unique`;
     case LMDisplayMessages.POST_APPROVED:
-      return `Post approved`;
+      return `Post approved.`;
     case LMDisplayMessages.POST_REJECTED:
-      return `Post rejected`;
+      return `Post rejected.`;
     case LMDisplayMessages.REPORT_IGNORED:
-      return `Report ignored`;
+      return `Report ignored.`;
     case LMDisplayMessages.POST_DELETED:
-      return `Post deleted`;
+      return `Post deleted.`;
     case LMDisplayMessages.RIGHTS_UPDATED:
-      return `Rights updated`;
+      return `Rights updated.`;
   }
 }
 

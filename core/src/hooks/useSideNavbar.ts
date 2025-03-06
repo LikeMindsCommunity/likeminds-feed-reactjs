@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { SideNavbarState } from "../shared/enums/lmSideNavbar";
 
 export function useSideNavbar() {
   const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -11,7 +12,7 @@ export function useSideNavbar() {
       localStorage.getItem(
         LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE,
       )) ||
-      "home",
+      SideNavbarState.HOME,
   );
 
   useEffect(() => {

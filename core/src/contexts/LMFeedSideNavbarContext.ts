@@ -1,8 +1,9 @@
 import React from "react";
+import { SideNavbarState } from "../shared/enums/lmSideNavbar";
 
 export const FeedSideNavbarContext =
   React.createContext<FeedSideNavbarContextnterface>({
-    selectedNav: "home",
+    selectedNav: SideNavbarState.HOME,
     selectNav: () => {},
   });
 

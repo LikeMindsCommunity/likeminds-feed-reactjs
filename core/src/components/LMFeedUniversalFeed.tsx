@@ -19,6 +19,7 @@ import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnaly
 import LMFeedLeftNavigation from "./LMFeedLeftNavigation";
 import { useSideNavbar } from "../hooks/useSideNavbar";
 import { LMFeedModeration } from "./LMFeedModeration";
+import { SideNavbarState } from "../shared/enums/lmSideNavbar";
 
 interface LMFeedUniversalFeedProps {
   followedTopics?: string[];
@@ -125,7 +126,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
         <div className="lm-sidenav">
           <LMFeedLeftNavigation />
         </div>
-        {selectedNav === "home" ? (
+        {selectedNav === SideNavbarState.HOME ? (
           <>
             <div className="lm-flex-grow" id="feed-scroller">
               <LMFeedCreatePost showStarterComponent />
@@ -158,7 +159,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
               <LMFeedAllMembers />
             </div>
           </>
-        ) : selectedNav === "moderation" ? (
+        ) : selectedNav === SideNavbarState.MODERATION ? (
           <LMFeedModeration />
         ) : null}
       </div>

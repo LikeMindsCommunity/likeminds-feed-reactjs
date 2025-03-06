@@ -11,7 +11,7 @@
 
   .lm-sidenav{
     height: auto;
-    max-width: 96px;
+    max-width: pxToRem(96);
     width: 100%;
     background-color: #fff;
     overflow: hidden;
@@ -24,7 +24,7 @@
     height: pxtoRem(64);
     width: pxtoRem(64);
     cursor: pointer;
-    margin: 20px 0px;
+    margin: pxToRem(20) pxToRem(0);
     position: relative;
   }
   
@@ -43,14 +43,14 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: pxToRem(4);
     height: 100%;
     background-color: var( --lm-feed-primary-color); 
-    border-radius: 20px;
+    border-radius: pxToRem(20);
   }
 
   .moderation-icon{
-    margin-bottom: 100px;
+    margin-bottom: pxToRem(100);
   }
 
   .lm-nav-icons{
@@ -65,12 +65,12 @@
 
   .lm-selected-background{
     background-color: var(--lm-feed-bg-color);
-    border-radius: 20px;
+    border-radius: pxToRem(20);
   }
 
   .lm-header-toggle-wrapper{
     display: flex;
-    gap: 16px;
+    gap: pxToRem(16);
   }
 
   .toggle-sidebar-menu-header{
@@ -82,12 +82,12 @@
   .toggle-sidebar-menu-heading{
     color: #333333;
     font-weight: 700 !important;
-    font-size: 13px;
+    font-size: pxToRem(13);
   }
 
   .lm-sidebar-headings{
     color: #9B9B9B;
-    font-size: 14px;
+    font-size: pxToRem(14);
     font-weight: 500;
   }
 

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import IOSSwitch from "../shared/components/LMFeedSwitchTheme";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
+import { EDIT_PERMISSION } from "../shared/constants/lmAppConstant";
 
 const LMFeedEditMemberPermissionsDialog = () => {
   const {
@@ -13,6 +14,7 @@ const LMFeedEditMemberPermissionsDialog = () => {
     updateMemberRightsHandler,
   } = useContext(FeedModerationContext);
 
+  // Toggles the selection state of a specific permission by its ID.
   const handleToggle = (id: number) => {
     setModifiedRights((prevRights) =>
       prevRights.map((right) =>
@@ -21,6 +23,7 @@ const LMFeedEditMemberPermissionsDialog = () => {
     );
   };
 
+  // Determines whether the "Save changes" button should be disabled.
   const isSaveDisabled =
     JSON.stringify(memberRights) === JSON.stringify(modifiedRights) &&
     customTitle.trim() === "";
@@ -28,7 +31,7 @@ const LMFeedEditMemberPermissionsDialog = () => {
   return (
     <div className="lm-feed-create-post-wrapper">
       <div className="lm-feed-create-post-wrapper__dialog-heading edit-member-permission-title">
-        Edit Permission
+        {EDIT_PERMISSION}
       </div>
 
       <hr className="edit-permissions-divider" />

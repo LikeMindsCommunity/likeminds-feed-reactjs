@@ -12,6 +12,7 @@ import LMFeedModerationPostHeader from "./LMFeedModerationPostHeader";
 import LMFeedModerationPostFooter from "./LMFeedModerationPostFooter";
 import { AttachmentType } from "@likeminds.community/feed-js";
 import { Report } from "../shared/types/models/report";
+import { SideNavbarState } from "../shared/enums/lmSideNavbar";
 
 interface LMFeedPostProps {
   propReport? : Report
@@ -65,7 +66,7 @@ const LMFeedPost: React.FC<LMFeedPostProps> = ({ propReport }) => {
           CustomComponents?.CustomPostViewHeader
         ) : (
           <>
-            {selectedNav === "home" ? (
+            {selectedNav === SideNavbarState.HOME ? (
               <LMFeedPostHeader />
             ) : (
               <LMFeedModerationPostHeader propReport={propReport} />
@@ -86,7 +87,7 @@ const LMFeedPost: React.FC<LMFeedPostProps> = ({ propReport }) => {
           CustomComponents.CustomPostViewFooter
         ) : (
           <>
-            {selectedNav === "home" ? (
+            {selectedNav === SideNavbarState.HOME ? (
               <LMFeedPostFooter />
             ) : (
               <LMFeedModerationPostFooter propReport={propReport} />

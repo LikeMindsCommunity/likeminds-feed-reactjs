@@ -16,6 +16,7 @@ import ModerationIcon from "../../assets/images/sidenav-unselected-moderation.sv
 import SelectedModerationIcon from "../../assets/images/bottom-bar-moderation-icon.svg";
 import CancelIcon from "../../assets/images/cancel-model-icon.svg";
 import { LMFeedCustomActionEvents } from "../constants/lmFeedCustomEventNames";
+import { SideNavbarState } from "../../shared/enums/lmSideNavbar";
 
 const LMFeedNotificationHeader = ({
   customEventClient,
@@ -25,7 +26,7 @@ const LMFeedNotificationHeader = ({
   const [open, setOpen] = useState<boolean>(false);
   const [isUserCM, setIsUserCM] = useState<boolean>(false);
   const currentScreen = localStorage.getItem(
-    LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE || "home",
+    LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE || SideNavbarState.HOME,
   );
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -64,7 +65,7 @@ const LMFeedNotificationHeader = ({
         <ListItem
           disablePadding
           sx={
-            currentScreen === "home"
+            currentScreen === SideNavbarState.HOME
               ? { backgroundColor: "#F5F5F5", color: "#5046e5" }
               : {}
           }
@@ -75,13 +76,13 @@ const LMFeedNotificationHeader = ({
               customEventClient.dispatchEvent(
                 LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE,
                 {
-                  currentState: "home",
+                  currentState: SideNavbarState.HOME,
                 },
               );
             }}
           >
             <ListItemIcon>
-              {currentScreen === "home" ? (
+              {currentScreen === SideNavbarState.HOME ? (
                 <img
                   src={SelectedHomeIcon}
                   alt="post approval"
@@ -102,7 +103,7 @@ const LMFeedNotificationHeader = ({
           <ListItem
             disablePadding
             sx={
-              currentScreen === "moderation"
+              currentScreen === SideNavbarState.MODERATION
                 ? { backgroundColor: "#F5F5F5", color: "#5046e5" }
                 : {}
             }
@@ -113,13 +114,13 @@ const LMFeedNotificationHeader = ({
                 customEventClient.dispatchEvent(
                   LMFeedCustomActionEvents.SIDE_NAVBAR_CURRENT_STATE,
                   {
-                    currentState: "moderation",
+                    currentState: SideNavbarState.MODERATION,
                   },
                 );
               }}
             >
               <ListItemIcon>
-                {currentScreen === "moderation" ? (
+                {currentScreen === SideNavbarState.MODERATION ? (
                   <img
                     src={SelectedModerationIcon}
                     alt="post approval"

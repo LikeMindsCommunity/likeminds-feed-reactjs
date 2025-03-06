@@ -5,6 +5,7 @@ import { useContext, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { SideNavbarState } from "../shared/enums/lmSideNavbar";
 
 const LMFeedLeftNavigation = () => {
   const { currentUser } = useContext(LMFeedUserProviderContext);
@@ -22,11 +23,11 @@ const LMFeedLeftNavigation = () => {
       <div className="lm-sidenav-icon-bar">
         <div
           className="lm-sidenav-icon-wrapper"
-          onClick={() => selectNav("home")}
+          onClick={() => selectNav(SideNavbarState.HOME)}
         >
           <div
             className={
-              selectedNav === "home"
+              selectedNav === SideNavbarState.HOME
                 ? "lm-nav-selected-icons lm-selected-background"
                 : "lm-nav-icons"
             }
@@ -38,12 +39,12 @@ const LMFeedLeftNavigation = () => {
       {currentUser?.state === 1 ? (
         <div
           className="lm-sidenav-icon-wrapper moderation-icon"
-          onClick={() => selectNav("moderation")}
+          onClick={() => selectNav(SideNavbarState.MODERATION)}
         >
           <div
             className={
               `lm-nav-icons` +
-              (selectedNav === `moderation` ? ` lm-selected-background ` : ``)
+              (selectedNav === SideNavbarState.MODERATION ? ` lm-selected-background ` : ``)
             }
           >
             <img src={ModerationIcon} alt="moderation" />

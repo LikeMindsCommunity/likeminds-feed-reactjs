@@ -13,6 +13,20 @@ import LMFeedEditMemberPermissionsDialog from "./LMFeedEditMemberPermissionsDial
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import {
+  POST_APPROVAL,
+  POST_COMMENT_REPORTED,
+  CLOSED_REPORTS,
+  POST_APPROVAL_DISABLED,
+  POST_APPROVAL_POST_SUBHEADING,
+  POST_APPROVAL_PRE_SUBHEADING,
+  NO_POST_APPROVAL_REPORTS_HEADING,
+  NO_POST_APPROVAL_REPORTS_SUBHEADING,
+  NO_REPORTED_REPORTS_HEADING,
+  NO_REPORTED_REPORTS_SUBHEADING,
+  NO_CLOSED_REPORTS_HEADING,
+  NO_CLOSED_REPORTS_SUBHEADING,
+} from "../shared/constants/lmAppConstant";
 
 function a11yProps(index: number) {
   return {
@@ -159,7 +173,7 @@ export const LMFeedModeration = () => {
                       borderBottom: "5px solid #5046e5",
                     },
                   }}
-                  variant="fullWidth" // Ensures tabs take equal width
+                  variant="fullWidth"
                 >
                   <Tab
                     label="Approvals"
@@ -169,7 +183,7 @@ export const LMFeedModeration = () => {
                       textTransform: "none",
                       fontSize: "16px",
                       fontWeight: "500",
-                      flexGrow: 1, // Ensures equal width for all tabs
+                      flexGrow: 1,
                       "&.Mui-selected": { color: "#5046e5" },
                     }}
                   />
@@ -181,7 +195,7 @@ export const LMFeedModeration = () => {
                       textTransform: "none",
                       fontSize: "16px",
                       fontWeight: "500",
-                      flexGrow: 1, // Ensures equal width for all tabs
+                      flexGrow: 1,
                       "&.Mui-selected": { color: "#5046e5" },
                     }}
                   />
@@ -193,7 +207,7 @@ export const LMFeedModeration = () => {
                       textTransform: "none",
                       fontSize: "16px",
                       fontWeight: "500",
-                      flexGrow: 1, // Ensures equal width for all tabs
+                      flexGrow: 1,
                       "&.Mui-selected": { color: "#5046e5" },
                     }}
                   />
@@ -213,15 +227,7 @@ export const LMFeedModeration = () => {
                   selectTab("approval");
                 }}
               >
-                Post Approval
-                {/* <span
-                  className={
-                    "lm-moderation-header__count" +
-                    (selectedTab === "approval" ? " selected-count" : "")
-                  }
-                >
-                  {posts.length > 0 ? posts.length : 0}
-                </span> */}
+                {POST_APPROVAL}
               </button>
 
               <button
@@ -234,15 +240,7 @@ export const LMFeedModeration = () => {
                   selectTab("reported");
                 }}
               >
-                Post/Comment Reported
-                {/* <span
-                  className={
-                    "lm-moderation-header__count" +
-                    (selectedTab === "reported" ? " selected-count" : "")
-                  }
-                >
-                  {posts.length > 0 ? posts.length : 0}
-                </span> */}
+                {POST_COMMENT_REPORTED}
               </button>
             </div>
 
@@ -256,7 +254,7 @@ export const LMFeedModeration = () => {
                 selectTab("closed");
               }}
             >
-              Closed Reports
+              {CLOSED_REPORTS}
             </button>
           </div>
           <hr className="moderation-separator" />
@@ -269,12 +267,12 @@ export const LMFeedModeration = () => {
                 className="disabled-icons-size"
               />
               <div className="moderation-disabled-heading">
-                Looks like post approval is disabled
+                {POST_APPROVAL_DISABLED}
               </div>
               <div className="moderation-disabled-subheading">
-                Please go to the{" "}
+                {POST_APPROVAL_PRE_SUBHEADING}
                 <span className="moderation-disabled-path">
-                  dashboard {">"} settings {">"} enable post approval
+                  {POST_APPROVAL_POST_SUBHEADING}
                 </span>
               </div>
             </div>
@@ -283,7 +281,6 @@ export const LMFeedModeration = () => {
               dataLength={reports.length}
               hasMore={loadMoreFeeds}
               next={getNextPage}
-              // TODO set shimmer on loader component
               loader={null}
               scrollThreshold={0.6}
             >
@@ -299,10 +296,10 @@ export const LMFeedModeration = () => {
                     className="disabled-icons-size"
                   />
                   <div className="moderation-disabled-heading">
-                    Everything looks fine. No Post Approval Reports
+                    {NO_POST_APPROVAL_REPORTS_HEADING}
                   </div>
                   <div className="moderation-disabled-subheading">
-                    Post Approval reports will be visible here.
+                    {NO_POST_APPROVAL_REPORTS_SUBHEADING}
                   </div>
                 </div>
               ) : selectedTab === "reported" ? (
@@ -313,10 +310,10 @@ export const LMFeedModeration = () => {
                     className="disabled-icons-size"
                   />
                   <div className="moderation-disabled-heading">
-                    Everything looks fine. No Post or Comment reported
+                    {NO_REPORTED_REPORTS_HEADING}
                   </div>
                   <div className="moderation-disabled-subheading">
-                    Reported Post or comment will be visible here.
+                    {NO_REPORTED_REPORTS_SUBHEADING}
                   </div>
                 </div>
               ) : selectedTab === "closed" ? (
@@ -327,10 +324,10 @@ export const LMFeedModeration = () => {
                     className="disabled-icons-size"
                   />
                   <div className="moderation-disabled-heading">
-                    Everything looks fine. No Closed reports.
+                    {NO_CLOSED_REPORTS_HEADING}
                   </div>
                   <div className="moderation-disabled-subheading">
-                    Closed reports will be visible here.
+                    {NO_CLOSED_REPORTS_SUBHEADING}
                   </div>
                 </div>
               ) : null}
