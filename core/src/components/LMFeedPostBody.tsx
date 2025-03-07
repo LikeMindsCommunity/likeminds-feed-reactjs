@@ -45,17 +45,19 @@ const LMFeedPostBody = () => {
       lm-feed-component-id={`lm-feed-post-body-vwxyz-${post?.id}`}
     >
       {heading.length > 0 && (
-        <h1
-          className="lm-feed-wrapper__card__body__heading"
-          style={{
-            cursor: !window.location.pathname.includes("/post")
-              ? "pointer"
-              : undefined,
-          }}
-          lm-feed-component-id={`lm-feed-post-body-abcde-${post?.id}`}
-        >
-          {heading}
-        </h1>
+        <a href={``}>
+          <h1
+            className="lm-feed-wrapper__card__body__heading"
+            style={{
+              cursor: !window.location.pathname.includes("/post")
+                ? "pointer"
+                : undefined,
+            }}
+            lm-feed-component-id={`lm-feed-post-body-abcde-${post?.id}`}
+          >
+            {heading}
+          </h1>
+        </a>
       )}
       {/* post text */}
       {text ? (
