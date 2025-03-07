@@ -15,7 +15,6 @@ import ApprovalPendingIcon from "../assets/images/approval-pending-icon.svg";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
 import { Report } from "../shared/types/models/report";
 import ModerationReportedTitleIcon from "../assets/images/moderation-reported-title.svg";
-import WarningIcon from "../assets/images/warning-icon.svg";
 import QuestionMarkIcon from "../assets/images/question-mark-icon.svg";
 import { ReportEntityType } from "@likeminds.community/feed-js";
 
@@ -123,21 +122,12 @@ const LMFeedModerationPostHeader = ({
             <>
               <div className="closed-header-wrapper">
                 <div className="moderation-closed-header">
-                  {isCommentReported ? (
-                    <img
-                      onClick={handleHeaderLeadingTap}
-                      src={WarningIcon}
-                      alt="warning-icon"
-                      className="warning-icon"
-                    />
-                  ) : (
-                    <img
-                      onClick={handleHeaderLeadingTap}
-                      src={ModerationReportedTitleIcon}
-                      alt="approval-pending-icon"
-                      className="approval-pending-icon"
-                    />
-                  )}
+                  <img
+                    onClick={handleHeaderLeadingTap}
+                    src={ModerationReportedTitleIcon}
+                    alt="approval-pending-icon"
+                    className="approval-pending-icon"
+                  />
                   <span
                     className="moderation-post-header-names"
                     onClick={handleHeaderTextTap}

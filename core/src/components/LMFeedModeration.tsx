@@ -102,6 +102,7 @@ export const LMFeedModeration = () => {
     topics,
     widgets,
     reports,
+    comments,
   ]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
