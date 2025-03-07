@@ -8,6 +8,7 @@ import {
   FeedListCustomActions,
   FeedPostDetailsCustomActions,
   GeneralClickCallbacks,
+  ModerationCustomActions,
   PostCreationCustomActions,
   PostPollCustomActions,
   RepliesCustomActions,
@@ -31,6 +32,7 @@ export interface CustomAgentProviderInterface {
   RepliesCustomCallbacks?: RepliesCustomActions;
   PostCreationCustomCallbacks?: PostCreationCustomActions;
   PostPollCustomCallbacks?: PostPollCustomActions;
+  ModerationCustomCallbacks?: ModerationCustomActions;
   postComponentClickCustomCallback?: PostComponentCustomClickEventDelegatorCallback;
   createPostComponentClickCustomCallback?: CreatePostComponentCustomClickEventDelegatorCallback;
   topicComponentClickCustomCallback?: TopicComponentCustomClickEventDelegatorCallback;

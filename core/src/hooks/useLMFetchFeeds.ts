@@ -91,6 +91,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
               .setPageSize(10)
               .build(),
           )) as never;
+
         if (fetchFeedsCall.success) {
           setCurrentPageCount(2);
           setFeedList([...fetchFeedsCall.data.posts]);
@@ -337,6 +338,14 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
     },
     [feedList, lmFeedclient, lmfeedAnalyticsClient, topics],
   );
+
+  useEffect(() => {
+    customEventClient?.listen(LMFeedCustomActionEvents.MODERATION_UPDATED, () => {
+      loadFeed();
+    });
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.MODERATION_UPDATED);
+  });
 
   useEffect(() => {
     customEventClient?.listen(LMFeedCustomActionEvents.POST_CREATED, () => {

@@ -7,9 +7,7 @@ import {
 import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTagsResponse";
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";
-import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
-import { LMFeedEntityType } from "../shared/constants/lmEntityType";
 import { Reply } from "../shared/types/models/replies";
 import { Post } from "../shared/types/models/post";
 import { changePostCase } from "../shared/utils";
@@ -17,11 +15,13 @@ import { WordAction } from "../shared/enums/wordAction";
 import { ReportPostResponse } from "../shared/types/api-responses/postReportResponse";
 import { getDisplayMessage } from "../shared/utils";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
+import { ReportEntityType } from "@likeminds.community/feed-js";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
 
 interface LMFeedReportPostDialogProps {
   closeReportDialog: () => void;
   entityId: string;
-  entityType: number;
+  entityType: ReportEntityType;
   post?: Post;
   comment?: Reply;
   reply?: Reply;
@@ -38,17 +38,25 @@ const LMFeedReportPostDialog = ({
   const { lmFeedclient, lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
-  const { displaySnackbarMessage } =
-    useContext(GeneralContext);
-  const { currentUser } = useContext(LMFeedUserProviderContext);
+  const { displaySnackbarMessage } = useContext(GeneralContext);
   const [reportTags, setReportTags] = useState<ReportObject[]>([]);
   const [selectedTag, setSelectedTag] = useState<ReportObject | null>(null);
   const [otherReason, setOtherReasons] = useState<string>("");
+  const { users } = useContext(FeedPostContext);
+
   async function report() {
     try {
       const call: ReportPostResponse = (await lmFeedclient?.postReport(
         PostReportRequest.builder()
-          .setUuid(currentUser?.sdkClientInfo.uuid || "")
+          .setAccusedUUID(
+            entityType === ReportEntityType.COMMENT
+              ? comment?.uuid || ""
+              : entityType === ReportEntityType.REPLY
+                ? reply?.uuid || ""
+                : users && post?.uuid
+                  ? users[post?.uuid].sdkClientInfo.uuid
+                  : "",
+          )
           .setTagId(selectedTag?.id || 0)
           .setReason(
             selectedTag?.id === 11 ? otherReason : selectedTag?.name || "",
@@ -65,14 +73,14 @@ const LMFeedReportPostDialog = ({
           );
       }
 
-      if (entityType === LMFeedEntityType.REPLY) {
+      if (entityType === ReportEntityType.REPLY) {
         lmfeedAnalyticsClient?.sendReplyReportedEvent(
           post!,
           comment!,
           reply!,
           selectedTag?.name || "",
         );
-      } else if (entityType === LMFeedEntityType.COMMENT) {
+      } else if (entityType === ReportEntityType.COMMENT) {
         lmfeedAnalyticsClient?.sendCommentReportedEvent(
           post!,
           comment!,
@@ -89,11 +97,12 @@ const LMFeedReportPostDialog = ({
       console.log(error);
     }
   }
+
   useEffect(() => {
     async function getReportTags() {
       try {
         const call: GetReportTagsResponse = (await lmFeedclient?.getReportTags(
-          GetReportTagsRequest.builder().setType(0).build(),
+          GetReportTagsRequest.builder().setEntityType(entityType).build(),
         )) as never;
         if (call.success) {
           setReportTags(call.data.reportTags);
@@ -103,7 +112,7 @@ const LMFeedReportPostDialog = ({
       }
     }
     getReportTags();
-  }, [lmFeedclient]);
+  }, [lmFeedclient, entityType]);
   return (
     <div className="lmReportPostWrapper">
       <div className="lmReportPostWrapper__header">

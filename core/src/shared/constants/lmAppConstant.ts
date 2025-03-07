@@ -28,3 +28,17 @@ export const VIDEO = "video";
 export const PDF = "PDF";
 export const REEL = "reel";
 export const POLL = "poll";
+
+export const EDIT_PERMISSION = "Edit Permission";
+export const POST_APPROVAL = "Post Approval";
+export const POST_COMMENT_REPORTED = "Post/Comment Reported";
+export const CLOSED_REPORTS = "Closed Reports";
+export const POST_APPROVAL_DISABLED = "Looks like post approval is disabled";
+export const POST_APPROVAL_PRE_SUBHEADING = "Please go to the ";
+export const POST_APPROVAL_POST_SUBHEADING = "dashboard > settings > enable post approval";
+export const NO_POST_APPROVAL_REPORTS_HEADING = "Everything looks fine. No Post Approval Reports";
+export const NO_POST_APPROVAL_REPORTS_SUBHEADING = " Post Approval reports will be visible here.";
+export const NO_REPORTED_REPORTS_HEADING = "Everything looks fine. No Post or Comment reported";
+export const NO_REPORTED_REPORTS_SUBHEADING = "Reported Post or comment will be visible here.";
+export const NO_CLOSED_REPORTS_HEADING = "Everything looks fine. No Closed reports.";
+export const NO_CLOSED_REPORTS_SUBHEADING = "Closed reports will be visible here.";

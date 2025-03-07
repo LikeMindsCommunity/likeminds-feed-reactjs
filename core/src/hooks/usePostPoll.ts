@@ -82,14 +82,14 @@ export function usePostPoll(): UsePostPoll {
     onOptionSelected,
   } = PostPollCustomCallbacks;
 
-  const pollId = post?.attachments[0].attachmentMeta.entityId;
+  const pollId = post?.attachments[0].metaData.entityId;
   const pollData = widgets && pollId ? widgets[pollId] : null;
   const pollExpiryTime = pollData?.metadata.expiryTime;
   const multiSelectNo = pollData?.metadata.multipleSelectNumber;
   const multiSelectState = pollData?.metadata.multipleSelectState;
   const pollType = pollData?.metadata.pollType;
   const allowAddOption = pollData?.metadata.allowAddOption;
-  const totalMembersVoted = pollData?.LmMeta?.votersCount;
+  const totalMembersVoted = pollData?.lmMeta?.votersCount;
   const [hasSelectedOption, setHasSelectedOption] = useState<boolean>(
     hasPollEnded(pollExpiryTime),
   );
@@ -97,7 +97,7 @@ export function usePostPoll(): UsePostPoll {
     isMultiChoicePoll(multiSelectNo, multiSelectState),
   );
   const [pollOptions, setPollOptions] = useState<PollOption[]>(
-    pollData?.LmMeta.options,
+    pollData?.lmMeta.options,
   );
   const [isAddOptionDialogOpen, setIsAddOptionDialogOpen] =
     useState<boolean>(false);
@@ -201,7 +201,7 @@ export function usePostPoll(): UsePostPoll {
         text: newOption.trim(),
       });
       if (call?.success) {
-        const options = (call?.data?.widget?.LmMeta as any).options;
+        const options = (call?.data?.widget?.lmMeta as any).options;
         setPollOptions(options);
       }
       setIsAddOptionDialogOpen(false);
@@ -232,7 +232,7 @@ export function usePostPoll(): UsePostPoll {
           selectedOptionIds.push(option.id);
         }
       });
-      const pollId = post?.attachments[0].attachmentMeta.entityId;
+      const pollId = post?.attachments[0].metaData.entityId;
 
       await lmFeedclient?.submitPollVote({
         pollId: pollId ?? "",

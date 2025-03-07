@@ -9,12 +9,13 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import LMFeedReportPostDialog from "./LMFeedReportPostDialog";
-import { LMFeedEntityType } from "../shared/constants/lmEntityType";
+import { ReportEntityType } from "@likeminds.community/feed-js";
 import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import pinIcon from "../assets/images/Icon-pin_new.svg";
 import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 import { WordAction } from "../shared/enums/wordAction";
+import { AttachmentType } from "@likeminds.community/feed-js";
 const LMFeedPostHeader = () => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
@@ -55,13 +56,24 @@ const LMFeedPostHeader = () => {
     }
     const newPost = { ...post };
     newPost.attachments = newPost.attachments.map((attachment) => {
-      if (attachment.attachmentType === 6) {
+      if (attachment.type === AttachmentType.POLL) {
         const newAttachment = { ...attachment };
-        const pollWidget = widgets![attachment.attachmentMeta.entityId!];
-        const { title, pollType, multipleSelectState, multipleSelectNumber, isAnonymous, expiryTime, allowAddOption } = pollWidget.metadata;
-        const options = pollWidget.LmMeta.options.map((option: { text: string }) => option.text);
+        const pollWidget = widgets![attachment.metaData.entityId!];
+        const {
+          title,
+          pollType,
+          multipleSelectState,
+          multipleSelectNumber,
+          isAnonymous,
+          expiryTime,
+          allowAddOption,
+        } = pollWidget.metadata;
 
-        Object.assign(newAttachment.attachmentMeta, {
+        const options = pollWidget.lmMeta.options.map(
+          (option: { text: string }) => option.text,
+        );
+
+        Object.assign(newAttachment.metaData, {
           title,
           pollQuestion: title,
           pollType,
@@ -73,11 +85,10 @@ const LMFeedPostHeader = () => {
           options,
         });
         return newAttachment;
-      }
-      else {
+      } else {
         return attachment;
       }
-    })
+    });
     setAnchor(null);
     const menuId = e.currentTarget.id;
     switch (menuId) {
@@ -138,7 +149,7 @@ const LMFeedPostHeader = () => {
       </Dialog>
       <Dialog open={openReportPostDialogBox} onClose={closeReportDialog}>
         <LMFeedReportPostDialog
-          entityType={LMFeedEntityType.POST}
+          entityType={ReportEntityType.POST}
           closeReportDialog={closeReportDialog}
           entityId={post?.id || ""}
           post={post || undefined}
@@ -148,6 +159,16 @@ const LMFeedPostHeader = () => {
       <div
         className="lm-feed-wrapper__card__header"
         lm-feed-component-id={`lm-feed-post-header-abcde-${post?.id}`}
+        onClick={() => {
+          lmfeedAnalyticsClient?.sendPostCommentClickEvent(post!);
+          const location = window.location;
+          const url = new URL(location.href);
+          const search = url.searchParams.get("id");
+          if (!search) {
+            url.searchParams.append("id", post?.id || "");
+            window.open(url, "_self");
+          }
+        }}
       >
         <div className="lm-flex-container">
           <div

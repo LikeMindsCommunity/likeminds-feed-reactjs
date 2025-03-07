@@ -39,7 +39,7 @@ $breakpoint-lg: 1200px;
     flex-grow: initial;
     width: 100%;
   }
-  .lm-member {
+  .lm-member, .lm-sidenav, .lm-moderation-header, .moderation-separator, .edit-permission-web-view{
     display: none;
   }
   .lm-feed-wrapper__card {
@@ -49,6 +49,19 @@ $breakpoint-lg: 1200px;
     width: 295px;
     padding: 1rem;
   }
+  .moderation-mobile-tab-wrapper, .edit-permission-mobile-view, .lm-mobile-view-toggle-bar{
+    display: block;
+  }
+  .lm-header-notification{
+    padding-left: 1rem;
+  }
+  .white-bg-container {
+    background-color: transparent;
+    height: 50vh;
+    width: auto;
+    box-shadow: none;
+    margin: 0px;
+  }
 }
 
 /* iPads, Tablets */
@@ -57,17 +70,39 @@ $breakpoint-lg: 1200px;
     flex-grow: initial;
     width: 100%;
   }
-  .lm-member {
+  .lm-member, .lm-sidenav, .lm-moderation-header , .moderation-separator, .edit-permission-web-view{
     display: none;
   }
   .lm-feed-wrapper__card {
     border-radius: 0;
+  }
+  .moderation-mobile-tab-wrapper, .edit-permission-mobile-view, .lm-mobile-view-toggle-bar{
+    display: block;
+  }
+  .lm-header-notification{
+    padding-left: 1rem;
+  }
+  .white-bg-container {
+    background-color: transparent;
+    height: 50vh;
+    width: auto;
+    box-shadow: none;
+    margin: 0px;
   }
 }
 
 /* Small screens, laptops */
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
   /* Your CSS styles for small screens and laptops */
+  .lm-sidenav, .lm-member {
+    display: none;
+  }
+  .lm-mobile-view-toggle-bar{
+    display: block;
+  }
+  .lm-header-notification{
+    padding-left: 1rem;
+  }
 }
 
 /* Desktops, large screens */

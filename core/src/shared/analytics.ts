@@ -1,3 +1,4 @@
+import { AttachmentType } from "@likeminds.community/feed-js";
 import { AnalyticsCallback } from "./types/analyticsCallback";
 import { Post } from "./types/models/post";
 import { Reply } from "./types/models/replies";
@@ -383,24 +384,24 @@ class LMFeedAnalytics {
       [this.Keys.POST_ID]: post?.id,
     };
     if (
-      post.attachments.some((attachment) => attachment.attachmentType === 4)
+      post.attachments.some((attachment) => attachment.type === AttachmentType.LINK)
     ) {
       const targetAttachment = post.attachments.find(
-        (att) => att.attachmentType === 4,
+        (att) => att.type === AttachmentType.LINK,
       );
 
       if (targetAttachment) {
-        details["link_attached"] = targetAttachment?.attachmentMeta?.ogTags?.url || "";
+        details["link_attached"] = targetAttachment?.metaData?.ogTags?.url || "";
       }
     }
     const imageCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 1 ? true : false,
+      attachment.type === AttachmentType.IMAGE ? true : false,
     ).length;
     const videoCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 2 ? true : false,
+      attachment.type === AttachmentType.VIDEO ? true : false,
     ).length;
     const docCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 3 ? true : false,
+      attachment.type === AttachmentType.DOCUMENT ? true : false,
     ).length;
     if (imageCount) {
       details["image_count"] = imageCount.toString();
@@ -423,24 +424,24 @@ class LMFeedAnalytics {
       [this.Keys.POST_ID]: post?.id,
     };
     if (
-      post.attachments.some((attachment) => attachment.attachmentType === 4)
+      post.attachments.some((attachment) => attachment.type === AttachmentType.LINK)
     ) {
       const targetAttachment = post.attachments.find(
-        (att) => att.attachmentType === 4,
+        (att) => att.type === AttachmentType.LINK,
       );
 
       if (targetAttachment) {
-        details["link_attached"] = targetAttachment?.attachmentMeta?.ogTags?.url || "";
+        details["link_attached"] = targetAttachment?.metaData?.ogTags?.url || "";
       }
     }
     const imageCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 1 ? true : false,
+      attachment.type === AttachmentType.IMAGE ? true : false,
     ).length;
     const videoCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 2 ? true : false,
+      attachment.type === AttachmentType.VIDEO ? true : false,
     ).length;
     const docCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 3 ? true : false,
+      attachment.type === AttachmentType.DOCUMENT ? true : false,
     ).length;
     if (imageCount) {
       details["image_count"] = imageCount.toString();
@@ -463,24 +464,24 @@ class LMFeedAnalytics {
       [this.Keys.POST_ID]: post?.id,
     };
     if (
-      post.attachments.some((attachment) => attachment.attachmentType === 4)
+      post.attachments.some((attachment) => attachment.type === AttachmentType.LINK)
     ) {
       const targetAttachment = post.attachments.find(
-        (att) => att.attachmentType === 4,
+        (att) => att.type === AttachmentType.LINK,
       );
 
       if (targetAttachment) {
-        details["link_attached"] = targetAttachment?.attachmentMeta?.ogTags?.url || "";
+        details["link_attached"] = targetAttachment?.metaData?.ogTags?.url || "";
       }
     }
     const imageCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 1 ? true : false,
+      attachment.type === AttachmentType.IMAGE ? true : false,
     ).length;
     const videoCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 2 ? true : false,
+      attachment.type === AttachmentType.VIDEO ? true : false,
     ).length;
     const docCount = post.attachments.filter((attachment) =>
-      attachment.attachmentType === 3 ? true : false,
+      attachment.type === AttachmentType.DOCUMENT ? true : false,
     ).length;
     if (imageCount) {
       details["image_count"] = imageCount.toString();
