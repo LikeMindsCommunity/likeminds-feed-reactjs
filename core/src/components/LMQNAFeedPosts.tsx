@@ -9,14 +9,21 @@ import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMQNAFeedPostBody from "./LMQNAFeedPostBody";
 import LMQNAFeedPostFooter from "./LMQNAFeedPostFooter";
 import { AttachmentType } from "@likeminds.community/feed-js";
+import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
+import LMFeedModerationPostHeader from "./LMFeedModerationPostHeader";
+import LMFeedModerationPostFooter from "./LMFeedModerationPostFooter";
+import { Report } from "../shared/types/models/report";
+import { SideNavbarState } from "../shared/enums/lmSideNavbar";
 
 interface LMFeedPostProps {
+  propReport?: Report;
   post: Post;
   user: User | undefined;
 }
 
-const LMQNAFeedPosts: React.FC<LMFeedPostProps> = () => {
+const LMQNAFeedPosts: React.FC<LMFeedPostProps> = ({ propReport }) => {
   const { CustomComponents } = useContext(CustomAgentProviderContext);
+  const { selectedNav } = useContext(FeedSideNavbarContext);
   const { post, postComponentClickCustomCallback } =
     useContext(FeedPostContext);
   const showCustomPostViewWidget = useMemo(() => {
@@ -39,42 +46,54 @@ const LMQNAFeedPosts: React.FC<LMFeedPostProps> = () => {
     }
   }, [post]);
   if (showCustomPostViewWidget) {
-    // TODO Custom Widget
-    // Render the complete custom Post View widget
     return CustomComponents?.CustomWidgetPostView;
   }
   return (
-    <div
-      className="lm-feed-wrapper__card lm-mb-2"
-      lm-feed-data-id={post?.id}
-      lm-feed-component-id={`lm-feed-post-wrapper-${post?.id}`}
-      onClick={(e) => {
-        if (postComponentClickCustomCallback) {
-          postComponentClickCustomCallback(e);
-        }
-      }}
-    >
-      {CustomComponents?.CustomPostViewHeader ? (
-        CustomComponents?.CustomPostViewHeader
-      ) : (
-        <LMFeedPostHeader />
-      )}
-      {CustomComponents?.CustomPostViewTopicsWrapper ? (
-        CustomComponents?.CustomPostViewTopicsWrapper
-      ) : (
-        <LMFeedPostTopicsWrapper />
-      )}
-      {CustomComponents?.CustomPostViewBody ? (
-        CustomComponents?.CustomPostViewBody
-      ) : (
-        <LMQNAFeedPostBody />
-      )}
-      {CustomComponents?.CustomPostViewFooter ? (
-        CustomComponents.CustomPostViewFooter
-      ) : (
-        <LMQNAFeedPostFooter />
-      )}
-    </div>
+    <>
+      <div
+        className="lm-feed-wrapper__card lm-mb-2"
+        lm-feed-data-id={post?.id}
+        lm-feed-component-id={`lm-feed-post-wrapper-${post?.id}`}
+        onClick={(e) => {
+          if (postComponentClickCustomCallback) {
+            postComponentClickCustomCallback(e);
+          }
+        }}
+      >
+        {CustomComponents?.CustomPostViewHeader ? (
+          CustomComponents?.CustomPostViewHeader
+        ) : (
+          <>
+            {selectedNav === SideNavbarState.HOME ? (
+              <LMFeedPostHeader />
+            ) : (
+              <LMFeedModerationPostHeader propReport={propReport} />
+            )}
+          </>
+        )}
+        {CustomComponents?.CustomPostViewTopicsWrapper ? (
+          CustomComponents?.CustomPostViewTopicsWrapper
+        ) : (
+          <LMFeedPostTopicsWrapper />
+        )}
+        {CustomComponents?.CustomPostViewBody ? (
+          CustomComponents?.CustomPostViewBody
+        ) : (
+          <LMQNAFeedPostBody />
+        )}
+        {CustomComponents?.CustomPostViewFooter ? (
+          CustomComponents.CustomPostViewFooter
+        ) : (
+          <>
+            {selectedNav === SideNavbarState.HOME ? (
+              <LMQNAFeedPostFooter />
+            ) : (
+              <LMFeedModerationPostFooter propReport={propReport} />
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

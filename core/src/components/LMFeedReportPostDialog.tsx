@@ -7,7 +7,6 @@ import {
 import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTagsResponse";
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";
-import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
 import { Reply } from "../shared/types/models/replies";
 import { Post } from "../shared/types/models/post";
@@ -17,6 +16,7 @@ import { ReportPostResponse } from "../shared/types/api-responses/postReportResp
 import { getDisplayMessage } from "../shared/utils";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import { ReportEntityType } from "@likeminds.community/feed-js";
+import { FeedPostContext } from "../contexts/LMFeedPostContext";
 
 interface LMFeedReportPostDialogProps {
   closeReportDialog: () => void;
@@ -38,17 +38,25 @@ const LMFeedReportPostDialog = ({
   const { lmFeedclient, lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
-  const { displaySnackbarMessage } =
-    useContext(GeneralContext);
-  const { currentUser } = useContext(LMFeedUserProviderContext);
+  const { displaySnackbarMessage } = useContext(GeneralContext);
   const [reportTags, setReportTags] = useState<ReportObject[]>([]);
   const [selectedTag, setSelectedTag] = useState<ReportObject | null>(null);
   const [otherReason, setOtherReasons] = useState<string>("");
+  const { users } = useContext(FeedPostContext);
+
   async function report() {
     try {
       const call: ReportPostResponse = (await lmFeedclient?.postReport(
         PostReportRequest.builder()
-          .setAccusedUUID(currentUser?.sdkClientInfo.uuid || "")
+          .setAccusedUUID(
+            entityType === ReportEntityType.COMMENT
+              ? comment?.uuid || ""
+              : entityType === ReportEntityType.REPLY
+                ? reply?.uuid || ""
+                : users && post?.uuid
+                  ? users[post?.uuid].sdkClientInfo.uuid
+                  : "",
+          )
           .setTagId(selectedTag?.id || 0)
           .setReason(
             selectedTag?.id === 11 ? otherReason : selectedTag?.name || "",
