@@ -68,6 +68,7 @@ const LMFeedPostHeader = () => {
           expiryTime,
           allowAddOption,
         } = pollWidget.metadata;
+
         const options = pollWidget.lmMeta.options.map(
           (option: { text: string }) => option.text,
         );
@@ -158,6 +159,16 @@ const LMFeedPostHeader = () => {
       <div
         className="lm-feed-wrapper__card__header"
         lm-feed-component-id={`lm-feed-post-header-abcde-${post?.id}`}
+        onClick={() => {
+          lmfeedAnalyticsClient?.sendPostCommentClickEvent(post!);
+          const location = window.location;
+          const url = new URL(location.href);
+          const search = url.searchParams.get("id");
+          if (!search) {
+            url.searchParams.append("id", post?.id || "");
+            window.open(url, "_self");
+          }
+        }}
       >
         <div className="lm-flex-container">
           <div
