@@ -11,6 +11,7 @@ import pdfIcon from "../assets/images/pdf-icon.svg";
 import { formatFileSize } from "../shared/utils";
 import { OgTag } from "../shared/types/models/ogTag";
 import { formatDate, previewMultiSelectStateModifier } from "../shared/utils";
+import { AttachmentType } from "@likeminds.community/feed-js";
 interface LMFeedCreatePostDMediaPost {
   mediaUploadDialog?: string;
 }
@@ -37,7 +38,7 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
     if (temporaryPost) {
       const attachmentsArray = temporaryPost.attachments.filter(
         (attachment) => {
-          if (attachment.attachmentType !== 5) {
+          if (attachment.type !== AttachmentType.CUSTOM) {
             return attachment;
           }
         },
@@ -48,14 +49,14 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
           return null;
         case 1: {
           const attachment = attachmentsArray[0];
-          switch (attachment.attachmentType) {
-            case 3:
+          switch (attachment.type) {
+            case AttachmentType.DOCUMENT:
               return <DocumentMediaItem attachment={attachment} />;
-            case 1:
+            case AttachmentType.IMAGE:
               return <ImageMediaItem attachment={attachment} />;
-            case 2:
+            case AttachmentType.VIDEO:
               return <VideoMediaItem attachment={attachment} />;
-            case 11:
+            case AttachmentType.REEL:
               return <ReelMediaItem attachment={attachment} />;
 
             default:
@@ -71,12 +72,12 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
               }}
             >
               {attachmentsArray?.map((attachment) => {
-                switch (attachment.attachmentType) {
-                  case 3:
+                switch (attachment.type) {
+                  case AttachmentType.DOCUMENT:
                     return <DocumentMediaItem attachment={attachment} />;
-                  case 1:
+                  case AttachmentType.IMAGE:
                     return <ImageMediaItem attachment={attachment} />;
-                  case 2:
+                  case AttachmentType.VIDEO:
                     return <VideoMediaItem attachment={attachment} />;
                   // case 4:
                   //   return <OGTagMediaItem attachment={attachment} />;
@@ -180,6 +181,7 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
   if (!temporaryPost && !mediaList?.length) {
     return null;
   }
+
   return (
     <>
       <div className="postImgSlider">
@@ -219,7 +221,7 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
         if (temporaryPost) {
           const attachmentsArray = temporaryPost.attachments.filter(
             (attachment) => {
-              if (attachment.attachmentType !== 5) {
+              if (attachment.type !== AttachmentType.CUSTOM) {
                 return attachment;
               }
             },
@@ -230,8 +232,8 @@ const LMFeedCreateEditPostMediaRenderer = memo(({ }: LMFeedCreatePostDMediaPost)
               return null;
             case 1: {
               const attachment = attachmentsArray[0];
-              switch (attachment.attachmentType) {
-                case 6:
+              switch (attachment.type) {
+                case AttachmentType.POLL:
                   return <PollItem attachment={attachment} />;
                 default:
                   return null;
@@ -266,8 +268,8 @@ const ImageMediaItem = ({ file, attachment }: MediaItemProps) => {
     return (
       <img
         className="lm-feed-create-post-media-item"
-        lm-feed-component-id={`lm-feed-edit-media-vwxyz-${attachment.attachmentMeta.url}`}
-        src={attachment.attachmentMeta.url}
+        lm-feed-component-id={`lm-feed-edit-media-vwxyz-${attachment.metaData.url}`}
+        src={attachment.metaData.url}
         alt="image"
       />
     );
@@ -295,9 +297,9 @@ export const VideoMediaItem = memo(
       return (
         <video
           className="lm-feed-create-post-media-item"
-          src={attachment.attachmentMeta.url}
+          src={attachment.metaData.url}
           controls
-          lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.attachmentMeta.url}`}
+          lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.metaData.url}`}
         />
       );
     } else return null;
@@ -305,7 +307,7 @@ export const VideoMediaItem = memo(
 );
 
 const PollItem = ({ attachment }: MediaItemProps) => {
-  const attachmentMeta = attachment?.attachmentMeta ?? undefined;
+  const attachmentMeta = attachment?.metaData ?? undefined;
   return <>
     {attachmentMeta &&
       <div className="poll-preview-wrapper">
@@ -349,9 +351,9 @@ const ReelMediaItem = ({ file, attachment }: MediaItemProps) => {
     return (
       <video
         className="lm-feed-create-post-media-item"
-        src={attachment.attachmentMeta.url}
+        src={attachment.metaData.url}
         controls
-        lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.attachmentMeta.url}`}
+        lm-feed-component-id={`lm-feed-edit-media-fghij-${attachment.metaData.url}`}
       />
     );
   } else return null;
@@ -359,14 +361,14 @@ const ReelMediaItem = ({ file, attachment }: MediaItemProps) => {
 
 const DocumentMediaItem = ({ attachment, file }: MediaItemProps) => {
   if (attachment) {
-    const { attachmentMeta } = attachment;
-    const { name, url, size } = attachmentMeta;
+    const { metaData } = attachment;
+    const { name, url, size } = metaData;
     return (
       <div
         className="attachmentPdf"
-        lm-feed-component-id={`lm-feed-edit-media-klmno-${attachment.attachmentMeta.url}`}
+        lm-feed-component-id={`lm-feed-edit-media-klmno-${attachment.metaData.url}`}
       >
-        <Document file={attachmentMeta?.url}>
+        <Document file={metaData?.url}>
           <Page
             pageNumber={1}
             className={"pdfPage"}

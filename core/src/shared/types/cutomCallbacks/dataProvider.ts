@@ -14,6 +14,8 @@ import {
   PollCreationDefaultActions,
   NotificationsDataStore,
   NotificationsDefaultActions,
+  ModerationDataStore,
+  ModerationDefaultActions,
 } from "./dataStores";
 
 export interface FeedListActionsAndDataStore {
@@ -54,4 +56,10 @@ export interface PollCreationActionsAndDataStore {
   pollCreationDataStore: PollCreationDataStore;
   applicationGeneralStore: ApplicationGeneralsStore;
   defaultActions: PollCreationDefaultActions;
+}
+
+export interface ModerationActionsAndDataStore {
+  moderationDataStore : ModerationDataStore;
+  applicationGeneralStore: ApplicationGeneralsStore;
+  defaultActions: ModerationDefaultActions;
 }

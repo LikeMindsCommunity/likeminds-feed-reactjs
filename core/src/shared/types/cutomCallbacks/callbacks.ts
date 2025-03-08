@@ -6,6 +6,7 @@ import {
   RepliesActionsAndDataStore,
   TopicsActionsAndDataStore,
   PollCreationActionsAndDataStore,
+  ModerationActionsAndDataStore,
 } from "./dataProvider";
 
 export interface FeedListCustomActions {
@@ -99,4 +100,17 @@ export type PostPollCustomActions = {
 
 export type PollCreationCustomActionCallback = (
   store: PollCreationActionsAndDataStore,
+) => Promise<void>;
+
+export type ModerationCustomActions = {
+  onApprovedPostClicked?: ModerationCustomActionCallback;
+  onRejectedPostClicked?: ModerationCustomActionCallback;
+  onLeadingTap?: ModerationCustomActionCallback;
+  onTextTap?: ModerationCustomActionCallback;
+  onTrailingTap?: ModerationCustomActionCallback;
+  onEditMemberPermissionClicked?: ModerationCustomActionCallback;
+};
+
+export type ModerationCustomActionCallback = (
+  store: ModerationActionsAndDataStore,
 ) => Promise<void>;

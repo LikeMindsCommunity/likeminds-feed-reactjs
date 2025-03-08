@@ -1,0 +1,296 @@
+.lm-moderation-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: pxToRem(25) auto pxToRem(20) auto;
+    width: pxToRem(576);
+
+    &__left{
+        display: flex;
+        gap:0.5rem
+    }
+
+    &__button{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--lm-feed-dark-color);
+        background-color: white;
+        border: pxToRem(1) solid #484F6780;
+        border-radius: pxToRem(8);
+        padding: pxToRem(12) pxToRem(16);
+        cursor: pointer;
+        font-size: pxToRem(16);
+        font-weight: 500;
+    }
+
+    &__count{
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: pxToRem(16); /* Adjust size as needed */
+        height: pxToRem(16);
+        background-color: red;
+        color: white;
+        font-size: pxToRem(10);
+        font-weight: bold;
+        border-radius: 50%;
+    }
+}
+
+.selected-button{
+    background-color: var(--lm-feed-primary-color);
+    color: white;
+}
+
+.selected-count{
+    background-color: #fff;
+    color: red;
+}
+
+.moderation-separator{
+    color: #E4E7EC;
+    margin-bottom: pxToRem(20);
+}
+
+.white-bg-container {
+    background-color: #fff;
+    height: pxToRem(225);
+    width: pxToRem(576);
+    border-radius: pxToRem(8);
+    box-shadow: pxToRem(0) pxToRem(0) pxToRem(24) rgba(72, 79, 103, 0.16);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: pxToRem(20) auto;
+}
+
+.moderation-disabled-heading{
+    font-size: pxToRem(16);
+    font-weight: 700;
+    margin-top: pxToRem(8);
+}
+
+.moderation-disabled-subheading{
+    font-size: pxToRem(13);
+    font-weight: 600;
+    color: #666666;
+}
+
+.moderation-disabled-path{
+    color : var(--lm-feed-primary-color);
+}
+
+.disabled-icons-size{
+    height: pxToRem(30);
+    width: pxToRem(30);
+}
+
+.moderation-post-footer-wrapper{
+    padding: pxToRem(12) pxToRem(16);
+    display: flex;
+    gap: pxToRem(8);
+    border-top: pxToRem(1) solid #E4E7EC;
+}
+
+.modeartion-post-header-alert, .moderation-post-closed-footer{
+    display: flex;
+    font-size: pxToRem(14);
+    font-weight: 400;
+    color: var(--lm-feed-card-content-heading);
+    padding: pxToRem(8) pxToRem(16);
+    gap: pxToRem(5);
+}
+
+.moderation-post-footer-wrapper-reported{
+    display: flex;
+    justify-content: space-between;
+}
+
+.moderation-footer-button-wrapper{
+    display: flex;
+    gap: pxToRem(8);
+}
+
+.moderation-edit-member-permission-button{
+ color: var(--lm-feed-primary-color);
+ background-color: #EDECFC;
+ border: none;
+}
+
+.moderation-post-header-names{
+    font-weight: 700;
+    color: var(--lm-feed-primary-color);
+
+    &__capitalize{
+        text-transform: capitalize;
+    }
+}
+
+.approval-pending-icon{
+    color: var(--lm-feed-primary-color);
+}
+
+.moderation-post-header-title-end{
+    font-weight: 400;
+    color: var(--lm-feed-card-content-heading);
+}
+
+.edit-member-permission-title{
+    text-align: left;
+    font-size: pxToRem(18);
+    font-weight: 500;
+    margin-bottom: pxToRem(0);
+    margin-top: pxToRem(5);
+}
+
+.edit-permissions-footer-wrapper{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    font-size: pxToRem(16);
+    font-weight: 500;
+    gap: pxToRem(8);
+    cursor: pointer;
+
+    &__button{
+        background-color: var(--lm-feed-primary-color);
+        color: #fff;
+        padding: pxToRem(12);
+        border-radius: pxToRem(8);
+    }
+
+    &__cancel-button{
+        background-color: #fff;
+        color: var( --lm-feed-dark-color);
+    }
+}
+
+.edit-permission-body-wrapper{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: pxToRem(20);
+    gap: pxToRem(8);
+
+    &__container{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 500;
+        font-size: pxToRem(14);
+    }
+}
+
+.edit-permissions-divider{
+    color: #E4E7EC;
+    width: 100%;
+    height: 1px;
+    margin: pxToRem(10) pxToRem(0);
+}
+
+.edit-permission-input{
+    padding-top: pxToRem(0);
+    padding-bottom: pxToRem(0);
+    margin: pxToRem(0);
+}
+
+.lm-comment-avatar {
+    width: pxToRem(40);
+    height: pxToRem(40);
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .lm-comment-avatar img,
+.lm-comment-avatar .avatar-initials {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: var(--lm-feed-primary-color);
+  color: var(--lm-feed-light-color);
+}
+
+.reported-comment-wrapper{
+    margin: pxToRem(10) pxToRem(15);
+}
+
+.reported-comment-body{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    gap: pxToRem(8);
+}
+
+.lm-reported-comment-container{
+    width: 80%;
+}
+
+.lm-reported-comment-details{
+    background-color: #E6EBF580;
+    width: 100%;
+    padding: pxToRem(12);
+    border-radius: pxToRem(16);
+    display: flex;
+    flex-direction: column;
+}
+
+.reported-comment-footer-bar{
+    display: flex;
+    align-items: center;
+    color: #484F6780;
+    font-size: pxToRem(12);
+    gap: pxToRem(8);
+}
+
+.closed-header-wrapper-question-icon, .reported-comment-heart-icon{
+    margin-top: pxToRem(5);
+}
+
+.reported-comment-heading{
+    color: var(--lm-feed-dark-color);
+    font-size: pxToRem(14);
+    font-weight: 500;
+    text-transform: capitalize;
+}
+.reported-comment-subheading{
+    color: var(--lm-feed-dark-color);
+    font-size: pxToRem(14);
+    font-weight: 400;
+}
+
+.moderation-post-closed-by{
+    color: var(--lm-feed-primary-color);
+    text-transform: capitalize;
+}
+
+.closed-header-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.moderation-closed-header{
+    display: flex;
+    align-items: center;
+    gap: pxToRem(8);
+}
+
+.moderation-mobile-tab-wrapper, .edit-permission-mobile-view{
+    display: none;
+  }
+
+.mobile-view-tab{
+    font-size: pxToRem(40);
+    font-weight: 500;
+}
+
+.iso-switch-toggle{
+    margin: pxToRem(10);
+}
+
+.capitalize{
+    text-transform: capitalize;
+}

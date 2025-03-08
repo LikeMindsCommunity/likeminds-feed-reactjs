@@ -353,7 +353,7 @@ export function pluralizeOrCapitalize(
 
 export function changePostCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const postVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.post || "post";
@@ -362,7 +362,7 @@ export function changePostCase(action: WordAction, word?: string) {
 
 export function changePollCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const pollVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.poll || "poll";
@@ -371,7 +371,7 @@ export function changePollCase(action: WordAction, word?: string) {
 
 export function changeCommentCase(action: WordAction, word?: string) {
   const communityConfigurations =
-    getCommunityConfigurationFromLocalStorage().communityConfigurations;
+    getCommunityConfigurationFromLocalStorage()?.communityConfigurations;
   const commentVariable =
     communityConfigurations?.find((config) => config.type === "feed_metadata")
       ?.value?.comment || "comment";
@@ -415,6 +415,16 @@ export function getDisplayMessage(message: LMDisplayMessages) {
       return `${changePostCase(WordAction.ALL_SMALL_SINGULAR)} unhidden`;
     case LMDisplayMessages.POLL_OPTIONS_SHOULD_BE_UNIQUE:
       return `Poll options should be unique`;
+    case LMDisplayMessages.POST_APPROVED:
+      return `Post approved.`;
+    case LMDisplayMessages.POST_REJECTED:
+      return `Post rejected.`;
+    case LMDisplayMessages.REPORT_IGNORED:
+      return `Report ignored.`;
+    case LMDisplayMessages.POST_DELETED:
+      return `Post deleted.`;
+    case LMDisplayMessages.RIGHTS_UPDATED:
+      return `Rights updated.`;
   }
 }
 
@@ -629,3 +639,13 @@ export const multipleOptionSubmitVoteValidation = (
       return false;
   }
 };
+
+export function formatTimestamp(timestamp: number): string {
+  const date = new Date(timestamp * 1000); // Convert from seconds to milliseconds
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  };
+  return date.toLocaleDateString("en-GB", options).replace(",", "");
+}

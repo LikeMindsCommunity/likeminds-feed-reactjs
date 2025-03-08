@@ -73,15 +73,12 @@ export const useReply: (
     try {
       const getCommentDetailsCall: GetCommentDetailsResponse =
         (await lmFeedclient?.getComments(
-          postId,
           GetCommentRequest.builder()
             .setPostId(postId)
             .setCommentId(replyId)
             .setPage(1)
             .setPageSize(10)
             .build(),
-          replyId,
-          1,
         )) as never;
       if (getCommentDetailsCall.success) {
         setReply({ ...getCommentDetailsCall.data.comment });
@@ -102,15 +99,12 @@ export const useReply: (
     try {
       const getCommentDetailsCall: GetCommentDetailsResponse =
         (await lmFeedclient?.getComments(
-          postId,
           GetCommentRequest.builder()
             .setPostId(postId)
             .setCommentId(replyId)
             .setPage(pageCount)
             .setPageSize(10)
             .build(),
-          replyId,
-          pageCount,
         )) as never;
       if (getCommentDetailsCall.success) {
         setUser({ ...users, ...getCommentDetailsCall.data.users });

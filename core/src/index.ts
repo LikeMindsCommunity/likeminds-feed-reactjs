@@ -14,6 +14,8 @@ import LMFeedPostTopicsWrapper from "./components/LMFeedPostTopicsWrapper";
 import LMFeedPost from "./components/LMFeedPosts";
 import LMFeedReportPostDialog from "./components/LMFeedReportPostDialog";
 import LMFeedCreatePollDialog from "./components/LMFeedCreatePollDialog";
+import LMFeedLeftNavigation from "./components/LMFeedLeftNavigation";
+import { LMFeedModeration } from "./components/LMFeedModeration";
 import LMFeedCreatePostDialog from "./components/LMFeedCreatePostDialog";
 import LMFeedPollDialogPreview from "./components/LMFeedPollDialogPreview";
 import LMPostPoll from "./components/LMPostPoll";
@@ -45,6 +47,8 @@ import { useFetchFeeds } from "./hooks/useLMFetchFeeds";
 import { useLMPostReply } from "./hooks/useLMPostReply";
 import { useReply } from "./hooks/useLMReply";
 import { useTopicDropdown } from "./hooks/useLMTopicDropdown";
+import { useSideNavbar } from "./hooks/useSideNavbar";
+import { useModeration } from "./hooks/useModeration";
 import useUserProvider from "./hooks/useLMUserProvider";
 import { useTagging } from "./hooks/useTagging";
 import LMFeedAttachments from "./shared/components/LMFeedAttachments";
@@ -120,6 +124,8 @@ export {
   LMFeedPollDialogPreview,
   LMPostPoll,
   LMFeedAllMembers,
+  LMFeedLeftNavigation,
+  LMFeedModeration,
   LMFeedCreateEditPostMediaRenderer as LMFeedCreateEditPostMediaRenderer,
   LMFeedCreatePost,
   LMFeedListDataContextProvider,
@@ -148,6 +154,8 @@ export {
   useLMPostReply,
   useReply,
   useTopicDropdown,
+  useSideNavbar,
+  useModeration,
   useUserProvider,
   useTagging,
   LMFeedAttachments,

@@ -26,7 +26,7 @@ import LMFeedPollDialogPreview from "./LMFeedPollDialogPreview";
 interface LMFeedCreatePollDialogProps {
 }
 
-const switchButtonTheme = createTheme({
+export const switchButtonTheme = createTheme({
   palette: {
     primary: {
       main: '#5046e5',
