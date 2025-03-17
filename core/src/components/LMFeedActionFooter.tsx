@@ -130,7 +130,7 @@ const LMFeedActionFooter = ({
         </>
       ) : null}
       {selectedTab === "approval" ? (
-        <div className="moderation-post-footer-wrapper">
+        <div className="moderation-post-footer-wrapper moderation-post-footer-wrapper-custom-style">
           <button
             className="lm-moderation-header__button lm-text-capitalize selected-button approve-button-custom-style"
             onClick={() => {
@@ -157,7 +157,7 @@ const LMFeedActionFooter = ({
           </button>
         </div>
       ) : selectedTab === "reported" ? (
-        <div className="moderation-post-footer-wrapper moderation-post-footer-wrapper-reported">
+        <div className="moderation-post-footer-wrapper moderation-post-footer-wrapper-reported moderation-post-footer-wrapper-custom-style">
           <div className="moderation-footer-button-wrapper">
             <button
               className="lm-moderation-header__button lm-text-capitalize selected-button "

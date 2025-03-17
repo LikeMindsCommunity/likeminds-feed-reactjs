@@ -12,6 +12,7 @@ import LMFeedActionFooter from "./LMFeedActionFooter";
 import { AttachmentType } from "@likeminds.community/feed-js";
 import { Report } from "../shared/types/models/report";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 interface LMFeedPostProps {
   propReport?: Report;
@@ -69,7 +70,7 @@ const LMFeedPost: React.FC<LMFeedPostProps> = ({
           CustomComponents?.CustomPostViewHeader
         ) : (
           <>
-            {isModerationScreen && currentUser?.state === 1 ? (
+            {isModerationScreen && currentUser?.state === LMFeedCurrentUserState.CM ? (
               <LMFeedActivityHeader propReport={propReport} />
             ) : (
               <LMFeedPostHeader />
@@ -90,7 +91,7 @@ const LMFeedPost: React.FC<LMFeedPostProps> = ({
           CustomComponents.CustomPostViewFooter
         ) : (
           <>
-            {isModerationScreen && currentUser?.state === 1 ? (
+            {isModerationScreen && currentUser?.state === LMFeedCurrentUserState.CM ? (
               <LMFeedActionFooter propReport={propReport} />
             ) : (
               <LMFeedPostFooter />

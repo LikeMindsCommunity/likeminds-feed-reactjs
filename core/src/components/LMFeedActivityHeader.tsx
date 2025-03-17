@@ -114,10 +114,10 @@ const LMFeedActivityHeader = ({ propReport }: LMFeedActivityHeaderProps) => {
                 className="moderation-post-header-names"
                 onClick={handleHeaderTextTap}
               >
-                <span className="moderation-post-header-names__capitalize">
+                <span className="moderation-post-header-names__capitalize post-header-user-custom-style">
                   {reportedMemberName}
                 </span>
-                <span className="moderation-post-header-title-end">
+                <span className="moderation-post-header-title-end post-header-title-end-custom-style">
                   {isCommentReported
                     ? ` reported a ${propReport?.type} on this post.`
                     : " reported this post."}
@@ -142,10 +142,10 @@ const LMFeedActivityHeader = ({ propReport }: LMFeedActivityHeaderProps) => {
                     className="moderation-post-header-names"
                     onClick={handleHeaderTextTap}
                   >
-                    <span className="moderation-post-header-names__capitalize">
+                    <span className="moderation-post-header-names__capitalize post-header-user-custom-style">
                       {reportedMemberName}
                     </span>
-                    <span className="moderation-post-header-title-end">
+                    <span className="moderation-post-header-title-end post-header-title-end-custom-style">
                       {isCommentReported
                         ? ` reported a ${propReport?.type} on this post.`
                         : " reported this post."}

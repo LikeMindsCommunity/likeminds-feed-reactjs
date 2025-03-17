@@ -8,6 +8,7 @@ import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 import LMFeedDetails from "./LMFeedDetails";
 import { returnPostId } from "../shared/utils";
 import { CustomAgentProviderContext } from "..";
+import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 export interface LMFeedListDataContextProviderInterface {
   children?: React.ReactNode;
@@ -36,7 +37,7 @@ const LMFeedListDataContextProvider = ({
 
   const renderComponents = () => {
     const postId = returnPostId();
-    const isCM = currentUser?.state === 1;
+    const isCM = currentUser?.state === LMFeedCurrentUserState.CM;
     if (postId.length) {
       if (CustomComponents && CustomComponents.CustomFeedDetails) {
         return <CustomComponents.CustomFeedDetails postId={postId} />;

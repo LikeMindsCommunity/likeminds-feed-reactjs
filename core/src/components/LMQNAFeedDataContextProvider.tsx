@@ -6,6 +6,7 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { returnPostId } from "../shared/utils";
 import LMQNAFeedDetails from "./LMQNAFeedDetails";
 import LMQNAFeedUniversalFeed from "./LMQNAFeedUniversalFeed";
+import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 export interface LMQNAFeedDataContextProviderInterface {
   children?: React.ReactNode;
@@ -30,7 +31,7 @@ const LMQNAFeedDataContextProvider = ({
     widgets,
   } = useFetchFeeds();
   const { currentUser } = useContext(LMFeedUserProviderContext);
-  const isCM = currentUser?.state === 1;
+  const isCM = currentUser?.state === LMFeedCurrentUserState.CM;
   const renderComponents = () => {
     const postId = returnPostId();
     if (postId.length) {
