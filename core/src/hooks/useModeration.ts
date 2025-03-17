@@ -136,7 +136,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       setIsLoading(false);
@@ -199,7 +198,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       setLoadMoreFeeds(false);
@@ -256,7 +254,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -286,7 +283,6 @@ export function useModeration() {
             getDisplayMessage(LMDisplayMessages.POST_APPROVED)!,
           );
         }
-        window.history.back();
       } else {
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
@@ -294,7 +290,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -323,7 +318,6 @@ export function useModeration() {
             getDisplayMessage(LMDisplayMessages.POST_REJECTED)!,
           );
         }
-        window.history.back();
       } else {
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
@@ -331,7 +325,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -390,7 +383,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.REPORT_IGNORED)!,
             );
           }
-          window.history.back();
         } else {
           if (displaySnackbarMessage) {
             displaySnackbarMessage(
@@ -398,7 +390,6 @@ export function useModeration() {
                 getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
             );
           }
-          window.history.back();
         }
       } catch (error) {
         console.log(error);
@@ -450,7 +441,6 @@ export function useModeration() {
                 )!,
               );
             }
-            window.history.back();
           } else {
             if (displaySnackbarMessage) {
               displaySnackbarMessage(
@@ -458,7 +448,6 @@ export function useModeration() {
                   getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
               );
             }
-            window.history.back();
           }
         } else {
           if (displaySnackbarMessage) {
@@ -467,7 +456,6 @@ export function useModeration() {
                 getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
             );
           }
-          window.history.back();
         }
       } catch (error) {
         console.log(error);
@@ -497,7 +485,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -534,7 +521,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);

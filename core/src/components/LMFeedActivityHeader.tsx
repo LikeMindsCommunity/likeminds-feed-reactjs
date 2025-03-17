@@ -18,13 +18,13 @@ import ModerationReportedTitleIcon from "../assets/images/moderation-reported-ti
 import QuestionMarkIcon from "../assets/images/question-mark-icon.svg";
 import { ReportEntityType } from "@likeminds.community/feed-js";
 
-interface LMFeedModerationPostFooterProps {
+interface LMFeedActivityHeaderProps {
   propReport: Report | undefined;
 }
 
-const LMFeedModerationPostHeader = ({
+const LMFeedActivityHeader = ({
   propReport,
-}: LMFeedModerationPostFooterProps) => {
+}: LMFeedActivityHeaderProps) => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
@@ -251,4 +251,4 @@ const LMFeedModerationPostHeader = ({
   );
 };
 
-export default LMFeedModerationPostHeader;
+export default LMFeedActivityHeader;

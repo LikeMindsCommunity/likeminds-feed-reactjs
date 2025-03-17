@@ -216,6 +216,13 @@ export default function useUserProvider(
       });
     }
   }, [customEventClient, lmFeedUser, lmFeedclient]);
+
+  useEffect(() => {
+    if (lmFeedUser) {
+      lmFeedclient.setUserInLocalStorage(JSON.stringify(lmFeedUser));
+    }
+  }, [lmFeedUser]);
+
   function logoutUser() {
     setLmFeedUser(null);
   }

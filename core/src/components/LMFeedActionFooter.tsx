@@ -11,13 +11,13 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { formatTimestamp } from "../shared/utils";
 import { Report } from "../shared/types/models/report";
 
-interface LMFeedModerationPostFooterProps {
+interface LMFeedActionFooterProps {
   propReport: Report | undefined;
 }
 
-const LMFeedModerationPostFooter = ({
+const LMFeedActionFooter = ({
   propReport,
-}: LMFeedModerationPostFooterProps) => {
+}: LMFeedActionFooterProps) => {
   const {
     selectedTab,
     handleOnApprovedPostClicked,
@@ -222,4 +222,4 @@ const LMFeedModerationPostFooter = ({
   );
 };
 
-export default LMFeedModerationPostFooter;
+export default LMFeedActionFooter;

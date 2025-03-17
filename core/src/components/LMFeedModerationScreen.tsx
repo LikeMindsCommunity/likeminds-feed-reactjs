@@ -35,7 +35,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const LMFeedModeration = () => {
+export const LMFeedModerationScreen = () => {
   const {
     selectTab,
     selectedTab,
@@ -90,7 +90,12 @@ export const LMFeedModeration = () => {
           }}
         >
           {CustomComponents?.CustomPostView || (
-            <Posts post={post} user={user} propReport={report} />
+            <Posts
+              isModerationScreen={true}
+              post={post}
+              user={user}
+              propReport={report}
+            />
           )}
         </FeedPostContext.Provider>
       );
@@ -116,41 +121,41 @@ export const LMFeedModeration = () => {
   };
 
   return (
-    <>
-      <FeedModerationContext.Provider
-        value={{
-          selectTab,
-          selectedTab,
-          isPostApprovalEnabled,
-          reports,
-          posts,
-          users,
-          widgets,
-          topics,
-          comments,
-          handleOnApprovedPostClicked,
-          handleOnRejectedPostClicked,
-          onApprovedCallback,
-          onRejectedCallback,
-          editMemberPermissionsHandler,
-          updateMemberRightsHandler,
-          memberRights,
-          isEditPermissionDialogOpen,
-          setIsEditPermissionDialogOpen,
-          modifiedRights,
-          setModifiedRights,
-          customTitle,
-          setCustomTitle,
-          currentReport,
-          setCurrentReport,
-          handleHeaderLeadingTap,
-          handleHeaderTextTap,
-          handleHeaderTrailingTap,
-          loadMoreFeeds,
-          getNextPage,
-          isLoading,
-        }}
-      >
+    <FeedModerationContext.Provider
+      value={{
+        selectTab,
+        selectedTab,
+        isPostApprovalEnabled,
+        reports,
+        posts,
+        users,
+        widgets,
+        topics,
+        comments,
+        handleOnApprovedPostClicked,
+        handleOnRejectedPostClicked,
+        onApprovedCallback,
+        onRejectedCallback,
+        editMemberPermissionsHandler,
+        updateMemberRightsHandler,
+        memberRights,
+        isEditPermissionDialogOpen,
+        setIsEditPermissionDialogOpen,
+        modifiedRights,
+        setModifiedRights,
+        customTitle,
+        setCustomTitle,
+        currentReport,
+        setCurrentReport,
+        handleHeaderLeadingTap,
+        handleHeaderTextTap,
+        handleHeaderTrailingTap,
+        loadMoreFeeds,
+        getNextPage,
+        isLoading,
+      }}
+    >
+      <div className="lm-moderation-container">
         <div className="lm-flex-grow" id="feed-scroller">
           <div className="moderation-mobile-tab-wrapper">
             <Box sx={{ width: "100%" }}>
@@ -343,7 +348,7 @@ export const LMFeedModeration = () => {
         >
           <LMFeedEditMemberPermissionsDialog />
         </Dialog>
-      </FeedModerationContext.Provider>
-    </>
+      </div>
+    </FeedModerationContext.Provider>
   );
 };

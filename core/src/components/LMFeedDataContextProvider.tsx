@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 
 import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
 
@@ -8,7 +9,13 @@ import LMFeedDetails from "./LMFeedDetails";
 import { returnPostId } from "../shared/utils";
 import { CustomAgentProviderContext } from "..";
 
-const LMFeedListDataContextProvider = () => {
+export interface LMFeedListDataContextProviderInterface {
+  children?: React.ReactNode;
+}
+
+const LMFeedListDataContextProvider = ({
+  children,
+}: LMFeedListDataContextProviderInterface) => {
   const {
     topics,
     selectedTopics,
@@ -24,9 +31,12 @@ const LMFeedListDataContextProvider = () => {
     hidePost,
     widgets,
   } = useFetchFeeds();
+  const { currentUser } = useContext(LMFeedUserProviderContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
+
   const renderComponents = () => {
     const postId = returnPostId();
+    const isCM = currentUser?.state === 1;
     if (postId.length) {
       if (CustomComponents && CustomComponents.CustomFeedDetails) {
         return <CustomComponents.CustomFeedDetails postId={postId} />;
@@ -37,7 +47,7 @@ const LMFeedListDataContextProvider = () => {
       if (CustomComponents && CustomComponents.CustomUniversalFeed) {
         return CustomComponents?.CustomUniversalFeed;
       } else {
-        return <LMFeedUniversalFeed />;
+        return <>{children && isCM ? children : <LMFeedUniversalFeed />}</>;
       }
     }
   };
