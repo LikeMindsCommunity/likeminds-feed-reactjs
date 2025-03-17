@@ -3,12 +3,16 @@ import "./App.css";
 import {
   LMSocialFeed,
   LMFeedNotificationHeader,
+  LMFeedUniversalFeed,
+  LMFeedModerationScreen,
   LMFeedCustomEvents,
   initiateFeedClient,
   LMCoreCallbacks,
-} from "@likeminds.community/likeminds-feed-reactjs";
+} from "@likeminds.community/likeminds-feed-reactjs-beta";
 
 import LoginScreen from "./LoginScreen";
+import SideNavbar from "./SideNavbar";
+import DrawerList from "./DrawerList";
 
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -18,6 +22,7 @@ function App() {
   const [username, setUsername] = useState<string>("");
   const [noShowScreen, setNoShowScreen] = useState<boolean>(true);
   const [showLoginScreen, setShowLoginScreen] = useState<boolean>(false);
+
   function login() {
     if (accessToken.length && refreshToken.length) {
       setUserDetails((userDetails) => {
@@ -104,15 +109,26 @@ function App() {
       />
     );
   }
+  const isModerationRoute = window.location.pathname === "/moderation";
   return (
     <>
+      <DrawerList />
       <LMFeedNotificationHeader customEventClient={customEventClient} />
-      <LMSocialFeed
-        client={lmFeedClient}
-        customEventClient={customEventClient}
-        userDetails={userDetails}
-        LMFeedCoreCallbacks={lmCoreCallbacks}
-      ></LMSocialFeed>
+      <div className="lm-wrapper">
+        <SideNavbar />
+        <LMSocialFeed
+          client={lmFeedClient}
+          customEventClient={customEventClient}
+          userDetails={userDetails}
+          LMFeedCoreCallbacks={lmCoreCallbacks}
+        >
+          {isModerationRoute ? (
+            <LMFeedModerationScreen />
+          ) : (
+            <LMFeedUniversalFeed />
+          )}
+        </LMSocialFeed>
+      </div>
     </>
   );
 }
