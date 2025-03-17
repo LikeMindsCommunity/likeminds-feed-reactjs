@@ -22,9 +22,7 @@ interface LMFeedActivityHeaderProps {
   propReport: Report | undefined;
 }
 
-const LMFeedActivityHeader = ({
-  propReport,
-}: LMFeedActivityHeaderProps) => {
+const LMFeedActivityHeader = ({ propReport }: LMFeedActivityHeaderProps) => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
@@ -88,22 +86,30 @@ const LMFeedActivityHeader = ({
         <div className="modeartion-post-header-alert activity-header-custom-style">
           {selectedTab === "approval" ? (
             <>
-              <img
-                onClick={handleHeaderLeadingTap}
-                src={ApprovalPendingIcon}
-                alt="approval-pending-icon"
-                className="approval-pending-icon"
-              />
+              {LMFeedCustomIcons?.moderationHeaderLeadingIcon ? (
+                <LMFeedCustomIcons.moderationHeaderLeadingIcon />
+              ) : (
+                <img
+                  onClick={handleHeaderLeadingTap}
+                  src={ApprovalPendingIcon}
+                  alt="approval-pending-icon"
+                  className="approval-pending-icon"
+                />
+              )}
               <span onClick={handleHeaderTextTap}>Approval Pending</span>
             </>
           ) : selectedTab === "reported" ? (
             <>
-              <img
-                onClick={handleHeaderLeadingTap}
-                src={ModerationReportedTitleIcon}
-                alt="approval-pending-icon"
-                className="approval-pending-icon"
-              />
+              {LMFeedCustomIcons?.moderationHeaderLeadingIcon ? (
+                <LMFeedCustomIcons.moderationHeaderLeadingIcon />
+              ) : (
+                <img
+                  onClick={handleHeaderLeadingTap}
+                  src={ModerationReportedTitleIcon}
+                  alt="approval-pending-icon"
+                  className="approval-pending-icon"
+                />
+              )}
               <span
                 className="moderation-post-header-names"
                 onClick={handleHeaderTextTap}
@@ -122,12 +128,16 @@ const LMFeedActivityHeader = ({
             <>
               <div className="closed-header-wrapper">
                 <div className="moderation-closed-header">
-                  <img
-                    onClick={handleHeaderLeadingTap}
-                    src={ModerationReportedTitleIcon}
-                    alt="approval-pending-icon"
-                    className="approval-pending-icon"
-                  />
+                  {LMFeedCustomIcons?.moderationHeaderLeadingIcon ? (
+                    <LMFeedCustomIcons.moderationHeaderLeadingIcon />
+                  ) : (
+                    <img
+                      onClick={handleHeaderLeadingTap}
+                      src={ModerationReportedTitleIcon}
+                      alt="approval-pending-icon"
+                      className="approval-pending-icon"
+                    />
+                  )}
                   <span
                     className="moderation-post-header-names"
                     onClick={handleHeaderTextTap}

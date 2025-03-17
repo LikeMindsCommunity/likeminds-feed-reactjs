@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import {
   LMSocialFeed,
   LMFeedNotificationHeader,
@@ -8,11 +8,12 @@ import {
   LMFeedCustomEvents,
   initiateFeedClient,
   LMCoreCallbacks,
-} from "@likeminds.community/likeminds-feed-reactjs-beta";
+} from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
 import SideNavbar from "./SideNavbar";
 import DrawerList from "./DrawerList";
+import "./App.css";
 
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -109,9 +110,9 @@ function App() {
       />
     );
   }
-  const isModerationRoute = window.location.pathname === "/moderation";
+
   return (
-    <>
+    <Router>
       <DrawerList />
       <LMFeedNotificationHeader customEventClient={customEventClient} />
       <div className="lm-wrapper">
@@ -122,14 +123,14 @@ function App() {
           userDetails={userDetails}
           LMFeedCoreCallbacks={lmCoreCallbacks}
         >
-          {isModerationRoute ? (
-            <LMFeedModerationScreen />
-          ) : (
-            <LMFeedUniversalFeed />
-          )}
+          <Routes>
+            <Route path="/moderation" element={<LMFeedModerationScreen />} />
+            <Route path="/" element={<LMFeedUniversalFeed />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
         </LMSocialFeed>
       </div>
-    </>
+    </Router>
   );
 }
 

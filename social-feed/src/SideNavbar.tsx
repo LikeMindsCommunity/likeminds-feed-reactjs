@@ -1,7 +1,9 @@
 import HomeIcon from "./assets/home-icon.svg";
 import ModerationIcon from "./assets/moderation-icon.svg";
+import { useNavigate } from "react-router-dom";
 
 const SideNavbar = () => {
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("LOCAL_USER") || "{}");
   const isCM = user?.state === 1;
   const isModerationScreen = window.location.pathname.includes("moderation");
@@ -11,13 +13,7 @@ const SideNavbar = () => {
         <div className="lm-sidenav-icon-bar">
           <div
             className="lm-sidenav-icon-wrapper"
-            onClick={() => {
-              const url = new URL(window.location.href);
-              if (url.pathname.endsWith("/moderation")) {
-                url.pathname = url.pathname.replace(/\/moderation$/, "");
-              }
-              window.location.assign(url.toString());
-            }}
+            onClick={() => navigate("/")}
           >
             <div
               className={
@@ -33,13 +29,7 @@ const SideNavbar = () => {
         {isCM ? (
           <div
             className="lm-sidenav-icon-wrapper moderation-icon"
-            onClick={() => {
-              const url = new URL(window.location.href);
-              if (!url.pathname.endsWith("/moderation")) {
-                url.pathname = url.pathname.replace(/\/$/, "") + "/moderation";
-              }
-              window.location.assign(url.toString());
-            }}
+            onClick={() => navigate("/moderation")}
           >
             <div
               className={
@@ -57,3 +47,4 @@ const SideNavbar = () => {
 };
 
 export default SideNavbar;
+

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -15,6 +16,7 @@ import SelectedModerationIcon from "./assets/bottom-bar-moderation-icon.svg";
 import CancelIcon from "./assets/cancel-model-icon.svg";
 
 const DrawerList = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const user = JSON.parse(localStorage.getItem("LOCAL_USER") || "{}");
   const isCM = user?.state === 1;
@@ -48,13 +50,7 @@ const DrawerList = () => {
         >
           <ListItemButton
             className="lm-sidebar-headings"
-            onClick={() => {
-              const url = new URL(window.location.href);
-              if (url.pathname.endsWith("/moderation")) {
-                url.pathname = url.pathname.replace(/\/moderation$/, "");
-              }
-              window.location.assign(url.toString());
-            }}
+            onClick={() => navigate("/")}
           >
             <ListItemIcon>
               {!currentScreen ? (
@@ -85,14 +81,7 @@ const DrawerList = () => {
           >
             <ListItemButton
               className="lm-sidebar-headings"
-              onClick={() => {
-                const url = new URL(window.location.href);
-                if (!url.pathname.endsWith("/moderation")) {
-                  url.pathname =
-                    url.pathname.replace(/\/$/, "") + "/moderation";
-                }
-                window.location.assign(url.toString());
-              }}
+              onClick={() => navigate("/moderation")}
             >
               <ListItemIcon>
                 {currentScreen ? (
