@@ -20,6 +20,7 @@ import { LMFeedModerationScreen } from "./components/LMFeedModerationScreen";
 import LMFeedCreatePostDialog from "./components/LMFeedCreatePostDialog";
 import LMFeedPollDialogPreview from "./components/LMFeedPollDialogPreview";
 import LMPostPoll from "./components/LMPostPoll";
+import { LogoutUserRequest, TokenValues } from "@likeminds.community/feed-js";
 
 import LMFeedUniversalFeed from "./components/LMFeedUniversalFeed";
 import LMFeedDeleteDialogBox from "./components/lmDialogs/LMFeedDeleteDialogBox";
@@ -168,6 +169,8 @@ export {
   LMFeedReplyTextArea,
   LMFeedTextArea,
   //   interfaces
+  LogoutUserRequest,
+  TokenValues,
   LMFeedAnalytics,
   LMCoreCallbacks,
   LMDisplayMessages,

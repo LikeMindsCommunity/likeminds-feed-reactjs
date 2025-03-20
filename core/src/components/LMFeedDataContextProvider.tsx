@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { useFetchFeeds } from "../hooks/useLMFetchFeeds";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 
 import LMFeedUniversalFeed from "./LMFeedUniversalFeed";
+import { LMFeedModerationScreen } from "./LMFeedModerationScreen";
 
 import LMFeedDetails from "./LMFeedDetails";
 import { returnPostId } from "../shared/utils";
@@ -35,6 +36,17 @@ const LMFeedListDataContextProvider = ({
   const { currentUser } = useContext(LMFeedUserProviderContext);
   const { CustomComponents } = useContext(CustomAgentProviderContext);
 
+  const childrenArray = React.Children.toArray(children);
+  const hasModerationScreen = childrenArray.some(
+    (child) =>
+      React.isValidElement(child) && child.type === LMFeedModerationScreen,
+  );
+
+  const hasUniversalFeed = childrenArray.some(
+    (child) =>
+      React.isValidElement(child) && child.type === LMFeedUniversalFeed,
+  );
+
   const renderComponents = () => {
     const postId = returnPostId();
     const isCM = currentUser?.state === LMFeedCurrentUserState.CM;
@@ -47,9 +59,15 @@ const LMFeedListDataContextProvider = ({
     } else {
       if (CustomComponents && CustomComponents.CustomUniversalFeed) {
         return CustomComponents?.CustomUniversalFeed;
-      } else {
-        return <>{children && isCM ? children : <LMFeedUniversalFeed />}</>;
       }
+      if (isCM && hasModerationScreen) {
+        return <LMFeedModerationScreen />;
+      }
+
+      if (hasUniversalFeed) {
+        return <LMFeedUniversalFeed />;
+      }
+      return children;
     }
   };
 
