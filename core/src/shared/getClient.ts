@@ -3,7 +3,7 @@ import { LMFeedClient } from "@likeminds.community/feed-js";
 export function initiateFeedClient() {
   const lmFeedClient = LMFeedClient.Builder()
     .setPlatformCode("rt")
-    .setVersionCode(16)
+    .setVersionCode(17)
     .build();
   return lmFeedClient;
 }
