@@ -73,10 +73,95 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   } = FeedPostDetailsCustomActions;
 
   // state for storing the post
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<Post | null>({
+    "id": "6710f985843b80acc6cace24",
+    "attachments": [
+      {
+        "metaData": {
+          "duration": 10,
+          "format": "mp4",
+          "name": "Abfrl- compress.mp4",
+
+          "size": 4075830,
+          "url": "https://prod-likeminds-media.s3.ap-south-1.amazonaws.com/files/post/b84d1b44-e5f3-4ee6-9cd2-63fa3475bb4c/Abfrl- compress.mp4"
+        },
+        "type": "reel"
+      },
+      {
+        "metaData": {
+          "entityId": "6710f985843b80acc6cace25",
+
+        },
+        "type": "custom"
+      }
+    ],
+
+    "commentsCount": 0,
+    "communityId": 0,
+    "createdAt": 1729165701103,
+    "heading": "",
+    "impressionCount": 0,
+    "isAnonymous": false,
+    "isEdited": false,
+    "isHidden": false,
+    "isLiked": false,
+    "isPendingPost": false,
+    "isPinned": false,
+    "isRepost": false,
+    "isRepostedByUser": false,
+    "isSaved": false,
+    "likesCount": 0,
+    "menuItems": [
+      {
+        "id": 5,
+        "title": "Edit Post"
+      },
+      {
+        "id": 1,
+        "title": "Delete Post"
+      },
+      {
+        "id": 2,
+        "title": "Pin This Post"
+      }
+    ],
+    "postShareCount": 0,
+    "postStatus": "",
+    "reachCount": 0,
+    "replies": [],
+    "repostCount": 0,
+    "tempId": "1729165709279",
+    "text": "Navratri Pick: ABFRL",
+    "topics": [],
+    "updatedAt": 1729165701144,
+    "userId": "",
+    "uuid": "b84d1b44-e5f3-4ee6-9cd2-63fa3475bb4c"
+  }
+  );
 
   // state for storing the record if the users
-  const [users, setUsers] = useState<Record<string, User>>({});
+  const [users, setUsers] = useState<Record<string, User>>({
+    "b84d1b44-e5f3-4ee6-9cd2-63fa3475bb4c": {
+      "id": 636851,
+      "name": "Choice Finx - v0 bot",
+      "imageUrl": "",
+      "userUniqueId": "b84d1b44-e5f3-4ee6-9cd2-63fa3475bb4c",
+      "sdkClientInfo": {
+        "community": 50627,
+        "user": 636851,
+        "userUniqueId": "b84d1b44-e5f3-4ee6-9cd2-63fa3475bb4c",
+        "uuid": "b84d1b44-e5f3-4ee6-9cd2-63fa3475bb4c",
+        "widgetId": ""
+      },
+      "uuid": "b84d1b44-e5f3-4ee6-9cd2-63fa3475bb4c",
+      "isGuest": false,
+      "isDeleted": false,
+      "customTitle": "Owner",
+      "state": 1,
+
+    }
+  }
+  );
 
   // state for storing replies
   const [replies, setReplies] = useState<Reply[]>([]);
@@ -88,7 +173,22 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
   const [topics, setTopics] = useState<Record<string, Topic>>({});
 
   // state to store the widgets
-  const [widgets, setWidgets] = useState<Record<string, any>>({});
+  const [widgets, setWidgets] = useState<Record<string, any>>({
+    "6710f985843b80acc6cace25": {
+      "_id": "6710f985843b80acc6cace25",
+      "_lmMeta": null,
+      "createdAt": 1729165701108,
+      "metadata": {
+        "meta": {
+          "metaData": "{\"customWidgetType\":\"FinXRecommendation\",\"entryPrice\":\"354\",\"isBuy\":true,\"searchRsp\":{\"ExchangeSegment\":\"NSE\",\"InstrumentName\":\" \",\"MarketLot\":1,\"OptionType\":\" \",\"PriceDivisor\":100,\"PriceTick\":5,\"sExpiry\":\"\",\"SecDesc\":\"ADITYA BIRLA FASHION & RT\",\"SecName\":\"ABFRL\",\"SegmentId\":1,\"Series\":\"EQ\",\"StrikePrice\":0,\"Symbol\":\"ABFRL\",\"Token\":30108},\"slPrice\":\"0\",\"targetPrice\":\"1062\"}"
+        }
+      },
+      "parentEntityId": "6710f985843b80acc6cace24",
+      "parentEntityType": "post",
+      "updatedAt": 1729165701108
+    }
+  }
+  );
   //   state to store page count
   const [pageCount, setPageCount] = useState<number>(1);
 
@@ -104,12 +204,12 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         )) as never;
 
       if (getPostDetailsCall.success) {
-        setPost({ ...getPostDetailsCall.data.post });
-        setReplies([...(getPostDetailsCall.data.post.replies || [])]);
-        setUsers({ ...getPostDetailsCall.data.users });
-        setTopics({ ...getPostDetailsCall.data.topics });
-        setWidgets({ ...getPostDetailsCall.data.widgets });
-        setPageCount((currentPage) => currentPage + 1);
+        // setPost({ ...getPostDetailsCall.data.post });
+        // setReplies([...(getPostDetailsCall.data.post.replies || [])]);
+        // setUsers({ ...getPostDetailsCall.data.users });
+        // setTopics({ ...getPostDetailsCall.data.topics });
+        // setWidgets({ ...getPostDetailsCall.data.widgets });
+        // setPageCount((currentPage) => currentPage + 1);
         if (!getPostDetailsCall.data.post.replies?.length) {
           setLoadNextPage(false);
         }
@@ -117,7 +217,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getPostDetailsCall?.errorMessage ||
-              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
+            getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
         window.history.back();
@@ -139,14 +239,14 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
             .build(),
         )) as never;
       if (getPostDetailsCall.success) {
-        setReplies([
-          ...replies,
-          ...(getPostDetailsCall.data.post.replies || []),
-        ]);
-        setUsers({ ...users, ...getPostDetailsCall.data.users });
-        setTopics({ ...topics, ...getPostDetailsCall.data.topics });
-        setWidgets({ ...widgets, ...getPostDetailsCall.data.widgets });
-        setPageCount((currentPage) => currentPage + 1);
+        // setReplies([
+        //   ...replies,
+        //   ...(getPostDetailsCall.data.post.replies || []),
+        // ]);
+        // setUsers({ ...users, ...getPostDetailsCall.data.users });
+        // setTopics({ ...topics, ...getPostDetailsCall.data.topics });
+        // setWidgets({ ...widgets, ...getPostDetailsCall.data.widgets });
+        // setPageCount((currentPage) => currentPage + 1);
         if (!getPostDetailsCall.data.post.replies?.length) {
           setLoadNextPage(false);
         }
@@ -621,9 +721,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     hidePost,
     postComponentClickCustomCallback: postComponentClickCustomCallback
       ? postComponentClickCustomCallback?.bind(
-          null,
-          feedPostDetailsActionsAndDataStore,
-        )
+        null,
+        feedPostDetailsActionsAndDataStore,
+      )
       : undefined,
   };
 };
