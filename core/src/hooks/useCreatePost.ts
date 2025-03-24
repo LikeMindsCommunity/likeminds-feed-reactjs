@@ -659,6 +659,7 @@ export function useCreatePost(): UseCreatePost {
           );
         }
         if (customWidgetsData) {
+          // Modifies user prodived custom widgets data to the format required by the API
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
@@ -775,6 +776,7 @@ export function useCreatePost(): UseCreatePost {
           attachmentResponseArray = attachmentResponseArray.filter(
             (attachment) => attachment.type !== AttachmentType.CUSTOM,
           );
+          // Modifies user prodived custom widgets data to the format required by the API
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
