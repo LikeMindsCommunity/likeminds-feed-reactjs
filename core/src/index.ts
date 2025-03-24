@@ -79,7 +79,6 @@ import { LMTopicsDropdownMode } from "./shared/enums/lmTopicFeedDropdownMode";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 import { initiateFeedClient } from "./shared/getClient";
 import LMQNAFeed from "./components/LMQNAFeed";
-import LMQNAFeedCreateMediaPost from "./components/LMQNAFeedCreateMediaPost";
 import LMQNAFeedCreatePost from "./components/LMQNAFeedCreatePost";
 import LMQNAFeedCreatePostDialog from "./components/LMQNAFeedCreatePostDialog";
 import LMQNAFeedDataContextProvider from "./components/LMQNAFeedDataContextProvider";
@@ -94,7 +93,6 @@ import LMQNAPollDialogPreview from "./components/LMQNAFeedPollDialogPreview";
 export {
   LMSocialFeed,
   LMQNAFeed,
-  LMQNAFeedCreateMediaPost,
   LMQNAFeedCreatePost,
   LMQNAFeedCreatePostDialog,
   LMQNAFeedDataContextProvider,

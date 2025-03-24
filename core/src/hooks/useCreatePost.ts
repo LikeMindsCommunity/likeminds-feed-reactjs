@@ -435,7 +435,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
 
-  function pollExpiryTimeClickFunction() {}
+  function pollExpiryTimeClickFunction() { }
 
   function editPollFunction() {
     setPreviewPoll(false);
@@ -479,7 +479,7 @@ export function useCreatePost(): UseCreatePost {
 
           const multipleSelectState =
             numberToPollMultipleSelectState[
-              advancedPollOptions.MULTIPLE_SELECTION_STATE
+            advancedPollOptions.MULTIPLE_SELECTION_STATE
             ];
 
           const pollType = advancedPollOptions.DONT_SHOW_LIVE_RESULTS
@@ -524,7 +524,7 @@ export function useCreatePost(): UseCreatePost {
             const attachmentType = file.type.includes("image")
               ? 1
               : file.type.includes("video") &&
-                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
                 ? 11 // Setting attachmentType to 11 for reels
                 : file.type.includes("video")
                   ? 2
@@ -659,13 +659,19 @@ export function useCreatePost(): UseCreatePost {
           );
         }
         if (customWidgetsData) {
-          for (const customWidgetData of customWidgetsData) {
+          // Modifies user prodived custom widgets data to the format required by the API
+          const newCustomWidgetsData = customWidgetsData.map((customData) => {
+            return {
+              meta: customData,
+            }
+          })
+          for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
                 .setType(AttachmentType.CUSTOM)
                 .setMetadata(
                   LMFeedPostAttachmentMeta.builder()
-                    .setMeta(customWidgetData)
+                    .setWidgetMeta(customWidgetData)
                     .build(),
                 )
                 .build(),
@@ -770,14 +776,19 @@ export function useCreatePost(): UseCreatePost {
           attachmentResponseArray = attachmentResponseArray.filter(
             (attachment) => attachment.type !== AttachmentType.CUSTOM,
           );
-
-          for (const customWidgetData of customWidgetsData) {
+          // Modifies user prodived custom widgets data to the format required by the API
+          const newCustomWidgetsData = customWidgetsData.map((customData) => {
+            return {
+              meta: customData,
+            }
+          })
+          for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
                 .setType(AttachmentType.CUSTOM)
                 .setMetadata(
                   LMFeedPostAttachmentMeta.builder()
-                    .setMeta(customWidgetData)
+                    .setWidgetMeta(customWidgetData)
                     .build(),
                 )
                 .build(),
@@ -1063,9 +1074,9 @@ export function useCreatePost(): UseCreatePost {
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback
         ? createPostComponentClickCustomCallback.bind(
-            null,
-            postCreationActionAndDataStore,
-          )
+          null,
+          postCreationActionAndDataStore,
+        )
         : undefined,
     openCreatePollDialog,
     setOpenCreatePollDialog,
