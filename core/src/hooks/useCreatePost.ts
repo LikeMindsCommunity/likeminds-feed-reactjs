@@ -659,7 +659,12 @@ export function useCreatePost(): UseCreatePost {
           );
         }
         if (customWidgetsData) {
-          for (const customWidgetData of customWidgetsData) {
+          const newCustomWidgetsData = customWidgetsData.map((customData) => {
+            return {
+              meta: customData,
+            }
+          })
+          for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
                 .setType(AttachmentType.CUSTOM)
@@ -770,8 +775,12 @@ export function useCreatePost(): UseCreatePost {
           attachmentResponseArray = attachmentResponseArray.filter(
             (attachment) => attachment.type !== AttachmentType.CUSTOM,
           );
-
-          for (const customWidgetData of customWidgetsData) {
+          const newCustomWidgetsData = customWidgetsData.map((customData) => {
+            return {
+              meta: customData,
+            }
+          })
+          for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
                 .setType(AttachmentType.CUSTOM)
