@@ -520,7 +520,7 @@ export function useCreatePost(): UseCreatePost {
                 file,
                 currentUser?.sdkClientInfo.uuid || "",
               )) as never;
-            const uploadedFileKey = `https://${LMAppAwsKeys.bucketNameProd}.s3.${LMAppAwsKeys.region}.amazonaws.com/${`files/post/${currentUser?.sdkClientInfo.uuid || ""}/${file.name}`}`;
+            const uploadedFileKey = `https://${LMAppAwsKeys.bucketName}.s3.${LMAppAwsKeys.region}.amazonaws.com/${`files/post/${currentUser?.sdkClientInfo.uuid || ""}/${file.name}`}`;
             const attachmentType = file.type.includes("image")
               ? 1
               : file.type.includes("video") &&

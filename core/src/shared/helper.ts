@@ -30,7 +30,7 @@ export class HelperFunctionsClass {
 
   static getAWS(): S3Client {
     const credentials = fromCognitoIdentityPool({
-      identityPoolId: LMAppAwsKeys.identityPoolIdProd,
+      identityPoolId: LMAppAwsKeys.identityPoolId,
       clientConfig: {
         region: LMAppAwsKeys.region,
       },
@@ -65,7 +65,7 @@ export class HelperFunctionsClass {
   ): PutObjectRequest {
     return {
       Key: `files/post/${userUniqueId}/${media.name}`,
-      Bucket: LMAppAwsKeys.bucketNameProd,
+      Bucket: LMAppAwsKeys.bucketName,
       Body: media,
       ACL: "public-read-write",
       ContentType: media.type,
