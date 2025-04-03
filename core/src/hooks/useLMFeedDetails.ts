@@ -117,7 +117,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getPostDetailsCall?.errorMessage ||
-              getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
+            getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
         window.history.back();
@@ -229,14 +229,7 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
         console.log(error);
       }
     },
-    [
-      customEventClient,
-      displaySnackbarMessage,
-      lmFeedclient,
-      lmfeedAnalyticsClient,
-      post,
-      topics,
-    ],
+    [customEventClient, displaySnackbarMessage, lmFeedclient, post],
   );
 
   const addNewComment = useCallback(
@@ -621,9 +614,9 @@ export const useFeedDetails: (id: string) => UseFeedDetailsInterface = (
     hidePost,
     postComponentClickCustomCallback: postComponentClickCustomCallback
       ? postComponentClickCustomCallback?.bind(
-          null,
-          feedPostDetailsActionsAndDataStore,
-        )
+        null,
+        feedPostDetailsActionsAndDataStore,
+      )
       : undefined,
   };
 };

@@ -161,6 +161,10 @@ const LMFeedPostHeader = () => {
         lm-feed-component-id={`lm-feed-post-header-abcde-${post?.id}`}
         onClick={() => {
           lmfeedAnalyticsClient?.sendPostCommentClickEvent(post!);
+          if (anchor !== null) {
+            return;
+          }
+
           const location = window.location;
           const url = new URL(location.href);
           const search = url.searchParams.get("id");
@@ -261,6 +265,7 @@ const LMFeedPostHeader = () => {
             onClick={(e) => {
               setAnchor(e.currentTarget);
               lmfeedAnalyticsClient?.sendPostMenuClickEvent(post!);
+              e.stopPropagation();
             }}
             lm-feed-component-id={`lm-feed-post-header-defgh-${post?.id}`}
           />
