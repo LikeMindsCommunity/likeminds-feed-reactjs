@@ -11,13 +11,13 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { formatTimestamp } from "../shared/utils";
 import { Report } from "../shared/types/models/report";
 
-interface LMFeedModerationPostFooterProps {
+interface LMFeedActionFooterProps {
   propReport: Report | undefined;
 }
 
-const LMFeedModerationPostFooter = ({
+const LMFeedActionFooter = ({
   propReport,
-}: LMFeedModerationPostFooterProps) => {
+}: LMFeedActionFooterProps) => {
   const {
     selectedTab,
     handleOnApprovedPostClicked,
@@ -130,7 +130,7 @@ const LMFeedModerationPostFooter = ({
         </>
       ) : null}
       {selectedTab === "approval" ? (
-        <div className="moderation-post-footer-wrapper">
+        <div className="moderation-post-footer-wrapper moderation-post-footer-wrapper-custom-style">
           <button
             className="lm-moderation-header__button lm-text-capitalize selected-button approve-button-custom-style"
             onClick={() => {
@@ -157,7 +157,7 @@ const LMFeedModerationPostFooter = ({
           </button>
         </div>
       ) : selectedTab === "reported" ? (
-        <div className="moderation-post-footer-wrapper moderation-post-footer-wrapper-reported">
+        <div className="moderation-post-footer-wrapper moderation-post-footer-wrapper-reported moderation-post-footer-wrapper-custom-style">
           <div className="moderation-footer-button-wrapper">
             <button
               className="lm-moderation-header__button lm-text-capitalize selected-button "
@@ -222,4 +222,4 @@ const LMFeedModerationPostFooter = ({
   );
 };
 
-export default LMFeedModerationPostFooter;
+export default LMFeedActionFooter;

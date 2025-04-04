@@ -1,8 +1,14 @@
 import { Switch, styled, SwitchProps } from "@mui/material";
 
-const IOSSwitch = styled((props: SwitchProps) => (
-    <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-  ))(({ theme }) => ({
+const IOSSwitch = styled((props: SwitchProps) => {
+  return <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />;
+})(({ theme }) => {
+  // Retrieve the latest CSS variable value inside the function
+  const primaryColor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--lm-feed-primary-color")
+    .trim() || "#5046E5"; // Fallback color
+
+  return {
     width: 36,
     height: 20,
     padding: 0,
@@ -14,11 +20,11 @@ const IOSSwitch = styled((props: SwitchProps) => (
         transform: "translateX(16px)",
         color: "#fff",
         "& + .MuiSwitch-track": {
-          backgroundColor: "#5046E5", // 🔵 Set to your exact blue color
+          backgroundColor: primaryColor, // Now it dynamically updates
           opacity: 1,
           border: 0,
           ...theme.applyStyles?.("dark", {
-            backgroundColor: "#3D36C4", // Darker blue for dark mode
+            backgroundColor: "#3D36C4", // Dark mode fallback
           }),
         },
         "&.Mui-disabled + .MuiSwitch-track": {
@@ -26,7 +32,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
         },
       },
       "&.Mui-focusVisible .MuiSwitch-thumb": {
-        color: "#5046E5", // 🔵 Blue glow when focused
+        color: primaryColor,
         border: "6px solid #fff",
       },
       "&.Mui-disabled .MuiSwitch-thumb": {
@@ -46,11 +52,11 @@ const IOSSwitch = styled((props: SwitchProps) => (
       boxSizing: "border-box",
       width: 16,
       height: 16,
-      backgroundColor: "#fff", // Keep the thumb white
+      backgroundColor: "#fff",
     },
     "& .MuiSwitch-track": {
       borderRadius: 26 / 2,
-      backgroundColor: "#E9E9EA", // Default gray when OFF
+      backgroundColor: "#E9E9EA",
       opacity: 1,
       transition: theme.transitions.create(["background-color"], {
         duration: 500,
@@ -59,6 +65,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
         backgroundColor: "#39393D",
       }),
     },
-  }));
+  };
+});
 
 export default IOSSwitch;

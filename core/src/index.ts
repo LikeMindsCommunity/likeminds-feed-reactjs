@@ -10,15 +10,17 @@ import { LMFeedOGTagMediaItem } from "./components/LMFeedOgTagMediaItem";
 import LMFeedPostBody from "./components/LMFeedPostBody";
 import LMFeedPostFooter from "./components/LMFeedPostFooter";
 import LMFeedPostHeader from "./components/LMFeedPostHeader";
+import LMFeedActionFooter from "./components/LMFeedActionFooter";
+import LMFeedActivityHeader from "./components/LMFeedActivityHeader";
 import LMFeedPostTopicsWrapper from "./components/LMFeedPostTopicsWrapper";
 import LMFeedPost from "./components/LMFeedPosts";
 import LMFeedReportPostDialog from "./components/LMFeedReportPostDialog";
 import LMFeedCreatePollDialog from "./components/LMFeedCreatePollDialog";
-import LMFeedLeftNavigation from "./components/LMFeedLeftNavigation";
-import { LMFeedModeration } from "./components/LMFeedModeration";
+import { LMFeedModerationScreen } from "./components/LMFeedModerationScreen";
 import LMFeedCreatePostDialog from "./components/LMFeedCreatePostDialog";
 import LMFeedPollDialogPreview from "./components/LMFeedPollDialogPreview";
 import LMPostPoll from "./components/LMPostPoll";
+import { LogoutUserRequest, TokenValues } from "@likeminds.community/feed-js";
 
 import LMFeedUniversalFeed from "./components/LMFeedUniversalFeed";
 import LMFeedDeleteDialogBox from "./components/lmDialogs/LMFeedDeleteDialogBox";
@@ -47,7 +49,6 @@ import { useFetchFeeds } from "./hooks/useLMFetchFeeds";
 import { useLMPostReply } from "./hooks/useLMPostReply";
 import { useReply } from "./hooks/useLMReply";
 import { useTopicDropdown } from "./hooks/useLMTopicDropdown";
-import { useSideNavbar } from "./hooks/useSideNavbar";
 import { useModeration } from "./hooks/useModeration";
 import useUserProvider from "./hooks/useLMUserProvider";
 import { useTagging } from "./hooks/useTagging";
@@ -122,8 +123,7 @@ export {
   LMFeedPollDialogPreview,
   LMPostPoll,
   LMFeedAllMembers,
-  LMFeedLeftNavigation,
-  LMFeedModeration,
+  LMFeedModerationScreen,
   LMFeedCreateEditPostMediaRenderer as LMFeedCreateEditPostMediaRenderer,
   LMFeedCreatePost,
   LMFeedListDataContextProvider,
@@ -133,6 +133,8 @@ export {
   LMFeedOGTagMediaItem,
   LMFeedPostBody,
   LMFeedPostFooter,
+  LMFeedActionFooter,
+  LMFeedActivityHeader,
   LMFeedPostTopicsWrapper,
   LMFeedReportPostDialog,
   LMFeedCreatePostContext,
@@ -152,7 +154,6 @@ export {
   useLMPostReply,
   useReply,
   useTopicDropdown,
-  useSideNavbar,
   useModeration,
   useUserProvider,
   useTagging,
@@ -166,6 +167,8 @@ export {
   LMFeedReplyTextArea,
   LMFeedTextArea,
   //   interfaces
+  LogoutUserRequest,
+  TokenValues,
   LMFeedAnalytics,
   LMCoreCallbacks,
   LMDisplayMessages,
