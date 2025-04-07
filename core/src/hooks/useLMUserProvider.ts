@@ -220,6 +220,9 @@ export default function useUserProvider(
   useEffect(() => {
     if (lmFeedUser) {
       lmFeedclient.setUserInLocalStorage(JSON.stringify(lmFeedUser));
+      customEventClient.dispatchEvent(LMFeedCustomActionEvents.CURRENT_USER_CM, {
+        isCM: lmFeedUser.state === 1,
+      });
     }
   }, [lmFeedUser]);
 
