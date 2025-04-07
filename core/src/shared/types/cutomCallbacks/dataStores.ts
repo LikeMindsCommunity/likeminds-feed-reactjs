@@ -15,6 +15,7 @@ import { WidgetResponse } from "../../utils";
 import { MemberRights } from "@likeminds.community/feed-js";
 import { Report } from "../models/report";
 import { Comment } from "../models/comment";
+import { GroupReport } from "../models/groupReport";
 
 export interface FeedListsDataStore {
   selectedTopics: string[];
@@ -212,7 +213,7 @@ export interface PollCreationDefaultActions {
 export interface ModerationDataStore {
   selectedTab: string;
   isPostApprovalEnabled: boolean;
-  reports: Report[];
+  reports: GroupReport[];
   posts: Record<string, Post>;
   comments: Record<string, Comment>;
   users: Record<string, User>;
@@ -222,21 +223,21 @@ export interface ModerationDataStore {
   isEditPermissionDialogOpen: boolean;
   modifiedRights: MemberRights[];
   customTitle: string;
-  currentReport: Report | null;
+  currentReport: GroupReport | null;
 }
 
 export interface ModerationDefaultActions {
   selectTab: (tab: string) => void;
   handleOnApprovedPostClicked: (reportIds: number[]) => Promise<void>;
   handleOnRejectedPostClicked: (reportIds: number[]) => Promise<void>;
-  onApprovedCallback: (report: Report) => Promise<void>;
-  onRejectedCallback: (report: Report, postId : string) => Promise<void>;
-  editMemberPermissionsHandler: (report: Report) => Promise<void>;
+  onApprovedCallback: (groupReport: GroupReport) => Promise<void>;
+  onRejectedCallback: (groupReport: GroupReport, postId: string) => Promise<void>;
+  editMemberPermissionsHandler: (uuid: string) => Promise<void>;
   updateMemberRightsHandler: () => Promise<void>;
   setIsEditPermissionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setModifiedRights: React.Dispatch<React.SetStateAction<MemberRights[]>>;
   setCustomTitle: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentReport: React.Dispatch<React.SetStateAction<Report | null>>;
+  setCurrentReport: React.Dispatch<React.SetStateAction<GroupReport | null>>;
   handleHeaderLeadingTap: () => void;
   handleHeaderTextTap: () => void;
   handleHeaderTrailingTap: () => void;

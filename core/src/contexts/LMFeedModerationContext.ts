@@ -2,7 +2,7 @@ import React from "react";
 import { Post } from "../shared/types/models/post";
 import { Topic } from "../shared/types/models/topic";
 import { User } from "../shared/types/models/member";
-import { Report } from "../shared/types/models/report";
+import { GroupReport } from "../shared/types/models/groupReport";
 import { Comment } from "../shared/types/models/comment";
 import { MemberRights } from "@likeminds.community/feed-js";
 
@@ -44,7 +44,7 @@ interface FeedModerationInterface {
   selectedTab: string;
   selectTab: (tab: string) => void;
   isPostApprovalEnabled: boolean;
-  reports: Report[];
+  reports: GroupReport[];
   posts: Record<string, Post>;
   comments: Record<string, Comment>;
   users: Record<string, User>;
@@ -52,9 +52,12 @@ interface FeedModerationInterface {
   topics: Record<string, Topic>;
   handleOnApprovedPostClicked: (reportIds: number[]) => Promise<void>;
   handleOnRejectedPostClicked: (reportIds: number[]) => Promise<void>;
-  onApprovedCallback: (report: Report) => Promise<void>;
-  onRejectedCallback: (report: Report, postId : string) => Promise<void>;
-  editMemberPermissionsHandler: (report: Report) => Promise<void>;
+  onApprovedCallback: (groupReport: GroupReport) => Promise<void>;
+  onRejectedCallback: (
+    groupReport: GroupReport,
+    postId: string,
+  ) => Promise<void>;
+  editMemberPermissionsHandler: (uuid: string) => Promise<void>;
   updateMemberRightsHandler: () => Promise<void>;
   handleHeaderLeadingTap: () => void;
   handleHeaderTextTap: () => void;
@@ -66,8 +69,8 @@ interface FeedModerationInterface {
   setModifiedRights: React.Dispatch<React.SetStateAction<MemberRights[]>>;
   customTitle: string;
   setCustomTitle: React.Dispatch<React.SetStateAction<string>>;
-  currentReport: Report | null;
-  setCurrentReport: React.Dispatch<React.SetStateAction<Report | null>>;
+  currentReport: GroupReport | null;
+  setCurrentReport: React.Dispatch<React.SetStateAction<GroupReport | null>>;
   loadMoreFeeds: boolean;
   getNextPage: () => void;
   isLoading: boolean;

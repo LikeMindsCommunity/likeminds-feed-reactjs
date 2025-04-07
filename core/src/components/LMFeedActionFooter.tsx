@@ -9,15 +9,13 @@ import commentLiked from "../assets/images/liked-sm.png";
 import { WordAction } from "../shared/enums/wordAction";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { formatTimestamp } from "../shared/utils";
-import { Report } from "../shared/types/models/report";
+import { GroupReport } from "../shared/types/models/groupReport";
 
 interface LMFeedActionFooterProps {
-  propReport: Report | undefined;
+  propReport: GroupReport | undefined;
 }
 
-const LMFeedActionFooter = ({
-  propReport,
-}: LMFeedActionFooterProps) => {
+const LMFeedActionFooter = ({ propReport }: LMFeedActionFooterProps) => {
   const {
     selectedTab,
     handleOnApprovedPostClicked,
@@ -30,7 +28,7 @@ const LMFeedActionFooter = ({
   } = useContext(FeedModerationContext);
   const { LMFeedCustomIcons = {} } = useContext(CustomAgentProviderContext);
 
-  const accusedUserState = propReport?.accusedUser.state;
+  const accusedUserState = propReport?.reports[0]?.accusedUser.state;
 
   const commentDetails = propReport?.entityId
     ? comments[propReport.entityId]
@@ -44,14 +42,14 @@ const LMFeedActionFooter = ({
             <div className="reported-comment-body">
               <div className="lm-comment-avatar">
                 {getAvatar({
-                  imageUrl: propReport?.accusedUser.imageUrl,
-                  name: propReport?.accusedUser.name,
+                  imageUrl: propReport?.reports[0]?.accusedUser.imageUrl,
+                  name: propReport?.reports[0]?.accusedUser.name,
                 })}
               </div>
               <div className="lm-reported-comment-container">
                 <div className="lm-reported-comment-details">
                   <span className="reported-comment-heading">
-                    {propReport?.accusedUser.name}
+                    {propReport?.reports[0]?.accusedUser.name}
                   </span>
                   <span className="reported-comment-subheading">
                     {commentDetails.text}
@@ -134,8 +132,8 @@ const LMFeedActionFooter = ({
           <button
             className="lm-moderation-header__button lm-text-capitalize selected-button approve-button-custom-style"
             onClick={() => {
-              if (propReport?.id !== undefined) {
-                handleOnApprovedPostClicked([propReport.id]);
+              if (propReport?.reports[0]?.id !== undefined) {
+                handleOnApprovedPostClicked([propReport.reports[0].id]);
               }
             }}
           >
@@ -146,8 +144,8 @@ const LMFeedActionFooter = ({
           <button
             className="lm-moderation-header__button lm-text-capitalize reject-button-custom-style"
             onClick={() => {
-              if (propReport?.id !== undefined) {
-                handleOnRejectedPostClicked([propReport.id]);
+              if (propReport?.reports[0]?.id !== undefined) {
+                handleOnRejectedPostClicked([propReport.reports[0].id]);
               }
             }}
           >
@@ -174,7 +172,12 @@ const LMFeedActionFooter = ({
               className="lm-moderation-header__button lm-text-capitalize  "
               onClick={() => {
                 if (propReport) {
-                  onRejectedCallback(propReport, commentDetails ? commentDetails.postId :  propReport.entityId);
+                  onRejectedCallback(
+                    propReport,
+                    commentDetails
+                      ? commentDetails.postId
+                      : propReport.entityId,
+                  );
                 }
               }}
             >
@@ -187,7 +190,9 @@ const LMFeedActionFooter = ({
               className="lm-moderation-header__button moderation-edit-member-permission-button edit-member-permission-custom-style"
               onClick={() => {
                 if (propReport) {
-                  editMemberPermissionsHandler(propReport);
+                  editMemberPermissionsHandler(
+                    propReport.reports[0].accusedUser.sdkClientInfo.uuid,
+                  );
                   setCurrentReport(propReport);
                 }
               }}
@@ -201,21 +206,37 @@ const LMFeedActionFooter = ({
         </div>
       ) : (
         <div className="moderation-post-closed-footer">
-          {propReport?.actionTaken ? (
-            propReport.actionTaken === 7 ? (
+          {propReport?.reports[0].actionTaken ? (
+            propReport.reports[0].actionTaken === 7 ||
+            propReport.reports[0].actionTaken === 9 ? (
               "Post approved by"
-            ) : propReport.actionTaken === 8 ? (
+            ) : propReport.reports[0].actionTaken === 8 ||
+              propReport.reports[0].actionTaken === 10 ? (
               "Post rejected by"
-            ) : null
+            ) : (
+              <>
+                <span className="capitalize">
+                  {propReport?.reports[0]?.type}
+                </span>{" "}
+                {propReport.reports[0].actionTaken === 11
+                  ? "approved by"
+                  : "rejected by"}
+              </>
+            )
           ) : (
             <>
-              <span className="capitalize">{propReport?.type}</span> approved by
+              <span className="capitalize">
+                {propReport?.reports[0]?.type === "pending_post"
+                  ? "Post"
+                  : propReport?.reports[0]?.type}
+              </span>{" "}
+              approved by
             </>
           )}
           <span className="moderation-post-closed-by">
-            {propReport?.closedBy?.name}
+            {propReport?.reports[0]?.closedBy?.name || "Unknown"} 
           </span>
-          on {formatTimestamp(Number(propReport?.closedOn))}
+          on {formatTimestamp(Number(propReport?.reports[0]?.closedOn))}
         </div>
       )}
     </>

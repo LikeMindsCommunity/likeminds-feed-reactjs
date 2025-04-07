@@ -10,12 +10,12 @@ import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedActivityHeader from "./LMFeedActivityHeader";
 import LMFeedActionFooter from "./LMFeedActionFooter";
 import { AttachmentType } from "@likeminds.community/feed-js";
-import { Report } from "../shared/types/models/report";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
+import { GroupReport } from "../shared/types/models/groupReport";
 
 interface LMFeedPostProps {
-  propReport?: Report;
+  propReport?: GroupReport;
   post: Post;
   user: User | undefined;
   isModerationScreen?: boolean;
