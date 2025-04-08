@@ -14,12 +14,13 @@ import SelectedHomeIcon from "./assets/sidenav-selected-home.svg";
 import ModerationIcon from "./assets/sidenav-unselected-moderation.svg";
 import SelectedModerationIcon from "./assets/bottom-bar-moderation-icon.svg";
 import CancelIcon from "./assets/cancel-model-icon.svg";
+import { LMFeedCurrentUserState } from "@likeminds.community/likeminds-feed-reactjs";
 
 const DrawerList = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const user = JSON.parse(localStorage.getItem("LOCAL_USER") || "{}");
-  const isCM = user?.state === 1;
+  const isCM = user?.state === LMFeedCurrentUserState.CM;
   const currentScreen = window.location.pathname.includes("moderation");
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);

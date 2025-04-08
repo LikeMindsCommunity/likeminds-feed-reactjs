@@ -10,6 +10,7 @@ import { WordAction } from "../shared/enums/wordAction";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { formatTimestamp } from "../shared/utils";
 import { GroupReport } from "../shared/types/models/groupReport";
+import { ActionTaken } from "@likeminds.community/feed-js";
 
 interface LMFeedActionFooterProps {
   propReport: GroupReport | undefined;
@@ -207,18 +208,24 @@ const LMFeedActionFooter = ({ propReport }: LMFeedActionFooterProps) => {
       ) : (
         <div className="moderation-post-closed-footer">
           {propReport?.reports[0].actionTaken ? (
-            propReport.reports[0].actionTaken === 7 ||
-            propReport.reports[0].actionTaken === 9 ? (
+            propReport.reports[0].actionTaken ===
+              ActionTaken.PENDING_POST_APPROVED ||
+            propReport.reports[0].actionTaken === ActionTaken.POST_APPROVED ? (
               "Post approved by"
-            ) : propReport.reports[0].actionTaken === 8 ||
-              propReport.reports[0].actionTaken === 10 ? (
+            ) : propReport.reports[0].actionTaken ===
+                ActionTaken.PENDING_POST_REJECTED ||
+              propReport.reports[0].actionTaken ===
+                ActionTaken.POST_REJECTED ? (
               "Post rejected by"
             ) : (
               <>
                 <span className="capitalize">
-                  {propReport?.reports[0]?.type}
+                  {propReport?.reports[0]?.type === "pending_post"
+                    ? "Post"
+                    : propReport?.reports[0]?.type}
                 </span>{" "}
-                {propReport.reports[0].actionTaken === 11
+                {propReport.reports[0].actionTaken ===
+                ActionTaken.COMMENT_APPROVED
                   ? "approved by"
                   : "rejected by"}
               </>
@@ -234,7 +241,7 @@ const LMFeedActionFooter = ({ propReport }: LMFeedActionFooterProps) => {
             </>
           )}
           <span className="moderation-post-closed-by">
-            {propReport?.reports[0]?.closedBy?.name || "Unknown"} 
+            {propReport?.reports[0]?.closedBy?.name || "Unknown"}
           </span>
           on {formatTimestamp(Number(propReport?.reports[0]?.closedOn))}
         </div>

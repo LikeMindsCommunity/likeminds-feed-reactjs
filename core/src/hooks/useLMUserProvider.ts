@@ -14,6 +14,7 @@ import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
 import { TokenValues } from "../shared/enums/tokens";
+import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 export interface UserDetails {
   accessToken?: string;
@@ -220,9 +221,12 @@ export default function useUserProvider(
   useEffect(() => {
     if (lmFeedUser) {
       lmFeedclient.setUserInLocalStorage(JSON.stringify(lmFeedUser));
-      customEventClient.dispatchEvent(LMFeedCustomActionEvents.CURRENT_USER_CM, {
-        isCM: lmFeedUser.state === 1,
-      });
+      customEventClient.dispatchEvent(
+        LMFeedCustomActionEvents.CURRENT_USER_CM,
+        {
+          isCM: lmFeedUser.state === LMFeedCurrentUserState.CM,
+        },
+      );
     }
   }, [lmFeedUser]);
 

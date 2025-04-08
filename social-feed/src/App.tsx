@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import {
   LMSocialFeed,
   LMFeedNotificationHeader,
@@ -8,6 +13,8 @@ import {
   LMFeedCustomEvents,
   initiateFeedClient,
   LMCoreCallbacks,
+  LMFeedCustomActionEvents,
+  LMFeedCurrentUserState,
 } from "@likeminds.community/likeminds-feed-reactjs";
 
 import LoginScreen from "./LoginScreen";
@@ -23,6 +30,22 @@ function App() {
   const [username, setUsername] = useState<string>("");
   const [noShowScreen, setNoShowScreen] = useState<boolean>(true);
   const [showLoginScreen, setShowLoginScreen] = useState<boolean>(false);
+  const [isCM, setIsCM] = useState(
+    JSON.parse(localStorage.getItem("LOCAL_USER") || "{}")?.state ===
+      LMFeedCurrentUserState.CM || false
+  );
+
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.CURRENT_USER_CM,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.isCM;
+        setIsCM(id);
+      }
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.CURRENT_USER_CM);
+  });
 
   function login() {
     if (accessToken.length && refreshToken.length) {
@@ -116,7 +139,7 @@ function App() {
       <DrawerList />
       <LMFeedNotificationHeader customEventClient={customEventClient} />
       <div className="lm-wrapper">
-        <SideNavbar />
+        <SideNavbar customEventClient={customEventClient} />
         <LMSocialFeed
           client={lmFeedClient}
           customEventClient={customEventClient}
@@ -124,7 +147,9 @@ function App() {
           LMFeedCoreCallbacks={lmCoreCallbacks}
         >
           <Routes>
-            <Route path="/moderation" element={<LMFeedModerationScreen />} />
+            {isCM && (
+              <Route path="/moderation" element={<LMFeedModerationScreen />} />
+            )}
             <Route path="/" element={<LMFeedUniversalFeed />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

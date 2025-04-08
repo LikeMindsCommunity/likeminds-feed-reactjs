@@ -123,7 +123,7 @@ export function useModeration() {
         setPageCount(page);
         if (
           Object.values(getPendingPostsForModerationCall.data.reportsData)
-            .length < pageSize
+            .length === 0
         ) {
           setLoadMoreFeeds(false);
         }
@@ -184,8 +184,7 @@ export function useModeration() {
 
         setPageCount(page);
         if (
-          Object.values(getPostCommentReportsCall.data.reportsData).length <
-          pageSize
+          Object.values(getPostCommentReportsCall.data.reportsData).length === 0
         ) {
           setLoadMoreFeeds(false);
         }
@@ -243,9 +242,7 @@ export function useModeration() {
         }));
 
         setPageCount(page);
-        if (
-          Object.values(getClosedReportsCall.data.reportsData).length < pageSize
-        ) {
+        if (Object.values(getClosedReportsCall.data.reportsData).length === 0) {
           setLoadMoreFeeds(false);
         }
       } else {

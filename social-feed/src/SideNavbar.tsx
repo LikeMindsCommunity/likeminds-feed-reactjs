@@ -1,12 +1,36 @@
 import HomeIcon from "./assets/home-icon.svg";
 import ModerationIcon from "./assets/moderation-icon.svg";
 import { useNavigate } from "react-router-dom";
+import {
+  LMFeedCustomEvents,
+  LMFeedCustomActionEvents,
+  LMFeedCurrentUserState,
+} from "@likeminds.community/likeminds-feed-reactjs";
+import { useEffect, useState } from "react";
 
-const SideNavbar = () => {
+const SideNavbar = ({
+  customEventClient,
+}: {
+  customEventClient: LMFeedCustomEvents;
+}) => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("LOCAL_USER") || "{}");
-  const isCM = user?.state === 1;
   const isModerationScreen = window.location.pathname.includes("moderation");
+  const [isCM, setIsCM] = useState(
+    JSON.parse(localStorage.getItem("LOCAL_USER") || "{}")?.state ===
+      LMFeedCurrentUserState.CM || false
+  );
+
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.CURRENT_USER_CM,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.isCM;
+        setIsCM(id);
+      }
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.CURRENT_USER_CM);
+  });
   return (
     <div className="lm-sidenav">
       <div className="lm-sidenav-wrapper">
@@ -47,4 +71,3 @@ const SideNavbar = () => {
 };
 
 export default SideNavbar;
-

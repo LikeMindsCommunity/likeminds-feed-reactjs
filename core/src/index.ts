@@ -67,6 +67,7 @@ import { LMFeedAnalytics } from "./shared/analytics";
 import { LMCoreCallbacks } from "./shared/LMSDKCoreCallbacks";
 // enums
 import { LMDisplayMessages } from "./shared/constants/lmDisplayMessages";
+import { LMFeedCurrentUserState } from "./shared/enums/lmCurrentUserState";
 import { LMFeedEntityType } from "./shared/constants/lmEntityType";
 import { LMFeedCustomActionEvents } from "./shared/constants/lmFeedCustomEventNames";
 import { LMFeedPostMenuItems } from "./shared/constants/lmFeedPostMenuItems";
@@ -172,6 +173,7 @@ export {
   LMFeedAnalytics,
   LMCoreCallbacks,
   LMDisplayMessages,
+  LMFeedCurrentUserState,
   LMFeedEntityType,
   LMFeedCustomActionEvents,
   LMFeedPostMenuItems,
