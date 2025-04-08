@@ -364,7 +364,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
       LMFeedCustomActionEvents.POST_EDITED,
       (e: Event) => {
         const detail = (e as CustomEvent).detail;
-        const { post, usersMap, topicsMap, widgetsMap } = detail;
+        const { post, usersMap, topicsMap, widgets: widgetsMap } = detail;
         const feedListCopy = [...feedList].map((feed) => {
           if (feed.id === post?.id) {
             return post;
