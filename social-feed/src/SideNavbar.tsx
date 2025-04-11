@@ -12,8 +12,10 @@ import { useContext, useEffect, useState } from "react";
 
 const SideNavbar = ({
   customEventClient,
+  lmFeedClient,
 }: {
   customEventClient: LMFeedCustomEvents;
+  lmFeedClient: any;
 }) => {
   const navigate = useNavigate();
   const isModerationScreen = window.location.pathname.includes("moderation");
@@ -21,9 +23,6 @@ const SideNavbar = ({
     JSON.parse(localStorage.getItem("LOCAL_USER") || "{}")?.state ===
       LMFeedCurrentUserState.CM || false
   );
-
-  const { lmFeedclient } = useContext(LMFeedGlobalClientProviderContext);
-
   useEffect(() => {
     customEventClient?.listen(
       LMFeedCustomActionEvents.CURRENT_USER_CM,
@@ -58,7 +57,7 @@ const SideNavbar = ({
           className="lm-sidenav-icon-wrapper moderation-icon"
           onClick={() => {
             console.log("calling logout");
-            logoutUser(lmFeedclient, undefined)
+            logoutUser(lmFeedClient, undefined);
           }}
         >
           <div

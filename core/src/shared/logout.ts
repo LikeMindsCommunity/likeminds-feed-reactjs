@@ -4,13 +4,15 @@ import { LMClient } from "./types/dataLayerExportsTypes";
 
 export async function logoutUser(
   lmFeedClient: LMClient,
-  deviceId?: string | undefined,
+  deviceId?: string | null,
 ) {
-    console.log("logout called! in util function");
+  console.log("logout called! in util function");
   const logoutRequest = LogoutRequest.builder().setDeviceId(deviceId).build();
   console.log("request created");
 
   const logoutUserCall = await lmFeedClient?.logoutUser(logoutRequest);
+  console.log("logoutResponse", logoutUserCall);
+
   if (logoutUserCall?.success) {
     console.log("data success");
     localStorage.removeItem(TokenValues.COMMUNITY_CONFIGURATIONS);
