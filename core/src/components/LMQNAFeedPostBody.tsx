@@ -3,7 +3,7 @@ import { parseAndReplaceTags, textPreprocessor } from "../shared/taggingParser";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedAttachments from "../shared/components/LMFeedAttachments";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
-import { AttachmentType } from "@likeminds.community/feed-js";
+import { AttachmentType } from "@likeminds.community/feed-js-beta";
 
 const LMQNAFeedPostBody = () => {
   const { post } = useContext(FeedPostContext);

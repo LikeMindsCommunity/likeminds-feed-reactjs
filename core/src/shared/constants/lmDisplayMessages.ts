@@ -14,7 +14,7 @@ export enum LMDisplayMessages {
   POST_REPORTED_SUCCESSFULLY = "Post Reported",
   POST_APPROVED = "Post approved.",
   POST_REJECTED = "Post rejected.",
-  REPORT_IGNORED = "Report ignored.",
+  POST_IGNORED = "Post ignored.",
   POST_DELETED = "Post deleted.",
   RIGHTS_UPDATED = "Rights updated.",
 }

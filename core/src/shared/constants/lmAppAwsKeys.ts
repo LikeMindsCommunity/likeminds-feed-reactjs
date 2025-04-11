@@ -1,4 +1,4 @@
-import { LMFeedClient } from "@likeminds.community/feed-js";
+import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 
 export const LMAppAwsKeys = {
   identityPoolId: LMFeedClient.getIdentityPoolId(),

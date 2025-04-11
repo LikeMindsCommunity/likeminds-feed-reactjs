@@ -11,7 +11,7 @@ import pdfIcon from "../../assets/images/pdf-icon.svg";
 import { Document, Page } from "react-pdf";
 import { OgTag } from "../types/models/ogTag";
 import LMPostPoll from "../../components/LMPostPoll";
-import { AttachmentType as AttachmentTypeEnum } from "@likeminds.community/feed-js";
+import { AttachmentType as AttachmentTypeEnum } from "@likeminds.community/feed-js-beta";
 
 export interface LMFeedAttachmentsProps {
   attachments: AttachmentType[];

@@ -4,7 +4,7 @@ import { Post } from "../shared/types/models/post";
 import { User } from "../shared/types/models/member";
 import { GetUniversalFeedResponse } from "../shared/types/api-responses/getUniversalFeed";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { GetFeedRequest, HidePostRequest } from "@likeminds.community/feed-js";
+import { GetFeedRequest, HidePostRequest } from "@likeminds.community/feed-js-beta";
 import { Topic } from "../shared/types/models/topic";
 import {
   DeletePostRequest,
@@ -12,7 +12,7 @@ import {
   // GetReportTagsRequest,
   PinPostRequest,
   // PostReportRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { GetPinPostResponse } from "../shared/types/api-responses/getPinPostResponse";
 import { DeletePostResponse } from "../shared/types/api-responses/deletePostResponse";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";
@@ -23,6 +23,7 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 import { getDisplayMessage } from "../shared/utils";
@@ -160,7 +161,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           lmfeedAnalyticsClient?.sendPostDeletedEvent(
             post,
             topics,
-            currentUser?.state === 4 ? "member" : "CM",
+            currentUser?.state === LMFeedCurrentUserState.MEMBER ? "member" : "CM",
           );
           feedListCopy.splice(index, 1);
           setFeedList(feedListCopy);

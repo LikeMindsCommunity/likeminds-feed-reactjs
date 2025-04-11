@@ -10,12 +10,13 @@ import { LMFeedOGTagMediaItem } from "./components/LMFeedOgTagMediaItem";
 import LMFeedPostBody from "./components/LMFeedPostBody";
 import LMFeedPostFooter from "./components/LMFeedPostFooter";
 import LMFeedPostHeader from "./components/LMFeedPostHeader";
+import LMFeedActionFooter from "./components/LMFeedActionFooter";
+import LMFeedActivityHeader from "./components/LMFeedActivityHeader";
 import LMFeedPostTopicsWrapper from "./components/LMFeedPostTopicsWrapper";
 import LMFeedPost from "./components/LMFeedPosts";
 import LMFeedReportPostDialog from "./components/LMFeedReportPostDialog";
 import LMFeedCreatePollDialog from "./components/LMFeedCreatePollDialog";
-import LMFeedLeftNavigation from "./components/LMFeedLeftNavigation";
-import { LMFeedModeration } from "./components/LMFeedModeration";
+import { LMFeedModerationScreen } from "./components/LMFeedModerationScreen";
 import LMFeedCreatePostDialog from "./components/LMFeedCreatePostDialog";
 import LMFeedPollDialogPreview from "./components/LMFeedPollDialogPreview";
 import LMPostPoll from "./components/LMPostPoll";
@@ -47,7 +48,6 @@ import { useFetchFeeds } from "./hooks/useLMFetchFeeds";
 import { useLMPostReply } from "./hooks/useLMPostReply";
 import { useReply } from "./hooks/useLMReply";
 import { useTopicDropdown } from "./hooks/useLMTopicDropdown";
-import { useSideNavbar } from "./hooks/useSideNavbar";
 import { useModeration } from "./hooks/useModeration";
 import useUserProvider from "./hooks/useLMUserProvider";
 import { useTagging } from "./hooks/useTagging";
@@ -66,6 +66,7 @@ import { LMFeedAnalytics } from "./shared/analytics";
 import { LMCoreCallbacks } from "./shared/LMSDKCoreCallbacks";
 // enums
 import { LMDisplayMessages } from "./shared/constants/lmDisplayMessages";
+import { LMFeedCurrentUserState } from "./shared/enums/lmCurrentUserState";
 import { LMFeedEntityType } from "./shared/constants/lmEntityType";
 import { LMFeedCustomActionEvents } from "./shared/constants/lmFeedCustomEventNames";
 import { LMFeedPostMenuItems } from "./shared/constants/lmFeedPostMenuItems";
@@ -122,8 +123,7 @@ export {
   LMFeedPollDialogPreview,
   LMPostPoll,
   LMFeedAllMembers,
-  LMFeedLeftNavigation,
-  LMFeedModeration,
+  LMFeedModerationScreen,
   LMFeedCreateEditPostMediaRenderer as LMFeedCreateEditPostMediaRenderer,
   LMFeedCreatePost,
   LMFeedListDataContextProvider,
@@ -133,6 +133,8 @@ export {
   LMFeedOGTagMediaItem,
   LMFeedPostBody,
   LMFeedPostFooter,
+  LMFeedActionFooter,
+  LMFeedActivityHeader,
   LMFeedPostTopicsWrapper,
   LMFeedReportPostDialog,
   LMFeedCreatePostContext,
@@ -152,7 +154,6 @@ export {
   useLMPostReply,
   useReply,
   useTopicDropdown,
-  useSideNavbar,
   useModeration,
   useUserProvider,
   useTagging,
@@ -169,6 +170,7 @@ export {
   LMFeedAnalytics,
   LMCoreCallbacks,
   LMDisplayMessages,
+  LMFeedCurrentUserState,
   LMFeedEntityType,
   LMFeedCustomActionEvents,
   LMFeedPostMenuItems,

@@ -10,15 +10,10 @@ import { Post } from "../shared/types/models/post";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import LMFeedAllMembers from "./LMFeedAllMembers";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
-import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
 import LMQNAFeedCreatePost from "./LMQNAFeedCreatePost";
 import LMQNAFeedPosts from "./LMQNAFeedPosts";
-import LMFeedLeftNavigation from "./LMFeedLeftNavigation";
-import { useSideNavbar } from "../hooks/useSideNavbar";
-import { LMFeedModeration } from "./LMFeedModeration";
-import { SideNavbarState } from "../shared/enums/lmSideNavbar";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -48,7 +43,6 @@ const LMQNAFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
     LMFeedGlobalClientProviderContext,
   );
   const { CustomComponents } = useContext(CustomAgentProviderContext);
-  const { selectedNav, selectNav } = useSideNavbar();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const scrollPos = sessionStorage.getItem("scroll-pos");
@@ -116,48 +110,37 @@ const LMQNAFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
   ]);
 
   return (
-    <FeedSideNavbarContext.Provider value={{ selectedNav, selectNav }}>
-      <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
-        <div className="lm-sidenav">
-          <LMFeedLeftNavigation />
-        </div>
-        {selectedNav === SideNavbarState.HOME ? (
-          <>
-            <div className="lm-flex-grow" id="feed-scroller">
-              <LMQNAFeedCreatePost showStarterComponent />
-              {CustomComponents?.CustomTopicDropDown ? (
-                CustomComponents.CustomTopicDropDown
-              ) : (
-                <div
-                  className="lm-mb-4 lm-mt-4"
-                  lm-feed-component-id={`lm-feed-topic-dropdown`}
-                >
-                  <LMFeedViewTopicDropdown
-                    mode={LMTopicsDropdownMode.view}
-                    selectedTopicIds={selectedTopics}
-                    setSelectedTopicsIds={setSelectedTopics}
-                  />
-                </div>
-              )}
-              <InfiniteScroll
-                dataLength={feedList.length}
-                hasMore={loadMoreFeeds}
-                next={getNextPage}
-                loader={null}
-                scrollThreshold={0.6}
-              >
-                {renderFeeds()}
-              </InfiniteScroll>
-            </div>
-            <div className="lm-member">
-              <LMFeedAllMembers />
-            </div>
-          </>
-        ) : selectedNav === SideNavbarState.MODERATION ? (
-          <LMFeedModeration />
-        ) : null}
+    <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
+      <div className="lm-flex-grow" id="feed-scroller">
+        <LMQNAFeedCreatePost showStarterComponent />
+        {CustomComponents?.CustomTopicDropDown ? (
+          CustomComponents.CustomTopicDropDown
+        ) : (
+          <div
+            className="lm-mb-4 lm-mt-4"
+            lm-feed-component-id={`lm-feed-topic-dropdown`}
+          >
+            <LMFeedViewTopicDropdown
+              mode={LMTopicsDropdownMode.view}
+              selectedTopicIds={selectedTopics}
+              setSelectedTopicsIds={setSelectedTopics}
+            />
+          </div>
+        )}
+        <InfiniteScroll
+          dataLength={feedList.length}
+          hasMore={loadMoreFeeds}
+          next={getNextPage}
+          loader={null}
+          scrollThreshold={0.6}
+        >
+          {renderFeeds()}
+        </InfiniteScroll>
       </div>
-    </FeedSideNavbarContext.Provider>
+      <div className="lm-member">
+        <LMFeedAllMembers />
+      </div>
+    </div>
   );
 };
 

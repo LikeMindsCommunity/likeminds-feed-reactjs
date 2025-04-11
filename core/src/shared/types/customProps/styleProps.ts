@@ -23,6 +23,7 @@ export interface LMFeedCustomIcons {
   createPostDialogBoxImageIcon?: () => JSX.Element;
   createPostDialogBoxVideoIcon?: () => JSX.Element;
   createPostDialogBoxDocumentIcon?: () => JSX.Element;
+  moderationHeaderLeadingIcon?: () => JSX.Element;
   notificationBellCustomIcon?: () => JSX.Element;
   postCommentCustomIcon?: () => JSX.Element;
   goBackCustomIcon?: () => JSX.Element;
