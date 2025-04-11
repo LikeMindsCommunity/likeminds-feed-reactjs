@@ -2,7 +2,7 @@ import {
   AddPost,
   EditPost,
   LMResponseType,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 
 export interface AddPostResponse extends LMResponseType<AddPost> {}
 

@@ -10,7 +10,7 @@ import { WordAction } from "../shared/enums/wordAction";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { formatTimestamp } from "../shared/utils";
 import { GroupReport } from "../shared/types/models/groupReport";
-import { ActionTaken } from "@likeminds.community/feed-js";
+import { ActionTaken } from "@likeminds.community/feed-js-beta";
 
 interface LMFeedActionFooterProps {
   propReport: GroupReport | undefined;

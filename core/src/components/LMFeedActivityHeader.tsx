@@ -16,7 +16,7 @@ import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
 import { GroupReport } from "../shared/types/models/groupReport";
 import ModerationReportedTitleIcon from "../assets/images/moderation-reported-title.svg";
 import QuestionMarkIcon from "../assets/images/question-mark-icon.svg";
-import { ReportEntityType } from "@likeminds.community/feed-js";
+import { ReportEntityType } from "@likeminds.community/feed-js-beta";
 
 interface LMFeedActivityHeaderProps {
   propReport: GroupReport | undefined;

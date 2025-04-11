@@ -1,4 +1,4 @@
-import { AttachmentType } from "@likeminds.community/feed-js";
+import { AttachmentType } from "@likeminds.community/feed-js-beta";
 import { AnalyticsCallback } from "./types/analyticsCallback";
 import { Post } from "./types/models/post";
 import { Reply } from "./types/models/replies";

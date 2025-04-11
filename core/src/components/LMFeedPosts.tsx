@@ -9,7 +9,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMFeedActivityHeader from "./LMFeedActivityHeader";
 import LMFeedActionFooter from "./LMFeedActionFooter";
-import { AttachmentType } from "@likeminds.community/feed-js";
+import { AttachmentType } from "@likeminds.community/feed-js-beta";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 import { GroupReport } from "../shared/types/models/groupReport";

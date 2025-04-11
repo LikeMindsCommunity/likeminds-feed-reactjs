@@ -4,7 +4,7 @@ import { Topic } from "../shared/types/models/topic";
 import { User } from "../shared/types/models/member";
 import { GroupReport } from "../shared/types/models/groupReport";
 import { Comment } from "../shared/types/models/comment";
-import { MemberRights } from "@likeminds.community/feed-js";
+import { MemberRights } from "@likeminds.community/feed-js-beta";
 
 export const FeedModerationContext =
   React.createContext<FeedModerationInterface>({

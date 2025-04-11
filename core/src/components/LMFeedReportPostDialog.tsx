@@ -3,7 +3,7 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import {
   GetReportTagsRequest,
   PostReportRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { GetReportTagsResponse } from "../shared/types/api-responses/getReportTagsResponse";
 import { ReportObject } from "../shared/types/models/reportTags";
 import closeIcon from "../assets/images/cancel-model-icon.svg";
@@ -15,7 +15,7 @@ import { WordAction } from "../shared/enums/wordAction";
 import { ReportPostResponse } from "../shared/types/api-responses/postReportResponse";
 import { getDisplayMessage } from "../shared/utils";
 import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
-import { ReportEntityType } from "@likeminds.community/feed-js";
+import { ReportEntityType } from "@likeminds.community/feed-js-beta";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 
 interface LMFeedReportPostDialogProps {
