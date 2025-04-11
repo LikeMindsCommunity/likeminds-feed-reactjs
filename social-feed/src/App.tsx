@@ -15,7 +15,7 @@ import {
   LMCoreCallbacks,
   LMFeedCustomActionEvents,
   LMFeedCurrentUserState,
-} from "@likeminds.community/likeminds-feed-reactjs";
+} from "@likeminds.community/likeminds-feed-reactjs-beta";
 
 import LoginScreen from "./LoginScreen";
 import SideNavbar from "./SideNavbar";

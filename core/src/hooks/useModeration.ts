@@ -15,6 +15,7 @@ import {
   FilterType,
   LMFeedReportStatus,
   DeleteCommentRequest,
+  TokenManager,
 } from "@likeminds.community/feed-js-beta";
 import { GetPendingPostModerationResponse } from "../shared/types/api-responses/getPendingPostsForModerationResponse";
 import { GetPostCommentReportsResponse } from "../shared/types/api-responses/getPostCommentReports";
@@ -34,6 +35,7 @@ import {
   ApplicationGeneralsStore,
 } from "../shared/types/cutomCallbacks/dataStores";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { TokenValues } from "../shared/enums/tokens";
 
 export function useModeration() {
   const [selectedTab, setSelectedTab] = useState<string>("approval");
@@ -561,7 +563,7 @@ export function useModeration() {
       if (setting) {
         const isPostApprovalEnabled = setting.enabled === true;
         localStorage.setItem(
-          "isPostApprovedEnabled",
+          TokenValues.IS_POST_APPROVAL_NEEDED,
           JSON.stringify(isPostApprovalEnabled),
         );
         setIsPostApprovalEnabled(isPostApprovalEnabled);

@@ -14,7 +14,7 @@ import SelectedHomeIcon from "./assets/sidenav-selected-home.svg";
 import ModerationIcon from "./assets/sidenav-unselected-moderation.svg";
 import SelectedModerationIcon from "./assets/bottom-bar-moderation-icon.svg";
 import CancelIcon from "./assets/cancel-model-icon.svg";
-import { LMFeedCurrentUserState } from "@likeminds.community/likeminds-feed-reactjs";
+import { LMFeedCurrentUserState } from "@likeminds.community/likeminds-feed-reactjs-beta";
 
 const DrawerList = () => {
   const navigate = useNavigate();

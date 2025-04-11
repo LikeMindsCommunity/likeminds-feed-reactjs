@@ -79,6 +79,7 @@ import { LikeActionType } from "./shared/enums/lmLikeActionType";
 import { LMTopicsDropdownMode } from "./shared/enums/lmTopicFeedDropdownMode";
 import { LMFeedCustomEvents } from "./shared/customEvents";
 import { initiateFeedClient } from "./shared/getClient";
+import { logoutUser } from "./shared/logout";
 import LMQNAFeed from "./components/LMQNAFeed";
 import LMQNAFeedCreatePost from "./components/LMQNAFeedCreatePost";
 import LMQNAFeedCreatePostDialog from "./components/LMQNAFeedCreatePostDialog";
@@ -184,4 +185,5 @@ export {
   LMFeedCustomEvents,
   // intitate Feed CLient Function
   initiateFeedClient,
+  logoutUser
 };

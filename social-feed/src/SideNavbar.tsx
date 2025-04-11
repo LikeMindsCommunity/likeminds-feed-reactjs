@@ -5,8 +5,10 @@ import {
   LMFeedCustomEvents,
   LMFeedCustomActionEvents,
   LMFeedCurrentUserState,
-} from "@likeminds.community/likeminds-feed-reactjs";
-import { useEffect, useState } from "react";
+  logoutUser,
+  LMFeedGlobalClientProviderContext,
+} from "@likeminds.community/likeminds-feed-reactjs-beta";
+import { useContext, useEffect, useState } from "react";
 
 const SideNavbar = ({
   customEventClient,
@@ -19,6 +21,8 @@ const SideNavbar = ({
     JSON.parse(localStorage.getItem("LOCAL_USER") || "{}")?.state ===
       LMFeedCurrentUserState.CM || false
   );
+
+  const { lmFeedclient } = useContext(LMFeedGlobalClientProviderContext);
 
   useEffect(() => {
     customEventClient?.listen(
@@ -48,6 +52,22 @@ const SideNavbar = ({
             >
               <img src={HomeIcon} alt="home" />
             </div>
+          </div>
+        </div>
+        <div
+          className="lm-sidenav-icon-wrapper moderation-icon"
+          onClick={() => {
+            console.log("calling logout");
+            logoutUser(lmFeedclient, undefined)
+          }}
+        >
+          <div
+            className={
+              `lm-nav-icons` +
+              (isModerationScreen ? ` lm-selected-background ` : ``)
+            }
+          >
+            <img src={ModerationIcon} alt="moderation" />
           </div>
         </div>
         {isCM ? (
