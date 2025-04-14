@@ -1,7 +1,6 @@
 import { useModeration } from "../hooks/useModeration";
 import PostApprovalDisabledIcon from "../assets/images/moderation-disabled-icon1.svg";
 import EmptyModeartionSizeIcon from "../assets/images/moderation-disabled-icon2.svg";
-import { Report } from "../shared/types/models/report";
 import Posts from "./LMFeedPosts";
 import { useCallback, useContext } from "react";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
@@ -35,7 +34,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const LMFeedModeration = () => {
+export const LMFeedModerationScreen = () => {
   const {
     selectTab,
     selectedTab,
@@ -71,7 +70,7 @@ export const LMFeedModeration = () => {
   const { CustomComponents } = useContext(CustomAgentProviderContext);
 
   const renderFeeds = useCallback(() => {
-    return reports?.map((report: Report) => {
+    return reports?.map((report) => {
       let post = posts[report.entityId];
       if (!post) {
         const comment = comments[report.entityId];
@@ -81,7 +80,7 @@ export const LMFeedModeration = () => {
       const user = users[post.uuid];
       return (
         <FeedPostContext.Provider
-          key={report?.id}
+          key={report?.entityId}
           value={{
             post,
             users,
@@ -90,7 +89,12 @@ export const LMFeedModeration = () => {
           }}
         >
           {CustomComponents?.CustomPostView || (
-            <Posts post={post} user={user} propReport={report} />
+            <Posts
+              isModerationScreen={true}
+              post={post}
+              user={user}
+              propReport={report}
+            />
           )}
         </FeedPostContext.Provider>
       );
@@ -116,41 +120,41 @@ export const LMFeedModeration = () => {
   };
 
   return (
-    <>
-      <FeedModerationContext.Provider
-        value={{
-          selectTab,
-          selectedTab,
-          isPostApprovalEnabled,
-          reports,
-          posts,
-          users,
-          widgets,
-          topics,
-          comments,
-          handleOnApprovedPostClicked,
-          handleOnRejectedPostClicked,
-          onApprovedCallback,
-          onRejectedCallback,
-          editMemberPermissionsHandler,
-          updateMemberRightsHandler,
-          memberRights,
-          isEditPermissionDialogOpen,
-          setIsEditPermissionDialogOpen,
-          modifiedRights,
-          setModifiedRights,
-          customTitle,
-          setCustomTitle,
-          currentReport,
-          setCurrentReport,
-          handleHeaderLeadingTap,
-          handleHeaderTextTap,
-          handleHeaderTrailingTap,
-          loadMoreFeeds,
-          getNextPage,
-          isLoading,
-        }}
-      >
+    <FeedModerationContext.Provider
+      value={{
+        selectTab,
+        selectedTab,
+        isPostApprovalEnabled,
+        reports,
+        posts,
+        users,
+        widgets,
+        topics,
+        comments,
+        handleOnApprovedPostClicked,
+        handleOnRejectedPostClicked,
+        onApprovedCallback,
+        onRejectedCallback,
+        editMemberPermissionsHandler,
+        updateMemberRightsHandler,
+        memberRights,
+        isEditPermissionDialogOpen,
+        setIsEditPermissionDialogOpen,
+        modifiedRights,
+        setModifiedRights,
+        customTitle,
+        setCustomTitle,
+        currentReport,
+        setCurrentReport,
+        handleHeaderLeadingTap,
+        handleHeaderTextTap,
+        handleHeaderTrailingTap,
+        loadMoreFeeds,
+        getNextPage,
+        isLoading,
+      }}
+    >
+      <div className="lm-moderation-container">
         <div className="lm-flex-grow" id="feed-scroller">
           <div className="moderation-mobile-tab-wrapper">
             <Box sx={{ width: "100%" }}>
@@ -343,7 +347,7 @@ export const LMFeedModeration = () => {
         >
           <LMFeedEditMemberPermissionsDialog />
         </Dialog>
-      </FeedModerationContext.Provider>
-    </>
+      </div>
+    </FeedModerationContext.Provider>
   );
 };

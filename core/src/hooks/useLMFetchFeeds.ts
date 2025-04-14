@@ -23,6 +23,7 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedListActionsAndDataStore } from "../shared/types/cutomCallbacks/dataProvider";
 import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callbacks";
 import { getDisplayMessage } from "../shared/utils";
@@ -160,7 +161,7 @@ export function useFetchFeeds(topicId?: string): useFetchFeedsResponse {
           lmfeedAnalyticsClient?.sendPostDeletedEvent(
             post,
             topics,
-            currentUser?.state === 4 ? "member" : "CM",
+            currentUser?.state === LMFeedCurrentUserState.MEMBER ? "member" : "CM",
           );
           feedListCopy.splice(index, 1);
           setFeedList(feedListCopy);

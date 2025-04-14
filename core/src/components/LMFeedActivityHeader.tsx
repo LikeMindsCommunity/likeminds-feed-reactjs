@@ -13,18 +13,16 @@ import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 import { WordAction } from "../shared/enums/wordAction";
 import ApprovalPendingIcon from "../assets/images/approval-pending-icon.svg";
 import { FeedModerationContext } from "../contexts/LMFeedModerationContext";
-import { Report } from "../shared/types/models/report";
+import { GroupReport } from "../shared/types/models/groupReport";
 import ModerationReportedTitleIcon from "../assets/images/moderation-reported-title.svg";
 import QuestionMarkIcon from "../assets/images/question-mark-icon.svg";
 import { ReportEntityType } from "@likeminds.community/feed-js";
 
-interface LMFeedModerationPostFooterProps {
-  propReport: Report | undefined;
+interface LMFeedActivityHeaderProps {
+  propReport: GroupReport | undefined;
 }
 
-const LMFeedModerationPostHeader = ({
-  propReport,
-}: LMFeedModerationPostFooterProps) => {
+const LMFeedActivityHeader = ({ propReport }: LMFeedActivityHeaderProps) => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
@@ -39,9 +37,16 @@ const LMFeedModerationPostHeader = ({
     handleHeaderTextTap,
   } = useContext(FeedModerationContext);
 
-  const isCommentReported = propReport?.type !== ReportEntityType.POST;
+  const isCommentReported =
+    propReport?.reports[0].type !== ReportEntityType.POST;
 
-  const reportedMemberName = propReport?.reportedByUser?.name;
+  const firstReporterName = propReport?.reports?.[0]?.reportedByUser?.name;
+  const otherReportersText =
+    propReport?.reports && propReport.reports.length > 1
+      ? propReport.reports.length === 2
+        ? " & 1 other"
+        : ` & ${propReport.reports.length - 1} others`
+      : "";
 
   const [openReportPostDialogBox, setOpenReportPostDialogBox] =
     useState<boolean>(false);
@@ -84,36 +89,48 @@ const LMFeedModerationPostHeader = ({
         />
       </Dialog>
 
-      {selectedTab === "closed" && propReport?.actionTaken ? null : (
+      {selectedTab === "closed" &&
+      propReport?.reports[0]?.type === "pending_post" ? null : (
         <div className="modeartion-post-header-alert activity-header-custom-style">
           {selectedTab === "approval" ? (
             <>
-              <img
-                onClick={handleHeaderLeadingTap}
-                src={ApprovalPendingIcon}
-                alt="approval-pending-icon"
-                className="approval-pending-icon"
-              />
+              {LMFeedCustomIcons?.moderationHeaderLeadingIcon ? (
+                <LMFeedCustomIcons.moderationHeaderLeadingIcon />
+              ) : (
+                <img
+                  onClick={handleHeaderLeadingTap}
+                  src={ApprovalPendingIcon}
+                  alt="approval-pending-icon"
+                  className="approval-pending-icon"
+                />
+              )}
               <span onClick={handleHeaderTextTap}>Approval Pending</span>
             </>
           ) : selectedTab === "reported" ? (
             <>
-              <img
-                onClick={handleHeaderLeadingTap}
-                src={ModerationReportedTitleIcon}
-                alt="approval-pending-icon"
-                className="approval-pending-icon"
-              />
+              {LMFeedCustomIcons?.moderationHeaderLeadingIcon ? (
+                <LMFeedCustomIcons.moderationHeaderLeadingIcon />
+              ) : (
+                <img
+                  onClick={handleHeaderLeadingTap}
+                  src={ModerationReportedTitleIcon}
+                  alt="approval-pending-icon"
+                  className="approval-pending-icon"
+                />
+              )}
               <span
                 className="moderation-post-header-names"
                 onClick={handleHeaderTextTap}
               >
-                <span className="moderation-post-header-names__capitalize">
-                  {reportedMemberName}
+                <span className="moderation-post-header-names__capitalize post-header-user-custom-style">
+                  {firstReporterName}
                 </span>
-                <span className="moderation-post-header-title-end">
+                <span className="moderation-post-header-names post-header-user-custom-style">
+                  {otherReportersText}
+                </span>
+                <span className="moderation-post-header-title-end post-header-title-end-custom-style">
                   {isCommentReported
-                    ? ` reported a ${propReport?.type} on this post.`
+                    ? ` reported a ${propReport?.reports[0]?.type} on this post.`
                     : " reported this post."}
                 </span>
               </span>
@@ -122,22 +139,29 @@ const LMFeedModerationPostHeader = ({
             <>
               <div className="closed-header-wrapper">
                 <div className="moderation-closed-header">
-                  <img
-                    onClick={handleHeaderLeadingTap}
-                    src={ModerationReportedTitleIcon}
-                    alt="approval-pending-icon"
-                    className="approval-pending-icon"
-                  />
+                  {LMFeedCustomIcons?.moderationHeaderLeadingIcon ? (
+                    <LMFeedCustomIcons.moderationHeaderLeadingIcon />
+                  ) : (
+                    <img
+                      onClick={handleHeaderLeadingTap}
+                      src={ModerationReportedTitleIcon}
+                      alt="approval-pending-icon"
+                      className="approval-pending-icon"
+                    />
+                  )}
                   <span
                     className="moderation-post-header-names"
                     onClick={handleHeaderTextTap}
                   >
-                    <span className="moderation-post-header-names__capitalize">
-                      {reportedMemberName}
+                    <span className="moderation-post-header-names__capitalize post-header-user-custom-style">
+                      {firstReporterName}
                     </span>
-                    <span className="moderation-post-header-title-end">
+                    <span className="moderation-post-header-names post-header-user-custom-style">
+                      {otherReportersText}
+                    </span>
+                    <span className="moderation-post-header-title-end post-header-title-end-custom-style">
                       {isCommentReported
-                        ? ` reported a ${propReport?.type} on this post.`
+                        ? ` reported a ${propReport?.reports[0]?.type} on this post.`
                         : " reported this post."}
                     </span>
                   </span>
@@ -251,4 +275,4 @@ const LMFeedModerationPostHeader = ({
   );
 };
 
-export default LMFeedModerationPostHeader;
+export default LMFeedActivityHeader;

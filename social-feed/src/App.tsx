@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import {
   LMSocialFeed,
   LMFeedNotificationHeader,
+  LMFeedUniversalFeed,
+  LMFeedModerationScreen,
   LMFeedCustomEvents,
   initiateFeedClient,
   LMCoreCallbacks,
-} from "@likeminds.community/likeminds-feed-reactjs";
+  LMFeedCustomActionEvents,
+  LMFeedCurrentUserState,
+} from "@likeminds.community/likeminds-feed-reactjs-beta";
 
 import LoginScreen from "./LoginScreen";
+import SideNavbar from "./SideNavbar";
+import DrawerList from "./DrawerList";
+import "./App.css";
 
 function App() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -18,6 +30,23 @@ function App() {
   const [username, setUsername] = useState<string>("");
   const [noShowScreen, setNoShowScreen] = useState<boolean>(true);
   const [showLoginScreen, setShowLoginScreen] = useState<boolean>(false);
+  const [isCM, setIsCM] = useState(
+    JSON.parse(localStorage.getItem("LOCAL_USER") || "{}")?.state ===
+      LMFeedCurrentUserState.CM || false
+  );
+
+  useEffect(() => {
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.CURRENT_USER_CM,
+      (e: Event) => {
+        const id = (e as CustomEvent).detail.isCM;
+        setIsCM(id);
+      }
+    );
+    return () =>
+      customEventClient?.remove(LMFeedCustomActionEvents.CURRENT_USER_CM);
+  });
+
   function login() {
     if (accessToken.length && refreshToken.length) {
       setUserDetails((userDetails) => {
@@ -104,16 +133,29 @@ function App() {
       />
     );
   }
+
   return (
-    <>
+    <Router>
+      <DrawerList />
       <LMFeedNotificationHeader customEventClient={customEventClient} />
-      <LMSocialFeed
-        client={lmFeedClient}
-        customEventClient={customEventClient}
-        userDetails={userDetails}
-        LMFeedCoreCallbacks={lmCoreCallbacks}
-      ></LMSocialFeed>
-    </>
+      <div className="lm-wrapper">
+        <SideNavbar customEventClient={customEventClient} />
+        <LMSocialFeed
+          client={lmFeedClient}
+          customEventClient={customEventClient}
+          userDetails={userDetails}
+          LMFeedCoreCallbacks={lmCoreCallbacks}
+        >
+          <Routes>
+            {isCM && (
+              <Route path="/moderation" element={<LMFeedModerationScreen />} />
+            )}
+            <Route path="/" element={<LMFeedUniversalFeed />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </LMSocialFeed>
+      </div>
+    </Router>
   );
 }
 
