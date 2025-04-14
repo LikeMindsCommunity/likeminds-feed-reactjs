@@ -5,17 +5,13 @@ import {
   LMFeedCustomEvents,
   LMFeedCustomActionEvents,
   LMFeedCurrentUserState,
-  logoutUser,
-  LMFeedGlobalClientProviderContext,
 } from "@likeminds.community/likeminds-feed-reactjs-beta";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const SideNavbar = ({
   customEventClient,
-  lmFeedClient,
 }: {
   customEventClient: LMFeedCustomEvents;
-  lmFeedClient: any;
 }) => {
   const navigate = useNavigate();
   const isModerationScreen = window.location.pathname.includes("moderation");
@@ -53,22 +49,7 @@ const SideNavbar = ({
             </div>
           </div>
         </div>
-        <div
-          className="lm-sidenav-icon-wrapper moderation-icon"
-          onClick={() => {
-            console.log("calling logout");
-            logoutUser(lmFeedClient, undefined);
-          }}
-        >
-          <div
-            className={
-              `lm-nav-icons` +
-              (isModerationScreen ? ` lm-selected-background ` : ``)
-            }
-          >
-            <img src={ModerationIcon} alt="moderation" />
-          </div>
-        </div>
+
         {isCM ? (
           <div
             className="lm-sidenav-icon-wrapper moderation-icon"

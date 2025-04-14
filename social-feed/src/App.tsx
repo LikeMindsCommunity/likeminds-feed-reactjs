@@ -139,10 +139,7 @@ function App() {
       <DrawerList />
       <LMFeedNotificationHeader customEventClient={customEventClient} />
       <div className="lm-wrapper">
-        <SideNavbar
-          customEventClient={customEventClient}
-          lmFeedClient={lmFeedClient}
-        />
+        <SideNavbar customEventClient={customEventClient} />
         <LMSocialFeed
           client={lmFeedClient}
           customEventClient={customEventClient}
