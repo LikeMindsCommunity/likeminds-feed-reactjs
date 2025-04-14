@@ -4,10 +4,9 @@ import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderC
 import {
   GetPendingPostModerationRequest,
   User,
-  UpdatePendingPostStatusRequest,
+  UpdateReportStatusRequest,
   LMResponseType,
   GetPostCommentReportRequest,
-  CloseReportRequest,
   DeletePostRequest,
   GetReportsRequest,
   GetMemberRightsRequest,
@@ -25,8 +24,8 @@ import { LMDisplayMessages } from "../shared/constants/lmDisplayMessages";
 import { Post } from "../shared/types/models/post";
 import { Comment } from "../shared/types/models/comment";
 import { Topic } from "../shared/types/models/topic";
-import { Report } from "../shared/types/models/report";
 import { Widget } from "../shared/types/models/widget";
+import { GroupReport } from "../shared/types/models/groupReport";
 import { GetMemberRightsResponse } from "../shared/types/api-responses/getMemberRightsResponse";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import {
@@ -35,6 +34,7 @@ import {
   ApplicationGeneralsStore,
 } from "../shared/types/cutomCallbacks/dataStores";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import { TokenValues } from "../shared/enums/tokens";
 
 export function useModeration() {
   const [selectedTab, setSelectedTab] = useState<string>("approval");
@@ -62,7 +62,7 @@ export function useModeration() {
   } = ModerationCustomCallbacks;
 
   const [posts, setPosts] = useState<Record<string, Post>>({});
-  const [reports, setReports] = useState<Report[]>([]);
+  const [reports, setReports] = useState<GroupReport[]>([]);
   const [users, setUsers] = useState<Record<string, User>>({});
   const [widgets, setWidgets] = useState<Record<string, Widget>>({});
   const [topics, setTopics] = useState<Record<string, Topic>>({});
@@ -74,7 +74,7 @@ export function useModeration() {
   const [isEditPermissionDialogOpen, setIsEditPermissionDialogOpen] =
     useState<boolean>(false);
   const [memberRights, setMemberRights] = useState<MemberRights[]>([]);
-  const [currentReport, setCurrentReport] = useState<Report | null>(null);
+  const [currentReport, setCurrentReport] = useState<GroupReport | null>(null);
 
   const [modifiedRights, setModifiedRights] =
     useState<MemberRights[]>(memberRights);
@@ -98,7 +98,7 @@ export function useModeration() {
       if (getPendingPostsForModerationCall.success) {
         setReports((prev) => [
           ...prev,
-          ...getPendingPostsForModerationCall.data.reports,
+          ...getPendingPostsForModerationCall.data.reportsData,
         ]);
         setPosts((prev) => ({
           ...prev,
@@ -123,8 +123,8 @@ export function useModeration() {
 
         setPageCount(page);
         if (
-          Object.values(getPendingPostsForModerationCall.data.reports).length <
-          pageSize
+          Object.values(getPendingPostsForModerationCall.data.reportsData)
+            .length === 0
         ) {
           setLoadMoreFeeds(false);
         }
@@ -136,7 +136,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       setIsLoading(false);
@@ -161,7 +160,7 @@ export function useModeration() {
       if (getPostCommentReportsCall.success) {
         setReports((prev) => [
           ...prev,
-          ...getPostCommentReportsCall.data.reports,
+          ...getPostCommentReportsCall.data.reportsData,
         ]);
         setPosts((prev) => ({
           ...prev,
@@ -186,8 +185,7 @@ export function useModeration() {
 
         setPageCount(page);
         if (
-          Object.values(getPostCommentReportsCall.data.reports).length <
-          pageSize
+          Object.values(getPostCommentReportsCall.data.reportsData).length === 0
         ) {
           setLoadMoreFeeds(false);
         }
@@ -199,7 +197,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       setLoadMoreFeeds(false);
@@ -226,7 +223,10 @@ export function useModeration() {
       setIsLoading(false);
 
       if (getClosedReportsCall.success) {
-        setReports((prev) => [...prev, ...getClosedReportsCall.data.reports]);
+        setReports((prev) => [
+          ...prev,
+          ...getClosedReportsCall.data.reportsData,
+        ]);
         setPosts((prev) => ({
           ...prev,
           ...getClosedReportsCall.data.posts,
@@ -243,9 +243,7 @@ export function useModeration() {
         }));
 
         setPageCount(page);
-        if (
-          Object.values(getClosedReportsCall.data.reports).length < pageSize
-        ) {
+        if (Object.values(getClosedReportsCall.data.reportsData).length === 0) {
           setLoadMoreFeeds(false);
         }
       } else {
@@ -256,7 +254,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -267,16 +264,16 @@ export function useModeration() {
   const handleOnApprovedPostClicked = async (reportIds: number[]) => {
     try {
       const UpdatePendingPostStatusCall: LMResponseType<null> =
-        (await lmFeedclient?.updatePendingPostStatus(
-          UpdatePendingPostStatusRequest.builder()
+        (await lmFeedclient?.updateReportStatus(
+          UpdateReportStatusRequest.builder()
             .setReportIds(reportIds)
-            .setStatus(LMFeedReportStatus.APPROVED)
+            .setActionTaken(LMFeedReportStatus.PENDING_POST_APPROVED)
             .build(),
         )) as never;
 
       if (UpdatePendingPostStatusCall.success) {
         setReports((prevReport) =>
-          prevReport.filter((report) => report.id !== reportIds[0]),
+          prevReport.filter((report) => report.reports[0].id !== reportIds[0]),
         );
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.MODERATION_UPDATED,
@@ -286,7 +283,6 @@ export function useModeration() {
             getDisplayMessage(LMDisplayMessages.POST_APPROVED)!,
           );
         }
-        window.history.back();
       } else {
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
@@ -294,7 +290,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -304,16 +299,16 @@ export function useModeration() {
   const handleOnRejectedPostClicked = async (reportIds: number[]) => {
     try {
       const UpdatePendingPostStatusCall: LMResponseType<null> =
-        (await lmFeedclient?.updatePendingPostStatus(
-          UpdatePendingPostStatusRequest.builder()
+        (await lmFeedclient?.updateReportStatus(
+          UpdateReportStatusRequest.builder()
             .setReportIds(reportIds)
-            .setStatus(LMFeedReportStatus.REJECTED)
+            .setActionTaken(LMFeedReportStatus.PENDING_POST_REJECTED)
             .build(),
         )) as never;
 
       if (UpdatePendingPostStatusCall.success) {
         setReports((prevReport) =>
-          prevReport.filter((report) => report.id !== reportIds[0]),
+          prevReport.filter((report) => report.reports[0].id !== reportIds[0]),
         );
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.MODERATION_UPDATED,
@@ -323,7 +318,6 @@ export function useModeration() {
             getDisplayMessage(LMDisplayMessages.POST_REJECTED)!,
           );
         }
-        window.history.back();
       } else {
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
@@ -331,7 +325,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -374,31 +367,42 @@ export function useModeration() {
   }, [selectedTab]);
 
   const onApprovedCallback = useCallback(
-    async (report: Report) => {
+    async (groupReport: GroupReport) => {
       try {
-        const CloseReportRequestCall: LMResponseType<null> =
-          (await lmFeedclient?.closeReport(
-            CloseReportRequest.builder().setReportId(report.id).build(),
+        const reportIds = groupReport.reports.map((report) => report.id);
+        const UpdatePendingPostStatusCall: LMResponseType<null> =
+          (await lmFeedclient?.updateReportStatus(
+            UpdateReportStatusRequest.builder()
+              .setReportIds(reportIds)
+              .setActionTaken(
+                groupReport.reports[0].type === "post"
+                  ? LMFeedReportStatus.POST_APPROVED
+                  : LMFeedReportStatus.COMMENT_APPROVED,
+              )
+              .build(),
           )) as never;
 
-        if (CloseReportRequestCall.success) {
+        if (UpdatePendingPostStatusCall.success) {
           setReports((prevReport) =>
-            prevReport.filter((currReport) => currReport.id !== report.id),
+            prevReport.filter(
+              (report) => report.entityId !== groupReport.entityId,
+            ),
+          );
+          customEventClient?.dispatchEvent(
+            LMFeedCustomActionEvents.MODERATION_UPDATED,
           );
           if (displaySnackbarMessage) {
             displaySnackbarMessage(
-              getDisplayMessage(LMDisplayMessages.REPORT_IGNORED)!,
+              getDisplayMessage(LMDisplayMessages.POST_IGNORED)!,
             );
           }
-          window.history.back();
         } else {
           if (displaySnackbarMessage) {
             displaySnackbarMessage(
-              CloseReportRequestCall?.errorMessage ||
+              UpdatePendingPostStatusCall?.errorMessage ||
                 getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
             );
           }
-          window.history.back();
         }
       } catch (error) {
         console.log(error);
@@ -408,57 +412,66 @@ export function useModeration() {
   );
 
   const onRejectedCallback = useCallback(
-    async (report: Report, postId: string) => {
+    async (groupReport: GroupReport, postId: string) => {
       try {
         let CloseReportRequestCall: LMResponseType<null>;
-        if (report.entityId === postId) {
+        if (groupReport.entityId === postId) {
           CloseReportRequestCall = (await lmFeedclient?.deletePost(
             DeletePostRequest.builder()
               .setPostId(postId)
-              .setDeleteReason(report.reason || "")
+              .setDeleteReason(groupReport.reports[0].reason || "")
               .build(),
           )) as never;
         } else {
           CloseReportRequestCall = (await lmFeedclient?.deleteComment(
             DeleteCommentRequest.builder()
               .setPostId(postId)
-              .setCommentId(report.entityId)
-              .setReason(report.reason || "")
+              .setCommentId(groupReport.entityId)
+              .setReason(groupReport.reports[0].reason || "")
               .build(),
           )) as never;
         }
 
         if (CloseReportRequestCall.success) {
           setReports((prevReport) =>
-            prevReport.filter((currReport) => currReport.id !== report.id),
+            prevReport.filter(
+              (currReport) => currReport.entityId !== groupReport.entityId,
+            ),
           );
-          const CloseReportRequestCall: LMResponseType<null> =
-            (await lmFeedclient?.closeReport(
-              CloseReportRequest.builder().setReportId(report.id).build(),
+
+          const reportIds = groupReport.reports.map((report) => report.id);
+          const UpdatePendingPostStatusCall: LMResponseType<null> =
+            (await lmFeedclient?.updateReportStatus(
+              UpdateReportStatusRequest.builder()
+                .setReportIds(reportIds)
+                .setActionTaken(
+                  groupReport.reports[0].type === "post"
+                    ? LMFeedReportStatus.POST_REJECTED
+                    : LMFeedReportStatus.COMMENT_REJECTED,
+                )
+                .build(),
             )) as never;
 
-          if (CloseReportRequestCall.success) {
+          if (UpdatePendingPostStatusCall.success) {
             customEventClient?.dispatchEvent(
               LMFeedCustomActionEvents.MODERATION_UPDATED,
             );
             if (displaySnackbarMessage) {
               displaySnackbarMessage(
                 getDisplayMessage(
-                  report.entityId === postId
+                  groupReport.reports[0].type === "post"
                     ? LMDisplayMessages.POST_DELETED
                     : LMDisplayMessages.COMMENT_DELETED_SUCCESS,
                 )!,
               );
             }
-            window.history.back();
           } else {
             if (displaySnackbarMessage) {
               displaySnackbarMessage(
-                CloseReportRequestCall?.errorMessage ||
+                UpdatePendingPostStatusCall?.errorMessage ||
                   getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
               );
             }
-            window.history.back();
           }
         } else {
           if (displaySnackbarMessage) {
@@ -467,7 +480,6 @@ export function useModeration() {
                 getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
             );
           }
-          window.history.back();
         }
       } catch (error) {
         console.log(error);
@@ -476,14 +488,11 @@ export function useModeration() {
     [lmFeedclient, displaySnackbarMessage],
   );
 
-  const editMemberPermissionsHandler = async (report: Report) => {
+  const editMemberPermissionsHandler = async (uuid: string) => {
     try {
       const getMemberRightsCall: GetMemberRightsResponse =
         (await lmFeedclient?.getMemberRights(
-          GetMemberRightsRequest.builder()
-            .setUuid(report.accusedUser.sdkClientInfo.uuid)
-            .setIsCM(false)
-            .build(),
+          GetMemberRightsRequest.builder().setUuid(uuid).setIsCM(false).build(),
         )) as never;
 
       if (getMemberRightsCall?.success) {
@@ -497,7 +506,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -507,7 +515,7 @@ export function useModeration() {
   const updateMemberRightsHandler = async () => {
     try {
       const requestBuilder = UpdateMemberRightsRequest.builder()
-        .setUuid(currentReport?.accusedUser.sdkClientInfo.uuid || "")
+        .setUuid(currentReport?.reports[0].accusedUser.sdkClientInfo.uuid || "")
         .setIsCM(false)
         .setRights(modifiedRights);
 
@@ -522,6 +530,7 @@ export function useModeration() {
 
       if (updateMemberRightsCall?.success) {
         setIsEditPermissionDialogOpen(false);
+        setCustomTitle("");
         if (displaySnackbarMessage) {
           displaySnackbarMessage(
             getDisplayMessage(LMDisplayMessages.RIGHTS_UPDATED)!,
@@ -534,7 +543,6 @@ export function useModeration() {
               getDisplayMessage(LMDisplayMessages.ERROR_LOADING_POST)!,
           );
         }
-        window.history.back();
       }
     } catch (error) {
       console.log(error);
@@ -554,7 +562,7 @@ export function useModeration() {
       if (setting) {
         const isPostApprovalEnabled = setting.enabled === true;
         localStorage.setItem(
-          "isPostApprovedEnabled",
+          TokenValues.IS_POST_APPROVAL_NEEDED,
           JSON.stringify(isPostApprovalEnabled),
         );
         setIsPostApprovalEnabled(isPostApprovalEnabled);

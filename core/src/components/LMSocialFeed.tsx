@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import React from "react";
 import { PropsWithChildren, useEffect } from "react";
 import GlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMClient } from "../shared/types/dataLayerExportsTypes";
@@ -25,6 +26,7 @@ import {
 import LMFeedPostCreationProgressBar from "./LMFeedPostCreationProgressBar";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
+  children?: React.ReactNode;
   client: T;
   showMember?: boolean;
   routes?: LMFeedCustomAppRoutes;
@@ -36,6 +38,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 }
 
 function LMSocialFeed({
+  children,
   LMFeedCoreCallbacks = {} as LMCoreCallbacks,
   userDetails,
   client,
@@ -141,7 +144,7 @@ function LMSocialFeed({
                 logoutUser: logoutUser,
               }}
             >
-              <LMFeedListDataContextProvider />
+              <LMFeedListDataContextProvider children={children}/>
             </UserProviderContext.Provider>
           </GeneralContext.Provider>
         </CustomAgentProviderContext.Provider>

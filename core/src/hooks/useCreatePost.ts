@@ -694,7 +694,7 @@ export function useCreatePost(): UseCreatePost {
 
         const call = await lmFeedclient?.addPost(addPostRequest);
         if (call?.success) {
-          lmfeedAnalyticsClient?.sendPostCreatedEvent(call.data.post);
+          lmfeedAnalyticsClient?.sendPostCreatedEvent(call?.data?.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
           );

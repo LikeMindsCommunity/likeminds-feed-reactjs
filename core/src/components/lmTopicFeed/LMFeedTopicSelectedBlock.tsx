@@ -23,7 +23,7 @@ export const LMFeedTopicSelectedBlock = ({
 
     default: {
       return (
-        <div className="lm-feed-topic-tile">
+        <div className="lm-feed-topic-tile topic-tile-custom-style">
           <span>{name}</span>
           <span onClick={() => onDeleteClick(topic)}>
             <img

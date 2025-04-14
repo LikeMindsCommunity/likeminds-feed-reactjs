@@ -419,8 +419,8 @@ export function getDisplayMessage(message: LMDisplayMessages) {
       return `Post approved.`;
     case LMDisplayMessages.POST_REJECTED:
       return `Post rejected.`;
-    case LMDisplayMessages.REPORT_IGNORED:
-      return `Report ignored.`;
+    case LMDisplayMessages.POST_IGNORED:
+      return `Post ignored.`;
     case LMDisplayMessages.POST_DELETED:
       return `Post deleted.`;
     case LMDisplayMessages.RIGHTS_UPDATED:

@@ -7,22 +7,26 @@ import LMFeedPostFooter from "./LMFeedPostFooter";
 import LMFeedPostTopicsWrapper from "./LMFeedPostTopicsWrapper";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
-import { FeedSideNavbarContext } from "../contexts/LMFeedSideNavbarContext";
-import LMFeedModerationPostHeader from "./LMFeedModerationPostHeader";
-import LMFeedModerationPostFooter from "./LMFeedModerationPostFooter";
+import LMFeedActivityHeader from "./LMFeedActivityHeader";
+import LMFeedActionFooter from "./LMFeedActionFooter";
 import { AttachmentType } from "@likeminds.community/feed-js";
-import { Report } from "../shared/types/models/report";
-import { SideNavbarState } from "../shared/enums/lmSideNavbar";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
+import { GroupReport } from "../shared/types/models/groupReport";
 
 interface LMFeedPostProps {
-  propReport? : Report
+  propReport?: GroupReport;
   post: Post;
   user: User | undefined;
+  isModerationScreen?: boolean;
 }
 
-const LMFeedPost: React.FC<LMFeedPostProps> = ({ propReport }) => {
+const LMFeedPost: React.FC<LMFeedPostProps> = ({
+  propReport,
+  isModerationScreen,
+}) => {
   const { CustomComponents } = useContext(CustomAgentProviderContext);
-  const { selectedNav } = useContext(FeedSideNavbarContext);
+  const { currentUser } = useContext(LMFeedUserProviderContext);
   const { post, postComponentClickCustomCallback } =
     useContext(FeedPostContext);
   const showCustomPostViewWidget = useMemo(() => {
@@ -66,10 +70,10 @@ const LMFeedPost: React.FC<LMFeedPostProps> = ({ propReport }) => {
           CustomComponents?.CustomPostViewHeader
         ) : (
           <>
-            {selectedNav === SideNavbarState.HOME ? (
-              <LMFeedPostHeader />
+            {isModerationScreen && currentUser?.state === LMFeedCurrentUserState.CM ? (
+              <LMFeedActivityHeader propReport={propReport} />
             ) : (
-              <LMFeedModerationPostHeader propReport={propReport} />
+              <LMFeedPostHeader />
             )}
           </>
         )}
@@ -87,10 +91,10 @@ const LMFeedPost: React.FC<LMFeedPostProps> = ({ propReport }) => {
           CustomComponents.CustomPostViewFooter
         ) : (
           <>
-            {selectedNav === SideNavbarState.HOME ? (
-              <LMFeedPostFooter />
+            {isModerationScreen && currentUser?.state === LMFeedCurrentUserState.CM ? (
+              <LMFeedActionFooter propReport={propReport} />
             ) : (
-              <LMFeedModerationPostFooter propReport={propReport} />
+              <LMFeedPostFooter />
             )}
           </>
         )}

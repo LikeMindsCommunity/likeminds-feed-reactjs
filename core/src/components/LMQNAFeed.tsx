@@ -24,6 +24,7 @@ import {
 } from "../shared/LMSDKCoreCallbacks";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
+  children?: React.ReactNode;
   client: T;
   showMember?: boolean;
   routes?: LMFeedCustomAppRoutes;
@@ -35,6 +36,7 @@ export interface LMFeedProps<T> extends CustomAgentProviderInterface {
 }
 
 function LMQNAFeed({
+  children,
   LMFeedCoreCallbacks = {} as LMCoreCallbacks,
   userDetails,
   client,
@@ -135,7 +137,7 @@ function LMQNAFeed({
                 logoutUser: logoutUser,
               }}
             >
-              <LMQNAFeedListDataContextProvider />
+              <LMQNAFeedListDataContextProvider children={children} />
             </UserProviderContext.Provider>
           </GeneralContext.Provider>
         </CustomAgentProviderContext.Provider>
