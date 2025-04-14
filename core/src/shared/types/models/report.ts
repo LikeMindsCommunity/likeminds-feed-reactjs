@@ -1,3 +1,3 @@
-import { Report as LMFeedReport } from "@likeminds.community/feed-js-beta";
+import { Report as LMFeedReport } from "@likeminds.community/feed-js";
 
 export interface Report extends LMFeedReport {}

@@ -9,13 +9,13 @@ import { LMFeedPostMenuItems } from "../shared/constants/lmFeedPostMenuItems";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import LMFeedReportPostDialog from "./LMFeedReportPostDialog";
-import { ReportEntityType } from "@likeminds.community/feed-js-beta";
+import { ReportEntityType } from "@likeminds.community/feed-js";
 import threeDotMenuIcon from "../assets/images/3-dot-menu-post-header.svg";
 import pinIcon from "../assets/images/Icon-pin_new.svg";
 import LMFeedDeleteDialogBox from "./lmDialogs/LMFeedDeleteDialogBox";
 import { LMFeedDeletePostModes } from "../shared/enums/lmDeleteDialogModes";
 import { WordAction } from "../shared/enums/wordAction";
-import { AttachmentType } from "@likeminds.community/feed-js-beta";
+import { AttachmentType } from "@likeminds.community/feed-js";
 const LMFeedPostHeader = () => {
   const { lmfeedAnalyticsClient } = useContext(
     LMFeedGlobalClientProviderContext,

@@ -12,7 +12,7 @@ import { Reply } from "../models/replies";
 import { Topic } from "../models/topic";
 import { PollOption, AdvancedPollOptions } from "../../../hooks/useCreatePost";
 import { WidgetResponse } from "../../utils";
-import { MemberRights } from "@likeminds.community/feed-js-beta";
+import { MemberRights } from "@likeminds.community/feed-js";
 import { Report } from "../models/report";
 import { Comment } from "../models/comment";
 import { GroupReport } from "../models/groupReport";

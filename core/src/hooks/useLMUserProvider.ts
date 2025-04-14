@@ -9,10 +9,10 @@ import {
   InitiateUserRequest,
   LMResponseType,
   ValidateUserRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { LMFeedCustomEvents } from "../shared/customEvents";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
-import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js-beta/dist/initiateUser/model/GetCommunityConfigurationsResponse";
+import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
 import { TokenValues } from "../shared/enums/tokens";
 import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 

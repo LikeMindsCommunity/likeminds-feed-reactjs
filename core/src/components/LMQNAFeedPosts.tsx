@@ -8,7 +8,7 @@ import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProvide
 import { FeedPostContext } from "../contexts/LMFeedPostContext";
 import LMQNAFeedPostBody from "./LMQNAFeedPostBody";
 import LMQNAFeedPostFooter from "./LMQNAFeedPostFooter";
-import { AttachmentType } from "@likeminds.community/feed-js-beta";
+import { AttachmentType } from "@likeminds.community/feed-js";
 
 interface LMFeedPostProps {
   post: Post;

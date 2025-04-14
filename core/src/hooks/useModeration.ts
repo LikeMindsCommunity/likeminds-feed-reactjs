@@ -15,8 +15,7 @@ import {
   FilterType,
   LMFeedReportStatus,
   DeleteCommentRequest,
-  TokenManager,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { GetPendingPostModerationResponse } from "../shared/types/api-responses/getPendingPostsForModerationResponse";
 import { GetPostCommentReportsResponse } from "../shared/types/api-responses/getPostCommentReports";
 import { GeneralContext } from "../contexts/LMFeedGeneralContext";

@@ -9,7 +9,7 @@ import LMFeedReplyTextArea from "../../shared/components/LMFeedReplyTextArea";
 import repliesThreeDotMenu from "../../assets/images/three-dot-menu-replies.svg";
 import { Dialog, Menu } from "@mui/material";
 import LMFeedReportPostDialog from "../LMFeedReportPostDialog";
-import { ReportEntityType } from "@likeminds.community/feed-js-beta";
+import { ReportEntityType } from "@likeminds.community/feed-js";
 import { LMFeedReplyMode } from "../../shared/constants/lmFeedReplyMode";
 import { LMFeedReplyMenuItems } from "../../shared/constants/lmFeedRepliesMenuItems";
 import LMFeedReplyEditTextArea from "../../shared/components/LMFeedReplyEditTextArea";

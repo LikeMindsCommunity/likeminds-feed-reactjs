@@ -1,3 +1,3 @@
-import { Activity as LMFeedActivity } from "@likeminds.community/feed-js-beta";
+import { Activity as LMFeedActivity } from "@likeminds.community/feed-js";
 
 export interface Activity extends LMFeedActivity {}

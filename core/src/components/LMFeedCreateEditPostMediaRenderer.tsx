@@ -11,7 +11,7 @@ import pdfIcon from "../assets/images/pdf-icon.svg";
 import { formatFileSize } from "../shared/utils";
 import { OgTag } from "../shared/types/models/ogTag";
 import { formatDate, previewMultiSelectStateModifier } from "../shared/utils";
-import { AttachmentType } from "@likeminds.community/feed-js-beta";
+import { AttachmentType } from "@likeminds.community/feed-js";
 interface LMFeedCreatePostDMediaPost {
   mediaUploadDialog?: string;
 }

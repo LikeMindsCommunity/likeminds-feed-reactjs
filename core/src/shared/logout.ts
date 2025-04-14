@@ -1,4 +1,4 @@
-import { LogoutRequest } from "@likeminds.community/feed-js-beta";
+import { LogoutRequest } from "@likeminds.community/feed-js";
 import { TokenValues } from "./enums/tokens";
 import { LMClient } from "./types/dataLayerExportsTypes";
 
@@ -6,15 +6,14 @@ export async function logoutUser(
   lmFeedClient: LMClient,
   deviceId?: string | null,
 ) {
-  console.log("logout called! in util function");
-  const logoutRequest = LogoutRequest.builder().setDeviceId(deviceId).build();
-  console.log("request created");
-
+  const logoutRequestBuilder = LogoutRequest.builder();
+  if (deviceId) {
+    logoutRequestBuilder.setDeviceId(deviceId);
+  }
+  const logoutRequest = logoutRequestBuilder.build();
   const logoutUserCall = await lmFeedClient?.logoutUser(logoutRequest);
-  console.log("logoutResponse", logoutUserCall);
 
   if (logoutUserCall?.success) {
-    console.log("data success");
     localStorage.removeItem(TokenValues.COMMUNITY_CONFIGURATIONS);
     localStorage.removeItem(TokenValues.IS_POST_APPROVAL_NEEDED);
   }
