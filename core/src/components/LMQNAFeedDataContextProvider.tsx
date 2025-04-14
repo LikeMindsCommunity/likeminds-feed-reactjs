@@ -6,6 +6,8 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { returnPostId } from "../shared/utils";
 import LMQNAFeedDetails from "./LMQNAFeedDetails";
 import LMQNAFeedUniversalFeed from "./LMQNAFeedUniversalFeed";
+import { LMFeedModerationScreen } from "./LMFeedModerationScreen";
+import { CustomAgentProviderContext } from "..";
 import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 export interface LMQNAFeedDataContextProviderInterface {
@@ -31,13 +33,40 @@ const LMQNAFeedDataContextProvider = ({
     widgets,
   } = useFetchFeeds();
   const { currentUser } = useContext(LMFeedUserProviderContext);
-  const isCM = currentUser?.state === LMFeedCurrentUserState.CM;
+  const { CustomComponents } = useContext(CustomAgentProviderContext);
+
+  const childrenArray = React.Children.toArray(children);
+  const hasModerationScreen = childrenArray.some(
+    (child) =>
+      React.isValidElement(child) && child.type === LMFeedModerationScreen,
+  );
+
+  const hasUniversalFeed = childrenArray.some(
+    (child) =>
+      React.isValidElement(child) && child.type === LMQNAFeedUniversalFeed,
+  );
+
   const renderComponents = () => {
     const postId = returnPostId();
+    const isCM = currentUser?.state === LMFeedCurrentUserState.CM;
     if (postId.length) {
-      return <LMQNAFeedDetails postId={postId} />;
+      if (CustomComponents && CustomComponents.CustomFeedDetails) {
+        return <CustomComponents.CustomFeedDetails postId={postId} />;
+      } else {
+        return <LMQNAFeedDetails postId={postId} />;
+      }
     } else {
-      return <>{children && isCM ? children : <LMQNAFeedUniversalFeed />}</>;
+      if (CustomComponents && CustomComponents.CustomUniversalFeed) {
+        return CustomComponents?.CustomUniversalFeed;
+      }
+      if (isCM && hasModerationScreen) {
+        return <LMFeedModerationScreen />;
+      }
+
+      if (hasUniversalFeed) {
+        return <LMQNAFeedUniversalFeed />;
+      }
+      return children;
     }
   };
   return (
