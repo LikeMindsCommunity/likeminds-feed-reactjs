@@ -45,8 +45,8 @@ pipeline {
                         def tagName = "v${version}"
                         def releaseName = "Release ${version}"
 
-                        sh "git config user.name 'CI Bot'"
-                        sh "git config user.email 'ci@likeminds.community'"
+                        sh "git config user.name 'Ishaan Jain'"
+                        sh "git config user.email 'ishaan.jain@likeminds.community'"
                         sh "git tag ${tagName}"
                         sh "git push origin ${tagName}"
 
@@ -59,7 +59,7 @@ pipeline {
                 -d '{
                   "tag_name": "${tagName}",
                   "name": "${releaseName}",
-                  "body": "Automated release from Jenkins.",
+                    "generate_release_notes": true,
                   "draft": false,
                   "prerelease": false
                 }'
@@ -94,6 +94,7 @@ pipeline {
                 { "title": "Version", "value": "${version}", "short": true },
                 { "title": "Branch", "value": "${branch}", "short": true },
                 { "title": "Build", "value": "#${buildNumber}", "short": true }
+                { "title": "Job Name", "value": "#${jobName}", "short": true }
               ],
               "footer": "Jenkins CI",
               "footer_icon": "https://jenkins.io/images/logos/jenkins/jenkins.png",
