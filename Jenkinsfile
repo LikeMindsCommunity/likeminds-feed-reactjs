@@ -24,7 +24,7 @@ pipeline {
             steps {
                 dir('core') {
                     sh 'npm install --legacy-peer-deps'
-                    sh 'npm run build'
+                    sh 'npm run build-lib'
                 }
             }
         }
