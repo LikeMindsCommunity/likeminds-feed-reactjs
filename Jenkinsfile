@@ -23,7 +23,7 @@ pipeline {
         stage('Install & Build SDK') {
             steps {
                 dir('core') {
-                    sh 'npm ci'
+                    sh 'npm install --legacy-peer-deps'
                     sh 'npm run build'
                 }
             }
