@@ -2,8 +2,6 @@ pipeline {
     agent any
 
     environment {
-        NODE_ENV = 'production'
-        HUSKY = '0'               // <-- disables husky in CI
         NPM_TOKEN = credentials('NPM_TOKEN')
         GITHUB_TOKEN = credentials('GITHUB_TOKEN')
         SLACK_WEBHOOK = credentials('SLACK_WEBHOOK_URL')
