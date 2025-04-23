@@ -23,7 +23,7 @@ pipeline {
                     def branchToCheckout = params.BRANCH_TO_BUILD ?: 'feature/LM-13590_createJenkinsPipeline'
                     checkout([
             $class: 'GitSCM',
-            branches: [[name: "*/${branchToCheckout}"]],
+            branches: [[name: "refs/heads/${branchToCheckout}"]]
             userRemoteConfigs: [[
             url: 'https://github.com/LikeMindsCommunity/likeminds-feed-reactjs.git'
             ]]
