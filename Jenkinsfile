@@ -72,7 +72,7 @@ pipeline {
                         def tagName = "v${version}"
                         def releaseName = "Release ${version}"
 
-                        withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
+                        withCredentials([string(credentialsId: 'ISHAAN_GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
                             sh """
                                 git config user.name 'CI Bot'
                                 git config user.email 'ci@likeminds.community'
