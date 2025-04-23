@@ -72,28 +72,43 @@ pipeline {
                         def tagName = "v${version}"
                         def releaseName = "Release ${version}"
 
-                        withCredentials([string(credentialsId: 'ISHAAN_GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
-                            sh """
-                                git config user.name 'CI Bot'
-                                git config user.email 'ci@likeminds.community'
-                                git tag ${tagName}
-                                git remote set-url origin https://${GITHUB_TOKEN}@github.com/${REPO}.git
-                                git push origin ${tagName}
+                        // Set Git identity and create tag
+                        sh """
+            git config user.name 'Ishaan Jain'
+            git config user.email 'ishaan.jain@likeminds.community'
+            git tag ${tagName}
+        """
 
-                                curl -s -X POST https://api.github.com/repos/${REPO}/releases \\
-                                -H "Authorization: token \$GITHUB_TOKEN" \\
-                                -H "Content-Type: application/json" \\
-                                -d '{
-                                    "tag_name": "${tagName}",
-                                    "name": "${releaseName}",
-                                    "generate_release_notes": true,
-                                    "draft": false,
-                                    "prerelease": false
-                                }'
-                            """
+                        // Create GitHub release and push tag using secure token
+                        withCredentials([string(credentialsId: 'ISHAAN_NPM_TOKEN', variable: 'GITHUB_TOKEN')]) {
+                            // Set remote with token (only in CI scope)
+                            sh '''
+            git remote set-url origin https://$GITHUB_TOKEN@github.com/LikeMindsCommunity/likeminds-feed-reactjs.git
+            git push origin ${tagName}
+            '''.stripIndent()
+
+                            // Write release payload to a file
+                            def releasePayload = """
+            {
+                "tag_name": "${tagName}",
+                "name": "${releaseName}",
+                "generate_release_notes": true,
+                "draft": false,
+                "prerelease": false
+            }
+            """
+                            writeFile file: 'release_payload.json', text: releasePayload
+
+                            // Hit GitHub release API securely
+                            sh '''
+                curl -X POST https://api.github.com/repos/LikeMindsCommunity/likeminds-feed-reactjs/releases \
+                -H "Authorization: token $GITHUB_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d @release_payload.json
+            '''
                         }
 
-                        // Save version for Slack use
+                        // Save version for Slack or other stages
                         currentBuild.description = tagName
                     }
                 }
@@ -108,7 +123,7 @@ pipeline {
                         def branch = env.GIT_BRANCH ?: 'unknown'
                         def buildNumber = env.BUILD_NUMBER
                         def jobName = env.JOB_NAME
-                        def timestamp = (System.currentTimeMillis() / 1000).toLong()
+                        def timestamp = (System.currentTimeMillis() / 1000)
 
                         def slackPayload = """
             {
