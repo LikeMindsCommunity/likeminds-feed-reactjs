@@ -84,27 +84,28 @@ pipeline {
                         sh "git tag ${tagName}"
 
                         withCredentials([string(credentialsId: 'ISHAAN_GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
-                            sh '''
-                                git remote set-url origin https://${GITHUB_TOKEN}@github.com/LikeMindsCommunity/likeminds-feed-reactjs.git
-                                git push origin refs/tags/${tagName}
-                            '''
-
-                            def releasePayload = """
-                                {
-                                    "tag_name": "${tagName}",
-                                    "name": "${releaseName}",
-                                    "generate_release_notes": true,
-                                    "draft": false,
-                                    "prerelease": false
-                                }
+                            writeFile file: 'release_payload.json', text: """
+                            {
+                                "tag_name": "${tagName}",
+                                "name": "${releaseName}",
+                                "generate_release_notes": true,
+                                "draft": false,
+                                "prerelease": false
+                            }
                             """
-                            writeFile file: 'release_payload.json', text: releasePayload
 
+                            // push the tag securely & safely
+                            sh """
+                                git remote set-url origin https://\$GITHUB_TOKEN@github.com/${REPO}.git
+                                git push origin refs/tags/${tagName}
+                            """
+
+                            // create the GitHub release
                             sh '''
                                 curl -X POST https://api.github.com/repos/LikeMindsCommunity/likeminds-feed-reactjs/releases \
-                                    -H "Authorization: token ${GITHUB_TOKEN}" \
-                                    -H "Content-Type: application/json" \
-                                    -d @release_payload.json
+                                -H "Authorization: token $GITHUB_TOKEN" \
+                                -H "Content-Type: application/json" \
+                                -d @release_payload.json
                             '''
                         }
 
