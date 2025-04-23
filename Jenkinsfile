@@ -13,9 +13,18 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Specific Branch') {
             steps {
-                checkout scm
+                script {
+                    def branchToCheckout = 'feature/LM-13590_createJenkinsPipeline'  // ⬅️ Change this to whatever branch you want
+                    checkout([
+        $class: 'GitSCM',
+        branches: [[name: "*/${branchToCheckout}"]],
+        userRemoteConfigs: [[
+        url: 'https://github.com/LikeMindsCommunity/likeminds-feed-reactjs.git'
+        ]]
+        ])
+                }
             }
         }
 
@@ -101,7 +110,7 @@ pipeline {
                 "ts": ${System.currentTimeMillis() / 1000}
                 }
             ]
-            }
+        }
             """
                     sh """
             curl -X POST -H 'Content-type: application/json' \
