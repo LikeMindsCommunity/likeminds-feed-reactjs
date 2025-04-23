@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'BRANCH_TO_BUILD', defaultValue: 'feature/LM-13590_createJenkinsPipeline', description: 'Branch to checkout and build')
+    }
+
     environment {
         NODE_ENV = 'development' // Don’t set to production to allow dev deps
         NPM_TOKEN = credentials('ISHAAN_NPM_TOKEN')
@@ -16,14 +20,14 @@ pipeline {
         stage('Checkout Specific Branch') {
             steps {
                 script {
-                    def branchToCheckout = 'feature/LM-13590_createJenkinsPipeline'  // ⬅️ Change this to whatever branch you want
+                    def branchToCheckout = params.BRANCH_TO_BUILD ?: 'feature/LM-13590_createJenkinsPipeline'
                     checkout([
-        $class: 'GitSCM',
-        branches: [[name: "*/${branchToCheckout}"]],
-        userRemoteConfigs: [[
-        url: 'https://github.com/LikeMindsCommunity/likeminds-feed-reactjs.git'
-        ]]
-        ])
+            $class: 'GitSCM',
+            branches: [[name: "*/${branchToCheckout}"]],
+            userRemoteConfigs: [[
+            url: 'https://github.com/LikeMindsCommunity/likeminds-feed-reactjs.git'
+            ]]
+            ])
                 }
             }
         }
