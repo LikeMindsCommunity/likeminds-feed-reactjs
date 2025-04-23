@@ -19,6 +19,33 @@ pipeline {
             }
         }
 
+        stage('Check git tags') {
+            steps {
+                dir('core') {
+                    script {
+                        // Fetch all tags from the remote repository
+                        sh 'git fetch --tags'
+
+                        // Get the previous version from the last release tag
+                        def previous_version = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+
+                        // Get the current version from package.json
+                        def current_version = sh(script: "cat package.json | grep '\"version\":' | awk -F'\"' '{print \$4}'", returnStdout: true).trim()
+
+                        echo "previous version ${previous_version}, current version ${current_version}"
+
+                        // Compare versions
+                        if (previous_version != "v${current_version}") {
+                            echo "Version has changed from ${previous_version} to v${current_version}."
+                        } else {
+                            echo 'Version has not changed.'
+                            error "Stopping the pipeline as the version hasn't changed."
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Install & Build SDK') {
             steps {
                 dir('core') {
