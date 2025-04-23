@@ -103,14 +103,16 @@ pipeline {
 
     post {
         success {
-            script {
-                def version = currentBuild.description ?: 'v?'
-                def branch = env.GIT_BRANCH ?: 'custom'
-                def buildNumber = env.BUILD_NUMBER
-                def jobName = env.JOB_NAME
+            withCredentials([string(credentialsId: 'SLACK_WEBHOOK_URL', variable: 'SLACK_WEBHOOK')]) {
+                script {
+                    def version = currentBuild.description ?: 'v?'
+                    def branch = env.GIT_BRANCH ?: 'unknown'
+                    def buildNumber = env.BUILD_NUMBER
+                    def jobName = env.JOB_NAME
+                    def timestamp = (System.currentTimeMillis() / 1000).toLong()
 
-                def slackMessage = """
-        {
+                    def slackPayload = """
+            {
             "attachments": [
                 {
                 "color": "#36a64f",
@@ -120,25 +122,29 @@ pipeline {
                 "fields": [
                     { "title": "Version", "value": "${version}", "short": true },
                     { "title": "Branch", "value": "${branch}", "short": true },
-                    { "title": "Build", "value": "#${buildNumber}", "short": true }
-                    { "title": "Job Name", "value": "#${jobName}", "short": true }
+                    { "title": "Build", "value": "#${buildNumber}", "short": true },
+                    { "title": "Job Name", "value": "${jobName}", "short": true }
                 ],
                 "footer": "Jenkins CI",
                 "footer_icon": "https://jenkins.io/images/logos/jenkins/jenkins.png",
-                "ts": ${System.currentTimeMillis() / 1000}
+                "ts": ${timestamp}
                 }
             ]
-        }
+            }
             """
-                    sh """
-            curl -X POST -H 'Content-type: application/json' \
-            --data '${slackMessage}' ${SLACK_WEBHOOK}
-            """
+
+                    // Save payload to file (for escaping issues)
+                    writeFile file: 'slack_payload.json', text: slackPayload
+
+                    sh '''
+            curl -X POST -H "Content-Type: application/json" \
+            --data @slack_payload.json $SLACK_WEBHOOK
+            '''
+                }
             }
         }
-
         failure {
-            echo '💥 Pipeline failed. No release or Slack message.'
+            echo '❌ Pipeline failed. No Slack message.'
         }
     }
 }
