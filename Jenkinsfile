@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         NODE_ENV = 'development' // Don’t set to production to allow dev deps
-        NPM_TOKEN = credentials('NPM_TOKEN')
-        SLACK_WEBHOOK = credentials('SLACK_WEBHOOK_URL')
+        NPM_TOKEN = credentials('ISHAAN_NPM_TOKEN')
+        SLACK_WEBHOOK = credentials('SLACK_JS_CHANNEL_URL')
         REPO = 'LikeMindsCommunity/likeminds-feed-reactjs'
     }
 
@@ -51,19 +51,19 @@ pipeline {
                         sh "git push origin ${tagName}"
 
                         // Securely call GitHub API using credentials block
-                        withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
+                        withCredentials([string(credentialsId: 'ISHAAN_GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
                             sh """
                 curl -s -X POST https://api.github.com/repos/${REPO}/releases \\
                 -H "Authorization: token \$GITHUB_TOKEN" \\
                 -H "Content-Type: application/json" \\
                 -d '{
-                  "tag_name": "${tagName}",
-                  "name": "${releaseName}",
+                    "tag_name": "${tagName}",
+                    "name": "${releaseName}",
                     "generate_release_notes": true,
-                  "draft": false,
-                  "prerelease": false
+                    "draft": false,
+                    "prerelease": false
                 }'
-              """
+                """
                         }
 
                         // Save version for Slack use
@@ -84,29 +84,29 @@ pipeline {
 
                 def slackMessage = """
         {
-          "attachments": [
-            {
-              "color": "#36a64f",
-              "title": "✅ ReactJS SDK Deployed",
-              "title_link": "https://github.com/${REPO}/releases/tag/${version}",
-              "text": "A new version of the React SDK has been deployed and released.",
-              "fields": [
-                { "title": "Version", "value": "${version}", "short": true },
-                { "title": "Branch", "value": "${branch}", "short": true },
-                { "title": "Build", "value": "#${buildNumber}", "short": true }
-                { "title": "Job Name", "value": "#${jobName}", "short": true }
-              ],
-              "footer": "Jenkins CI",
-              "footer_icon": "https://jenkins.io/images/logos/jenkins/jenkins.png",
-              "ts": ${System.currentTimeMillis() / 1000}
+            "attachments": [
+                {
+                "color": "#36a64f",
+                "title": "✅ ReactJS SDK Deployed",
+                "title_link": "https://github.com/${REPO}/releases/tag/${version}",
+                "text": "A new version of the React SDK has been deployed and released.",
+                "fields": [
+                    { "title": "Version", "value": "${version}", "short": true },
+                    { "title": "Branch", "value": "${branch}", "short": true },
+                    { "title": "Build", "value": "#${buildNumber}", "short": true }
+                    { "title": "Job Name", "value": "#${jobName}", "short": true }
+                ],
+                "footer": "Jenkins CI",
+                "footer_icon": "https://jenkins.io/images/logos/jenkins/jenkins.png",
+                "ts": ${System.currentTimeMillis() / 1000}
+                }
+            ]
             }
-          ]
-        }
-        """
-                sh """
-          curl -X POST -H 'Content-type: application/json' \
-          --data '${slackMessage}' ${SLACK_WEBHOOK}
-        """
+            """
+                    sh """
+            curl -X POST -H 'Content-type: application/json' \
+            --data '${slackMessage}' ${SLACK_WEBHOOK}
+            """
             }
         }
 
