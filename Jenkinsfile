@@ -83,7 +83,7 @@ pipeline {
 
                         sh "git tag ${tagName}"
 
-                        withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
+                        withCredentials([string(credentialsId: 'ISHAAN_GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
                             sh '''
                                 git remote set-url origin https://${GITHUB_TOKEN}@github.com/LikeMindsCommunity/likeminds-feed-reactjs.git
                                 git push origin refs/tags/${tagName}
