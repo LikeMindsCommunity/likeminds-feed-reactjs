@@ -45,25 +45,25 @@ pipeline {
                         def tagName = "v${version}"
                         def releaseName = "Release ${version}"
 
-                        sh "git config user.name 'Ishaan Jain'"
-                        sh "git config user.email 'ishaan.jain@likeminds.community'"
-                        sh "git tag ${tagName}"
-                        sh "git push origin ${tagName}"
-
-                        // Securely call GitHub API using credentials block
-                        withCredentials([string(credentialsId: 'ISHAAN_GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
+                        withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
                             sh """
-                curl -s -X POST https://api.github.com/repos/${REPO}/releases \\
-                -H "Authorization: token \$GITHUB_TOKEN" \\
-                -H "Content-Type: application/json" \\
-                -d '{
-                    "tag_name": "${tagName}",
-                    "name": "${releaseName}",
-                    "generate_release_notes": true,
-                    "draft": false,
-                    "prerelease": false
-                }'
-                """
+                                git config user.name 'CI Bot'
+                                git config user.email 'ci@likeminds.community'
+                                git tag ${tagName}
+                                git remote set-url origin https://${GITHUB_TOKEN}@github.com/${REPO}.git
+                                git push origin ${tagName}
+
+                                curl -s -X POST https://api.github.com/repos/${REPO}/releases \\
+                                -H "Authorization: token \$GITHUB_TOKEN" \\
+                                -H "Content-Type: application/json" \\
+                                -d '{
+                                    "tag_name": "${tagName}",
+                                    "name": "${releaseName}",
+                                    "generate_release_notes": true,
+                                    "draft": false,
+                                    "prerelease": false
+                                }'
+                            """
                         }
 
                         // Save version for Slack use
