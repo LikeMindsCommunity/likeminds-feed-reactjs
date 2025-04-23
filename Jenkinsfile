@@ -99,19 +99,18 @@ pipeline {
                 }
             }
         }
-    }
 
-    post {
-        success {
-            withCredentials([string(credentialsId: 'SLACK_WEBHOOK_URL', variable: 'SLACK_WEBHOOK')]) {
-                script {
-                    def version = currentBuild.description ?: 'v?'
-                    def branch = env.GIT_BRANCH ?: 'unknown'
-                    def buildNumber = env.BUILD_NUMBER
-                    def jobName = env.JOB_NAME
-                    def timestamp = (System.currentTimeMillis() / 1000).toLong()
+        stage('Notify Slack') {
+            steps {
+                withCredentials([string(credentialsId: 'SLACK_JS_CHANNEL_URL', variable: 'SLACK_WEBHOOK')]) {
+                    script {
+                        def version = sh(script: "node -p \"require('./core/package.json').version\"", returnStdout: true).trim()
+                        def branch = env.GIT_BRANCH ?: 'unknown'
+                        def buildNumber = env.BUILD_NUMBER
+                        def jobName = env.JOB_NAME
+                        def timestamp = (System.currentTimeMillis() / 1000).toLong()
 
-                    def slackPayload = """
+                        def slackPayload = """
             {
             "attachments": [
                 {
@@ -131,20 +130,17 @@ pipeline {
                 }
             ]
             }
-            """
+        """
 
-                    // Save payload to file (for escaping issues)
-                    writeFile file: 'slack_payload.json', text: slackPayload
+                        writeFile file: 'slack_payload.json', text: slackPayload
 
-                    sh '''
+                        sh '''
             curl -X POST -H "Content-Type: application/json" \
             --data @slack_payload.json $SLACK_WEBHOOK
             '''
+                    }
                 }
             }
-        }
-        failure {
-            echo '❌ Pipeline failed. No Slack message.'
         }
     }
 }
