@@ -46,6 +46,7 @@ import {
   ZeroArgVoidReturns,
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
+import { SaveTemporaryPostRequest } from "@likeminds.community/feed-js";
 
 interface UseCreatePost {
   postText: string | null;
@@ -435,7 +436,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
 
-  function pollExpiryTimeClickFunction() { }
+  function pollExpiryTimeClickFunction() {}
 
   function editPollFunction() {
     setPreviewPoll(false);
@@ -474,12 +475,84 @@ export function useCreatePost(): UseCreatePost {
 
         const attachmentResponseArray: Attachment[] = [];
 
+        // // Check if post has media attachments
+        // const hasMediaAttachments = mediaList.some(
+        //   (file) =>
+        //     file.type.includes("image") ||
+        //     file.type.includes("video") ||
+        //     file.type.includes("pdf") ||
+        //     (file.type.includes("video") &&
+        //       mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL),
+        // );
+
+        // if (hasMediaAttachments) {
+        //   // Create temporary post ID
+        //   const tempId = `-${Date.now()}`;
+
+        //   // Create temporary post object
+        //   const tempPost = SaveTemporaryPostRequest.builder()
+        //     .setTempPost({
+        //       post: {
+        //         id: tempId,
+        //         text: textContent,
+        //         attachments: attachmentResponseArray,
+        //         topics: selectedTopicIds,
+        //         isAnonymous: isAnonymousPost,
+        //         heading: question || "",
+        //         createdAt: Date.now(),
+        //         commentsCount: 0,
+        //         isEdited: false,
+        //         isLiked: false,
+        //         isPinned: false,
+        //         isRepost: false,
+        //         isRepostedByUser: false,
+        //         isSaved: false,
+        //         likesCount: 0,
+        //         menuItems: [],
+        //         repostCount: 0,
+        //         tempId: null,
+        //         updatedAt: Date.now(),
+        //         uuid: "",
+        //         isHidden: false,
+        //       },
+        //     })
+        //     .build();
+
+        //   // Save to local storage
+        //   await lmFeedclient?.saveTemporaryPost(tempPost);
+
+        //   // Set the temporary post in the context
+        //   setTemporaryPost(tempPost.tempPost.post);
+
+        //   // Upload media to AWS S3
+        //   try {
+        //     // Show banner only when we start AWS upload
+        //     customEventClient?.dispatchEvent(
+        //       LMFeedCustomActionEvents.POST_CREATION_STARTED,
+        //       { tempId },
+        //     );
+
+        //     for (const file of mediaList) {
+        //       await HelperFunctionsClass.uploadMedia(
+        //         file,
+        //         currentUser?.sdkClientInfo.uuid || "",
+        //       );
+        //     }
+        //   } catch (error) {
+        //     // Hide banner if upload fails
+        //     customEventClient?.dispatchEvent(
+        //       LMFeedCustomActionEvents.POST_CREATION_FAILED,
+        //     );
+        //     throw error; // Re-throw to handle in the outer catch block
+        //   }
+        // }
+
         if (pollText.length !== 0) {
           const pollOtionsList: string[] = pollOptions.map((obj) => obj.text);
 
           const multipleSelectState =
             numberToPollMultipleSelectState[
-            advancedPollOptions.MULTIPLE_SELECTION_STATE
+              advancedPollOptions.MULTIPLE_SELECTION_STATE
             ];
 
           const pollType = advancedPollOptions.DONT_SHOW_LIVE_RESULTS
@@ -524,7 +597,7 @@ export function useCreatePost(): UseCreatePost {
             const attachmentType = file.type.includes("image")
               ? 1
               : file.type.includes("video") &&
-                mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
                 ? 11 // Setting attachmentType to 11 for reels
                 : file.type.includes("video")
                   ? 2
@@ -663,8 +736,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -676,6 +749,73 @@ export function useCreatePost(): UseCreatePost {
                 )
                 .build(),
             );
+          }
+        }
+
+        // Check if post has media attachments
+        const hasMediaAttachments = attachmentResponseArray.some(
+          (attachment) =>
+            attachment.type === AttachmentType.IMAGE ||
+            attachment.type === AttachmentType.VIDEO ||
+            attachment.type === AttachmentType.DOCUMENT ||
+            attachment.type === AttachmentType.REEL,
+        );
+
+        if (hasMediaAttachments) {
+          const tempId = `-${Date.now()}`;
+          const tempPost = SaveTemporaryPostRequest.builder()
+            .setTempPost({
+              post: {
+                id: tempId,
+                text: textContent,
+                attachments: attachmentResponseArray,
+                topics: selectedTopicIds,
+                isAnonymous: isAnonymousPost,
+                heading: question || "",
+                createdAt: Date.now(),
+                commentsCount: 0,
+                isEdited: false,
+                isLiked: false,
+                isPinned: false,
+                isRepost: false,
+                isRepostedByUser: false,
+                isSaved: false,
+                likesCount: 0,
+                menuItems: [],
+                repostCount: 0,
+                tempId: null,
+                updatedAt: Date.now(),
+                uuid: "",
+                isHidden: false,
+              },
+            })
+            .build();
+          // Save to local storage
+          await lmFeedclient?.saveTemporaryPost(tempPost);
+
+          // Set the temporary post in the context
+          setTemporaryPost(tempPost.tempPost.post);
+
+          // Upload media to AWS S3
+          try {
+            // Show banner only when we start AWS upload
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_STARTED,
+              { tempId },
+            );
+
+            for (const file of mediaList) {
+              await HelperFunctionsClass.uploadMedia(
+                file,
+                currentUser?.sdkClientInfo.uuid || "",
+              );
+            }
+          } catch (error) {
+            // Hide banner if upload fails
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_FAILED,
+            );
+            throw error; // Re-throw to handle in the outer catch block
           }
         }
 
@@ -701,6 +841,10 @@ export function useCreatePost(): UseCreatePost {
         }
       } catch (error) {
         console.log(error);
+        // Dispatch failed event if not already dispatched
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.POST_CREATION_FAILED,
+        );
       } finally {
         setOpenPostCreationProgressBar!(false);
       }
@@ -780,8 +924,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -1074,9 +1218,9 @@ export function useCreatePost(): UseCreatePost {
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback
         ? createPostComponentClickCustomCallback.bind(
-          null,
-          postCreationActionAndDataStore,
-        )
+            null,
+            postCreationActionAndDataStore,
+          )
         : undefined,
     openCreatePollDialog,
     setOpenCreatePollDialog,
