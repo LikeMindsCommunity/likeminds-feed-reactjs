@@ -74,7 +74,7 @@ pipeline {
                     script {
                         def version     = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
                         def tagName     = "v${version}"
-                        def releaseName = "Release ${version}"
+                        def releaseName = "v${version}"
 
                         sh '''
                             git config user.name 'Ishaan Jain'
@@ -130,7 +130,7 @@ pipeline {
                                 "attachments": [
                                     {
                                         "color": "#36a64f",
-                                        "title": "✅ ReactJS SDK Deployed",
+                                        "title": "✅ ReactJS Feed Core SDK Deployed",
                                         "title_link": "https://github.com/${REPO}/releases/tag/${version}",
                                         "text": "A new version of the React SDK has been deployed and released.",
                                         "fields": [
