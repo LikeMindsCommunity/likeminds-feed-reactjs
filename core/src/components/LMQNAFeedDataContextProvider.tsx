@@ -7,7 +7,7 @@ import { returnPostId } from "../shared/utils";
 import LMQNAFeedDetails from "./LMQNAFeedDetails";
 import LMQNAFeedUniversalFeed from "./LMQNAFeedUniversalFeed";
 import { LMFeedModerationScreen } from "./LMFeedModerationScreen";
-import { CustomAgentProviderContext } from "..";
+import { CustomAgentProviderContext } from "../old_index";
 import { LMFeedCurrentUserState } from "../shared/enums/lmCurrentUserState";
 
 export interface LMQNAFeedDataContextProviderInterface {

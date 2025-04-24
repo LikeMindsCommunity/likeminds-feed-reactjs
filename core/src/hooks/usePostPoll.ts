@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { FeedPostContext } from "..";
+import { FeedPostContext } from "../old_index";
 import { User } from "../shared/types/models/member";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { WidgetResponse } from "../shared/utils";
@@ -418,10 +418,10 @@ export function usePostPoll(): UsePostPoll {
     isAddOptionDialogOpen,
     handleAddOptionDialog: onAddPollOptionsClicked
       ? onAddPollOptionsClicked.bind(null, {
-        pollCreationDataStore: pollPostDataStore,
-        applicationGeneralStore: applicationGeneralsStore,
-        defaultActions: defaultActions,
-      })
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
       : handleAddOptionDialog,
     showSubmitVoteButton,
     showAddOptionButton,
@@ -431,10 +431,10 @@ export function usePostPoll(): UsePostPoll {
     pollResultSelectedTab,
     setPollResultSelectedTabFunction: onOptionSelected
       ? onOptionSelected.bind(null, {
-        pollCreationDataStore: pollPostDataStore,
-        applicationGeneralStore: applicationGeneralsStore,
-        defaultActions: defaultActions,
-      })
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
       : setPollResultSelectedTabFunction,
     totalMultipleOptions,
     newOption,
@@ -444,17 +444,17 @@ export function usePostPoll(): UsePostPoll {
     handleOptionClick,
     handleAddOptionSubmit: onSubmitButtonClick
       ? onSubmitButtonClick.bind(null, {
-        pollCreationDataStore: pollPostDataStore,
-        applicationGeneralStore: applicationGeneralsStore,
-        defaultActions: defaultActions,
-      })
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
       : handleAddOptionSubmit,
     submitVoteHandler: onSubmitButtonClicked
       ? onSubmitButtonClicked.bind(null, {
-        pollCreationDataStore: pollPostDataStore,
-        applicationGeneralStore: applicationGeneralsStore,
-        defaultActions: defaultActions,
-      })
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
       : submitVoteHandler,
     totalVotesCount,
     totalMembersVotes,
@@ -462,10 +462,10 @@ export function usePostPoll(): UsePostPoll {
     setIsEditModeFunction,
     onOptionVoteCountClick: onPollOptionClicked
       ? onPollOptionClicked.bind(null, {
-        pollCreationDataStore: pollPostDataStore,
-        applicationGeneralStore: applicationGeneralsStore,
-        defaultActions: defaultActions,
-      })
+          pollCreationDataStore: pollPostDataStore,
+          applicationGeneralStore: applicationGeneralsStore,
+          defaultActions: defaultActions,
+        })
       : onOptionVoteCountClick,
     pollReadMoreTapped,
     pollReadMoreTappedFunction,

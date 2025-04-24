@@ -1,4 +1,4 @@
-import { FeedPostContext } from "..";
+import { FeedPostContext } from "../old_index";
 import { useContext, useMemo } from "react";
 import {
   getTimeLeftInPoll,
