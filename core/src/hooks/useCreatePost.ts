@@ -47,6 +47,7 @@ import {
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
 import { SaveTemporaryPostRequest } from "@likeminds.community/feed-js";
+import { DeleteTemporaryPostRequest } from "@likeminds.community/feed-js";
 
 interface UseCreatePost {
   postText: string | null;
@@ -312,6 +313,7 @@ export function useCreatePost(): UseCreatePost {
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
   const [isAnonymousPost, setIsAnonymousPost] = useState<boolean>(false);
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
+  // const [temporaryId, setTemporaryId] = useState<string | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [preSelectedTopics, setPreSelectedTopics] = useState<Topic[]>([]);
@@ -760,9 +762,10 @@ export function useCreatePost(): UseCreatePost {
             attachment.type === AttachmentType.DOCUMENT ||
             attachment.type === AttachmentType.REEL,
         );
-
+        let localTempId = null;
         if (hasMediaAttachments) {
           const tempId = `-${Date.now()}`;
+          localTempId = tempId;
           const tempPost = SaveTemporaryPostRequest.builder()
             .setTempPost({
               post: {
@@ -834,6 +837,16 @@ export function useCreatePost(): UseCreatePost {
 
         const call = await lmFeedclient?.addPost(addPostRequest);
         if (call?.success) {
+          console.log(localTempId);
+          if (hasMediaAttachments && localTempId) {
+            const deleteRequest = DeleteTemporaryPostRequest.builder()
+              .setTemporaryPostId(localTempId) // Use the same ID that was saved
+              .build();
+
+            // Delete the temporary post from IndexedDB
+            await lmFeedclient?.deleteTemporaryPost(deleteRequest);
+          }
+
           lmfeedAnalyticsClient?.sendPostCreatedEvent(call?.data?.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
