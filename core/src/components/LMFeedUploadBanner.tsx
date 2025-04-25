@@ -135,7 +135,6 @@ const LMFeedUploadBanner = () => {
       >
         <div className="lm-feed-upload-banner__spinner"></div>
         <span className="lm-feed-upload-banner__text">Uploading post...</span>
-        <div>hello this the original banner</div>
         <button
           className="lm-feed-upload-banner__cancel-btn"
           onClick={handleCancel}
