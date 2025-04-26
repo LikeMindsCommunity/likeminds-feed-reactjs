@@ -781,9 +781,10 @@ export function useCreatePost(): UseCreatePost {
         }
       } catch (error) {
         console.log(error);
-        // Dispatch failed event if not already dispatched
+        // Dispatch failed event with upload failure flag
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.POST_CREATION_FAILED,
+          { isUploadFailure: true }
         );
       } finally {
         setOpenPostCreationProgressBar!(false);
@@ -963,6 +964,61 @@ export function useCreatePost(): UseCreatePost {
   }, [lmFeedclient, text]);
 
   useEffect(() => {
+    // Listen for retry upload event
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.RETRY_POST_UPLOAD,
+      async (event: Event) => {
+        const customEvent = event as CustomEvent;
+        const post = customEvent.detail?.post;
+        if (post) {
+          // Reset states and start upload again
+          setTemporaryPost(post);
+          try {
+            setOpenPostCreationProgressBar!(true);
+            // Re-upload media attachments
+            for (const attachment of post.attachments) {
+              if ([1, 2, 3, 11].includes(attachment.type)) {
+                const file = attachment.metaData.file;
+                await HelperFunctionsClass.uploadMedia(
+                  file,
+                  currentUser?.sdkClientInfo.uuid || ""
+                );
+              }
+            }
+            // If upload successful, create the post
+            const addPostRequest = AddPostRequest.builder()
+              .setAttachments(post.attachments)
+              .setText(post.text)
+              .setTopicIds(post.topics)
+              .setTempId(Date.now().toString())
+              .setIsAnonymous(post.isAnonymous)
+              .build();
+
+            const call = await lmFeedclient?.addPost(addPostRequest);
+            if (call?.success) {
+              // Delete temporary post after successful creation
+              const deleteRequest = DeleteTemporaryPostRequest.builder()
+                .setTemporaryPostId(post.id)
+                .build();
+              await lmFeedclient?.deleteTemporaryPost(deleteRequest);
+
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATED
+              );
+            }
+          } catch (error) {
+            console.error("Error during retry upload:", error);
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_FAILED,
+              { isUploadFailure: true }
+            );
+          } finally {
+            setOpenPostCreationProgressBar!(false);
+          }
+        }
+      }
+    );
+
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
       (event: Event) => {

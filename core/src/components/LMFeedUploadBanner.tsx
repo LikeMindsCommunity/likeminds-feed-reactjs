@@ -1,19 +1,44 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { DeleteTemporaryPostRequest } from "@likeminds.community/feed-js";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import { DeleteTemporaryPostRequest, AddPostRequest, AttachmentType } from "@likeminds.community/feed-js";
 import { HelperFunctionsClass } from "../shared/helper";
 // import deleteTemporaryPost from "@likeminds.community/feed-js";
 const LMFeedUploadBanner = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [tempPostId, setTempPostId] = useState<string | null>(null);
+  const [uploadFailed, setUploadFailed] = useState(false);
   const { customEventClient, lmFeedclient } = useContext(
-    LMFeedGlobalClientProviderContext,
+    LMFeedGlobalClientProviderContext
   );
+  const { currentUser } = useContext(LMFeedUserProviderContext);
   // const { temporaryPost } = useContext(LMFeedCreatePostContext);
 
   useEffect(() => {
-    console.log("LMFeedUploadBanner mounted");
+    // Check for any existing temporary posts when component mounts
+    const checkTemporaryPost = async () => {
+      try {
+        const response = await lmFeedclient?.getTemporaryPost();
+        if (response?.data?.tempPost) {
+          const tempId = response.data.tempPost.post.id;
+          setTempPostId(tempId);
+          setIsVisible(true);
+          setUploadFailed(true);
+          // Dispatch event to disable create post button
+          customEventClient?.dispatchEvent(
+            LMFeedCustomActionEvents.POST_CREATION_STARTED,
+            { tempId }
+          );
+        }
+      } catch (error) {
+        console.error('Error checking temporary post:', error);
+      }
+    };
+
+    checkTemporaryPost();
+
+    // Handle new post creation events
     const handlePostCreationStarted = (event: Event) => {
       const customEvent = event as CustomEvent;
       console.log("Post creation started", customEvent.detail);
@@ -29,8 +54,7 @@ const LMFeedUploadBanner = () => {
 
     const handlePostCreationFailed = () => {
       console.log("Post creation failed");
-      setIsVisible(false);
-      setTempPostId(null);
+      setUploadFailed(true);
     };
 
     customEventClient?.listen(
@@ -55,6 +79,104 @@ const LMFeedUploadBanner = () => {
       customEventClient?.remove(LMFeedCustomActionEvents.POST_CREATION_FAILED);
     };
   }, [customEventClient]);
+
+  const handleRetry = async () => {
+    if (tempPostId && lmFeedclient) {
+      try {
+        // Get the temporary post
+        const post = await lmFeedclient.getTemporaryPost();
+        const tempPost = post?.data?.tempPost?.post;
+        
+        if (tempPost) {
+          setUploadFailed(false);
+          
+          // Show banner when we start AWS upload retry
+          customEventClient?.dispatchEvent(
+            LMFeedCustomActionEvents.POST_CREATION_STARTED,
+            { tempId: tempPost.id }
+          );
+
+          try {
+            // Upload media to AWS S3
+            const mediaList = tempPost.attachments || [];
+            if (!currentUser?.sdkClientInfo?.uuid) {
+              throw new Error("User ID not found");
+            }
+            for (const attachment of mediaList) {
+              if (attachment.type === AttachmentType.IMAGE || 
+                  attachment.type === AttachmentType.VIDEO || 
+                  attachment.type === AttachmentType.DOCUMENT) {
+                if (!attachment.metaData?.url) {
+                  console.warn('No URL found for attachment:', attachment);
+                  continue;
+                }
+                try {
+                  const response = await fetch(attachment.metaData.url);
+                  const blob = await response.blob();
+                  const file = new File(
+                    [blob],
+                    attachment.metaData.name || 'file',
+                    { type: response.headers.get('content-type') || 'application/octet-stream' }
+                  );
+                  await HelperFunctionsClass.uploadMedia(
+                    file,
+                    currentUser.sdkClientInfo.uuid
+                  );
+                } catch (error) {
+                  console.error('Failed to fetch file from URL:', error);
+                  continue;
+                }
+              } else {
+                console.warn('Unsupported attachment type:', attachment.type);
+                continue;
+              }
+            }
+            
+            // After successful AWS upload, call addPost
+            const addPostRequest = AddPostRequest.builder()
+              .setAttachments(tempPost.attachments || [])
+              .setText(tempPost.text || "")
+              .setTopicIds(tempPost.topics || [])
+              .setTempId(Date.now().toString())
+              .setIsAnonymous(tempPost.isAnonymous || false);
+
+            if (tempPost.heading) {
+              addPostRequest.setHeading(tempPost.heading);
+            }
+
+            const addPostResponse = await lmFeedclient.addPost(addPostRequest.build());
+            
+            if (addPostResponse?.success) {
+              // Delete temporary post after successful creation
+              const deleteRequest = DeleteTemporaryPostRequest.builder()
+                .setTemporaryPostId(tempPostId)
+                .build();
+
+              await lmFeedclient.deleteTemporaryPost(deleteRequest);
+
+              // Dispatch success event
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATED,
+                {}
+              );
+            }
+          } catch (error) {
+            console.error("Error in upload/post creation:", error);
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_FAILED,
+              {}
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error getting temporary post:", error);
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.POST_CREATION_FAILED,
+          {}
+        );
+      }
+    }
+  };
 
   const handleCancel = async () => {
     console.log("entry mil  gayi ji");
@@ -133,22 +255,61 @@ const LMFeedUploadBanner = () => {
           color: "white",
         }}
       >
-        <div className="lm-feed-upload-banner__spinner"></div>
-        <span className="lm-feed-upload-banner__text">Uploading post...</span>
-        <button
-          className="lm-feed-upload-banner__cancel-btn"
-          onClick={handleCancel}
-          style={{
-            cursor: "pointer",
-            padding: "5px 10px",
-            backgroundColor: "white",
-            border: "none",
-            borderRadius: "4px",
-            color: "black",
-          }}
-        >
-          Cancel
-        </button>
+        {!uploadFailed ? (
+          <>
+            <div className="lm-feed-upload-banner__spinner"></div>
+            <span className="lm-feed-upload-banner__text">
+              Uploading post...
+            </span>
+            <button
+              className="lm-feed-upload-banner__cancel-btn"
+              onClick={handleCancel}
+              style={{
+                cursor: "pointer",
+                padding: "5px 10px",
+                backgroundColor: "white",
+                border: "none",
+                borderRadius: "4px",
+                color: "black",
+              }}
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="lm-feed-upload-banner__text">Upload failed</span>
+            <button
+              className="lm-feed-upload-banner__retry-btn"
+              onClick={handleRetry}
+              style={{
+                cursor: "pointer",
+                padding: "5px 10px",
+                backgroundColor: "white",
+                border: "none",
+                borderRadius: "4px",
+                color: "black",
+                marginRight: "10px",
+              }}
+            >
+              Retry
+            </button>
+            <button
+              className="lm-feed-upload-banner__cancel-btn"
+              onClick={handleCancel}
+              style={{
+                cursor: "pointer",
+                padding: "5px 10px",
+                backgroundColor: "white",
+                border: "none",
+                borderRadius: "4px",
+                color: "black",
+              }}
+            >
+              Cancel
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
