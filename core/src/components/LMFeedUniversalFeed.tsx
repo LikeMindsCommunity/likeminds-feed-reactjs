@@ -15,7 +15,6 @@ import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
 import LMFeedUploadBanner from "./LMFeedUploadBanner";
-
 interface LMFeedUniversalFeedProps {
   followedTopics?: string[];
 }
