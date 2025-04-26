@@ -1,0 +1,97 @@
+.lm-feed-upload-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(to right, #4a90e2, #357abd);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+
+  &__container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  &__text {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 16px;
+  }
+
+  &__retry-btn,
+  &__cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__retry-btn {
+    background-color: white;
+    color: #4a90e2;
+    margin-right: 12px;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  &__cancel-btn {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    backdrop-filter: blur(8px);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  // Error state
+  &--error {
+    background: linear-gradient(to right, #e74c3c, #c0392b);
+
+    .lm-feed-upload-banner__retry-btn {
+      color: #e74c3c;
+    }
+  }
+
+  // Loading animation for the uploading state
+  &__loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

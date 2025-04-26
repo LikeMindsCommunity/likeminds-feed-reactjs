@@ -764,7 +764,6 @@ export function useCreatePost(): UseCreatePost {
 
         const call = await lmFeedclient?.addPost(addPostRequest);
         if (call?.success) {
-          console.log(localTempId);
           if (hasMediaAttachments && localTempId) {
             const deleteRequest = DeleteTemporaryPostRequest.builder()
               .setTemporaryPostId(localTempId) // Use the same ID that was saved

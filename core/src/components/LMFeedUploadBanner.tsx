@@ -5,7 +5,7 @@ import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
 import { DeleteTemporaryPostRequest, AddPostRequest, AttachmentType } from "@likeminds.community/feed-js";
 import { HelperFunctionsClass } from "../shared/helper";
 // import deleteTemporaryPost from "@likeminds.community/feed-js";
-const LMFeedUploadBanner = () => {
+const LMFeedUploadBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [tempPostId, setTempPostId] = useState<string | null>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -41,19 +41,16 @@ const LMFeedUploadBanner = () => {
     // Handle new post creation events
     const handlePostCreationStarted = (event: Event) => {
       const customEvent = event as CustomEvent;
-      console.log("Post creation started", customEvent.detail);
       setTempPostId(customEvent.detail.tempId);
       setIsVisible(true);
     };
 
     const handlePostCreated = () => {
-      console.log("Post created");
       setIsVisible(false);
       setTempPostId(null);
     };
 
     const handlePostCreationFailed = () => {
-      console.log("Post creation failed");
       setUploadFailed(true);
     };
 
@@ -73,7 +70,6 @@ const LMFeedUploadBanner = () => {
     );
 
     return () => {
-      console.log("LMFeedUploadBanner unmounting");
       customEventClient?.remove(LMFeedCustomActionEvents.POST_CREATION_STARTED);
       customEventClient?.remove(LMFeedCustomActionEvents.POST_CREATED);
       customEventClient?.remove(LMFeedCustomActionEvents.POST_CREATION_FAILED);
@@ -179,14 +175,10 @@ const LMFeedUploadBanner = () => {
   };
 
   const handleCancel = async () => {
-    console.log("entry mil  gayi ji");
-    console.log("tempPostId:", tempPostId);
     if (tempPostId && lmFeedclient) {
       try {
-        console.log("Cancelling upload for post:", tempPostId);
         // Cancel the AWS upload first
         HelperFunctionsClass.cancelUpload();
-        console.log("aws upload cancel");
 
         // Then delete the temporary post
         const request = DeleteTemporaryPostRequest.builder()
@@ -195,8 +187,6 @@ const LMFeedUploadBanner = () => {
 
         // Delete from local storage
         await lmFeedclient?.deleteTemporaryPost(request);
-        console.log("hello", request.temporaryPostId);
-        console.log("deleted temporary post from local storage");
 
         // Clear the temporary post from state
         setTempPostId(null);
@@ -206,7 +196,6 @@ const LMFeedUploadBanner = () => {
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.POST_CREATION_FAILED,
         );
-        console.log("event cancelled");
       } catch (error) {
         console.error("Error during cancellation:", error);
         // Even if there's an error, try to hide the banner and clear state
@@ -221,57 +210,18 @@ const LMFeedUploadBanner = () => {
     }
   };
 
-  console.log(
-    "LMFeedUploadBanner rendering, isVisible:",
-    isVisible,
-    "tempPostId:",
-    tempPostId,
-  );
-
   if (!isVisible) return null;
 
   return (
-    <div
-      className="lm-feed-upload-banner"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        padding: "10px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        className="lm-feed-upload-banner__content"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          color: "white",
-        }}
-      >
+    <div className={`lm-feed-upload-banner ${uploadFailed ? 'lm-feed-upload-banner--error' : ''}`}>
+      <div className="lm-feed-upload-banner__container">
         {!uploadFailed ? (
           <>
-            <div className="lm-feed-upload-banner__spinner"></div>
-            <span className="lm-feed-upload-banner__text">
-              Uploading post...
-            </span>
+            <div className="lm-feed-upload-banner__loading" />
+            <span className="lm-feed-upload-banner__text">Uploading...</span>
             <button
               className="lm-feed-upload-banner__cancel-btn"
               onClick={handleCancel}
-              style={{
-                cursor: "pointer",
-                padding: "5px 10px",
-                backgroundColor: "white",
-                border: "none",
-                borderRadius: "4px",
-                color: "black",
-              }}
             >
               Cancel
             </button>
@@ -282,29 +232,12 @@ const LMFeedUploadBanner = () => {
             <button
               className="lm-feed-upload-banner__retry-btn"
               onClick={handleRetry}
-              style={{
-                cursor: "pointer",
-                padding: "5px 10px",
-                backgroundColor: "white",
-                border: "none",
-                borderRadius: "4px",
-                color: "black",
-                marginRight: "10px",
-              }}
             >
               Retry
             </button>
             <button
               className="lm-feed-upload-banner__cancel-btn"
               onClick={handleCancel}
-              style={{
-                cursor: "pointer",
-                padding: "5px 10px",
-                backgroundColor: "white",
-                border: "none",
-                borderRadius: "4px",
-                color: "black",
-              }}
             >
               Cancel
             </button>
