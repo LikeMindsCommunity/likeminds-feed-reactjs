@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
-import { FeedPostContext } from "../old_index";
+import { FeedPostContext } from "..";
 import { User } from "../shared/types/models/member";
 import { CustomAgentProviderContext } from "../contexts/LMFeedCustomAgentProviderContext";
 import { WidgetResponse } from "../shared/utils";
