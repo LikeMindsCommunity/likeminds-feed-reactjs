@@ -1,5 +1,5 @@
 import React from "react";
-import { useLMFeedRetryPost } from "../hooks/LMFeedRetryPost";
+import { useLMFeedRetryPost } from "../hooks/useRetryPost";
 
 const LMFeedUploadBanner: React.FC = () => {
   const { isVisible, uploadFailed, handleRetry, handleCancel } = useLMFeedRetryPost();
