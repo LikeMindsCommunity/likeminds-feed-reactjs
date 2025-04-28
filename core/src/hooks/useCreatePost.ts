@@ -313,7 +313,6 @@ export function useCreatePost(): UseCreatePost {
   const [tempReelThumbnail, setTempReelThumbnail] = useState<File[]>([]);
   const [isAnonymousPost, setIsAnonymousPost] = useState<boolean>(false);
   const [temporaryPost, setTemporaryPost] = useState<Post | null>(null);
-  // const [temporaryId, setTemporaryId] = useState<string | null>(null);
   const [mediaList, setMediaList] = useState<File[]>([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [preSelectedTopics, setPreSelectedTopics] = useState<Topic[]>([]);
