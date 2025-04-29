@@ -119,11 +119,9 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                     currentUser.sdkClientInfo.uuid
                   );
                 } catch (error) {
-                  console.error('Failed to fetch file from URL:', error);
                   continue;
                 }
               } else {
-                console.warn('Unsupported attachment type:', attachment.type);
                 continue;
               }
             }
@@ -154,7 +152,6 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
               );
             }
           } catch (error) {
-            console.error("Error in upload/post creation:", error);
             customEventClient?.dispatchEvent(
               LMFeedCustomActionEvents.POST_CREATION_FAILED,
               {}

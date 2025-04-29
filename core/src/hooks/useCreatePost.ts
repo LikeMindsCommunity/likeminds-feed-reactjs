@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { createTempPost } from "../shared/utils/createTempPost";
+import { isMediaAttachmentType } from "../shared/utils/attachmentUtils";
 import {
   MutableRefObject,
   useCallback,
@@ -681,47 +683,30 @@ export function useCreatePost(): UseCreatePost {
         }
 
         // Check if post has media attachments
-        const hasMediaAttachments = attachmentResponseArray.some(
-          (attachment) =>
-            attachment.type === AttachmentType.IMAGE ||
-            attachment.type === AttachmentType.VIDEO ||
-            attachment.type === AttachmentType.DOCUMENT ||
-            attachment.type === AttachmentType.REEL,
+        const hasMediaAttachments = attachmentResponseArray.some((attachment) =>
+          isMediaAttachmentType(attachment.type),
         );
         let localTempId = null;
         if (hasMediaAttachments) {
-          const tempId = `-${Date.now()}`;
+          const tempId = `-${Date.now()}`;    
           localTempId = tempId;
           const tempPost = SaveTemporaryPostRequest.builder()
             .setTempPost({
-              post: {
-                id: tempId,
-                text: textContent,
+              post: createTempPost({
+                textContent,
                 attachments: attachmentResponseArray,
-                topics: selectedTopicIds,
-                isAnonymous: isAnonymousPost,
-                heading: question || "",
-                createdAt: Date.now(),
-                commentsCount: 0,
-                isEdited: false,
-                isLiked: false,
-                isPinned: false,
-                isRepost: false,
-                isRepostedByUser: false,
-                isSaved: false,
-                likesCount: 0,
-                menuItems: [],
-                repostCount: 0,
-                tempId: null,
-                updatedAt: Date.now(),
-                uuid: "",
-                isHidden: false,
-              },
+                selectedTopicIds,
+                isAnonymousPost,
+                question: question || "",
+                tempId,
+                uuid: currentUser?.sdkClientInfo.uuid || "",
+              }),
             })
             .build();
           // Save to local storage
           await lmFeedclient?.saveTemporaryPost(tempPost);
 
+          // ... (rest of the code remains the same)
           // Set the temporary post in the context
           setTemporaryPost(tempPost.tempPost.post);
 
@@ -782,7 +767,7 @@ export function useCreatePost(): UseCreatePost {
         // Dispatch failed event with upload failure flag
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.POST_CREATION_FAILED,
-          { isUploadFailure: true }
+          { isUploadFailure: true },
         );
       } finally {
         setOpenPostCreationProgressBar!(false);
@@ -829,11 +814,7 @@ export function useCreatePost(): UseCreatePost {
         if (ogTag) {
           if (
             !attachmentResponseArray.some(
-              (attachment) =>
-                attachment.type === AttachmentType.IMAGE ||
-                attachment.type === AttachmentType.VIDEO ||
-                attachment.type === AttachmentType.DOCUMENT ||
-                attachment.type === AttachmentType.REEL,
+              (attachment) => isMediaAttachmentType(attachment.type)
             )
           ) {
             attachmentResponseArray.pop();
@@ -975,11 +956,11 @@ export function useCreatePost(): UseCreatePost {
             setOpenPostCreationProgressBar!(true);
             // Re-upload media attachments
             for (const attachment of post.attachments) {
-              if ([1, 2, 3, 11].includes(attachment.type)) {
+              if (isMediaAttachmentType(attachment.type)) {
                 const file = attachment.metaData.file;
                 await HelperFunctionsClass.uploadMedia(
                   file,
-                  currentUser?.sdkClientInfo.uuid || ""
+                  currentUser?.sdkClientInfo.uuid || "",
                 );
               }
             }
@@ -988,7 +969,7 @@ export function useCreatePost(): UseCreatePost {
               .setAttachments(post.attachments)
               .setText(post.text)
               .setTopicIds(post.topics)
-              .setTempId(Date.now().toString())
+              .setTempId(post.id)
               .setIsAnonymous(post.isAnonymous)
               .build();
 
@@ -1001,20 +982,19 @@ export function useCreatePost(): UseCreatePost {
               await lmFeedclient?.deleteTemporaryPost(deleteRequest);
 
               customEventClient?.dispatchEvent(
-                LMFeedCustomActionEvents.POST_CREATED
+                LMFeedCustomActionEvents.POST_CREATED,
               );
             }
           } catch (error) {
-            console.error("Error during retry upload:", error);
             customEventClient?.dispatchEvent(
               LMFeedCustomActionEvents.POST_CREATION_FAILED,
-              { isUploadFailure: true }
+              { isUploadFailure: true },
             );
           } finally {
             setOpenPostCreationProgressBar!(false);
           }
         }
-      }
+      },
     );
 
     customEventClient?.listen(
