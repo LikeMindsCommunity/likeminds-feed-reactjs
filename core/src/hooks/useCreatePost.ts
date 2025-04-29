@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { createTempPost } from "../shared/utils/createTempPost";
+import { isMediaAttachmentType } from "../shared/utils/attachmentUtils";
 import {
   MutableRefObject,
   useCallback,
@@ -46,6 +48,8 @@ import {
   ZeroArgVoidReturns,
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
+import { SaveTemporaryPostRequest } from "@likeminds.community/feed-js";
+import { DeleteTemporaryPostRequest } from "@likeminds.community/feed-js";
 
 interface UseCreatePost {
   postText: string | null;
@@ -435,7 +439,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
 
-  function pollExpiryTimeClickFunction() { }
+  function pollExpiryTimeClickFunction() {}
 
   function editPollFunction() {
     setPreviewPoll(false);
@@ -473,13 +477,12 @@ export function useCreatePost(): UseCreatePost {
         }
 
         const attachmentResponseArray: Attachment[] = [];
-
         if (pollText.length !== 0) {
           const pollOtionsList: string[] = pollOptions.map((obj) => obj.text);
 
           const multipleSelectState =
             numberToPollMultipleSelectState[
-            advancedPollOptions.MULTIPLE_SELECTION_STATE
+              advancedPollOptions.MULTIPLE_SELECTION_STATE
             ];
 
           const pollType = advancedPollOptions.DONT_SHOW_LIVE_RESULTS
@@ -524,7 +527,7 @@ export function useCreatePost(): UseCreatePost {
             const attachmentType = file.type.includes("image")
               ? 1
               : file.type.includes("video") &&
-                mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
                 ? 11 // Setting attachmentType to 11 for reels
                 : file.type.includes("video")
                   ? 2
@@ -663,8 +666,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -676,6 +679,57 @@ export function useCreatePost(): UseCreatePost {
                 )
                 .build(),
             );
+          }
+        }
+
+        // Check if post has media attachments
+        const hasMediaAttachments = attachmentResponseArray.some((attachment) =>
+          isMediaAttachmentType(attachment.type),
+        );
+        let localTempId = null;
+        if (hasMediaAttachments) {
+          const tempId = `-${Date.now()}`;    
+          localTempId = tempId;
+          const tempPost = SaveTemporaryPostRequest.builder()
+            .setTempPost({
+              post: createTempPost({
+                textContent,
+                attachments: attachmentResponseArray,
+                selectedTopicIds,
+                isAnonymousPost,
+                question: question || "",
+                tempId,
+                uuid: currentUser?.sdkClientInfo.uuid || "",
+              }),
+            })
+            .build();
+          // Save to local storage
+          await lmFeedclient?.saveTemporaryPost(tempPost);
+
+          // ... (rest of the code remains the same)
+          // Set the temporary post in the context
+          setTemporaryPost(tempPost.tempPost.post);
+
+          // Upload media to AWS S3
+          try {
+            // Show banner only when we start AWS upload
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_STARTED,
+              { tempId },
+            );
+
+            for (const file of mediaList) {
+              await HelperFunctionsClass.uploadMedia(
+                file,
+                currentUser?.sdkClientInfo.uuid || "",
+              );
+            }
+          } catch (error) {
+            // Hide banner if upload fails
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_FAILED,
+            );
+            throw error; // Re-throw to handle in the outer catch block
           }
         }
 
@@ -694,6 +748,15 @@ export function useCreatePost(): UseCreatePost {
 
         const call = await lmFeedclient?.addPost(addPostRequest);
         if (call?.success) {
+          if (hasMediaAttachments && localTempId) {
+            const deleteRequest = DeleteTemporaryPostRequest.builder()
+              .setTemporaryPostId(localTempId) // Use the same ID that was saved
+              .build();
+
+            // Delete the temporary post from IndexedDB
+            await lmFeedclient?.deleteTemporaryPost(deleteRequest);
+          }
+
           lmfeedAnalyticsClient?.sendPostCreatedEvent(call?.data?.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
@@ -701,6 +764,11 @@ export function useCreatePost(): UseCreatePost {
         }
       } catch (error) {
         console.log(error);
+        // Dispatch failed event with upload failure flag
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.POST_CREATION_FAILED,
+          { isUploadFailure: true },
+        );
       } finally {
         setOpenPostCreationProgressBar!(false);
       }
@@ -746,11 +814,7 @@ export function useCreatePost(): UseCreatePost {
         if (ogTag) {
           if (
             !attachmentResponseArray.some(
-              (attachment) =>
-                attachment.type === AttachmentType.IMAGE ||
-                attachment.type === AttachmentType.VIDEO ||
-                attachment.type === AttachmentType.DOCUMENT ||
-                attachment.type === AttachmentType.REEL,
+              (attachment) => isMediaAttachmentType(attachment.type)
             )
           ) {
             attachmentResponseArray.pop();
@@ -780,8 +844,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -879,6 +943,60 @@ export function useCreatePost(): UseCreatePost {
   }, [lmFeedclient, text]);
 
   useEffect(() => {
+    // Listen for retry upload event
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.RETRY_POST_UPLOAD,
+      async (event: Event) => {
+        const customEvent = event as CustomEvent;
+        const post = customEvent.detail?.post;
+        if (post) {
+          // Reset states and start upload again
+          setTemporaryPost(post);
+          try {
+            setOpenPostCreationProgressBar!(true);
+            // Re-upload media attachments
+            for (const attachment of post.attachments) {
+              if (isMediaAttachmentType(attachment.type)) {
+                const file = attachment.metaData.file;
+                await HelperFunctionsClass.uploadMedia(
+                  file,
+                  currentUser?.sdkClientInfo.uuid || "",
+                );
+              }
+            }
+            // If upload successful, create the post
+            const addPostRequest = AddPostRequest.builder()
+              .setAttachments(post.attachments)
+              .setText(post.text)
+              .setTopicIds(post.topics)
+              .setTempId(post.id)
+              .setIsAnonymous(post.isAnonymous)
+              .build();
+
+            const call = await lmFeedclient?.addPost(addPostRequest);
+            if (call?.success) {
+              // Delete temporary post after successful creation
+              const deleteRequest = DeleteTemporaryPostRequest.builder()
+                .setTemporaryPostId(post.id)
+                .build();
+              await lmFeedclient?.deleteTemporaryPost(deleteRequest);
+
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATED,
+              );
+            }
+          } catch (error) {
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_FAILED,
+              { isUploadFailure: true },
+            );
+          } finally {
+            setOpenPostCreationProgressBar!(false);
+          }
+        }
+      },
+    );
+
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
       (event: Event) => {
@@ -1074,9 +1192,9 @@ export function useCreatePost(): UseCreatePost {
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback
         ? createPostComponentClickCustomCallback.bind(
-          null,
-          postCreationActionAndDataStore,
-        )
+            null,
+            postCreationActionAndDataStore,
+          )
         : undefined,
     openCreatePollDialog,
     setOpenCreatePollDialog,
