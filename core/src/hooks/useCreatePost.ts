@@ -39,6 +39,8 @@ import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 import { numberToPollMultipleSelectState } from "../shared/utils";
 import { PollType } from "../shared/enums/ImPollType";
 import { getDisplayMessage } from "../shared/utils";
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
 
 import {
   OneArgVoidReturns,
@@ -46,6 +48,64 @@ import {
   ZeroArgVoidReturns,
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
+
+// Initialize FFmpeg
+const ffmpeg = new FFmpeg();
+let ffmpegLoaded = false;
+
+// Function to compress video
+const compressVideo = async (file: File): Promise<File> => {
+  try {
+    if (!ffmpegLoaded) {
+      // Load FFmpeg with WASM
+      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+      await ffmpeg.load({
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+      });
+      ffmpegLoaded = true;
+    }
+
+    const inputFileName = 'input.mp4';
+    const outputFileName = 'output.mp4';
+    
+    // Convert File to ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
+    
+    // Write the file to FFmpeg's virtual file system
+    await ffmpeg.writeFile(inputFileName, new Uint8Array(arrayBuffer));
+
+    // Compress video with FFmpeg
+    await ffmpeg.exec([
+      '-i', inputFileName,
+      '-c:v', 'libx264',
+      '-crf', '28',
+      '-preset', 'faster',
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      outputFileName
+    ]);
+
+    // Read the compressed file
+    const data = await ffmpeg.readFile(outputFileName);
+    
+    // Create a new File object
+    const compressedFile = new File(
+      [data],
+      file.name,
+      { type: 'video/mp4' }
+    );
+
+    // Clean up
+    await ffmpeg.deleteFile(inputFileName);
+    await ffmpeg.deleteFile(outputFileName);
+
+    return compressedFile;
+  } catch (error) {
+    console.error('Video compression failed:', error);
+    return file; // Return original file if compression fails
+  }
+};
 
 interface UseCreatePost {
   postText: string | null;
@@ -512,7 +572,18 @@ export function useCreatePost(): UseCreatePost {
             setOpenPostCreationProgressBar!(true);
           }
           for (let index = 0; index < mediaList.length; index++) {
-            const file: File = mediaList[index];
+            let file: File = mediaList[index];
+            
+            // Compress video files before upload
+            if (file.type.includes("video")) {
+              try {
+                const compressedFile = await compressVideo(file);
+                file = compressedFile;
+              } catch (error) {
+                console.error('Video compression failed:', error);
+                // Continue with original file if compression fails
+              }
+            }
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const resp: UploadMediaModel =
