@@ -1,15 +1,12 @@
 .lm-feed-upload-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: var(--lm-feed-info-color);
-  padding: pxToRem(16);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+  &__uploading{
+    display: flex;
+    align-items: center;
+    gap: pxToRem(12);
+    font-size: pxToRem(16);
+    font-weight: 500;
+    color: var(--lm-feed-dark-color);
+  }
 
   &__container {
     max-width: pxToRem(1200);
@@ -21,76 +18,51 @@
     gap: pxToRem(16);
   }
 
-  &__text {
-    color: var(--lm-feed-light-color);
+  &__cancel-btn {
+    padding: pxToRem(8) pxToRem(12);
+    border: none;
+    border-radius: pxToRem(20);
+    cursor: pointer;
+    font-family: "Roboto";
     font-size: pxToRem(16);
     font-weight: 500;
-    margin-right: pxToRem(16);
-  }
-
-  &__retry-btn,
-  &__cancel-btn {
-    padding: pxToRem(8) pxToRem(16);
-    border: none;
-    border-radius: pxToRem(6);
-    font-size: pxToRem(14);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      transform: translateY(pxToRem(-1));
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
+    color: var(--lm-feed-dark-color);
   }
 
   &__retry-btn {
-    background-color: var(--lm-feed-light-color);
-    color: var(--lm-feed-primary-color);
+    padding: pxToRem(8) pxToRem(12);
+    border: none;
+    border-radius: pxToRem(20);
+    cursor: pointer;
+    font-family: "Roboto";
+    font-size: pxToRem(16);
+    font-weight: 500;
+    color: var(--lm-feed-danger-color);
+    background-color: #FEE4E2;
     margin-right: pxToRem(12);
-
-    &:hover {
-      background-color: var(--lm-feed-light-color);
-    }
   }
 
-  &__cancel-btn {
-    background-color: var(--lm-feed-danger-color);
-    color: var(--lm-feed-light-color);
-    backdrop-filter: blur(pxToRem(8));
-
-    &:hover {
-      background-color: var(--lm-feed-dark-color);
-    }
-  }
-
-  // Error state
-  &--error {
-    background: var(--lm-feed-danger-color);
-
-    .lm-feed-upload-banner__retry-btn {
-      color: var(--lm-feed-light-color);
-    }
-  }
-
-  // Loading animation for the uploading state
-  &__loading {
-    display: inline-block;
-    width: pxToRem(20);
-    height: pxToRem(20);
-    margin-right: 12px;
-    border: pxToRem(2) solid var(--lm-feed-dark-color);
-    border-radius: 50%;
-    border-top-color: var(--lm-feed-light-color);
-    animation: spin 1s linear infinite;
+  &__retry-cancel-btn {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border: none;
+   border-radius: 100%;
+   padding: pxToRem(8);
   }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.lm-feed-upload-banner-snackbar{
+  padding: pxtoRem(16);
 }
+
+.lm-feed-upload-banner-text {
+  font-size: pxToRem(16);
+  font-weight: 500;
+  color: var(--lm-feed-dark-color);
+}
+
+.retry-banner-img{
+  margin-right: pxToRem(8);
+}
+

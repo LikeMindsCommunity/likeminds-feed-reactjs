@@ -130,6 +130,7 @@ export default function useUserProvider(
           lmFeedclient.setUserInLocalStorage(
             JSON.stringify(initiateUserCall.data?.user),
           );
+          lmFeedclient.initializeDatabase();
         }
 
         const memberStateCall: GetMemberStateResponse =

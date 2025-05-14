@@ -1,9 +1,17 @@
-import { useContext, useEffect, useState } from 'react';
-import { LMFeedCustomActionEvents } from '../shared/constants/lmFeedCustomEventNames';
-import LMFeedGlobalClientProviderContext from '../contexts/LMFeedGlobalClientProviderContext';
-import LMFeedUserProviderContext from '../contexts/LMFeedUserProviderContext';
-import { DeleteTemporaryPostRequest, AddPostRequest, AttachmentType } from '@likeminds.community/feed-js';
-import { HelperFunctionsClass } from '../shared/helper';
+import { useContext, useEffect, useState } from "react";
+import { LMFeedCustomActionEvents } from "../shared/constants/lmFeedCustomEventNames";
+import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
+import LMFeedUserProviderContext from "../contexts/LMFeedUserProviderContext";
+import {
+  DeleteTemporaryPostRequest,
+  AddPostRequest,
+  AttachmentType,
+  Attachment,
+  LMFeedPostAttachment,
+  LMFeedPostAttachmentMeta,
+} from "@likeminds.community/feed-js";
+import { HelperFunctionsClass } from "../shared/helper";
+import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 
 export interface LMFeedRetryPostHook {
   isVisible: boolean;
@@ -17,8 +25,10 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
   const [isVisible, setIsVisible] = useState(false);
   const [tempPostId, setTempPostId] = useState<string | null>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
-  
-  const { customEventClient, lmFeedclient } = useContext(LMFeedGlobalClientProviderContext);
+
+  const { customEventClient, lmFeedclient } = useContext(
+    LMFeedGlobalClientProviderContext,
+  );
   const { currentUser } = useContext(LMFeedUserProviderContext);
 
   useEffect(() => {
@@ -32,11 +42,11 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
           setUploadFailed(true);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATION_STARTED,
-            { tempId }
+            { tempId },
           );
         }
       } catch (error) {
-        console.error('Error checking temporary post:', error);
+        console.error("Error checking temporary post:", error);
       }
     };
 
@@ -84,26 +94,29 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
       try {
         const post = await lmFeedclient.getTemporaryPost();
         const tempPost = post?.data?.tempPost?.post;
-        
+
         if (tempPost) {
           setUploadFailed(false);
-          
+
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATION_STARTED,
-            { tempId: tempPost.id }
+            { tempId: tempPost.id },
           );
-
           try {
             const mediaList = tempPost.attachments || [];
+            const attachmentResponseArray: Attachment[] = [];
             if (!currentUser?.sdkClientInfo?.uuid) {
               throw new Error("User ID not found");
             }
             for (const attachment of mediaList) {
-              if (attachment.type === AttachmentType.IMAGE || 
-                  attachment.type === AttachmentType.VIDEO || 
-                  attachment.type === AttachmentType.DOCUMENT) {
+              if (
+                attachment.type === AttachmentType.IMAGE ||
+                attachment.type === AttachmentType.REEL ||
+                attachment.type === AttachmentType.VIDEO ||
+                attachment.type === AttachmentType.DOCUMENT
+              ) {
                 if (!attachment.metaData?.url) {
-                  console.warn('No URL found for attachment:', attachment);
+                  console.warn("No URL found for attachment:", attachment);
                   continue;
                 }
                 try {
@@ -111,13 +124,98 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                   const blob = await response.blob();
                   const file = new File(
                     [blob],
-                    attachment.metaData.name || 'file',
-                    { type: response.headers.get('content-type') || 'application/octet-stream' }
+                    attachment.metaData.name || "file",
+                    {
+                      type:
+                        response.headers.get("content-type") ||
+                        "application/octet-stream",
+                    },
                   );
-                  await HelperFunctionsClass.uploadMedia(
+                  (await HelperFunctionsClass.uploadMedia(
                     file,
-                    currentUser.sdkClientInfo.uuid
-                  );
+                    currentUser?.sdkClientInfo.uuid || "",
+                  )) as never;
+
+                  const uploadedFileKey = `https://${LMAppAwsKeys.bucketName}.s3.${LMAppAwsKeys.region}.amazonaws.com/${`files/post/${currentUser?.sdkClientInfo.uuid || ""}/${file.name}`}`;
+                  attachment.metaData.url = uploadedFileKey;
+
+                  switch (attachment.type) {
+                    case AttachmentType.IMAGE: {
+                      attachmentResponseArray.push(
+                        LMFeedPostAttachment.builder()
+                          .setType(AttachmentType.IMAGE)
+                          .setMetadata(
+                            LMFeedPostAttachmentMeta.builder()
+                              .setUrl(uploadedFileKey)
+                              .setFormat(
+                                file?.name?.split(".").slice(-1).toString(),
+                              )
+                              .setSize(file.size)
+                              .setName(file.name)
+                              .build(),
+                          )
+                          .build(),
+                      );
+                      break;
+                    }
+                    case AttachmentType.VIDEO: {
+                      attachmentResponseArray.push(
+                        LMFeedPostAttachment.builder()
+                          .setType(AttachmentType.VIDEO)
+                          .setMetadata(
+                            LMFeedPostAttachmentMeta.builder()
+                              .setUrl(uploadedFileKey)
+                              .setFormat(
+                                file?.name?.split(".").slice(-1).toString(),
+                              )
+                              .setSize(file.size)
+                              .setName(file.name)
+                              .setDuration(10)
+                              .build(),
+                          )
+                          .build(),
+                      );
+                      break;
+                    }
+                    case AttachmentType.DOCUMENT: {
+                      attachmentResponseArray.push(
+                        LMFeedPostAttachment.builder()
+                          .setType(AttachmentType.DOCUMENT)
+                          .setMetadata(
+                            LMFeedPostAttachmentMeta.builder()
+                              .setUrl(uploadedFileKey)
+                              .setFormat(
+                                file?.name?.split(".").slice(-1).toString(),
+                              )
+                              .setSize(file.size)
+                              .setName(file.name)
+                              .build(),
+                          )
+                          .build(),
+                      );
+                      break;
+                    }
+                    case AttachmentType.REEL: {
+                      // New case for attachmentType 11 (Reels)
+                      attachmentResponseArray.push(
+                        LMFeedPostAttachment.builder()
+                          .setType(AttachmentType.REEL)
+                          .setMetadata(
+                            LMFeedPostAttachmentMeta.builder()
+                              .setUrl(uploadedFileKey)
+                              .setFormat(
+                                file?.name?.split(".").slice(-1).toString(),
+                              )
+                              .setSize(file.size)
+                              .setName(file.name)
+                              .setDuration(10) // Assuming duration is applicable to reels
+                              .build(),
+                          )
+                          .build(),
+                      );
+                      break;
+                    }
+                  }
                 } catch (error) {
                   continue;
                 }
@@ -125,9 +223,9 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                 continue;
               }
             }
-            
+
             const addPostRequest = AddPostRequest.builder()
-              .setAttachments(tempPost.attachments || [])
+              .setAttachments(attachmentResponseArray)
               .setText(tempPost.text || "")
               .setTopicIds(tempPost.topics || [])
               .setTempId(Date.now().toString())
@@ -137,8 +235,10 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
               addPostRequest.setHeading(tempPost.heading);
             }
 
-            const addPostResponse = await lmFeedclient.addPost(addPostRequest.build());
-            
+            const addPostResponse = await lmFeedclient.addPost(
+              addPostRequest.build(),
+            );
+            console.log("5");
             if (addPostResponse?.success) {
               const deleteRequest = DeleteTemporaryPostRequest.builder()
                 .setTemporaryPostId(tempPostId)
@@ -148,13 +248,13 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
 
               customEventClient?.dispatchEvent(
                 LMFeedCustomActionEvents.POST_CREATED,
-                {}
+                {},
               );
             }
           } catch (error) {
             customEventClient?.dispatchEvent(
               LMFeedCustomActionEvents.POST_CREATION_FAILED,
-              {}
+              {},
             );
           }
         }
@@ -162,7 +262,7 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
         console.error("Error getting temporary post:", error);
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.POST_CREATION_FAILED,
-          {}
+          {},
         );
       }
     }
@@ -201,4 +301,3 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
     handleCancel,
   };
 };
-

@@ -1,6 +1,8 @@
+import { Attachment } from "../types/models/attachment";
+
 interface CreateTempPostParams {
   textContent: string;
-  attachments: any[];
+  attachments: Attachment[];
   selectedTopicIds: string[];
   isAnonymousPost: boolean;
   question?: string;
@@ -18,7 +20,7 @@ export const createTempPost = ({
   uuid,
 }: CreateTempPostParams) => {
   const currentTime = Date.now();
-  
+
   return {
     id: tempId,
     text: textContent,

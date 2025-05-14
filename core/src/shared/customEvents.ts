@@ -67,8 +67,6 @@ export class LMFeedCustomEvents {
       postCreationActionAndDataStore: this.postCreationActionAndDataStore,
       notificationsActionsAndDataStore: this.notificationsActionsAndDataStore,
     };
-    // return obj;
-    // console.log(fn.prototype);
     return fn.bind(obj);
   }
   private registerEvent(eventName: string) {

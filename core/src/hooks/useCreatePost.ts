@@ -454,6 +454,15 @@ export function useCreatePost(): UseCreatePost {
     }
   }
 
+  function readFileAsBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   const postFeed = useCallback(
     async function (customWidgetsData?: Record<string, any>[]) {
       try {
@@ -477,6 +486,10 @@ export function useCreatePost(): UseCreatePost {
         }
 
         const attachmentResponseArray: Attachment[] = [];
+
+        let localTempId = null;
+        const tempId = `-${Date.now()}`;
+
         if (pollText.length !== 0) {
           const pollOtionsList: string[] = pollOptions.map((obj) => obj.text);
 
@@ -513,6 +526,79 @@ export function useCreatePost(): UseCreatePost {
         } else {
           if (mediaList.length) {
             setOpenPostCreationProgressBar!(true);
+
+            localTempId = tempId;
+
+            // First create attachments with local file paths
+            const localAttachments: Attachment[] = [];
+            for (const file of mediaList) {
+              const attachmentType = file.type.includes("image")
+                ? AttachmentType.IMAGE
+                : file.type.includes("video") &&
+                    mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                  ? AttachmentType.REEL
+                  : file.type.includes("video")
+                    ? AttachmentType.VIDEO
+                    : file.type.includes("pdf")
+                      ? AttachmentType.DOCUMENT
+                      : AttachmentType.DOCUMENT;
+              const base64 = await readFileAsBase64(file);
+              const localAttachment = LMFeedPostAttachment.builder()
+                .setType(attachmentType)
+                .setMetadata(
+                  LMFeedPostAttachmentMeta.builder()
+                    .setUrl(base64) // Store local file URL
+                    .setFormat(file?.name?.split(".").slice(-1).toString())
+                    .setSize(file.size)
+                    .setName(file.name)
+                    .build(),
+                )
+                .build();
+
+              localAttachments.push(localAttachment);
+            }
+
+            // Save temporary post with local attachments first
+            const tempPost = SaveTemporaryPostRequest.builder()
+              .setTempPost({
+                post: createTempPost({
+                  textContent,
+                  attachments: localAttachments,
+                  selectedTopicIds,
+                  isAnonymousPost,
+                  question: question || "",
+                  tempId,
+                  uuid: currentUser?.sdkClientInfo.uuid || "",
+                }),
+              })
+              .build();
+
+            // Save to local storage
+            await lmFeedclient?.saveTemporaryPost(tempPost);
+
+            // Set the temporary post in the context
+            setTemporaryPost(tempPost.tempPost.post);
+
+            // Now proceed with AWS upload
+            try {
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATION_STARTED,
+                { tempId },
+              );
+
+              for (const file of mediaList) {
+                await HelperFunctionsClass.uploadMedia(
+                  file,
+                  currentUser?.sdkClientInfo.uuid || "",
+                );
+              }
+            } catch (error) {
+              // Hide banner if upload fails
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATION_FAILED,
+              );
+              throw error; // Re-throw to handle in the outer catch block
+            }
           }
           for (let index = 0; index < mediaList.length; index++) {
             const file: File = mediaList[index];
@@ -682,57 +768,6 @@ export function useCreatePost(): UseCreatePost {
           }
         }
 
-        // Check if post has media attachments
-        const hasMediaAttachments = attachmentResponseArray.some((attachment) =>
-          isMediaAttachmentType(attachment.type),
-        );
-        let localTempId = null;
-        if (hasMediaAttachments) {
-          const tempId = `-${Date.now()}`;    
-          localTempId = tempId;
-          const tempPost = SaveTemporaryPostRequest.builder()
-            .setTempPost({
-              post: createTempPost({
-                textContent,
-                attachments: attachmentResponseArray,
-                selectedTopicIds,
-                isAnonymousPost,
-                question: question || "",
-                tempId,
-                uuid: currentUser?.sdkClientInfo.uuid || "",
-              }),
-            })
-            .build();
-          // Save to local storage
-          await lmFeedclient?.saveTemporaryPost(tempPost);
-
-          // ... (rest of the code remains the same)
-          // Set the temporary post in the context
-          setTemporaryPost(tempPost.tempPost.post);
-
-          // Upload media to AWS S3
-          try {
-            // Show banner only when we start AWS upload
-            customEventClient?.dispatchEvent(
-              LMFeedCustomActionEvents.POST_CREATION_STARTED,
-              { tempId },
-            );
-
-            for (const file of mediaList) {
-              await HelperFunctionsClass.uploadMedia(
-                file,
-                currentUser?.sdkClientInfo.uuid || "",
-              );
-            }
-          } catch (error) {
-            // Hide banner if upload fails
-            customEventClient?.dispatchEvent(
-              LMFeedCustomActionEvents.POST_CREATION_FAILED,
-            );
-            throw error; // Re-throw to handle in the outer catch block
-          }
-        }
-
         const addPostRequestBuilder = AddPostRequest.builder()
           .setAttachments(attachmentResponseArray)
           .setText(textContent)
@@ -746,6 +781,10 @@ export function useCreatePost(): UseCreatePost {
 
         const addPostRequest = addPostRequestBuilder.build();
 
+        // Check if post has media attachments
+        const hasMediaAttachments = attachmentResponseArray.some((attachment) =>
+          isMediaAttachmentType(attachment.type),
+        );
         const call = await lmFeedclient?.addPost(addPostRequest);
         if (call?.success) {
           if (hasMediaAttachments && localTempId) {
@@ -813,8 +852,8 @@ export function useCreatePost(): UseCreatePost {
 
         if (ogTag) {
           if (
-            !attachmentResponseArray.some(
-              (attachment) => isMediaAttachmentType(attachment.type)
+            !attachmentResponseArray.some((attachment) =>
+              isMediaAttachmentType(attachment.type),
             )
           ) {
             attachmentResponseArray.pop();
