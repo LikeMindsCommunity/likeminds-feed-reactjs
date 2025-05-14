@@ -40,10 +40,6 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
           setTempPostId(tempId);
           setIsVisible(true);
           setUploadFailed(true);
-          customEventClient?.dispatchEvent(
-            LMFeedCustomActionEvents.POST_CREATION_STARTED,
-            { tempId },
-          );
         }
       } catch (error) {
         console.error("Error checking temporary post:", error);
@@ -56,6 +52,7 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
       const customEvent = event as CustomEvent;
       setTempPostId(customEvent.detail.tempId);
       setIsVisible(true);
+      setUploadFailed(false);
     };
 
     const handlePostCreated = () => {
@@ -238,7 +235,6 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
             const addPostResponse = await lmFeedclient.addPost(
               addPostRequest.build(),
             );
-            console.log("5");
             if (addPostResponse?.success) {
               const deleteRequest = DeleteTemporaryPostRequest.builder()
                 .setTemporaryPostId(tempPostId)
@@ -281,6 +277,7 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
 
         setTempPostId(null);
         setIsVisible(false);
+        setUploadFailed(false);
 
         customEventClient?.dispatchEvent(
           LMFeedCustomActionEvents.POST_CREATION_FAILED,
@@ -289,6 +286,7 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
         console.error("Error during cancellation:", error);
         setTempPostId(null);
         setIsVisible(false);
+        setUploadFailed(false);
       }
     }
   };

@@ -66,3 +66,16 @@
   margin-right: pxToRem(8);
 }
 
+.mobile-upload-banner{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--lm-feed-light-color);
+  width: 100%;
+  padding: pxToRem(16);
+  display: none;
+}
+
+.lm-feed-mobile-upload-banner{
+  display: flex;
+}

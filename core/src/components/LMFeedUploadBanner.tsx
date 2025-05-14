@@ -8,7 +8,7 @@ const LMFeedUploadBanner: React.FC = () => {
   const { isVisible, uploadFailed, handleRetry, handleCancel } =
     useLMFeedRetryPost();
 
-  // if (!isVisible) return null;
+  if (!isVisible) return null;
 
   const postingMessage = (
     <div className="lm-feed-upload-banner__uploading">
@@ -53,6 +53,43 @@ const LMFeedUploadBanner: React.FC = () => {
   return (
     <>
       <div className="lm-feed-upload-banner__container">
+        {!uploadFailed ? (
+          <div className="mobile-upload-banner">
+            <div className="lm-feed-upload-banner__uploading">
+              <CircularProgress size={30} />
+              <div className="lm-feed-upload-banner-text">Uploading...</div>
+            </div>
+            <button
+              className="lm-feed-upload-banner__cancel-btn"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div className="mobile-upload-banner">
+            <div className="lm-feed-upload-banner-text">Upload Failed.</div>
+            <div className="lm-feed-mobile-upload-banner">
+              <button
+                className="lm-feed-upload-banner__retry-btn"
+                onClick={handleRetry}
+              >
+                <img src={RetryIcon} alt="retry" className="retry-banner-img" />
+                Retry
+              </button>
+              <button
+                className="lm-feed-upload-banner__retry-cancel-btn"
+                onClick={handleCancel}
+              >
+                <img
+                  src={CancelIcon}
+                  alt="cancel"
+                  className="retry-cancel-img"
+                />
+              </button>
+            </div>
+          </div>
+        )}
         {!uploadFailed ? (
           <Snackbar
             className="lm-feed-upload-banner-snackbar"
