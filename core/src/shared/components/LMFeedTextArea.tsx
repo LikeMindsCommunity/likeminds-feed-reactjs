@@ -44,10 +44,15 @@ const LMFeedTextArea = () => {
   }, [textFieldRef]);
 
   useEffect(() => {
-    if (temporaryPost && textFieldRef?.current) {
-      textFieldRef.current.innerHTML = convertTextToHTML(
-        temporaryPost.text,
-      ).innerHTML;
+    if (textFieldRef?.current) {
+      if (temporaryPost) {
+        textFieldRef.current.innerHTML = convertTextToHTML(
+          temporaryPost.text,
+        ).innerHTML;
+      } else {
+        // Explicitly clear the text area for new posts or when temporaryPost is null
+        textFieldRef.current.innerHTML = "";
+      }
     }
     setCursorToTheEnd();
     // eslint-disable-next-line react-hooks/exhaustive-deps

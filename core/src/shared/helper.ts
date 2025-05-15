@@ -10,6 +10,8 @@ import {
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { LMAppAwsKeys } from "./constants/lmAppAwsKeys";
 export class HelperFunctionsClass {
+  private static currentUpload: AbortController | null = null;
+
   static detectLinks(text: string) {
     const regex = /\b(?:https?:\/\/)?(?:[\w.]+\.\w+)(?:(?<=\\n)|\b)/g;
     const links = text?.match(regex);
@@ -49,6 +51,10 @@ export class HelperFunctionsClass {
       media,
       userUniqueId,
     );
+  
+    // Create a new AbortController for this upload
+    this.currentUpload = new AbortController();
+  
     const command = new PutObjectCommand({
       Key,
       Bucket,
@@ -56,7 +62,17 @@ export class HelperFunctionsClass {
       ACL,
       ContentType,
     });
-    return s3Client.send(command);
+  
+    // Pass the abort signal when sending the command
+    return s3Client.send(command, { 
+      abortSignal: this.currentUpload.signal 
+    });
+  }
+  static cancelUpload() {
+    if (this.currentUpload) {
+      this.currentUpload.abort();
+      this.currentUpload = null;
+    }
   }
 
   private static buildUploadParams(
