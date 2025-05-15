@@ -1185,6 +1185,13 @@ export function useCreatePost(): UseCreatePost {
       setQuestion(temporaryPost.heading);
     }
   }, [temporaryPost]);
+
+  useEffect(() => {
+    if (openCreatePostDialog) {
+      resetStates();
+    }
+  }, [openCreatePostDialog]);
+
   return {
     postText: text,
     setPostText,
