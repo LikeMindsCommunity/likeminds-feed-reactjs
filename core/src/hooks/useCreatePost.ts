@@ -39,6 +39,8 @@ import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 import { numberToPollMultipleSelectState } from "../shared/utils";
 import { PollType } from "../shared/enums/ImPollType";
 import { getDisplayMessage } from "../shared/utils";
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile } from '@ffmpeg/util';
 
 import {
   OneArgVoidReturns,
@@ -46,6 +48,49 @@ import {
   ZeroArgVoidReturns,
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
+
+export const compressVideo = async (file: File): Promise<File> => {
+  try {
+    const ffmpeg = new FFmpeg();
+    
+    // Load FFmpeg with core files
+    await ffmpeg.load();
+
+    const inputName = 'input.mp4';
+    const outputName = 'output.mp4';
+
+    await ffmpeg.writeFile(inputName, await fetchFile(file));
+
+    // Run compression with speed-optimized settings
+    await ffmpeg.exec([
+      '-i', inputName,
+      '-c:v', 'libx264', // Use H.264 codec
+      '-preset', 'ultrafast', // Fastest encoding speed
+      '-crf', '32', // Slightly lower quality for faster compression
+      '-c:a', 'copy',
+      '-movflags', '+faststart', // Enable fast start for web playback
+      '-y', // Overwrite output file if exists
+      '-threads', '0', // Use all available CPU threads
+      outputName
+    ]);
+
+    const data = await ffmpeg.readFile(outputName);
+    const blob = new Blob([data], { type: 'video/mp4' });
+    
+    const compressedFile = new File([blob], `compressed_${file.name}`, {
+      type: 'video/mp4'
+    });
+
+    // Cleanup
+    await ffmpeg.deleteFile(inputName);
+    await ffmpeg.deleteFile(outputName);
+
+    return compressedFile;
+  } catch (error) {
+    console.error('Video compression failed:', error);
+    return file; // Return original file if compression fails
+  }
+};
 
 interface UseCreatePost {
   postText: string | null;
@@ -435,7 +480,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
 
-  function pollExpiryTimeClickFunction() { }
+  function pollExpiryTimeClickFunction() {}
 
   function editPollFunction() {
     setPreviewPoll(false);
@@ -479,7 +524,7 @@ export function useCreatePost(): UseCreatePost {
 
           const multipleSelectState =
             numberToPollMultipleSelectState[
-            advancedPollOptions.MULTIPLE_SELECTION_STATE
+              advancedPollOptions.MULTIPLE_SELECTION_STATE
             ];
 
           const pollType = advancedPollOptions.DONT_SHOW_LIVE_RESULTS
@@ -512,7 +557,17 @@ export function useCreatePost(): UseCreatePost {
             setOpenPostCreationProgressBar!(true);
           }
           for (let index = 0; index < mediaList.length; index++) {
-            const file: File = mediaList[index];
+            let file: File = mediaList[index];
+
+            // Compress video files before upload
+            if (file.type.includes("video")) {
+              try {
+                const compressedFile = await compressVideo(file);
+                file = compressedFile;
+              } catch (error) {
+                console.error(error);
+              }
+            }
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const resp: UploadMediaModel =
@@ -524,7 +579,7 @@ export function useCreatePost(): UseCreatePost {
             const attachmentType = file.type.includes("image")
               ? 1
               : file.type.includes("video") &&
-                mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
                 ? 11 // Setting attachmentType to 11 for reels
                 : file.type.includes("video")
                   ? 2
@@ -663,8 +718,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -780,8 +835,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -1074,9 +1129,9 @@ export function useCreatePost(): UseCreatePost {
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback
         ? createPostComponentClickCustomCallback.bind(
-          null,
-          postCreationActionAndDataStore,
-        )
+            null,
+            postCreationActionAndDataStore,
+          )
         : undefined,
     openCreatePollDialog,
     setOpenCreatePollDialog,
