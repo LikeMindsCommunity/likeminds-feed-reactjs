@@ -40,7 +40,7 @@ import { numberToPollMultipleSelectState } from "../shared/utils";
 import { PollType } from "../shared/enums/ImPollType";
 import { getDisplayMessage } from "../shared/utils";
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { toBlobURL } from '@ffmpeg/util';
+import { fetchFile } from '@ffmpeg/util';
 
 import {
   OneArgVoidReturns,
@@ -49,56 +49,42 @@ import {
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
 
-// Initialize FFmpeg
-const ffmpeg = new FFmpeg();
-let ffmpegLoaded = false;
-
-// Function to compress video
-const compressVideo = async (file: File): Promise<File> => {
+export const compressVideo = async (file: File): Promise<File> => {
   try {
-    if (!ffmpegLoaded) {
-      // Load FFmpeg with WASM
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
-      ffmpegLoaded = true;
-    }
-
-    const inputFileName = 'input.mp4';
-    const outputFileName = 'output.mp4';
+    const ffmpeg = new FFmpeg();
     
-    // Convert File to ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer();
-    
-    // Write the file to FFmpeg's virtual file system
-    await ffmpeg.writeFile(inputFileName, new Uint8Array(arrayBuffer));
+    // Load FFmpeg with core files
+    await ffmpeg.load();
 
-    // Compress video with FFmpeg
+    const inputName = 'input.mp4';
+    const outputName = 'output.mp4';
+
+    await ffmpeg.writeFile(inputName, await fetchFile(file));
+
+    // Run compression with speed-optimized settings
     await ffmpeg.exec([
-      '-i', inputFileName,
-      '-c:v', 'libx264',
-      '-crf', '28',
-      '-preset', 'faster',
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      outputFileName
+      '-i', inputName,
+      '-c:v', 'libx264', // Use H.264 codec
+      '-preset', 'ultrafast', // Fastest encoding speed
+      '-crf', '32', // Slightly lower quality for faster compression
+      '-c:a', 'copy',
+      '-movflags', '+faststart', // Enable fast start for web playback
+      '-y', // Overwrite output file if exists
+      '-threads', '0', // Use all available CPU threads
+      '-vf', 'scale=640:-2',
+      outputName
     ]);
 
-    // Read the compressed file
-    const data = await ffmpeg.readFile(outputFileName);
+    const data = await ffmpeg.readFile(outputName);
+    const blob = new Blob([data], { type: 'video/mp4' });
     
-    // Create a new File object
-    const compressedFile = new File(
-      [data],
-      file.name,
-      { type: 'video/mp4' }
-    );
+    const compressedFile = new File([blob], `compressed_${file.name}`, {
+      type: 'video/mp4'
+    });
 
-    // Clean up
-    await ffmpeg.deleteFile(inputFileName);
-    await ffmpeg.deleteFile(outputFileName);
+    // Cleanup
+    await ffmpeg.deleteFile(inputName);
+    await ffmpeg.deleteFile(outputName);
 
     return compressedFile;
   } catch (error) {
@@ -495,7 +481,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
 
-  function pollExpiryTimeClickFunction() { }
+  function pollExpiryTimeClickFunction() {}
 
   function editPollFunction() {
     setPreviewPoll(false);
@@ -539,7 +525,7 @@ export function useCreatePost(): UseCreatePost {
 
           const multipleSelectState =
             numberToPollMultipleSelectState[
-            advancedPollOptions.MULTIPLE_SELECTION_STATE
+              advancedPollOptions.MULTIPLE_SELECTION_STATE
             ];
 
           const pollType = advancedPollOptions.DONT_SHOW_LIVE_RESULTS
@@ -573,15 +559,14 @@ export function useCreatePost(): UseCreatePost {
           }
           for (let index = 0; index < mediaList.length; index++) {
             let file: File = mediaList[index];
-            
+
             // Compress video files before upload
             if (file.type.includes("video")) {
               try {
                 const compressedFile = await compressVideo(file);
                 file = compressedFile;
               } catch (error) {
-                console.error('Video compression failed:', error);
-                // Continue with original file if compression fails
+                console.error(error);
               }
             }
 
@@ -595,7 +580,7 @@ export function useCreatePost(): UseCreatePost {
             const attachmentType = file.type.includes("image")
               ? 1
               : file.type.includes("video") &&
-                mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
                 ? 11 // Setting attachmentType to 11 for reels
                 : file.type.includes("video")
                   ? 2
@@ -734,8 +719,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -851,8 +836,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -1145,9 +1130,9 @@ export function useCreatePost(): UseCreatePost {
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback
         ? createPostComponentClickCustomCallback.bind(
-          null,
-          postCreationActionAndDataStore,
-        )
+            null,
+            postCreationActionAndDataStore,
+          )
         : undefined,
     openCreatePollDialog,
     setOpenCreatePollDialog,
