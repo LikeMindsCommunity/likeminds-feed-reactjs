@@ -71,7 +71,6 @@ export const compressVideo = async (file: File): Promise<File> => {
       '-movflags', '+faststart', // Enable fast start for web playback
       '-y', // Overwrite output file if exists
       '-threads', '0', // Use all available CPU threads
-      '-vf', 'scale=640:-2',
       outputName
     ]);
 
