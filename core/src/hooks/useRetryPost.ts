@@ -221,31 +221,33 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
               }
             }
 
-            const addPostRequest = AddPostRequest.builder()
-              .setAttachments(attachmentResponseArray)
-              .setText(tempPost.text || "")
-              .setTopicIds(tempPost.topics || [])
-              .setTempId(Date.now().toString())
-              .setIsAnonymous(tempPost.isAnonymous || false);
+            if (attachmentResponseArray.length > 0) {
+              const addPostRequest = AddPostRequest.builder()
+                .setAttachments(attachmentResponseArray)
+                .setText(tempPost.text || "")
+                .setTopicIds(tempPost.topics || [])
+                .setTempId(Date.now().toString())
+                .setIsAnonymous(tempPost.isAnonymous || false);
 
-            if (tempPost.heading) {
-              addPostRequest.setHeading(tempPost.heading);
-            }
+              if (tempPost.heading) {
+                addPostRequest.setHeading(tempPost.heading);
+              }
 
-            const addPostResponse = await lmFeedclient.addPost(
-              addPostRequest.build(),
-            );
-            if (addPostResponse?.success) {
-              const deleteRequest = DeleteTemporaryPostRequest.builder()
-                .setTemporaryPostId(tempPostId)
-                .build();
-
-              await lmFeedclient.deleteTemporaryPost(deleteRequest);
-
-              customEventClient?.dispatchEvent(
-                LMFeedCustomActionEvents.POST_CREATED,
-                {},
+              const addPostResponse = await lmFeedclient.addPost(
+                addPostRequest.build(),
               );
+              if (addPostResponse?.success) {
+                const deleteRequest = DeleteTemporaryPostRequest.builder()
+                  .setTemporaryPostId(tempPostId)
+                  .build();
+
+                await lmFeedclient.deleteTemporaryPost(deleteRequest);
+
+                customEventClient?.dispatchEvent(
+                  LMFeedCustomActionEvents.POST_CREATED,
+                  {},
+                );
+              }
             }
           } catch (error) {
             customEventClient?.dispatchEvent(
