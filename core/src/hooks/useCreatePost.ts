@@ -40,7 +40,7 @@ import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callb
 import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 import { numberToPollMultipleSelectState } from "../shared/utils";
 import { PollType } from "../shared/enums/ImPollType";
-import { getDisplayMessage } from "../shared/utils";
+import { getDisplayMessage, getVideoDimensions, getImageDimensions } from "../shared/utils";
 
 import {
   OneArgVoidReturns,
@@ -524,13 +524,12 @@ export function useCreatePost(): UseCreatePost {
               .build(),
           );
         } else {
+          // First create attachments with local file paths
+          const localAttachments: Attachment[] = [];
           if (mediaList.length) {
             setOpenPostCreationProgressBar!(true);
 
             localTempId = tempId;
-
-            // First create attachments with local file paths
-            const localAttachments: Attachment[] = [];
             for (const file of mediaList) {
               const attachmentType = file.type.includes("image")
                 ? AttachmentType.IMAGE
@@ -543,16 +542,34 @@ export function useCreatePost(): UseCreatePost {
                       ? AttachmentType.DOCUMENT
                       : AttachmentType.DOCUMENT;
               const base64 = await readFileAsBase64(file);
+
+              const LMFeedPostAttachmentMetaBuilder =
+                LMFeedPostAttachmentMeta.builder()
+                  .setUrl(base64) // Store local file URL
+                  .setFormat(file?.name?.split(".").slice(-1).toString())
+                  .setSize(file.size)
+                  .setName(file.name);
+
+              if (attachmentType === AttachmentType.IMAGE) {
+                const { width, height } = await getImageDimensions(file);
+                LMFeedPostAttachmentMetaBuilder.setWidth(width).setHeight(
+                  height,
+                );
+              }
+
+              if (
+                attachmentType === AttachmentType.VIDEO ||
+                attachmentType === AttachmentType.REEL
+              ) {
+                const { width, height } = await getVideoDimensions(file);
+                LMFeedPostAttachmentMetaBuilder.setWidth(width).setHeight(
+                  height,
+                );
+              }
+
               const localAttachment = LMFeedPostAttachment.builder()
                 .setType(attachmentType)
-                .setMetadata(
-                  LMFeedPostAttachmentMeta.builder()
-                    .setUrl(base64) // Store local file URL
-                    .setFormat(file?.name?.split(".").slice(-1).toString())
-                    .setSize(file.size)
-                    .setName(file.name)
-                    .build(),
-                )
+                .setMetadata(LMFeedPostAttachmentMetaBuilder.build())
                 .build();
 
               localAttachments.push(localAttachment);
@@ -632,6 +649,8 @@ export function useCreatePost(): UseCreatePost {
                         .setFormat(file?.name?.split(".").slice(-1).toString())
                         .setSize(file.size)
                         .setName(file.name)
+                        .setHeight(localAttachments[index]?.metaData?.height || 0)
+                        .setWidth(localAttachments[index]?.metaData?.width || 0)
                         .build(),
                     )
                     .build(),
@@ -649,6 +668,8 @@ export function useCreatePost(): UseCreatePost {
                         .setSize(file.size)
                         .setName(file.name)
                         .setDuration(10)
+                        .setHeight(localAttachments[index]?.metaData?.height || 0)
+                        .setWidth(localAttachments[index]?.metaData?.width || 0)
                         .build(),
                     )
                     .build(),
@@ -683,6 +704,8 @@ export function useCreatePost(): UseCreatePost {
                         .setSize(file.size)
                         .setName(file.name)
                         .setDuration(10) // Assuming duration is applicable to reels
+                        .setHeight(localAttachments[index]?.metaData?.height || 0)
+                        .setWidth(localAttachments[index]?.metaData?.width || 0)
                         .build(),
                     )
                     .build(),
