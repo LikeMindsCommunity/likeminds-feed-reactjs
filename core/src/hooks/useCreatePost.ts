@@ -305,6 +305,7 @@ export function useCreatePost(): UseCreatePost {
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
+  const [postCreationStarted, setPostCreationStarted] = useState<boolean>(false);
   const [showOGTagViewContainer, setShowOGTagViewContainer] =
     useState<boolean>(true);
   const [text, setText] = useState<string | null>("");
@@ -466,6 +467,7 @@ export function useCreatePost(): UseCreatePost {
   const postFeed = useCallback(
     async function (customWidgetsData?: Record<string, any>[]) {
       try {
+        setPostCreationStarted(true);
         if (openCreatePostDialog) setOpenCreatePostDialog(false);
         if (openCreatePollDialog) setOpenCreatePollDialog(false);
 
@@ -833,6 +835,8 @@ export function useCreatePost(): UseCreatePost {
         );
       } finally {
         setOpenPostCreationProgressBar!(false);
+        setPostCreationStarted(false);
+        resetStates();
       }
     },
     [
@@ -1005,6 +1009,29 @@ export function useCreatePost(): UseCreatePost {
   }, [lmFeedclient, text]);
 
   useEffect(() => {
+    // Listen for post creation started event
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_CREATION_STARTED,
+      () => {
+        setPostCreationStarted(true);
+      }
+    );
+
+    // Listen for post creation completed/failed events
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_CREATED,
+      () => {
+        setPostCreationStarted(false);
+      }
+    );
+
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_CREATION_FAILED,
+      () => {
+        setPostCreationStarted(false);
+      }
+    );
+
     // Listen for retry upload event
     customEventClient?.listen(
       LMFeedCustomActionEvents.RETRY_POST_UPLOAD,
@@ -1054,6 +1081,7 @@ export function useCreatePost(): UseCreatePost {
             );
           } finally {
             setOpenPostCreationProgressBar!(false);
+            resetStates();
           }
         }
       },
@@ -1062,23 +1090,25 @@ export function useCreatePost(): UseCreatePost {
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
       (event: Event) => {
-        setOpenCreatePostDialog(true);
-        const details = (event as CustomEvent).detail;
-        const tempPost = details.post;
-        const topicsMap = details.topics;
-        setTemporaryPost(tempPost);
-        const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
-          return topicsMap[topicId];
-        });
-        const ogTagAttchmentObject = tempPost?.attachments?.filter(
-          (attachment: Attachment) => {
-            return attachment.type === AttachmentType.LINK;
-          },
-        );
-        if (ogTagAttchmentObject.length) {
-          setOgtag(ogTagAttchmentObject[0].LMFeedPostAttachmentMeta.ogTags);
+        if (!postCreationStarted) {
+          setOpenCreatePostDialog(true);
+          const details = (event as CustomEvent).detail;
+          const tempPost = details.post;
+          const topicsMap = details.topics;
+          setTemporaryPost(tempPost);
+          const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
+            return topicsMap[topicId];
+          });
+          const ogTagAttchmentObject = tempPost?.attachments?.filter(
+            (attachment: Attachment) => {
+              return attachment.type === AttachmentType.LINK;
+            },
+          );
+          if (ogTagAttchmentObject.length) {
+            setOgtag(ogTagAttchmentObject[0].LMFeedPostAttachmentMeta.ogTags);
+          }
+          setPreSelectedTopics(preSelectedTopicsArr);
         }
-        setPreSelectedTopics(preSelectedTopicsArr);
       },
     );
     return () => {
@@ -1209,12 +1239,6 @@ export function useCreatePost(): UseCreatePost {
     }
   }, [temporaryPost]);
 
-  useEffect(() => {
-    if (openCreatePostDialog) {
-      resetStates();
-    }
-  }, [openCreatePostDialog]);
-
   return {
     postText: text,
     setPostText,
@@ -1236,7 +1260,11 @@ export function useCreatePost(): UseCreatePost {
       : editPost,
     ogTag,
     openCreatePostDialog,
-    setOpenCreatePostDialog,
+    setOpenCreatePostDialog: (value: boolean) => {
+      if (!postCreationStarted) {
+        setOpenCreatePostDialog(value);
+      }
+    },
     temporaryPost,
     clearPollFunction: onPollClearClicked
       ? onPollClearClicked.bind(null, postCreationActionAndDataStore)
@@ -1266,7 +1294,11 @@ export function useCreatePost(): UseCreatePost {
           )
         : undefined,
     openCreatePollDialog,
-    setOpenCreatePollDialog,
+    setOpenCreatePollDialog: (value: boolean) => {
+      if (!postCreationStarted) {
+        setOpenCreatePollDialog(value);
+      }
+    },
     pollOptions,
     addPollOption: onAddOptionClicked
       ? onAddOptionClicked.bind(null, postCreationActionAndDataStore)
