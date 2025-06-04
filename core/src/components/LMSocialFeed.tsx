@@ -23,7 +23,6 @@ import {
   LMCoreCallbacks,
   LMSDKCallbacksImplementations,
 } from "../shared/LMSDKCoreCallbacks";
-import LMFeedPostCreationProgressBar from "./LMFeedPostCreationProgressBar";
 
 export interface LMFeedProps<T> extends CustomAgentProviderInterface {
   children?: React.ReactNode;
@@ -144,7 +143,7 @@ function LMSocialFeed({
                 logoutUser: logoutUser,
               }}
             >
-              <LMFeedListDataContextProvider children={children}/>
+              <LMFeedListDataContextProvider children={children} />
             </UserProviderContext.Provider>
           </GeneralContext.Provider>
         </CustomAgentProviderContext.Provider>
@@ -154,7 +153,6 @@ function LMSocialFeed({
           onClose={closeSnackbar}
           autoHideDuration={3000}
         />
-        <LMFeedPostCreationProgressBar open={openPostCreationProgressBar} />
       </GlobalClientProviderContext.Provider>
     </div>
   );

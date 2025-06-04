@@ -61,4 +61,5 @@ const LMFeedDeleteDialogBox = ({ mode, onClose }: LMDeletePostDialogProps) => {
   );
 };
 
+
 export default LMFeedDeleteDialogBox;
