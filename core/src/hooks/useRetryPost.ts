@@ -89,12 +89,12 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
   const handleRetry = async () => {
     if (tempPostId && lmFeedclient) {
       try {
+        setUploadFailed(false);
+        setIsVisible(false);
         const post = await lmFeedclient.getTemporaryPost();
         const tempPost = post?.data?.tempPost?.post;
 
         if (tempPost) {
-          setUploadFailed(false);
-
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATION_STARTED,
             { tempId: tempPost.id },
