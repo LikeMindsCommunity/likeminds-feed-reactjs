@@ -89,12 +89,12 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
   const handleRetry = async () => {
     if (tempPostId && lmFeedclient) {
       try {
+        setUploadFailed(false);
+        setIsVisible(false);
         const post = await lmFeedclient.getTemporaryPost();
         const tempPost = post?.data?.tempPost?.post;
 
         if (tempPost) {
-          setUploadFailed(false);
-
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATION_STARTED,
             { tempId: tempPost.id },
@@ -149,6 +149,8 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                               )
                               .setSize(file.size)
                               .setName(file.name)
+                              .setHeight(attachment.metaData.height || 0)
+                              .setWidth(attachment.metaData.width || 0)
                               .build(),
                           )
                           .build(),
@@ -168,6 +170,8 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                               .setSize(file.size)
                               .setName(file.name)
                               .setDuration(10)
+                              .setHeight(attachment.metaData.height || 0)
+                              .setWidth(attachment.metaData.width || 0)
                               .build(),
                           )
                           .build(),
@@ -206,6 +210,8 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                               .setSize(file.size)
                               .setName(file.name)
                               .setDuration(10) // Assuming duration is applicable to reels
+                              .setHeight(attachment.metaData.height || 0)
+                              .setWidth(attachment.metaData.width || 0)
                               .build(),
                           )
                           .build(),
