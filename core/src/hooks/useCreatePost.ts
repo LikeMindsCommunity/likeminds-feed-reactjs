@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { createTempPost } from "../shared/utils/createTempPost";
+import { isMediaAttachmentType } from "../shared/utils/attachmentUtils";
 import {
   MutableRefObject,
   useCallback,
@@ -38,7 +40,7 @@ import { ComponentDelegatorListener } from "../shared/types/cutomCallbacks/callb
 import { LMAppAwsKeys } from "../shared/constants/lmAppAwsKeys";
 import { numberToPollMultipleSelectState } from "../shared/utils";
 import { PollType } from "../shared/enums/ImPollType";
-import { getDisplayMessage } from "../shared/utils";
+import { getDisplayMessage, getVideoDimensions, getImageDimensions } from "../shared/utils";
 
 import {
   OneArgVoidReturns,
@@ -46,6 +48,8 @@ import {
   ZeroArgVoidReturns,
 } from "./useInputs";
 import { SelectChangeEvent } from "@mui/material";
+import { SaveTemporaryPostRequest } from "@likeminds.community/feed-js";
+import { DeleteTemporaryPostRequest } from "@likeminds.community/feed-js";
 
 interface UseCreatePost {
   postText: string | null;
@@ -301,6 +305,7 @@ export function useCreatePost(): UseCreatePost {
   // declating state variables
   const [openCreatePostDialog, setOpenCreatePostDialog] =
     useState<boolean>(false);
+  const [postCreationStarted, setPostCreationStarted] = useState<boolean>(false);
   const [showOGTagViewContainer, setShowOGTagViewContainer] =
     useState<boolean>(true);
   const [text, setText] = useState<string | null>("");
@@ -435,7 +440,7 @@ export function useCreatePost(): UseCreatePost {
     setShowOGTagViewContainer(false);
   }
 
-  function pollExpiryTimeClickFunction() { }
+  function pollExpiryTimeClickFunction() {}
 
   function editPollFunction() {
     setPreviewPoll(false);
@@ -450,9 +455,19 @@ export function useCreatePost(): UseCreatePost {
     }
   }
 
+  function readFileAsBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   const postFeed = useCallback(
     async function (customWidgetsData?: Record<string, any>[]) {
       try {
+        setPostCreationStarted(true);
         if (openCreatePostDialog) setOpenCreatePostDialog(false);
         if (openCreatePollDialog) setOpenCreatePollDialog(false);
 
@@ -474,12 +489,15 @@ export function useCreatePost(): UseCreatePost {
 
         const attachmentResponseArray: Attachment[] = [];
 
+        let localTempId = null;
+        const tempId = `-${Date.now()}`;
+
         if (pollText.length !== 0) {
           const pollOtionsList: string[] = pollOptions.map((obj) => obj.text);
 
           const multipleSelectState =
             numberToPollMultipleSelectState[
-            advancedPollOptions.MULTIPLE_SELECTION_STATE
+              advancedPollOptions.MULTIPLE_SELECTION_STATE
             ];
 
           const pollType = advancedPollOptions.DONT_SHOW_LIVE_RESULTS
@@ -508,8 +526,98 @@ export function useCreatePost(): UseCreatePost {
               .build(),
           );
         } else {
+          // First create attachments with local file paths
+          const localAttachments: Attachment[] = [];
           if (mediaList.length) {
             setOpenPostCreationProgressBar!(true);
+
+            localTempId = tempId;
+            for (const file of mediaList) {
+              const attachmentType = file.type.includes("image")
+                ? AttachmentType.IMAGE
+                : file.type.includes("video") &&
+                    mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                  ? AttachmentType.REEL
+                  : file.type.includes("video")
+                    ? AttachmentType.VIDEO
+                    : file.type.includes("pdf")
+                      ? AttachmentType.DOCUMENT
+                      : AttachmentType.DOCUMENT;
+              const base64 = await readFileAsBase64(file);
+
+              const LMFeedPostAttachmentMetaBuilder =
+                LMFeedPostAttachmentMeta.builder()
+                  .setUrl(base64) // Store local file URL
+                  .setFormat(file?.name?.split(".").slice(-1).toString())
+                  .setSize(file.size)
+                  .setName(file.name);
+
+              if (attachmentType === AttachmentType.IMAGE) {
+                const { width, height } = await getImageDimensions(file);
+                LMFeedPostAttachmentMetaBuilder.setWidth(width).setHeight(
+                  height,
+                );
+              }
+
+              if (
+                attachmentType === AttachmentType.VIDEO ||
+                attachmentType === AttachmentType.REEL
+              ) {
+                const { width, height } = await getVideoDimensions(file);
+                LMFeedPostAttachmentMetaBuilder.setWidth(width).setHeight(
+                  height,
+                );
+              }
+
+              const localAttachment = LMFeedPostAttachment.builder()
+                .setType(attachmentType)
+                .setMetadata(LMFeedPostAttachmentMetaBuilder.build())
+                .build();
+
+              localAttachments.push(localAttachment);
+            }
+
+            // Save temporary post with local attachments first
+            const tempPost = SaveTemporaryPostRequest.builder()
+              .setTempPost({
+                post: createTempPost({
+                  textContent,
+                  attachments: localAttachments,
+                  selectedTopicIds,
+                  isAnonymousPost,
+                  question: question || "",
+                  tempId,
+                  uuid: currentUser?.sdkClientInfo.uuid || "",
+                }),
+              })
+              .build();
+
+            // Save to local storage
+            await lmFeedclient?.saveTemporaryPost(tempPost);
+
+            // Set the temporary post in the context
+            setTemporaryPost(tempPost.tempPost.post);
+
+            // Now proceed with AWS upload
+            try {
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATION_STARTED,
+                { tempId },
+              );
+
+              for (const file of mediaList) {
+                await HelperFunctionsClass.uploadMedia(
+                  file,
+                  currentUser?.sdkClientInfo.uuid || "",
+                );
+              }
+            } catch (error) {
+              // Hide banner if upload fails
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATION_FAILED,
+              );
+              throw error; // Re-throw to handle in the outer catch block
+            }
           }
           for (let index = 0; index < mediaList.length; index++) {
             const file: File = mediaList[index];
@@ -524,7 +632,7 @@ export function useCreatePost(): UseCreatePost {
             const attachmentType = file.type.includes("image")
               ? 1
               : file.type.includes("video") &&
-                mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
+                  mediaUploadMode === LMFeedCreatePostMediaUploadMode.REEL
                 ? 11 // Setting attachmentType to 11 for reels
                 : file.type.includes("video")
                   ? 2
@@ -543,6 +651,8 @@ export function useCreatePost(): UseCreatePost {
                         .setFormat(file?.name?.split(".").slice(-1).toString())
                         .setSize(file.size)
                         .setName(file.name)
+                        .setHeight(localAttachments[index]?.metaData?.height || 0)
+                        .setWidth(localAttachments[index]?.metaData?.width || 0)
                         .build(),
                     )
                     .build(),
@@ -560,6 +670,8 @@ export function useCreatePost(): UseCreatePost {
                         .setSize(file.size)
                         .setName(file.name)
                         .setDuration(10)
+                        .setHeight(localAttachments[index]?.metaData?.height || 0)
+                        .setWidth(localAttachments[index]?.metaData?.width || 0)
                         .build(),
                     )
                     .build(),
@@ -594,6 +706,8 @@ export function useCreatePost(): UseCreatePost {
                         .setSize(file.size)
                         .setName(file.name)
                         .setDuration(10) // Assuming duration is applicable to reels
+                        .setHeight(localAttachments[index]?.metaData?.height || 0)
+                        .setWidth(localAttachments[index]?.metaData?.width || 0)
                         .build(),
                     )
                     .build(),
@@ -663,8 +777,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -692,8 +806,21 @@ export function useCreatePost(): UseCreatePost {
 
         const addPostRequest = addPostRequestBuilder.build();
 
+        // Check if post has media attachments
+        const hasMediaAttachments = attachmentResponseArray.some((attachment) =>
+          isMediaAttachmentType(attachment.type),
+        );
         const call = await lmFeedclient?.addPost(addPostRequest);
         if (call?.success) {
+          if (hasMediaAttachments && localTempId) {
+            const deleteRequest = DeleteTemporaryPostRequest.builder()
+              .setTemporaryPostId(localTempId) // Use the same ID that was saved
+              .build();
+
+            // Delete the temporary post from IndexedDB
+            await lmFeedclient?.deleteTemporaryPost(deleteRequest);
+          }
+
           lmfeedAnalyticsClient?.sendPostCreatedEvent(call?.data?.post);
           customEventClient?.dispatchEvent(
             LMFeedCustomActionEvents.POST_CREATED,
@@ -701,8 +828,15 @@ export function useCreatePost(): UseCreatePost {
         }
       } catch (error) {
         console.log(error);
+        // Dispatch failed event with upload failure flag
+        customEventClient?.dispatchEvent(
+          LMFeedCustomActionEvents.POST_CREATION_FAILED,
+          { isUploadFailure: true },
+        );
       } finally {
         setOpenPostCreationProgressBar!(false);
+        setPostCreationStarted(false);
+        resetStates();
       }
     },
     [
@@ -745,12 +879,8 @@ export function useCreatePost(): UseCreatePost {
 
         if (ogTag) {
           if (
-            !attachmentResponseArray.some(
-              (attachment) =>
-                attachment.type === AttachmentType.IMAGE ||
-                attachment.type === AttachmentType.VIDEO ||
-                attachment.type === AttachmentType.DOCUMENT ||
-                attachment.type === AttachmentType.REEL,
+            !attachmentResponseArray.some((attachment) =>
+              isMediaAttachmentType(attachment.type),
             )
           ) {
             attachmentResponseArray.pop();
@@ -780,8 +910,8 @@ export function useCreatePost(): UseCreatePost {
           const newCustomWidgetsData = customWidgetsData.map((customData) => {
             return {
               meta: customData,
-            }
-          })
+            };
+          });
           for (const customWidgetData of newCustomWidgetsData) {
             attachmentResponseArray.push(
               LMFeedPostAttachment.builder()
@@ -879,26 +1009,106 @@ export function useCreatePost(): UseCreatePost {
   }, [lmFeedclient, text]);
 
   useEffect(() => {
+    // Listen for post creation started event
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_CREATION_STARTED,
+      () => {
+        setPostCreationStarted(true);
+      }
+    );
+
+    // Listen for post creation completed/failed events
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_CREATED,
+      () => {
+        setPostCreationStarted(false);
+      }
+    );
+
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.POST_CREATION_FAILED,
+      () => {
+        setPostCreationStarted(false);
+      }
+    );
+
+    // Listen for retry upload event
+    customEventClient?.listen(
+      LMFeedCustomActionEvents.RETRY_POST_UPLOAD,
+      async (event: Event) => {
+        const customEvent = event as CustomEvent;
+        const post = customEvent.detail?.post;
+        if (post) {
+          // Reset states and start upload again
+          setTemporaryPost(post);
+          try {
+            setOpenPostCreationProgressBar!(true);
+            // Re-upload media attachments
+            for (const attachment of post.attachments) {
+              if (isMediaAttachmentType(attachment.type)) {
+                const file = attachment.metaData.file;
+                await HelperFunctionsClass.uploadMedia(
+                  file,
+                  currentUser?.sdkClientInfo.uuid || "",
+                );
+              }
+            }
+            // If upload successful, create the post
+            const addPostRequest = AddPostRequest.builder()
+              .setAttachments(post.attachments)
+              .setText(post.text)
+              .setTopicIds(post.topics)
+              .setTempId(post.id)
+              .setIsAnonymous(post.isAnonymous)
+              .build();
+
+            const call = await lmFeedclient?.addPost(addPostRequest);
+            if (call?.success) {
+              // Delete temporary post after successful creation
+              const deleteRequest = DeleteTemporaryPostRequest.builder()
+                .setTemporaryPostId(post.id)
+                .build();
+              await lmFeedclient?.deleteTemporaryPost(deleteRequest);
+
+              customEventClient?.dispatchEvent(
+                LMFeedCustomActionEvents.POST_CREATED,
+              );
+            }
+          } catch (error) {
+            customEventClient?.dispatchEvent(
+              LMFeedCustomActionEvents.POST_CREATION_FAILED,
+              { isUploadFailure: true },
+            );
+          } finally {
+            setOpenPostCreationProgressBar!(false);
+            resetStates();
+          }
+        }
+      },
+    );
+
     customEventClient?.listen(
       LMFeedCustomActionEvents.OPEN_CREATE_POST_DIALOUGE,
       (event: Event) => {
-        setOpenCreatePostDialog(true);
-        const details = (event as CustomEvent).detail;
-        const tempPost = details.post;
-        const topicsMap = details.topics;
-        setTemporaryPost(tempPost);
-        const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
-          return topicsMap[topicId];
-        });
-        const ogTagAttchmentObject = tempPost?.attachments?.filter(
-          (attachment: Attachment) => {
-            return attachment.type === AttachmentType.LINK;
-          },
-        );
-        if (ogTagAttchmentObject.length) {
-          setOgtag(ogTagAttchmentObject[0].LMFeedPostAttachmentMeta.ogTags);
+        if (!postCreationStarted) {
+          setOpenCreatePostDialog(true);
+          const details = (event as CustomEvent).detail;
+          const tempPost = details.post;
+          const topicsMap = details.topics;
+          setTemporaryPost(tempPost);
+          const preSelectedTopicsArr = tempPost.topics.map((topicId: string) => {
+            return topicsMap[topicId];
+          });
+          const ogTagAttchmentObject = tempPost?.attachments?.filter(
+            (attachment: Attachment) => {
+              return attachment.type === AttachmentType.LINK;
+            },
+          );
+          if (ogTagAttchmentObject.length) {
+            setOgtag(ogTagAttchmentObject[0].LMFeedPostAttachmentMeta.ogTags);
+          }
+          setPreSelectedTopics(preSelectedTopicsArr);
         }
-        setPreSelectedTopics(preSelectedTopicsArr);
       },
     );
     return () => {
@@ -1028,6 +1238,7 @@ export function useCreatePost(): UseCreatePost {
       setQuestion(temporaryPost.heading);
     }
   }, [temporaryPost]);
+
   return {
     postText: text,
     setPostText,
@@ -1049,7 +1260,11 @@ export function useCreatePost(): UseCreatePost {
       : editPost,
     ogTag,
     openCreatePostDialog,
-    setOpenCreatePostDialog,
+    setOpenCreatePostDialog: (value: boolean) => {
+      if (!postCreationStarted) {
+        setOpenCreatePostDialog(value);
+      }
+    },
     temporaryPost,
     clearPollFunction: onPollClearClicked
       ? onPollClearClicked.bind(null, postCreationActionAndDataStore)
@@ -1074,12 +1289,16 @@ export function useCreatePost(): UseCreatePost {
     createPostComponentClickCustomCallback:
       createPostComponentClickCustomCallback
         ? createPostComponentClickCustomCallback.bind(
-          null,
-          postCreationActionAndDataStore,
-        )
+            null,
+            postCreationActionAndDataStore,
+          )
         : undefined,
     openCreatePollDialog,
-    setOpenCreatePollDialog,
+    setOpenCreatePollDialog: (value: boolean) => {
+      if (!postCreationStarted) {
+        setOpenCreatePollDialog(value);
+      }
+    },
     pollOptions,
     addPollOption: onAddOptionClicked
       ? onAddOptionClicked.bind(null, postCreationActionAndDataStore)

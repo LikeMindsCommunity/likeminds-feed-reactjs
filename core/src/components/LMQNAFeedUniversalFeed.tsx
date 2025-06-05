@@ -14,6 +14,7 @@ import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientPro
 import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
 import LMQNAFeedCreatePost from "./LMQNAFeedCreatePost";
 import LMQNAFeedPosts from "./LMQNAFeedPosts";
+import LMFeedUploadBanner from "./LMFeedUploadBanner";
 
 interface LMFeedUniversalFeedProps {
   PostView?: React.FC;
@@ -112,6 +113,7 @@ const LMQNAFeedUniversalFeed = (props: LMFeedUniversalFeedProps) => {
   return (
     <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
       <div className="lm-flex-grow" id="feed-scroller">
+        <LMFeedUploadBanner />
         <LMQNAFeedCreatePost showStarterComponent />
         {CustomComponents?.CustomTopicDropDown ? (
           CustomComponents.CustomTopicDropDown

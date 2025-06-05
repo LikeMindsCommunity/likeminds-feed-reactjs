@@ -649,3 +649,33 @@ export function formatTimestamp(timestamp: number): string {
   };
   return date.toLocaleDateString("en-GB", options).replace(",", "");
 }
+
+export function getImageDimensions(
+    file: File,
+  ): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve({ width: img.width, height: img.height });
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  export function getVideoDimensions(
+    file: File,
+  ): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+
+      video.onloadedmetadata = () => {
+        resolve({ width: video.videoWidth, height: video.videoHeight });
+        URL.revokeObjectURL(video.src);
+      };
+
+      video.onerror = reject;
+      video.src = URL.createObjectURL(file);
+    });
+  }

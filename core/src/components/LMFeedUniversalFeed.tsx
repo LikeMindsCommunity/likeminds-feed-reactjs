@@ -14,7 +14,7 @@ import LMFeedAllMembers from "./LMFeedAllMembers";
 import { LMFeedDataContext } from "../contexts/LMFeedDataContext";
 import LMFeedGlobalClientProviderContext from "../contexts/LMFeedGlobalClientProviderContext";
 import { LMFeedNotificationAnalytics } from "../shared/enums/lmNotificationAnalytics";
-
+import LMFeedUploadBanner from "./LMFeedUploadBanner";
 interface LMFeedUniversalFeedProps {
   followedTopics?: string[];
 }
@@ -116,6 +116,7 @@ const LMFeedUniversalFeed = ({ followedTopics }: LMFeedUniversalFeedProps) => {
   return (
     <div ref={wrapperRef} className="lm-feed-wrapper lm-d-flex">
       <div className="lm-flex-grow" id="feed-scroller">
+      <LMFeedUploadBanner/>
         <LMFeedCreatePost showStarterComponent />
         {CustomComponents?.CustomTopicDropDown ? (
           CustomComponents.CustomTopicDropDown
