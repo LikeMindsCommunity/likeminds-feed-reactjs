@@ -25,11 +25,28 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
   const [isVisible, setIsVisible] = useState(false);
   const [tempPostId, setTempPostId] = useState<string | null>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const { customEventClient, lmFeedclient } = useContext(
     LMFeedGlobalClientProviderContext,
   );
   const { currentUser } = useContext(LMFeedUserProviderContext);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => {
+      setIsOnline(false);
+      setUploadFailed(true);
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     const checkTemporaryPost = async () => {
@@ -87,6 +104,10 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
   }, [customEventClient]);
 
   const handleRetry = async () => {
+    if (!isOnline) {
+      return;
+    }
+    
     if (tempPostId && lmFeedclient) {
       try {
         setUploadFailed(false);
@@ -197,7 +218,6 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                       break;
                     }
                     case AttachmentType.REEL: {
-                      // New case for attachmentType 11 (Reels)
                       attachmentResponseArray.push(
                         LMFeedPostAttachment.builder()
                           .setType(AttachmentType.REEL)
@@ -209,7 +229,7 @@ export const useLMFeedRetryPost = (): LMFeedRetryPostHook => {
                               )
                               .setSize(file.size)
                               .setName(file.name)
-                              .setDuration(10) // Assuming duration is applicable to reels
+                              .setDuration(10)
                               .setHeight(attachment.metaData.height || 0)
                               .setWidth(attachment.metaData.width || 0)
                               .build(),

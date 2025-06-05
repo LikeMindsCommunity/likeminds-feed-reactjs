@@ -38,7 +38,7 @@ const LMFeedUploadBanner: React.FC = () => {
         className="lm-feed-upload-banner__retry-btn"
         onClick={handleRetry}
       >
-        <img src={RetryIcon} alt="retry" className="retry-banner-img" />
+        <img src={RetryIcon} alt="" className="retry-banner-img" />
         Retry
       </button>
       <button
