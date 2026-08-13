@@ -1,6 +1,7 @@
 {
   "name": "@likeminds.community/likeminds-feed-reactjs",
   "version": "1.12.0",
+  "license": "Apache-2.0",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
